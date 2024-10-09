@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="../Content/css/flaticon.css">
     <link rel="stylesheet" href="../Content/css/icomoon.css">
     <link rel="stylesheet" href="../Content/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         #body-config {
             background-image: url("../Content/images/bg_3.jpg");
@@ -37,7 +38,8 @@
             display: block;
             unicode-bidi: isolate;
         }
-        #nav-config{
+
+        #nav-config {
             width: 500px !important;
         }
 
@@ -67,7 +69,7 @@
                 justify-content: center;
             }
 
-         
+
 
         }
     </style>
@@ -86,7 +88,7 @@
             <div class="collapse navbar-collapse nav-config" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="">Home</a>
+                        <a class="nav-link" href="" style="color: orange;">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="">Menu</a>
@@ -99,6 +101,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="" style="color: red;">Google+</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
@@ -122,35 +127,41 @@
             <div class="icon d-flex justify-content-center align-items-center mb-5"><span
                     class="flaticon-pizza-1"></span></div>
         </div>
-        <div style="width: auto;display: flex; align-items: center; justify-content: center;">
+        <div style="width: auto;display: flex; align-items: center; justify-content: center;margin-top: -20px;">
             <div class="col-md-5 ftco-animate fadeInUp ftco-animated" style="text-align: center;">
                 <h3 class="mb-8" style="color: orange;">Welcome to Zesty Bites™!</h3>
                 <form action="#" class="appointment-form" autocomplete="off" id="signin">
 
                     <div class="d-md-flex">
                         <div class="form-group">
+                            <i class="fa fa-user icon" style="color: orange;"></i>
                             <input style="justify-content: left; text-align: left;" type="text" class="form-control"
-                                placeholder="Enter email or username" id="email">
+                                placeholder="Enter email or username" id="usn" required>
                         </div>
                     </div>
 
                     <div class="d-md-flex">
                         <div class="form-group">
+                            <i class="fa fa-key icon" style="color: orange;"></i>
                             <input style="justify-content: left; text-align: left;" type="password" class="form-control"
-                                placeholder="Password" id="Password">
+                                placeholder="Password" id="psw" required
+                                oninput="InvalidPsw(this)"
+                                oninvalid="InvalidPsw(this)">
                         </div>
+
                     </div>
                     <div class="other-choice">
                         <div id="rmbm"><input type="checkbox" name="remember"> Remember me</div>
 
                         <div id="fgpsw"><span class="psw">Forgot <a href="#">password?</a></span></div>
-                    </div>
-                    <label>
-
-                    </label>
+                    </div><br>
 
                     <div class="form-group" style="text-align: center;">
                         <input type="submit" value="Log In" class="btn btn-primary py-3 px-4">
+                    </div>
+
+                    <div class="other-choice">
+                        <div id="fgpsw"><span class="psw"><a href="#">Create an account!</a></span></div>
                     </div>
 
                 </form>
@@ -200,6 +211,7 @@
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
     <script src="../Content/js/google-map.js"></script>
     <script src="../Content/js/main.js"></script>
+    <script src="handleError.js"></script>
 </body>
 
 </html>

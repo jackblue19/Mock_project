@@ -24,59 +24,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/32417c83fe.js" crossorigin="anonymous"></script>
     <style>
-        #body-config {
-            background-image: url("../Content/images/bg_3.jpg");
+        .nav-config {
+            color: red;
         }
 
-        .form-config {
-            background-color: black;
-            width: 500px;
-            height: 620px;
-            opacity: 80%;
+        .middle-part {
+            color: yellow;
         }
 
-        div {
-            display: block;
-            unicode-bidi: isolate;
+        #avt {
+            color: yellow;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            flex-wrap: nowrap;
+            padding-top: 20px;
         }
 
-        #nav-config {
-            width: 500px !important;
-        }
-
-        @media only screen and (max-width: 767px) {
-            .other-choice {
-                opacity: 200;
-                text-align: left;
-                display: flex;
-                justify-content: space-between;
-            }
-        }
-
-        @media only screen and (min-width: 768px) {
-            .form-config {
-                margin: auto;
-                background-color: black;
-                width: 500px;
-                height: 620px;
-                opacity: 80%;
-            }
-
-            .other-choice {
-                opacity: 200;
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
+        #search-bar textarea textPath {
+            color: red !important;
         }
     </style>
 </head>
 
 <body id="body-config">
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-        <div class="container">
+        <div class="container nav-config">
             <a class="navbar-brand" href="@Url.Action(" Index", "Home" )">
                 <span class="flaticon-pizza-1 mr-1"></span>Zesty Bites<br><small>Delicious</small>
             </a>
@@ -101,16 +75,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="">About</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" style="color: red;">Google+</a>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" id="search-bar">
+                        <input type="text" placeholder="Search..">
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                    </li>
-                    <li class="nav-item">
-                    </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="avt">
+                        <i class="fa-regular fa-user" style="justify-content: center;">
+                        </i>
+                        <p>Username</p>
                     </li>
                 </ul>
             </div>
@@ -119,69 +94,48 @@
     <!-- END nav -->
 
     <!-- Middle Part -->
-    <div class="form-config">
-        <div class="media d-block services" style="width: auto;
-        display: flex; align-items: center; justify-content: center; margin-top: 10px;
-        padding-top: 40px;">
-            <div class="icon d-flex justify-content-center align-items-center mb-5"><span
-                    class="flaticon-pizza-1"></span></div>
-        </div>
-        <div style="width: auto;display: flex; align-items: center; justify-content: center;margin-top: -20px;">
-            <div class="col-md-5 ftco-animate fadeInUp ftco-animated" style="text-align: center;">
-                <h3 class="mb-8" style="color: orange;">Welcome to Zesty Bites™!</h3>
-                <form action="#" class="appointment-form" autocomplete="off" id="signin">
+    <div class="middle-part">
+        <!-- <div class="head-middle" style="background-color: red; height: 100px; width:auto;
+                        display: flex; flex-direction: row;">
+            <div class="half-left" style="background-color: #aaaa00; height: auto; width: 37.5%;"></div>
+            <div class="half-right" style="background-color: #aa8800; height: auto; width: 63.5%;"></div>
+        </div> -->
+        <div class="center-middle" style="background-color: white; height: 700px; width:auto;
+                        display: flex; flex-direction: row;">
+            <!-- position: sticky; -->
+            <div class="half-left" style="background-color: yellow; height: auto; width: 37.5%;
+                                    display: flex; justify-content: space-evenly;
+                                    flex-direction: column;
+                                    align-items: center;">
 
-                    <div class="d-md-flex">
-                        <div class="form-group">
-                            <i class="fa fa-user icon" style="color: orange;"></i>
-                            <input style="justify-content: left; text-align: left;" type="text" class="form-control"
-                                placeholder="Enter email or username" id="usn" required>
-                        </div>
+                <div class="bank-qr" style="display: flex; align-items: center; flex-direction: column;">
+                    <div class="qr-code" style="height: 350px; width: 350px; background-color: white;">
                     </div>
-
-                    <div class="d-md-flex">
-                        <div class="form-group">
-                            <i class="fa fa-key icon" style="color: orange;"></i>
-                            <input style="justify-content: left; text-align: left;" type="password" class="form-control"
-                                placeholder="Password" id="psw" required oninput="InvalidPsw(this)"
-                                oninvalid="InvalidPsw(this)">
-                        </div>
-
+                    <div class="qr-info" style="color: red; text-align: center; margin-top: 15px">
+                        <p>Viettinbank - 106873586585
+                            Nguyen Manh Tan Huynh</p>
                     </div>
-                    <div class="other-choice">
-                        <div id="rmbm"><input type="checkbox" name="remember"> Remember me</div>
-
-                        <div id="fgpsw"><span class="psw">Forgot <a href="#">password?</a></span></div>
-                    </div><br>
-
-                    <div class="form-group" style="text-align: center;">
-                        <input type="submit" value="Log In" class="btn btn-primary py-3 px-4">
-                    </div>
-
-                    <div class="other-choice">
-                        <div id="fgpsw"><span class="psw"><a href="#">Create an account!</a></span></div>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-        <!-- Footer -->
-        <footer class="footer color-main under-footer" style="margin-bottom: norem;">
-            <div class="row">
-                <div class="col-md-12 text-center">
-
-                    <p>
-                        Copyright &copy;
-                        <script>document.write(new Date().getFullYear());</script> All rights reserved.
-                    </p>
                 </div>
+                <div class="cmt" style="align-items: center;text-align: center; color: red;">
+                    Please use your bill as a proof for your payment<br>
+                    when our shipper arrived.<br>
+                    Enjoy your meals!</div>
+                <!-- thay the cho align-items: center => using "white-sapce: pre" -> get text as it is formed -->
             </div>
-        </footer>
+            <div class="half-right" style="background-color: orange; height: auto; width: 63.5%;">
+                <div class="right-top" style="background-color: red;height: 10%;">
+
+                </div>
+                <div class="right-center" style="background-color: green;height: 70%;"></div>
+                <div class="right-bottom" style="background-color: blue;height: 20%;"></div>
+            </div>
+        </div>
+        <div class="foot-middle" style="background-color: blue; height: 100px; width:auto"></div>
     </div>
+    <div class="footer" style="background-color: burlywood; height: 100px; width:auto"></div>
+
 
     <!-- Done Middle Part -->
-
-
 
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
@@ -205,9 +159,6 @@
     <script src="../Content/js/bootstrap-datepicker.js"></script>
     <script src="../Content/js/jquery.timepicker.min.js"></script>
     <script src="../Content/js/scrollax.min.js"></script>
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="../Content/js/google-map.js"></script>
     <script src="../Content/js/main.js"></script>
     <script src="handleError.js"></script>
 </body>

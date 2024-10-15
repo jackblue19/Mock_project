@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        if (confirm("Are you happy?")) {
+            document.write("You say \'Yes, I am\'");
+            document.write("<br>");
+            document.write(new Date());
+        } else {
+            document.write("You say \'Nah, not at all\'");
+            document.write("<br>");
+            document.write(new Date());
+        }
+        var name = prompt("Enter your name", "Jackblue");
+        document.write("<br>");
+        document.write("Ni de mingzi shi: " + name);
+        var arr = ["zzz", "asdad", "done"];
+        arr.push("Sure");
+        arr.forEach(
+            item => document.write("<br>", item)
+        );
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Zesty Bites</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" rel="stylesheet">
+    <link rel="stylesheet" href="../Content/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../Content/css/animate.css">
+    <link rel="stylesheet" href="../Content/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../Content/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../Content/css/magnific-popup.css">
+    <link rel="stylesheet" href="../Content/css/aos.css">
+    <link rel="stylesheet" href="../Content/css/ionicons.min.css">
+    <link rel="stylesheet" href="../Content/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../Content/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="../Content/css/flaticon.css">
+    <link rel="stylesheet" href="../Content/css/icomoon.css">
+    <link rel="stylesheet" href="../Content/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/32417c83fe.js" crossorigin="anonymous"></script>
+    <style>
+        .nav-config {
+            color: red;
+        }
+
+        .middle-part {
+            color: yellow;
+        }
+
+        #avt {
+            color: yellow;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            flex-wrap: nowrap;
+            padding-top: 20px;
+        }
+
+        #search-bar textarea textPath {
+            color: red !important;
+        }
+    </style>
+</head>
+
+<body id="body-config">
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container nav-config">
+            <a class="navbar-brand" href="@Url.Action(" Index", "Home" )">
+                <span class="flaticon-pizza-1 mr-1"></span>Zesty Bites<br><small>Delicious</small>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse nav-config" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="" style="color: orange;">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Reservation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">About</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" id="search-bar">
+                        <input type="text" placeholder="Search..">
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" id="avt">
+                        <a class="nav-link" href="">
+                            <i class="fa-regular fa-user" style="justify-content: center;"></i>
+                            <p>Username</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END nav -->
+
+    <!-- Middle Part -->
+    <div class="middle-part">
+        <!-- <div class="head-middle" style="background-color: red; height: 100px; width:auto;
+                        display: flex; flex-direction: row;">
+            <div class="half-left" style="background-color: #aaaa00; height: auto; width: 37.5%;"></div>
+            <div class="half-right" style="background-color: #aa8800; height: auto; width: 63.5%;"></div>
+        </div> -->
+        <div class="center-middle" style="background-color: white; height: 700px; width:auto;
+                        display: flex; flex-direction: row;">
+            <!-- position: sticky; -->
+            <div class="half-left" style="background-color: yellow; height: auto; width: 37.5%;
+                                    display: flex; justify-content: space-evenly;
+                                    flex-direction: column;
+                                    align-items: center;">
+
+                <div class="bank-qr" style="display: flex; align-items: center; flex-direction: column;">
+                    <div class="qr-code" style="height: 350px; width: 350px; background-color: white;">
+                    </div>
+                    <div class="qr-info" style="color: red; text-align: center; margin-top: 15px">
+                        <p>Viettinbank - 106873586585
+                            Nguyen Manh Tan Huynh</p>
+                    </div>
+                </div>
+                <div class="cmt" style="align-items: center;text-align: center; color: red;">
+                    Please use your bill as a proof for your payment<br>
+                    when our shipper arrived.<br>
+                    Enjoy your meals!</div>
+                <!-- thay the cho align-items: center => using "white-sapce: pre" -> get text as it is formed -->
+            </div>
+            <div class="half-right" style="background-color: orange; height: auto; width: 63.5%;">
+                <div class="right-top" style="background-color: red;height: 10%;">
+
+                </div>
+                <div class="right-center" style="background-color: green;height: 70%;"></div>
+                <div class="right-bottom" style="background-color: blue;height: 20%;"></div>
+            </div>
+        </div>
+        <div class="foot-middle" style="background-color: blue; height: 100px; width:auto"></div>
+    </div>
+    <div class="footer" style="background-color: burlywood; height: 100px; width:auto"></div>
+
+
+    <!-- Done Middle Part -->
+
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
+            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
+            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00" />
+        </svg></div>
+
+    <!-- Script -->
+    <script src="../Content/js/jquery.min.js"></script>
+    <script src="../Content/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="../Content/js/popper.min.js"></script>
+    <script src="../Content/js/bootstrap.min.js"></script>
+    <script src="../Content/js/jquery.easing.1.3.js"></script>
+    <script src="../Content/js/jquery.waypoints.min.js"></script>
+    <script src="../Content/js/jquery.stellar.min.js"></script>
+    <script src="../Content/js/owl.carousel.min.js"></script>
+    <script src="../Content/js/jquery.magnific-popup.min.js"></script>
+    <script src="../Content/js/aos.js"></script>
+    <script src="../Content/js/jquery.animateNumber.min.js"></script>
+    <script src="../Content/js/bootstrap-datepicker.js"></script>
+    <script src="../Content/js/jquery.timepicker.min.js"></script>
+    <script src="../Content/js/scrollax.min.js"></script>
+    <script src="../Content/js/main.js"></script>
+    <script src="handleError.js"></script>
+</body>
+
+</html>

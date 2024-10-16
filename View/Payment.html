@@ -24,16 +24,239 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/32417c83fe.js" crossorigin="anonymous"></script>
     <style>
+        * {
+
+            /*CUSTOM-SCROLL-BAR*/
+            /* width */
+            ::-webkit-scrollbar {
+                width: 0px;
+            }
+        }
+
         .nav-config {
             color: red;
         }
 
         .middle-part {
-            color: yellow;
+
+            .center-middle {
+                height: 700px;
+                width: auto;
+                display: flex;
+                flex-direction: row;
+
+                .half-left {
+                    background-color: black;
+                    opacity: 100%;
+                    height: auto;
+                    width: 37.5%;
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column;
+                    align-items: center;
+
+                    .bank-qr {
+                        display: flex;
+                        align-items: center;
+                        flex-direction: column;
+
+                        .qr-code {
+                            height: 350px;
+                            width: 350px;
+                            background-color: white;
+                        }
+
+                        .qr-info {
+                            color: orange;
+                            text-align: center;
+                            margin-top: 15px
+                        }
+                    }
+
+                    .cmt {
+                        align-items: center;
+                        text-align: center;
+                        color: yellow;
+                    }
+                }
+
+                .half-right {
+                    background-image: url(../Content/images/bg_3.jpg);
+
+                    height: auto;
+                    width: 63.5%;
+
+                    .right-top {
+                        background-color: black;
+                        height: 10%;
+
+                        .right-top-in-div {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: row;
+
+
+                        }
+
+                    }
+
+                    .table-config {
+                        color: white;
+                        border: 2px solid black;
+                        width: 100%;
+                        text-align: center;
+
+                        th {
+                            font-size: large;
+                            width: 20%;
+                        }
+
+                        th:nth-child(2) {
+                            width: 45%;
+                            text-align: left;
+                        }
+
+                        th:nth-child(3) {
+                            width: 15%;
+                        }
+                    }
+
+                    .right-center {
+                        color: white;
+                        background-color: black;
+                        opacity: 80%;
+                        height: 80%;
+                        overflow: auto;
+                        font-size: 30px;
+
+                        div {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: row;
+                            text-align: center;
+                            align-items: stretch;
+                            justify-content: center;
+
+                            .middle-table {
+                                border: 2px solid black;
+                                width: 100%;
+
+                                .hide-head {
+                                    opacity: 0%;
+                                    height: 0%;
+                                }
+
+                                th,
+                                td {
+                                    width: 20%;
+                                }
+
+                                th:nth-child(2),
+                                td:nth-child(2) {
+                                    width: 45%;
+                                    text-align: left;
+                                }
+
+                                th:nth-child(3),
+                                td:nth-child(3) {
+                                    width: 15%;
+                                }
+                            }
+                        }
+                    }
+
+                    .right-bottom {
+                        border: 2px solid black;
+                        background-color: black;
+                        height: 10%;
+
+                        div {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: row;
+
+                            table {
+                                border: 2px solid black;
+                                width: 100%;
+                                text-align: center;
+                            }
+
+                            th {
+                                width: 40%;
+                            }
+
+                            th:last-child {
+                                width: 20%;
+                                background-color: rgb(255, 183, 0);
+                                transition: background-color 0.01s ease, color 0.01s ease;
+
+                                a {
+                                    color: black;
+                                    padding: auto;
+                                }
+
+                                a:link,
+                                a:visited {
+                                    background-color: none;
+                                    color: initial;
+                                    text-align: center;
+                                    text-decoration: none;
+                                }
+
+                                a:hover,
+                                a:active {
+                                    background-color: none !important;
+                                }
+                            }
+
+                            th:last-child:hover {
+                                background-color: yellow !important;
+
+                            }
+                        }
+                    }
+
+                }
+
+
+                /*CUSTOM-SCROLL-BAR*/
+                /* width */
+                ::-webkit-scrollbar {
+                    width: 10px;
+                }
+
+                /* Track */
+                ::-webkit-scrollbar-track {
+                    box-shadow: inset 0 0 5px rgb(11, 26, 34);
+                    border-radius: 5px;
+                }
+
+                /* Handle */
+                ::-webkit-scrollbar-thumb {
+                    background: wheat;
+                    border-radius: 5px;
+                }
+
+                /* Handle on hover */
+                ::-webkit-scrollbar-thumb:hover {
+                    background: #f1cfcf;
+                }
+
+                /* done */
+            }
+
+            .foot-middle {
+                background-color: blue;
+                height: 100px;
+                width: auto;
+            }
+
+
         }
 
         #avt {
-            color: yellow;
+            /* color: yellow; */
+            color: orange;
             display: flex;
             justify-content: center;
             flex-direction: column;
@@ -49,6 +272,7 @@
 </head>
 
 <body id="body-config">
+
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container nav-config">
             <a class="navbar-brand" href="@Url.Action(" Index", "Home" )">
@@ -100,42 +324,521 @@
             <div class="half-left" style="background-color: #aaaa00; height: auto; width: 37.5%;"></div>
             <div class="half-right" style="background-color: #aa8800; height: auto; width: 63.5%;"></div>
         </div> -->
-        <div class="center-middle" style="background-color: white; height: 700px; width:auto;
-                        display: flex; flex-direction: row;">
+        <div class="center-middle">
             <!-- position: sticky; -->
-            <div class="half-left" style="background-color: yellow; height: auto; width: 37.5%;
-                                    display: flex; justify-content: space-evenly;
-                                    flex-direction: column;
-                                    align-items: center;">
+            <div class="half-left">
 
-                <div class="bank-qr" style="display: flex; align-items: center; flex-direction: column;">
-                    <div class="qr-code" style="height: 350px; width: 350px; background-color: white;">
+                <div class="bank-qr">
+                    <div style="display: flex; flex-direction: column-reverse;justify-content: space-evenly;">
+                        <div class="qr-code">
+                            <img src="../Content/images/qr_code.png" alt="yt_music" style="height: 100%;">
+                        </div>
+                        <div class="qr-info">
+                            <p><b>Viettinbank - 106873586585</b><br>
+                                <b>Nguyen Manh Tan Huynh</b>
+                            </p>
+                        </div>
                     </div>
-                    <div class="qr-info" style="color: red; text-align: center; margin-top: 15px">
-                        <p>Viettinbank - 106873586585
-                            Nguyen Manh Tan Huynh</p>
-                    </div>
+
                 </div>
-                <div class="cmt" style="align-items: center;text-align: center; color: red;">
+                <br><br>
+                <div class="cmt">
                     Please use your bill as a proof for your payment<br>
                     when our shipper arrived.<br>
                     Enjoy your meals!</div>
                 <!-- thay the cho align-items: center => using "white-sapce: pre" -> get text as it is formed -->
             </div>
-            <div class="half-right" style="background-color: orange; height: auto; width: 63.5%;">
-                <div class="right-top" style="background-color: red;height: 10%;">
-
+            <div class="half-right">
+                <div class="right-top">
+                    <div class="right-top-in-div">
+                        <table class="table-config">
+                            <tr>
+                                <th>Index</th>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <div class="right-center" style="background-color: green;height: 70%;"></div>
-                <div class="right-bottom" style="background-color: blue;height: 20%;"></div>
+                <div class="right-center">
+                    <div>
+                        <table class="middle-table">
+                            <tr class="hide-head">
+                                <th>Index</th>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Pizza</td>
+                                <td>2</td>
+                                <td>22$</td>
+                            </tr>
+
+                            <tr style="opacity: 0%; height: 0%;">
+                                <th>Index</th>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="right-bottom">
+                    <div>
+                        <table class="table-config">
+                            <tr>
+                                <th>Total item: 10</th>
+                                <th>Total cost: 200$</th>
+                                <th>
+                                    <a href="Payment.html" target="_blank">Pay</a>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="foot-middle" style="background-color: blue; height: 100px; width:auto"></div>
+        <div class="foot-middle" style="display: none;"></div>
     </div>
-    <div class="footer" style="background-color: burlywood; height: 100px; width:auto"></div>
+    <div class="footer" style="background-color: burlywood; height: 100px; width:auto; display: none;"></div>
 
 
     <!-- Done Middle Part -->
+
+    <!-- Footer -->
+    <footer class="ftco-footer ftco-section img">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">About Us</h2>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
+                            there live the blind texts.</p>
+                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Recent Blog</h2>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4 ml-md-4">
+                        <h2 class="ftco-heading-2">Services</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">Cooked</a></li>
+                            <li><a href="#" class="py-2 d-block">Deliver</a></li>
+                            <li><a href="#" class="py-2 d-block">Quality Foods</a></li>
+                            <li><a href="#" class="py-2 d-block">Mixed</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Have a Questions?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain
+                                        View, San Francisco, California, USA</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929
+                                            210</span></a></li>
+                                <li><a href="#"><span class="icon icon-envelope"></span><span
+                                            class="text">info@yourdomain.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
@@ -161,6 +864,26 @@
     <script src="../Content/js/scrollax.min.js"></script>
     <script src="../Content/js/main.js"></script>
     <script src="handleError.js"></script>
+    <script>
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 200) { // Điều kiện cuộn xuống
+                if ($('.navbar-collapse').hasClass('show')) {
+                    $('.navbar-collapse').removeClass('show'); // Đóng navbar mà không thay đổi giao diện
+                }
+            }
+        });
+    </script>
+    <script>
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.ftco-navbar-light');
+            if (window.scrollY > 50) { // Thay đổi giá trị 50 tùy theo nhu cầu
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+    </script>
 </body>
 
 </html>

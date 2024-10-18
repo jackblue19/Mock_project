@@ -1,0 +1,83 @@
+#body-config {
+    background-image: url("../images/bg_3.jpg");
+}
+
+.form-config {
+    background-color: black;
+    width: 500px;
+    height: 620px;
+    opacity: 80%;
+
+    .form-top {
+        width: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 40px;
+    }
+
+    .form-bot {
+        width: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -20px;
+
+        .inner-form {
+            text-align: center;
+
+            h3,
+            i {
+                color: orange;
+            }
+
+            #signin {
+                input {
+                    justify-content: left;
+                    text-align: left;
+                }
+
+                .n-btn {
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
+
+div {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+#nav-config {
+    width: 500px !important;
+}
+
+@media only screen and (max-width: 767px) {
+    .other-choice {
+        opacity: 200;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .form-config {
+        margin: auto;
+        background-color: black;
+        width: 500px;
+        height: 620px;
+        opacity: 80%;
+    }
+
+    .other-choice {
+        opacity: 200;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+}

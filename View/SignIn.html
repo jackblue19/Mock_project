@@ -23,58 +23,9 @@
     <link rel="stylesheet" href="../Content/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/32417c83fe.js" crossorigin="anonymous"></script>
-    <style>
-        #body-config {
-            background-image: url("../Content/images/bg_3.jpg");
-        }
-
-        .form-config {
-            background-color: black;
-            width: 500px;
-            height: 620px;
-            opacity: 80%;
-        }
-
-        div {
-            display: block;
-            unicode-bidi: isolate;
-        }
-
-        #nav-config {
-            width: 500px !important;
-        }
-
-        @media only screen and (max-width: 767px) {
-            .other-choice {
-                opacity: 200;
-                text-align: left;
-                display: flex;
-                justify-content: space-between;
-            }
-        }
-
-        @media only screen and (min-width: 768px) {
-            .form-config {
-                margin: auto;
-                background-color: black;
-                width: 500px;
-                height: 620px;
-                opacity: 80%;
-            }
-
-            .other-choice {
-                opacity: 200;
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-        }
-    </style>
+    <link rel="stylesheet" href="../Content/css/signin.css">
 </head>
-
-<body id="body-config">
+<div>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="@Url.Action(" Index", "Home" )">
@@ -116,35 +67,35 @@
             </div>
         </div>
     </nav>
-    <!-- END nav -->
+</div>
+
+<body id="body-config">
+
+    <!-- END nav
 
     <!-- Middle Part -->
     <div class="form-config">
-        <div class="media d-block services" style="width: auto;
-        display: flex; align-items: center; justify-content: center; margin-top: 10px;
-        padding-top: 40px;">
+        <div class="media d-block services form-top">
             <div class="icon d-flex justify-content-center align-items-center mb-5"><span
                     class="flaticon-pizza-1"></span></div>
         </div>
-        <div style="width: auto;display: flex; align-items: center; justify-content: center;margin-top: -20px;">
-            <div class="col-md-5 ftco-animate fadeInUp ftco-animated" style="text-align: center;">
-                <h3 class="mb-8" style="color: orange;">Welcome to Zesty Bites™!</h3>
+        <div class="form-bot">
+            <div class="col-md-5 ftco-animate fadeInUp ftco-animated inner-form">
+                <h3 class="mb-8">Welcome to Zesty Bites™!</h3>
                 <form action="#" class="appointment-form" autocomplete="off" id="signin">
-
                     <div class="d-md-flex">
                         <div class="form-group">
-                            <i class="fa fa-user icon" style="color: orange;"></i>
-                            <input style="justify-content: left; text-align: left;" type="text" class="form-control"
-                                placeholder="Enter email or username" id="usn" required>
+                            <i class="fa fa-user icon"></i>
+                            <input type="text" class="form-control" placeholder="Enter email or username" id="usn"
+                                required>
                         </div>
                     </div>
 
                     <div class="d-md-flex">
                         <div class="form-group">
-                            <i class="fa fa-key icon" style="color: orange;"></i>
-                            <input style="justify-content: left; text-align: left;" type="password" class="form-control"
-                                placeholder="Password" id="psw" required oninput="InvalidPsw(this)"
-                                oninvalid="InvalidPsw(this)">
+                            <i class="fa fa-key icon"></i>
+                            <input type="password" class="form-control" placeholder="Password" id="psw" required
+                                oninput="InvalidPsw(this)" oninvalid="InvalidPsw(this)">
                         </div>
 
                     </div>
@@ -154,7 +105,7 @@
                         <div id="fgpsw"><span class="psw">Forgot <a href="#">password?</a></span></div>
                     </div><br>
 
-                    <div class="form-group" style="text-align: center;">
+                    <div class="form-group n-btn">
                         <input type="submit" value="Log In" class="btn btn-primary py-3 px-4">
                     </div>
 

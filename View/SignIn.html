@@ -25,7 +25,7 @@
     <script src="https://kit.fontawesome.com/32417c83fe.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../Content/css/signin.css">
 </head>
-<div>
+<div style="display: none;">
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="@Url.Action(" Index", "Home" )">
@@ -68,72 +68,72 @@
         </div>
     </nav>
 </div>
+<!-- END nav -->
+<!-- Middle Part -->
 
 <body id="body-config">
-
-    <!-- END nav
-
-    <!-- Middle Part -->
-    <div class="form-config">
-        <div class="media d-block services form-top">
-            <div class="icon d-flex justify-content-center align-items-center mb-5"><span
-                    class="flaticon-pizza-1"></span></div>
-        </div>
-        <div class="form-bot">
-            <div class="col-md-5 ftco-animate fadeInUp ftco-animated inner-form">
-                <h3 class="mb-8">Welcome to Zesty Bites™!</h3>
-                <form action="#" class="appointment-form" autocomplete="off" id="signin">
-                    <div class="d-md-flex">
-                        <div class="form-group">
-                            <i class="fa fa-user icon"></i>
-                            <input type="text" class="form-control" placeholder="Enter email or username" id="usn"
-                                required>
-                        </div>
-                    </div>
-
-                    <div class="d-md-flex">
-                        <div class="form-group">
-                            <i class="fa fa-key icon"></i>
-                            <input type="password" class="form-control" placeholder="Password" id="psw" required
-                                oninput="InvalidPsw(this)" oninvalid="InvalidPsw(this)">
-                        </div>
-
-                    </div>
-                    <div class="other-choice">
-                        <div id="rmbm"><input type="checkbox" name="remember"> Remember me</div>
-
-                        <div id="fgpsw"><span class="psw">Forgot <a href="#">password?</a></span></div>
-                    </div><br>
-
-                    <div class="form-group n-btn">
-                        <input type="submit" value="Log In" class="btn btn-primary py-3 px-4">
-                    </div>
-
-                    <div class="other-choice">
-                        <div id="fgpsw"><span class="psw"><a href="#">Create an account!</a></span></div>
-                    </div>
-
-                </form>
+    <div class="left-body">
+        <div class="form-config">
+            <div class="media d-block services form-top">
+                <div class="icon d-flex justify-content-center align-items-center mb-5"><span
+                        class="flaticon-pizza-1"></span></div>
             </div>
-        </div>
-        <!-- Footer -->
-        <footer class="footer color-main under-footer" style="margin-bottom: norem;">
-            <div class="row">
-                <div class="col-md-12 text-center">
+            <div class="form-bot">
+                <div class="col-md-5 ftco-animate fadeInUp ftco-animated inner-form">
+                    <h3 class="mb-8">Welcome to Zesty Bites™!</h3>
+                    <form action="#" class="appointment-form" autocomplete="off" id="signin">
+                        <div class="d-md-flex">
+                            <div class="form-group">
+                                <i class="fa fa-user icon"></i>
+                                <input type="text" class="form-control" placeholder="Enter email or username" id="usn"
+                                    required>
+                            </div>
+                        </div>
 
-                    <p>
-                        Copyright &copy;
-                        <script>document.write(new Date().getFullYear());</script> All rights reserved.
-                    </p>
+                        <div class="d-md-flex">
+                            <div class="form-group">
+                                <i class="fa fa-key icon"></i>
+                                <input type="password" class="form-control" placeholder="Password" id="psw" required
+                                    oninput="InvalidPsw(this)" oninvalid="InvalidPsw(this)">
+                            </div>
+
+                        </div>
+                        <div class="other-choice">
+                            <div id="rmbm"><input type="checkbox" name="remember"> Remember me</div>
+
+                            <div id="fgpsw"><span class="psw">Forgot <a href="#">password?</a></span></div>
+                        </div><br>
+
+                        <div class="form-group n-btn">
+                            <input type="submit" value="Log In" class="btn btn-primary py-3 px-4">
+                        </div>
+
+                        <div class="other-choice">
+                            <div id="fgpsw"><span class="psw"><a href="#">Create an account!</a></span></div>
+                        </div>
+
+                    </form>
                 </div>
             </div>
-        </footer>
+
+            <!-- Footer -->
+            <!-- <footer class="footer color-main under-footer" style="margin-bottom: norem;">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+    
+                        <p>
+                            Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script> All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </footer> -->
+        </div>
     </div>
-
+    <div class="right-body">
+        Welcome to<br> Zesty Bites™~
+    </div>
     <!-- Done Middle Part -->
-
-
-
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
             <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />

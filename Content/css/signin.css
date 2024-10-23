@@ -1,18 +1,18 @@
 #body-config {
-    width: 100%;
+    /* width: 100%; */
     background-image: url("../images/bg_3.jpg");
-    display: flex;
-    .left-body{
+    /* display: flex; */
+    /* .left-body{
         width: 35%;
-    }
-    .right-body{
+    } */
+    /* .right-body{
         width: 65%;
         color: yellow;
         display: flex;
         align-items: center;
         justify-content: center;    
-        font-size: 64px;    
-    }
+        font-size: 46px;    
+    } */
 }
 
 .form-config {

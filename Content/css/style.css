@@ -12885,6 +12885,7 @@ textarea.form-control {
         /* width */
         ::-webkit-scrollbar {
           width: 10px;
+          display: none;
       }
 
       /* Track */
@@ -12895,7 +12896,7 @@ textarea.form-control {
 
       /* Handle */
       ::-webkit-scrollbar-thumb {
-          background: wheat;
+          background: #ffd200;
           border-radius: 5px;
       }
 

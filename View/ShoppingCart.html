@@ -38,21 +38,8 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/32417c83fe.js" crossorigin="anonymous"></script>
     <!-- <link rel="stylesheet" href="../Content/css/payment.css"> -->
-    <style>
-        .heading-text {
-            height: 108px;
-            color: orange;
-            font-size: 68px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 108;
-        }
-
-        .pic {}
-    </style>
+    <link rel="stylesheet" href="../Content/css/ShoppingCart.css">
 </head>
-
 
 <body id="body-config">
     <!-- BEGIN nav -->
@@ -119,8 +106,7 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
             </div>
             <div class="slider">
                 <!-- Menu choice -->
-                <section class="home-slider owl-carousel img"
-                    style="background-image: url('../Content/images/burger-1.jpg');">
+                <section class="home-slider owl-carousel img">
                     <div class="slider-item">
                         <div class="overlay"></div>
                         <div class="container">
@@ -136,7 +122,7 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                                     </p>
                                 </div>
                                 <div class="col-md-6 ftco-animate">
-                                    <img src="../Content/images/bg_1.png" class="img-fluid" alt="">
+                                    <img class="img-fluid food1" alt="">
                                 </div>
 
                             </div>
@@ -158,18 +144,17 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                                     </p>
                                 </div>
                                 <div class="col-md-6 ftco-animate">
-                                    <img src="../Content/images/bg_2.png" class="img-fluid" alt="">
+                                    <img class="img-fluid food2" alt="">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="slider-item" style="background-image: url('../Content/images/bg_3.jpg');">
+                    <div class="slider-item food3">
                         <div class="overlay"></div>
                         <div class="container">
                             <div class="row slider-text justify-content-center align-items-center"
                                 data-scrollax-parent="true">
-
                                 <div class="col-md-7 col-sm-12 text-center ftco-animate">
                                     <span class="subheading">Welcome</span>
                                     <h1 class="mb-4">We cooked your desired Pizza Recipe</h1>
@@ -179,27 +164,16 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                                             class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3">View Menu</a>
                                     </p>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
         </div>
-        <div class="middle-bottom" style="overflow: auto;">
-            <div class="table-top" style="color: orange;
-                                    background-color: rgb(10, 75, 75);
-                                    opacity: 80%;
-                                    font-size: 30px;
-                                    height: 100%;
-                                    display: flex;
-                                    flex-direction: row;
-                                    text-align: center;
-                                    align-items: stretch;
-                                    justify-content: center;
-                                    width: 100%;">
-                <table class="table-cart" style="width: 100%; height: auto;">
-                    <thead style="background-color: black;">
+        <div class="middle-bottom">
+            <div class="table-top">
+                <table class="table-cart">
+                    <thead>
                         <tr>
                             <th>Index</th>
                             <th>Items</th>
@@ -208,26 +182,20 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                             <th>Amount</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-body">
                         <!-- <tbody style="background-image: url('../Content/images/bg_3.jpg');"> -->
                         <tr>
                             <td id="index">1</td>
                             <td id="itemPic">
                                 <div class="picDiv">
-                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic" style="width: auto;
-                                                        height: auto;
-                                                        border-radius: 50%;
-                                                        width: 180px;
-                                                        height: 180px;">
+                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic">
                                 </div>
                                 <div class="itemName">Pizza</div>
                             </td>
                             <td id="itemPrice">22$</td>
                             <td>
                                 <!-- <button class="desc-item">-</button> -->
-                                <div class="styleQuantity" style="display: flex;
-                                                                justify-content: space-evenly;
-                                                                align-content: center;  ">
+                                <div class="styleQuantity">
                                     <div class="dropQuantity"><i class="fa-solid fa-minus"></i></div>
                                     <p class="item-quantity">2</p>
                                     <div class="addQuantity"><i class="fa-solid fa-plus"></i></div>
@@ -240,20 +208,14 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                             <td id="index">1</td>
                             <td id="itemPic">
                                 <div class="picDiv">
-                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic" style="width: auto;
-                                                        height: auto;
-                                                        border-radius: 50%;
-                                                        width: 180px;
-                                                        height: 180px;">
+                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic">
                                 </div>
                                 <div class="itemName">Pizza</div>
                             </td>
                             <td id="itemPrice">22$</td>
                             <td>
                                 <!-- <button class="desc-item">-</button> -->
-                                <div class="styleQuantity" style="display: flex;
-                                                                justify-content: space-evenly;
-                                                                align-content: center;  ">
+                                <div class="styleQuantity">
                                     <div class="dropQuantity"><i class="fa-solid fa-minus"></i></div>
                                     <p class="item-quantity">2</p>
                                     <div class="addQuantity"><i class="fa-solid fa-plus"></i></div>
@@ -266,20 +228,14 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                             <td id="index">1</td>
                             <td id="itemPic">
                                 <div class="picDiv">
-                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic" style="width: auto;
-                                                        height: auto;
-                                                        border-radius: 50%;
-                                                        width: 180px;
-                                                        height: 180px;">
+                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic">
                                 </div>
                                 <div class="itemName">Pizza</div>
                             </td>
                             <td id="itemPrice">22$</td>
                             <td>
                                 <!-- <button class="desc-item">-</button> -->
-                                <div class="styleQuantity" style="display: flex;
-                                                                justify-content: space-evenly;
-                                                                align-content: center;  ">
+                                <div class="styleQuantity">
                                     <div class="dropQuantity"><i class="fa-solid fa-minus"></i></div>
                                     <p class="item-quantity">2</p>
                                     <div class="addQuantity"><i class="fa-solid fa-plus"></i></div>
@@ -292,20 +248,14 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                             <td id="index">1</td>
                             <td id="itemPic">
                                 <div class="picDiv">
-                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic" style="width: auto;
-                                                        height: auto;
-                                                        border-radius: 50%;
-                                                        width: 180px;
-                                                        height: 180px;">
+                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic">
                                 </div>
                                 <div class="itemName">Pizza</div>
                             </td>
                             <td id="itemPrice">22$</td>
                             <td>
                                 <!-- <button class="desc-item">-</button> -->
-                                <div class="styleQuantity" style="display: flex;
-                                                                justify-content: space-evenly;
-                                                                align-content: center;  ">
+                                <div class="styleQuantity">
                                     <div class="dropQuantity"><i class="fa-solid fa-minus"></i></div>
                                     <p class="item-quantity">2</p>
                                     <div class="addQuantity"><i class="fa-solid fa-plus"></i></div>
@@ -318,20 +268,14 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                             <td id="index">1</td>
                             <td id="itemPic">
                                 <div class="picDiv">
-                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic" style="width: auto;
-                                                        height: auto;
-                                                        border-radius: 50%;
-                                                        width: 180px;
-                                                        height: 180px;">
+                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic">
                                 </div>
                                 <div class="itemName">Pizza</div>
                             </td>
                             <td id="itemPrice">22$</td>
                             <td>
                                 <!-- <button class="desc-item">-</button> -->
-                                <div class="styleQuantity" style="display: flex;
-                                                                justify-content: space-evenly;
-                                                                align-content: center;  ">
+                                <div class="styleQuantity">
                                     <div class="dropQuantity"><i class="fa-solid fa-minus"></i></div>
                                     <p class="item-quantity">2</p>
                                     <div class="addQuantity"><i class="fa-solid fa-plus"></i></div>
@@ -344,20 +288,14 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                             <td id="index">1</td>
                             <td id="itemPic">
                                 <div class="picDiv">
-                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic" style="width: auto;
-                                                        height: auto;
-                                                        border-radius: 50%;
-                                                        width: 180px;
-                                                        height: 180px;">
+                                    <img src="../Content/images/burger-1.jpg" alt="burger-1" class="pic">
                                 </div>
                                 <div class="itemName">Pizza</div>
                             </td>
                             <td id="itemPrice">22$</td>
                             <td>
                                 <!-- <button class="desc-item">-</button> -->
-                                <div class="styleQuantity" style="display: flex;
-                                                                justify-content: space-evenly;
-                                                                align-content: center;  ">
+                                <div class="styleQuantity">
                                     <div class="dropQuantity"><i class="fa-solid fa-minus"></i></div>
                                     <p class="item-quantity">2</p>
                                     <div class="addQuantity"><i class="fa-solid fa-plus"></i></div>
@@ -369,42 +307,29 @@ https://codepen.io/hbadri-dev/pen/KKBqxvQ
                     </tbody>
                 </table>
             </div>
-            <div class="table-bot" style="color: orange;
-                                    background-color: rgb(10, 75, 75);
-                                    opacity: 80%;
-                                    font-size: 30px;
-                                    height: 100%;
-                                    display: flex;
-                                    flex-direction: row;
-                                    text-align: center;
-                                    align-items: stretch;
-                                    justify-content: center;
-                                    width: 100%;">
-                <table class="calculate" style="width: 100%; height: auto;">
-                    <thead style="  background-color: black;
-                                    color: white;">
-                        <tr>
-                            <th>
-                                <div id="itemNumbers">
-                                    Total items: 6
-                                </div>
-                            </th>
-                            <th>
-                                <div id="totalMoney">
-                                    Total Amount: 100$
-                                </div>
-                            </th>
-                            <th class="confirmPay" 
-                            style="background-color: orange;
-                                   color: black;">
-                                <div>
-                                    Payment
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+        </div>
+        <div class="under-table">
+            <table class="calculate">
+                <thead>
+                    <tr>
+                        <th>
+                            <div id="itemNumbers">
+                                Total items: 6
+                            </div>
+                        </th>
+                        <th>
+                            <div id="totalMoney">
+                                Total Amount: 100$
+                            </div>
+                        </th>
+                        <th class="confirmPay">
+                            <div>
+                                Payment
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pizza - Free Bootstrap 4 Template by Colorlib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../Content/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../Content/css/animate.css">
+    <link rel="stylesheet" href="../Content/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../Content/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../Content/css/magnific-popup.css">
+    <link rel="stylesheet" href="../Content/css/aos.css">
+    <link rel="stylesheet" href="../Content/css/ionicons.min.css">
+    <link rel="stylesheet" href="../Content/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../Content/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="../Content/css/flaticon.css">
+    <link rel="stylesheet" href="../Content/css/icomoon.css">
+    <link rel="stylesheet" href="../Content/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Content/css/supply.css">
+    <link rel="stylesheet" href="../Content/css/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+
+<style>
+      .body-config{
+        background-image: url("../Content/images/bg_3.jpg");
+    }
+    .bg-dark {
+    background-color: black;
+    }
+   .list-group {
+    width: 80%; /* Đổi chiều rộng thành 80% */
+    height: 800px; /* Chiều cao vẫn giữ nguyên */
+    margin: 0 auto; /* Căn giữa thẻ */
+   }
+    .form-config {
+    background-color: rgba(22, 19, 19, 0.7);
+    width: 80%; /* Đổi chiều rộng thành 80% */
+    height: 750px; /* Chiều cao vẫn giữ nguyên */
+    margin: 0 auto; /* Căn giữa thẻ */
+    }
+    .text-primary {
+    color: #ecedee; /* Màu xanh dương */   
+    }
+    .form-label {
+    color: #ffffff; /* Màu cam cho các nhãn */
+    }
+
+    .text-light {
+    color: #6c757d; /* Màu xám cho văn bản thông báo */
+    }
+
+    .list-group-flush .list-group-item {
+    border-top: 0;
+    background-color: rgba(22, 19, 19, 0.7); /* Màu nền đen mờ cho tất cả các mục */
+    color: #fff; /* Màu chữ trắng cho tất cả các mục */
+    font-size: 14px; /* Tăng kích thước chữ cho tất cả các mục */
+    }
+    .list-group-flush {
+    margin-top: 20px; /* Điều chỉnh giá trị để di chuyển danh sách xuống */
+    }
+    .form-config {
+    margin-top: 50px; /* Điều chỉnh giá trị để tạo khoảng cách từ thanh taskbar */
+}
+.gender-options {
+    display: flex; /* Sắp xếp theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-top: 10px; /* Khoảng cách giữa label Gender và các nút radio */
+}
+
+.gender-option {
+    margin-right: 100px; /* Khoảng cách giữa các tùy chọn Nam và Nữ */
+}
+
+.gender-option:last-child {
+    margin-right: 0; /* Không thêm khoảng cách bên phải cho tùy chọn cuối */
+}
+
+.gender-option label {
+    color: rgb(255, 255, 255); /* Đặt màu chữ cho nhãn thành màu xanh */
+}
+.form-controler {
+    display: block; /* Đảm bảo input là khối */
+    width: 100%; /* Đặt chiều rộng cho input */
+    height: 80%;
+    margin-top: 5px; /* Khoảng cách giữa label và input */
+    padding: 10px 0; /* Thêm padding trên và dưới */
+    border: none; /* Loại bỏ toàn bộ viền */
+    border-bottom: 2px solid white; /* Đường kẻ trắng phía dưới */
+    background-color: transparent; /* Đảm bảo nền trong suốt */
+    color: rgb(255, 255, 255); /* Màu chữ */
+    outline: none; /* Loại bỏ viền khi focus */
+}
+
+.form-label {
+    color:rgb(255, 255, 255); /* Thay đổi màu chữ thành màu xanh */
+    /* Bạn có thể thay đổi màu khác tùy thích, ví dụ: */
+    /* color: #007BFF; /* Màu xanh dương */
+    /* color: red; /* Màu đỏ */
+}
+@media screen and (max-width: 430px) {
+    .col-md-3 pt-0{
+        height: 330px;
+    }
+}
+
+    
+
+</style>
+</head>
+<body class="body-config">
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="flaticon-pizza-1 mr-1"></span>Zesty Bites<br><small>Delicious</small>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse nav-config" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
+                    <li class="nav-item"><a href="supply.html" class="nav-link">Supply</a></li>
+                    <li class="nav-item"><a href="reservation.html" class="nav-link">Reservation</a></li>
+                    <li class="nav-item"><a href="feedback.html" class="nav-link">FeedBack</a></li>
+                    <li class="nav-item"><a href="About.html" class="nav-link">About</a></li>
+            </div>
+                    <!-- Dropdown for profile icon without the dropdown arrow -->
+            <div class="dropdown ms-auto">
+            <i class="bi bi-person-circle icon-light" data-bs-toggle="dropdown" aria-expanded="false"></i>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item custom-link" href="signin.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            </ul>
+            </div>
+        </div>
+    </nav>
+      <div class="form-config">
+        <div class="row no-gutters row-bordered row-border-light">
+            <div class="col-md-3 pt-0">
+                <div class="list-group list-group-flush account-settings-links">
+                    <label class="btn btn-outline" for="file-input">
+                        <img id="icon-placeholder" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;" src="../Content/images/149071.png" alt="Default Icon"> <!-- Thay thế bằng icon mặc định -->
+                        <input type="file" class="account-settings-fileinput" style="display:none   " id="file-input">
+                        <span style="margin-top: 5px; color: #ffffff; display: flex; flex-direction: column; align-items: center;">Select photo</span> <!-- Thêm chữ "Chọn ảnh" -->
+                    </label>
+                    <a class="list-group-item list-group-item-action active" data-toggle="list"
+                        href="#account-general">General</a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list"
+                        href="#account-change-password">Change password</a>
+                </div>
+            </div>
+            <div class="col-md-9 text-primary">
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="account-general">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-controler" >
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">PhoneNumber</label>
+                                <input type="text" class="form-controler">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Adress</label>
+                                <input type="text" class="form-controler">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <div class="gender-options">
+                                    <div class="gender-option">
+                                        <input type="radio" id="male" name="gender" value="male">
+                                        <label for="male">Male</label>
+                                    </div>
+                                    <div class="gender-option">
+                                        <input type="radio" id="female" name="gender" value="female">
+                                        <label for="female">Female</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">    
+                                <label class="form-label">E-mail</label>
+                                <input type="text" class="form-controler">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="account-change-password">
+                        <div class="card-body pb-2">
+                            <div class="form-group">
+                                <label class="form-label">Current password</label>
+                                <input type="password" class="form-controler">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New password</label>
+                                <input type="password" class="form-controler">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Repeat new password</label>
+                                <input type="password" class="form-controler">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right mt-3">
+                        <button type="button" class="btn btn-primary">Save changes</button>&nbsp;
+                        <button type="button" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div> 
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
+    <script>
+        // Thêm sự kiện khi chọn file
+        document.getElementById('file-input').addEventListener('change', function(event) {
+            const file = event.target.files[0]; // Lấy file được chọn
+            if (file) {
+                const reader = new FileReader(); // Tạo đối tượng FileReader
+                reader.onload = function(e) {
+                    const iconPlaceholder = document.getElementById('icon-placeholder');
+    
+                    // Đặt ảnh tải lên làm src của thẻ img
+                    iconPlaceholder.src = e.target.result; // Đặt ảnh tải lên vào icon
+    
+                    // (Tuỳ chọn) Nếu bạn muốn thay đổi kích thước hoặc các thuộc tính khác của ảnh
+                    iconPlaceholder.style.width = '150px'; // Kích thước của ảnh
+                    iconPlaceholder.style.height = '150px'; // Kích thước của ảnh       
+                }
+                reader.readAsDataURL(file); // Đọc file ảnh
+            }
+        });
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    <script src="../Content/js/jquery.min.js"></script>
+    <script src="../Content/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="../Content/js/popper.min.js"></script>
+    <script src="../Content/js/bootstrap.min.js"></script>
+    <script src="../Content/js/jquery.easing.1.3.js"></script>
+    <script src="../Content/js/jquery.waypoints.min.js"></script>
+    <script src="../Content/js/jquery.stellar.min.js"></script>
+    <script src="../Content/js/owl.carousel.min.js"></script>
+    <script src="../Content/js/jquery.magnific-popup.min.js"></script>
+    <script src="../Content/js/aos.js"></script>
+    <script src="../Content/js/jquery.animateNumber.min.js"></script>
+    <script src="../Content/js/bootstrap-datepicker.js"></script>
+    <script src="../Content/js/jquery.timepicker.min.js"></script>
+    <script src="../Content/js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="../Content/js/google-map.js"></script>
+    <script src="../Content/js/main.js"></script>
+    <script src="../Content/js/supply.js"></script>
+    
+</body>

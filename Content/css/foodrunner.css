@@ -1,0 +1,315 @@
+
+  /* Container chứa sidebar và main-content */
+  .container-content {
+      display: flex; 
+      height: calc(100vh - 60px);
+  }
+  
+  /* Sidebar cố định chiều rộng */
+  .sidebar {
+      width: 250px; 
+      background-color: #233331; 
+      color: white;
+      padding: 20px; 
+      box-sizing: border-box; 
+  }
+  
+  /* Main Content chiếm phần còn lại */
+  .main-content {
+      display: flex;
+      align-items: flex-start; 
+      width: 100%;
+      justify-content: flex-start;
+      background-image: url("../images/food-background-with-italian-food-ingredients.jpg") ;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+  }
+  @media only screen and (min-width: 1200px) {
+    .main-content {
+        background-size: 100%; /* Hiển thị toàn bộ hình nền */
+    }
+}
+  
+  /* Điều chỉnh thẻ runner-info */
+  .runner-info {
+      flex: 1; 
+      display: flex; 
+      justify-content: flex-start; 
+      padding: 5px 10px; 
+      box-sizing: border-box; 
+      margin-top: 20px;
+      height: 90%;
+      flex-direction: column;
+  }
+  /*CUSTOM-SCROLL-BAR*/
+          /* width */
+          ::-webkit-scrollbar {
+            width: 10px;
+        }
+  
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px rgb(11, 26, 34);
+            border-radius: 5px;
+        }
+  
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: rgba(225, 240, 56, 0.247);
+            border-radius: 5px;
+        }
+  
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f1cfcf;
+        }
+  
+        /* done */
+  /* Điều chỉnh thẻ table-order */
+  .table-order-container {
+      flex: 1; 
+      margin-left: 20px; 
+      display: flex;
+      flex-direction: column; 
+      align-items: center; 
+      margin-top: 30px;
+      height: 90%;
+    
+  }
+  .runner-header {
+      display: flex; 
+      align-items: center; 
+      justify-content: flex-start; 
+      width: 100%; 
+      margin-bottom: 20px; 
+  }
+  
+  .text-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center; 
+      flex-grow: 1; 
+  }
+  
+  /* Đặt chiều cao cho icon bằng tổng chiều cao của h2 và h3 */
+  .avatar i.fas.fa-user {
+      font-size: 120px;
+      margin-right: 80px; 
+      line-height: 1; 
+      color: #000000;
+  
+  }
+  .table-items{
+      width: 100%; 
+      text-align: center;
+      padding: 10px;
+      height: 70%;
+  
+  }
+  /* Tăng chiều cao h2 và h3 theo cách phù hợp */
+  .text-content h2 {
+      font-size: 50px; 
+      margin: 0;
+      font-weight: bold;
+      color: #000;
+  }
+  
+  .text-content h3 {
+      font-size: 30px; 
+      margin: 0;
+      color: #000000;
+      padding-left: 90px;
+  }
+  /* Đặt line-height cho cả hai thẻ để tổng chiều cao bằng icon */
+  .text-content h2, .text-content h3 {
+      line-height: 1.2;
+  }
+  
+  
+  
+  
+  /* Xóa margin của ul để loại bỏ khoảng cách giữa các mục */
+  .sidebar nav ul {
+      list-style-type: none; 
+      padding-left: 0; 
+      margin: 0; 
+  }
+  nav {
+      background-color: #233331; 
+      padding: 20px; 
+  }
+  
+  nav ul {
+      list-style-type: none; 
+      padding: 0; 
+      margin: 0; 
+  }
+  
+  nav ul li {
+      margin-bottom: 15px; 
+  }
+  
+  nav ul li a {
+      display: flex;
+      align-items: center; 
+      text-decoration: none; 
+      color: #ffffff; 
+      padding: 12px 20px; 
+      border-radius: 20px; 
+      background-color: #344d4f; 
+      transition: background-color 0.3s, transform 0.3s; 
+      border: 2px solid transparent; 
+  }
+  
+  nav ul li a:hover {
+      background-color: #3a4d4f;
+      transform: scale(1.05); 
+      border: 2px solid #ffffff; 
+  }
+  
+  nav ul li a i {
+      margin-right: 10px; 
+  }
+  /* màu cho bảng table */
+  /* Kiểu dáng cho bảng table-order */
+  .table-order-wrapper {
+      max-height: 300px;
+  }
+  
+  .table-order {
+      width: 100%;
+      border-collapse: collapse;
+      
+  }
+  
+  /* Kiểu dáng cho tiêu đề bảng */
+  .table-order thead {
+      background-color: #4d5257; /* Màu nền cho tiêu đề bảng */
+      color: #000000; 
+      position: sticky;
+      top: 0; 
+      z-index: 1; 
+  }
+  
+  .table-body-scroll {
+      height: 200px;
+      overflow-y: auto; 
+  }
+  .table-order td {
+      color: #ffffff;
+      padding: 6px 90px; 
+      text-align: left;
+  }
+  
+  /* Kiểu dáng cho các ô tiêu đề */
+  .table-order th {
+      padding:10px 100px; 
+      text-align: left; 
+  
+  }
+  /* Căn giữa hoặc phải cho cột Quantity */
+  .table-order td:nth-child(2), .table-order th:nth-child(2) {
+      text-align: center; /* Căn giữa cho cột Quantity */
+  }
+  
+  /* Đặt chiều rộng cho cột */
+  .table-order th:nth-child(1), .table-order td:nth-child(1) {
+      width: 70%; /* Cột 'Item' */
+  }
+  
+  .table-order th:nth-child(2), .table-order td:nth-child(2) {
+      width: 60%; /* Cột 'Quantity' */
+  }
+  
+  
+  /* Kiểu dáng cho các hàng trong bảng */
+  .table-order tbody tr {
+      background-color: #6b6969; 
+      border-bottom: 1px solid #000000; 
+      display: table; 
+      width: 100%;
+  }
+  
+  .table-order td.no-cell {
+      width: 70px; 
+      text-align: center;
+  }
+  
+  .table-order .circle-number {
+      width: 40px; 
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid #000; 
+      display: flex; 
+      justify-content: center;
+      align-items: center; 
+      background-color: #d3d3d3; 
+      font-weight: bold; 
+      font-size: 18px; 
+      color: #333; 
+      margin: 0 auto; 
+  }
+  
+  
+  
+  /* Đổi màu hàng khi hover */
+  .table-order tbody tr:hover {
+      background-color: #929094; 
+  }
+  
+  /* Kiểu dáng cho trạng thái trong bảng */
+  .status {
+      padding: 5px 10px; 
+      border-radius: 5px; 
+      font-weight: bold; 
+  }
+  
+  /* Màu cho trạng thái Unserved */
+  .status.unserved {
+      background-color: #dc3545; 
+      color: white; 
+  }
+  .status.unise {
+      background-color: #204f9a; 
+      color: white; 
+  }
+  
+  /* Màu cho trạng thái Serving */
+  .status.serving {
+      background-color: #28a745; 
+      color: white; 
+  }
+  .table-heading{
+      color:#000;
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+  }
+  .table-body-scroll-note{
+      max-height: 100px;
+      overflow-y: auto;
+  }
+  .table-order-note {
+      width: 100%;
+      border-collapse: collapse;
+  }
+  
+  .table-order-note td {
+      padding: 12px;
+      border-bottom: 1px solid #000000;
+      font-size: 14px;
+      background-color: #6b6969;
+      color: #ffffff; 
+  }
+  
+  /* Màu xen kẽ cho các dòng */
+  .table-order-note tr:nth-child(even) {
+      background-color: #b45454; 
+  }
+  
+  /* Hiệu ứng khi di chuột qua */
+  .table-order-note tr:hover {
+      background-color: #5e84b3;
+      cursor: pointer;
+  }

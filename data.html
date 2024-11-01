@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Section</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="fetch.js" defer></script>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#data-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.data-item {
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.data-item h3 {
+    margin: 0 0 10px;
+    font-size: 1.2em;
+}
+
+.data-item p {
+    margin: 5px 0;
+}
+
+#comment-input-container {
+    margin-top: 20px;
+}
+
+#comment-input {
+    width: 300px;
+    padding: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Comment Section</h1>
+    </header>
+    <main>
+        <div id="data-container"></div>
+        <button id="add-comment-btn">Add Comment</button>
+        <div id="comment-input-container" style="display: none;">
+            <input type="text" id="comment-input" placeholder="Enter your comment">
+            <button id="submit-comment-btn">Submit Comment</button>
+        </div>
+    </main>
+</body>
+</html>

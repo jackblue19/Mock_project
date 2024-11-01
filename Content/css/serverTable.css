@@ -1,0 +1,237 @@
+.tablink {
+    background-color: #555;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 17px;
+    width: 25%;
+}
+
+.tablink:hover {
+    background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+    color: white;
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+
+
+#All {
+    /* background-color: radial-gradient(at 84.67833763063891% 73.31428194669843%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 1) 0%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 0) 100%), radial-gradient(at 68.5352991974912% 74.4127771615289%, hsla(60, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 0) 100%), radial-gradient(at 35.645545474056895% 68.23169543499239%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 1) 0%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 0) 100%), radial-gradient(at 72.52764046268997% 55.50287334909638%, hsla(60, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 0) 100%), radial-gradient(at 24.160196149694602% 54.33588761377517%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 1) 0%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 0) 100%), radial-gradient(at 77.87545377856885% 43.24092809277727%, hsla(60, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 0) 100%), radial-gradient(at 50.469609086189024% 36.766444671566404%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 1) 0%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 0) 100%), radial-gradient(at 90.53729570431427% 36.44788342718257%, hsla(60, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 0) 100%), radial-gradient(at 84.3714920247932% 93.67818630179924%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 1) 0%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 0) 100%), radial-gradient(at 17.99147776369525% 31.26802751631019%, hsla(60, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 0) 100%), radial-gradient(at 18.46347848127927% 75.21229347366925%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 1) 0%, hsla(39.0909090909091, 76.74418604651167%, 83.13725490196077%, 0) 100%); */
+    background-color: yellow;
+}
+
+#Main {
+    background-color: red;
+}
+
+#FruitnSalad {
+    background-color: green;
+}
+
+#DrinknDessert {
+    background-color: blue;
+}
+
+td .styleQuantity {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+}
+
+.tab-config {
+
+    /* height: 370px; */
+    .tabcontent {
+        width: 100%;
+
+        .detailcontent {
+            .menu-content {
+                width: 100%;
+                text-align: center;
+
+                .t-index {
+                    width: 10%;
+                    padding-left: 3px;
+                    padding-right: 3px;
+                }
+
+                .t-name {
+                    width: 45%;
+                }
+
+                .t-update {
+                    width: 45%;
+
+                    .t-less {
+                        border-radius: 8px;
+                        margin-right: 2px;
+                        width: 50%;
+                    }
+
+                    .t-more {
+                        border-radius: 8px;
+                        width: 50%;
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+.bot-middle {
+    .tab-config {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        font-family: Arial;
+        overflow: auto;
+    }
+
+    .detailcontent {
+        .menu-content {
+            tbody {
+                .t-update {
+                    .styleQuantity {
+                        color: black;
+                        display: flex;
+                        flex-direction: row;
+
+                        .t-less {
+                            color: rgb(255, 255, 255);
+                            background-color: red;
+                        }
+
+                        .t-more {
+                            color: rgb(255, 255, 255);
+                            background-color: green;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+.detail-order {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: wheat;
+    color: black;
+
+    .heading-bot {
+        text-align: center;
+        font-size: 30px;
+        color: black;
+    }
+
+    .table-info {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        margin-bottom: 20px;
+
+        .left-info {
+            width: 50%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        .right-info {
+            width: 50%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        .attr-filt {
+            color: yellow;
+            border-radius: 10%;
+            padding-left: 3px;
+            padding-right: 3px;
+            background: black;
+        }
+
+        select {
+            text-align: center;
+            width: 100%;
+            border-radius: 60px;
+        }
+
+    }
+
+    .detail-cover {
+        background-color: wheat;
+        height: 350px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+
+        .detail-info {
+            background-color: black;
+            height: 65%;
+            display: flex;
+            flex-direction: column;
+
+            .detail-head {
+                height: 20%;
+                background-color: red;
+                border-radius: 4px;
+                display: flex;
+                text-align: center;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+
+            .d-index {
+                width: 10%;
+            }
+
+            .d-name {
+                width: 45%;
+                padding: 0;
+                word-break: break-all;
+            }
+
+            .d-origin {
+                width: 10%;
+            }
+
+            .d-status {
+                word-break: break-all;
+                width: 25%;
+                padding: 0;
+            }
+
+            .d-quantity {
+                width: 10%;
+            }
+
+            .detail-body {
+                height: 80%;
+                background-color: blue;
+                border-radius: 4px;
+                overflow: auto;
+                text-align: center;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+
+            .note-info {
+                background-color: white;
+                height: 35%;
+            }
+        }
+    }
+}

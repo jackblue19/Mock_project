@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Zesty Bites</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" rel="stylesheet">
+    <link rel="stylesheet" href="../Content/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../Content/css/animate.css">
+    <link rel="stylesheet" href="../Content/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../Content/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../Content/css/magnific-popup.css">
+    <link rel="stylesheet" href="../Content/css/aos.css">
+    <link rel="stylesheet" href="../Content/css/ionicons.min.css">
+    <link rel="stylesheet" href="../Content/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../Content/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="../Content/css/flaticon.css">
+    <link rel="stylesheet" href="../Content/css/icomoon.css">
+    <link rel="stylesheet" href="../Content/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/32417c83fe.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../Content/css/server.css">
+    <link rel="stylesheet" href="../Content/css/serverTable.css">
+</head>
+
+<body id="body-config">
+    <!-- BEGIN nav -->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container nav-config">
+            <a class="navbar-brand" href="@Url.Action(" Index", "Home" )">
+                <span class="flaticon-pizza-1 mr-1"></span>Zesty Bites<br><small>Delicious</small>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Log out
+            </button>
+        </div>
+    </nav>
+    <!-- END nav -->
+
+    <!-- Middle Part -->
+    <div class="middle">
+        <div class="top-middle">
+            <div class="avt">
+                <img alt="">
+            </div>
+            <div class="avt-name">
+                <p><b>Nguyen Bao<br>Server</b></p>
+            </div>
+        </div>
+        <div class="bot-middle" style="align-items: center;">
+            <div class="heading-txt">
+                <p>Menu</p>
+            </div>
+            <div class="tab-config">
+                <button class="tablink" onclick="openPage('All', this, 'yellow')" id="defaultOpen"
+                    style="color: black;">All</button>
+                <button class="tablink" onclick="openPage('Main', this, 'red')">Main</button>
+                <button class="tablink" onclick="openPage('FruitnSalad', this, 'green')">Light</button>
+                <button class="tablink" onclick="openPage('DrinknDessert', this, 'blue')">Sides</button>
+
+                <div id="All" class="tabcontent" style="color: black;">
+                    <div class="detailcontent">
+                        <table class="menu-content" style="overflow: auto;">
+                            <thead>
+                                <tr>
+                                    <td class="t-index">Index</td>
+                                    <td class="t-name">Name</td>
+                                    <td class="t-update">Modification</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="detailcontent" style="height: 180px; overflow: auto;">
+                        <table class="menu-content" style="overflow: auto;">
+                            <tbody>
+                                <tr>
+                                    <td class="t-index">
+                                        01
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        02
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        03
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        04
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        05
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        06
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="Main" class="tabcontent">
+                    <div class="detailcontent">
+                        <table class="menu-content" style="overflow: auto;">
+                            <thead>
+                                <tr>
+                                    <td class="t-index">Index</td>
+                                    <td class="t-name">Name</td>
+                                    <td class="t-update">Modification</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="detailcontent" style="height: 180px; overflow: auto;">
+                        <table class="menu-content" style="overflow: auto;">
+                            <tbody>
+                                <tr>
+                                    <td class="t-index">
+                                        01
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        02
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        03
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        04
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        05
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        06
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="FruitnSalad" class="tabcontent">
+                    <div class="detailcontent">
+                        <table class="menu-content" style="overflow: auto;">
+                            <thead>
+                                <tr>
+                                    <td class="t-index">Index</td>
+                                    <td class="t-name">Name</td>
+                                    <td class="t-update">Modification</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="detailcontent" style="height: 180px; overflow: auto;">
+                        <table class="menu-content" style="overflow: auto;">
+                            <tbody>
+                                <tr>
+                                    <td class="t-index">
+                                        01
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        02
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        03
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        04
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        05
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        06
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="DrinknDessert" class="tabcontent">
+                    <div class="detailcontent">
+                        <table class="menu-content" style="overflow: auto;">
+                            <thead>
+                                <tr>
+                                    <td class="t-index">Index</td>
+                                    <td class="t-name">Name</td>
+                                    <td class="t-update">Modification</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="detailcontent" style="height: 180px; overflow: auto;">
+                        <table class="menu-content" style="overflow: auto;">
+                            <tbody>
+                                <tr>
+                                    <td class="t-index">
+                                        01
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        02
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        03
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        04
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        05
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="t-index">
+                                        06
+                                    </td>
+                                    <td class="t-name">
+                                        Pizza dua hot dog thap cam
+                                    </td>
+                                    <td class="t-update">
+                                        <div class="styleQuantity">
+                                            <div class="t-less"><i class="fa-solid fa-minus"></i>
+                                            </div>
+                                            <div class="t-more"><i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="table-label"> -->
+            <!-- <div class="table-config"> -->
+            <!-- <div class="table-content"> -->
+        </div>
+    </div>
+
+    <hr class="div-space">
+
+    <div class="detail-order">
+        <div class="heading-bot">
+            Order
+        </div>
+        <div class="table-info">
+            <div class="left-info">
+                <div class="attr-filt">Table</div>
+                <div class="table-index" style="width: 60%;">
+                    <select name="table-number" id="itable">
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                    </select>
+                </div>
+            </div>
+            <div class="right-info">
+                <div class="attr-filt">Status</div>
+                <div class="table-status" style="width: 60%;">
+                    <select name="table-status" id="tstatus">
+                        <option value="1">Served</option>
+                        <option value="0">Empty</option>
+                        <option value="3">Waiting</option>
+                        <option value="2">Deposit</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="detail-cover">
+            <div class="detail-info">
+                <div class="detail-head">
+                    <table style=" width: 100%;">
+                        <thead style="width: 100%;">
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">
+                                    Status
+                                </td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="detail-body">
+                    <table style="width: 100%; color: white;">
+                        <tbody>
+                            <tr>
+                                <td class="d-index">1</td>
+                                <td class="d-name">
+                                    akldksahdsajlkhdlaskjdhlajksdhasujdhasduasdl
+                                </td>
+                                <td class="d-origin">12</td>
+                                <td class="d-status">Servering</td>
+                                <td class="d-quantity">12</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">
+                                    Status
+                                </td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                            <tr>
+                                <td class="d-index">Index</td>
+                                <td class="d-name">Name</td>
+                                <td class="d-origin">Origin</td>
+                                <td class="d-status">Status</td>
+                                <td class="d-quantity">Quantity</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="note-info">
+                <textarea name="noting" id="note"
+                    style="height: 120px; width: 100%; margin-top: 12px; text-align: center;"
+                    placeholder="Typing notes..."></textarea>
+            </div>
+        </div>
+    </div>
+    <hr class="div-space">
+    <div class="btn-config">
+        <div class="update-btn"><button>Update</button></div>
+        <div class="remove-btn"><button>Delete</button></div>
+        <!-- <div class="view-btn"><button>View</button></div> -->
+        <!-- <div class="add-btn"><button>Create</button></div> -->
+    </div>
+
+    <!-- Done Middle Part -->
+
+    <!-- Footer -->
+    <footer class="ftco-footer ftco-section img">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">About Us</h2>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
+                            there live the blind texts.</p>
+                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Recent Blog</h2>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4 ml-md-4">
+                        <h2 class="ftco-heading-2">Services</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">Cooked</a></li>
+                            <li><a href="#" class="py-2 d-block">Deliver</a></li>
+                            <li><a href="#" class="py-2 d-block">Quality Foods</a></li>
+                            <li><a href="#" class="py-2 d-block">Mixed</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Have a Questions?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain
+                                        View, San Francisco, California, USA</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929
+                                            210</span></a></li>
+                                <li><a href="#"><span class="icon icon-envelope"></span><span
+                                            class="text">info@yourdomain.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
+            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
+            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00" />
+        </svg></div>
+
+    <!-- Script -->
+    <script src="../Content/js/jquery.min.js"></script>
+    <script src="../Content/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="../Content/js/popper.min.js"></script>
+    <script src="../Content/js/bootstrap.min.js"></script>
+    <script src="../Content/js/jquery.easing.1.3.js"></script>
+    <script src="../Content/js/jquery.waypoints.min.js"></script>
+    <script src="../Content/js/jquery.stellar.min.js"></script>
+    <script src="../Content/js/owl.carousel.min.js"></script>
+    <script src="../Content/js/jquery.magnific-popup.min.js"></script>
+    <script src="../Content/js/aos.js"></script>
+    <script src="../Content/js/jquery.animateNumber.min.js"></script>
+    <script src="../Content/js/bootstrap-datepicker.js"></script>
+    <script src="../Content/js/jquery.timepicker.min.js"></script>
+    <script src="../Content/js/scrollax.min.js"></script>
+    <script src="../Content/js/main.js"></script>
+    <script src="handleError.js"></script>
+    <script>
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 200) { // Điều kiện cuộn xuống
+                if ($('.navbar-collapse').hasClass('show')) {
+                    $('.navbar-collapse').removeClass('show'); // Đóng navbar mà không thay đổi giao diện
+                }
+            }
+        });
+    </script>
+    <script>
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.ftco-navbar-light');
+            if (window.scrollY > 50) { // Thay đổi giá trị 50 tùy theo nhu cầu
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+    </script>
+    <script>
+        function openPage(pageName, elmnt, color) {
+            // Hide all elements with class="tabcontent" by default */
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Remove the background color of all tablinks/buttons
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+
+            // Show the specific tab content
+            document.getElementById(pageName).style.display = "block";
+
+            // Add the specific color to the button used to open the tab content
+            elmnt.style.backgroundColor = color;
+        }
+
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,160 @@
+Tạo Model:
+
+Tạo một class C# đại diện cho dữ liệu feedback, ví dụ:
+csharp
+
+Verify
+
+Open In Editor
+Edit
+Copy code
+public class Feedback
+{
+    public int Id { get; set; }
+    public string Message { get; set; }
+    public string Response { get; set; }
+}
+Tạo Controller:
+
+Tạo một controller để xử lý logic và truyền dữ liệu từ cơ sở dữ liệu đến view:
+csharp
+
+Verify
+
+Open In Editor
+Edit
+Copy code
+public class ResponderController : Controller
+{
+    private readonly IFeedbackService _feedbackService;
+
+    public ResponderController(IFeedbackService feedbackService)
+    {
+        _feedbackService = feedbackService;
+    }
+
+    public ActionResult Index(int page = 1)
+    {
+        int pageSize = 9;
+        var feedbacks = _feedbackService.GetFeedbacks(page, pageSize);
+        return View(feedbacks);
+    }
+
+    [HttpPost]
+    public ActionResult SaveResponse(int feedbackId, string response)
+    {
+        _feedbackService.SaveResponse(feedbackId, response);
+        return Json(new { success = true });
+    }
+}
+Tạo View:
+
+Chuyển đổi HTML hiện tại thành một Razor View (.cshtml):
+html
+
+Verify
+
+Open In Editor
+Edit
+Run
+Copy code
+@model IEnumerable<Feedback>
+
+<!-- Các phần HTML khác giữ nguyên -->
+
+<div id="view" class="view">
+    @foreach (var feedback in Model)
+    {
+        <div class="feedback-item" onclick="showPopup(@feedback.Id, '@feedback.Message')">
+            @feedback.Message
+        </div>
+        @if (!string.IsNullOrEmpty(feedback.Response))
+        {
+            <div class="saved-response">
+                Your Response: @feedback.Response
+            </div>
+        }
+    }
+</div>
+Sửa đổi JavaScript:
+
+Thay đổi cách dữ liệu được tải và xử lý:
+javascript
+
+Verify
+
+Open In Editor
+Edit
+Copy code
+function loadPage(pageNumber) {
+    $.ajax({
+        url: '/Responder/Index',
+        data: { page: pageNumber },
+        success: function(result) {
+            $('#view').html(result);
+            updatePagination(pageNumber);
+        }
+    });
+}
+
+function sendResponse() {
+    var feedbackId = $('#currentFeedbackId').val();
+    var responseText = $('#responseText').val();
+    $.ajax({
+        url: '/Responder/SaveResponse',
+        type: 'POST',
+        data: { feedbackId: feedbackId, response: responseText },
+        success: function(result) {
+            if(result.success) {
+                closePopup();
+                loadPage(currentPage);
+            }
+        }
+    });
+}
+Cấu hình Routing:
+
+Đảm bảo routes được cấu hình đúng trong Startup.cs hoặc RouteConfig.cs:
+csharp
+
+Verify
+
+Open In Editor
+Edit
+Copy code
+routes.MapRoute(
+    name: "Default",
+    url: "{controller}/{action}/{id}",
+    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+);
+Tạo Service Layer:
+
+Tạo một service để xử lý logic truy xuất và lưu trữ dữ liệu:
+csharp
+
+Verify
+
+Open In Editor
+Edit
+Copy code
+public interface IFeedbackService
+{
+    IEnumerable<Feedback> GetFeedbacks(int page, int pageSize);
+    void SaveResponse(int feedbackId, string response);
+}
+
+public class FeedbackService : IFeedbackService
+{
+    // Implement các phương thức để truy xuất và lưu trữ dữ liệu
+}
+Cấu hình Dependency Injection:
+
+Trong Startup.cs, cấu hình DI cho IFeedbackService:
+csharp
+
+Verify
+
+Open In Editor
+Edit
+Copy code
+services.AddScoped<IFeedbackService, FeedbackService>();

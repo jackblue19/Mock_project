@@ -1,0 +1,138 @@
+To implement a solution in C# that retrieves data from a database and updates the HTML table, you'll need to set up a backend with ASP.NET Core (or ASP.NET MVC). Below is a guide on how to create a simple API that serves account data, and how to use AJAX to fetch that data on the frontend.
+
+### 1. Setting Up the Backend in C#
+
+#### Step 1: Create an ASP.NET Core Web API Project
+
+1. Open Visual Studio and create a new ASP.NET Core Web Application.
+2. Choose the **API** template.
+
+#### Step 2: Define the Account Model
+
+Create a model for the account. In your project, add a new folder called **Models** and create a class named `Account.cs`.
+
+```csharp
+
+namespace YourNamespace.Models
+{
+    public class Account
+    {
+        public int Account_ID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Name { get; set; }
+        public string Phone_Number { get; set; }
+        public string Address { get; set; }
+        public string Gender { get; set; }
+        public string Email { get; set; }
+        public string Verification_Code { get; set; }
+        public int Role_ID { get; set; }
+    }
+}
+```
+
+#### Step 3: Create the Accounts Controller
+
+Add a new controller named `AccountsController.cs` in the **Controllers** folder.
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using YourNamespace.Models;
+using System.Collections.Generic;
+
+namespace YourNamespace.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccountsController : ControllerBase
+    {
+        // Simulate a database with an in-memory list for demonstration purposes
+        private static List<Account> accounts = new List<Account>
+        {
+            new Account { Account_ID = 1, Username = "user1", Password = "pass123", Name = "John Doe", Phone_Number = "123456789", Address = "123 Main St", Gender = "Male", Email = "john@example.com", Verification_Code = "666161", Role_ID = 2 },
+            new Account { Account_ID = 2, Username = "user2", Password = "pass456", Name = "Jane Smith", Phone_Number = "987654321", Address = "456 Elm St", Gender = "Female", Email = "jane@example.com", Verification_Code = "123456", Role_ID = 1 }
+            // Add more accounts as needed
+        };
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Account>> GetAccounts()
+        {
+            return Ok(accounts);
+        }
+    }
+}
+```
+
+### 2. Frontend Code to Fetch and Display Accounts
+
+Add the following JavaScript code to your existing HTML file, ensuring it fetches data from the API you created.
+
+#### Modify the HTML to Include the Account Table
+
+Make sure the table's body has an `id` so you can target it in JavaScript.
+
+```html
+<tbody id="account-data">
+    <!-- Rows will be populated here -->
+</tbody>
+```
+
+#### Add the JavaScript for AJAX
+
+Insert this script at the end of your HTML document, just before the closing `</body>` tag:
+
+```html
+<script>
+    // Function to fetch and display account data
+    async function fetchAndDisplayAccounts() {
+        try {
+            const response = await fetch('/api/accounts'); // API endpoint
+            const accounts = await response.json();
+
+            // Find the table body
+            const tbody = document.getElementById('account-data');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            // Iterate over each account and add rows to the table
+            accounts.forEach(account => {
+                const row = document.createElement('tr');
+                row.setAttribute('onclick', 'showPopup(this)');
+
+                row.innerHTML = `
+                    <td>${account.Account_ID}</td>
+                    <td>${account.Username}</td>
+                    <td>${account.Password}</td>
+                    <td>${account.Name}</td>
+                    <td>${account.Phone_Number}</td>
+                    <td>${account.Address}</td>
+                    <td>${account.Gender}</td>
+                    <td>${account.Email}</td>
+                    <td>${account.Verification_Code}</td>
+                    <td>${account.Role_ID}</td>
+                `;
+
+                // Append the row to the table body
+                tbody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Error fetching account data:', error);
+        }
+    }
+
+    // Call the function to load data on page load
+    document.addEventListener('DOMContentLoaded', fetchAndDisplayAccounts);
+</script>
+
+
+```
+
+### 3. Run Your Application
+
+1. Make sure you have the appropriate using directives and namespaces in your C# files.
+2. Run the ASP.NET Core application. The API will typically be accessible at `http://localhost:5000/api/accounts`.
+3. Open your HTML page in a browser, and the table should populate automatically with the account data fetched from your C# backend.
+
+### 4. Final Notes
+
+- **Database Integration:** For a real application, you would replace the in-memory list with a database context using Entity Framework Core or another ORM to interact with a database. The `GetAccounts()` method would then retrieve records from the database.
+- **Security Considerations:** Ensure you handle sensitive data, such as passwords, properly. Consider using hashing for password storage and provide appropriate authentication for your API.

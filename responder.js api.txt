@@ -1,0 +1,114 @@
+let currentPage = 1;
+let pageSize = 9;
+let totalPages = 1;
+
+// Hàm load dữ liệu từ server
+function loadPage(pageNumber) {
+    $.ajax({
+        url: '/Feedback/GetFeedbacks',
+        type: 'GET',
+        data: {
+            page: pageNumber,
+            pageSize: pageSize
+        },
+        success: function(result) {
+            currentPage = pageNumber;
+            totalPages = result.totalPages;
+            
+            const contentContainer = document.getElementById('view');
+            contentContainer.innerHTML = '';
+
+            result.data.forEach(item => {
+                const itemContainer = document.createElement('div');
+
+                // Tạo feedback item
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = 'feedback-item';
+                feedbackDiv.setAttribute('data-id', item.id);
+                feedbackDiv.textContent = item.message;
+                feedbackDiv.onclick = function() { 
+                    showPopup(item.id, item.message); 
+                };
+                itemContainer.appendChild(feedbackDiv);
+
+                // Hiển thị response nếu có
+                if (item.response) {
+                    const responseDiv = document.createElement('div');
+                    responseDiv.className = 'saved-response';
+                    responseDiv.textContent = `Response: ${item.response}`;
+                    itemContainer.appendChild(responseDiv);
+                }
+
+                contentContainer.appendChild(itemContainer);
+            });
+
+            updatePagination();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading feedbacks:', error);
+        }
+    });
+}
+
+function updatePagination() {
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = 'page-item' + (i === currentPage ? ' active' : '');
+        li.innerHTML = `<a class="page-link" href="#" onclick="loadPage(${i})">${i}</a>`;
+        paginationContainer.appendChild(li);
+    }
+}
+
+function showPopup(feedbackId, feedbackMessage) {
+    document.getElementById('feedbackMessage').innerText = feedbackMessage;
+    document.getElementById('feedbackMessage').setAttribute('data-id', feedbackId);
+    document.getElementById('responseText').value = '';
+    
+    document.getElementById('popupOverlay').style.display = 'block';
+    document.getElementById('infoPopup').style.display = 'block';
+}
+
+function closePopup() {
+    document.getElementById('popupOverlay').style.display = 'none';
+    document.getElementById('infoPopup').style.display = 'none';
+}
+
+function sendResponse() {
+    const feedbackId = document.getElementById('feedbackMessage').getAttribute('data-id');
+    const responseText = document.getElementById('responseText').value;
+
+    if (!responseText) {
+        alert('Vui lòng nhập response trước khi gửi.');
+        return;
+    }
+
+    $.ajax({
+        url: '/Feedback/SaveResponse',
+        type: 'POST',
+        data: {
+            feedbackId: feedbackId,
+            response: responseText
+        },
+        success: function(result) {
+            if (result.success) {
+                alert('Response đã được lưu thành công!');
+                closePopup();
+                loadPage(currentPage); // Reload current page to show new response
+            } else {
+                alert('Có lỗi xảy ra: ' + result.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('Có lỗi xảy ra khi lưu response');
+            console.error('Error saving response:', error);
+        }
+    });
+}
+
+// Load trang đầu tiên khi script được chạy
+$(document).ready(function() {
+    loadPage(1);
+});

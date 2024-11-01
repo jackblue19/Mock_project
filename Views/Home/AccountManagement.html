@@ -24,11 +24,13 @@
     <link rel="stylesheet" href="../../Content/css/style.css" />
 
     <style>
-        /* styles.css */
+        #ftco-navbar {
+            height: 60px !important;
+        }
+
 
         /* Set the text color to black for the entire document */
         body {
-            background-color: #7cc5ad;
             color: black;
             /* Set the text color to black */
         }
@@ -36,17 +38,17 @@
         /* Account div */
         .AccountSearch {
             width: 100%;
-            height: 100px;
+            height: 80px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #A8BBB4;
+            background-color: #D0CECA;
         }
 
         .AccountView {
-            background-color: #A8BBB4;
+            background-color: #D0CECA;
             width: 100%;
-            height: 500px;
+            height: 555px;
             display: flex;
             justify-content: center;
         }
@@ -91,7 +93,7 @@
             position: sticky;
             top: 0;
             /* Keeps the header at the top while scrolling */
-            background-color: #83b8b0;
+            background-color: #cba570;
             /* Optional: background color for the header */
             color: rgb(0, 0, 0);
             /* Optional: text color for better contrast */
@@ -139,7 +141,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 50%;
-            background-color: #D1DBC8;
+            background-color: #FDFCE5 ;
             border: 1px solid #333;
             padding: 20px;
             z-index: 1000;
@@ -147,12 +149,18 @@
             border-radius: 8px;
         }
 
+
         .popup-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
+
+        .popup-header h3 {
+            color: #000000;
+        }
+
 
         .popup-close {
             cursor: pointer;
@@ -162,8 +170,8 @@
 
         /* footer --------------------------------------------------- */
         .footer {
-            height: 10px;
-            background-color: #A8BBB4;
+            height: 15px;
+            background-color: #D0CECA;
         }
     </style>
 </head>
@@ -225,7 +233,7 @@
 
         <div class="AccountView">
             <!-- Account List Section -->
-            <<div class="AccountList">
+            <div class="AccountList">
                 <table class="List">
                     <thead>
                         <tr>

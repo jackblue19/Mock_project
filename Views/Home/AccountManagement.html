@@ -36,15 +36,39 @@
         }
 
         /* Account div */
-        .AccountSearch {
+        .AccountFunction {
             width: 100%;
-            height: 80px;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: row;
             background-color: #D0CECA;
+            color: #000;
         }
 
+        .AccountFunction * {
+            font-size: 24px;
+            /* This will apply to all child elements */
+        }
+
+        .AccountSearch {
+            width: 50%;
+            height: 80px;
+            display: flex;
+            margin-left: 15px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .AccountCreate {
+            width: 50%;
+            height: 80px;
+            display: flex;
+            margin-right: 15px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+
+        /* Account Gridview */
         .AccountView {
             background-color: #D0CECA;
             width: 100%;
@@ -141,7 +165,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 50%;
-            background-color: #FDFCE5 ;
+            background-color: #FDFCE5;
             border: 1px solid #333;
             padding: 20px;
             z-index: 1000;
@@ -166,6 +190,15 @@
             cursor: pointer;
             font-size: 1.5em;
             color: #333;
+        }
+
+        /* Add styles for input fields in the popup */
+        .popup input[type="text"],
+        .popup input[type="password"],
+        .popup select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 5px;
         }
 
         /* footer --------------------------------------------------- */
@@ -200,39 +233,32 @@
     <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
     <div class="popup" id="infoPopup">
         <div class="popup-header">
-            <h3>Account Details</h3>
+            <h3 id="popupTitle">Account Details</h3>
             <span class="popup-close" onclick="closePopup()">×</span>
         </div>
-        <table class="Info">
-            <thead>
-                <tr>
-                    <th>Field</th>
-                    <th>Data</th>
-                </tr>
-            </thead>
-            <tbody id="infoTableBody"></tbody>
-        </table>
-        <!-- Update and Delete buttons -->
-        <div style="margin-top: 15px; display: flex; justify-content: space-between;">
-            <button onclick="updateAccount()"
-                style="padding: 8px 12px; background-color: #94cf96; color: rgb(0, 0, 0); border: none; cursor: pointer; border-radius: 4px;">Update</button>
-            <button onclick="deleteAccount()"
-                style="padding: 8px 12px; background-color: #d5908b; color: rgb(0, 0, 0); border: none; cursor: pointer; border-radius: 4px;">Delete</button>
-        </div>
+        <form id="accountForm">
+            <table class="Info">
+                <tbody id="infoTableBody"></tbody>
+            </table>
+            <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                <button type="button" onclick="submitForm()" id="submitButton">Update</button>
+                <button type="button" onclick="deleteAccount()" id="deleteButton">Delete</button>
+            </div>
+        </form>
     </div>
 
     <div class="AccountBody">
-
-        <div class="AccountSearch">
-            <form onsubmit="event.preventDefault();" role="search">
+        <div class="AccountFunction">
+            <div class="AccountSearch">
                 <input id="search" type="search" placeholder="Search..." autofocus required
                     oninput="searchAccounts()" />
-            </form>
+            </div>
+            <div class="AccountCreate">
+                <button onclick="showCreatePopup()">Create</button>
+            </div>
         </div>
 
-
         <div class="AccountView">
-            <!-- Account List Section -->
             <div class="AccountList">
                 <table class="List">
                     <thead>
@@ -249,254 +275,14 @@
                             <th>Role_ID</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr onclick="showPopup(this)">
-                            <td>1</td>
-                            <td>user1</td>
-                            <td>pass123</td>
-                            <td>John Doe</td>
-                            <td>123456789</td>
-                            <td>123 Main St</td>
-                            <td>Male</td>
-                            <td>john@example.com</td>
-                            <td>666161</td>
-                            <td>2</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>2</td>
-                            <td>user2</td>
-                            <td>pass456</td>
-                            <td>Jane Smith</td>
-                            <td>987654321</td>
-                            <td>456 Elm St</td>
-                            <td>Female</td>
-                            <td>jane@example.com</td>
-                            <td>123456</td>
-                            <td>1</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>3</td>
-                            <td>user3</td>
-                            <td>pass789</td>
-                            <td>Mark Taylor</td>
-                            <td>555123456</td>
-                            <td>789 Oak St</td>
-                            <td>Male</td>
-                            <td>mark@example.com</td>
-                            <td>789012</td>
-                            <td>3</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>4</td>
-                            <td>user4</td>
-                            <td>pass101</td>
-                            <td>Linda Brown</td>
-                            <td>111222333</td>
-                            <td>321 Pine St</td>
-                            <td>Female</td>
-                            <td>linda@example.com</td>
-                            <td>456789</td>
-                            <td>2</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>5</td>
-                            <td>user5</td>
-                            <td>pass202</td>
-                            <td>Alex Green</td>
-                            <td>333444555</td>
-                            <td>654 Maple St</td>
-                            <td>Male</td>
-                            <td>alex@example.com</td>
-                            <td>321654</td>
-                            <td>1</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>1</td>
-                            <td>user1</td>
-                            <td>pass123</td>
-                            <td>John Doe</td>
-                            <td>123456789</td>
-                            <td>123 Main St</td>
-                            <td>Male</td>
-                            <td>john@example.com</td>
-                            <td>666161</td>
-                            <td>2</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>2</td>
-                            <td>user2</td>
-                            <td>pass456</td>
-                            <td>Jane Smith</td>
-                            <td>987654321</td>
-                            <td>456 Elm St</td>
-                            <td>Female</td>
-                            <td>jane@example.com</td>
-                            <td>123456</td>
-                            <td>1</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>3</td>
-                            <td>user3</td>
-                            <td>pass789</td>
-                            <td>Mark Taylor</td>
-                            <td>555123456</td>
-                            <td>789 Oak St</td>
-                            <td>Male</td>
-                            <td>mark@example.com</td>
-                            <td>789012</td>
-                            <td>3</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>4</td>
-                            <td>user4</td>
-                            <td>pass101</td>
-                            <td>Linda Brown</td>
-                            <td>111222333</td>
-                            <td>321 Pine St</td>
-                            <td>Female</td>
-                            <td>linda@example.com</td>
-                            <td>456789</td>
-                            <td>2</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>5</td>
-                            <td>user5</td>
-                            <td>pass202</td>
-                            <td>Alex Green</td>
-                            <td>333444555</td>
-                            <td>654 Maple St</td>
-                            <td>Male</td>
-                            <td>alex@example.com</td>
-                            <td>321654</td>
-                            <td>1</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>1</td>
-                            <td>user1</td>
-                            <td>pass123</td>
-                            <td>John Doe</td>
-                            <td>123456789</td>
-                            <td>123 Main St</td>
-                            <td>Male</td>
-                            <td>john@example.com</td>
-                            <td>666161</td>
-                            <td>2</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>2</td>
-                            <td>user2</td>
-                            <td>pass456</td>
-                            <td>Jane Smith</td>
-                            <td>987654321</td>
-                            <td>456 Elm St</td>
-                            <td>Female</td>
-                            <td>jane@example.com</td>
-                            <td>123456</td>
-                            <td>1</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>3</td>
-                            <td>user3</td>
-                            <td>pass789</td>
-                            <td>Mark Taylor</td>
-                            <td>555123456</td>
-                            <td>789 Oak St</td>
-                            <td>Male</td>
-                            <td>mark@example.com</td>
-                            <td>789012</td>
-                            <td>3</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>4</td>
-                            <td>user4</td>
-                            <td>pass101</td>
-                            <td>Linda Brown</td>
-                            <td>111222333</td>
-                            <td>321 Pine St</td>
-                            <td>Female</td>
-                            <td>linda@example.com</td>
-                            <td>456789</td>
-                            <td>2</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>5</td>
-                            <td>user5</td>
-                            <td>pass202</td>
-                            <td>Alex Green</td>
-                            <td>333444555</td>
-                            <td>654 Maple St</td>
-                            <td>Male</td>
-                            <td>alex@example.com</td>
-                            <td>321654</td>
-                            <td>1</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>1</td>
-                            <td>user1</td>
-                            <td>pass123</td>
-                            <td>John Doe</td>
-                            <td>123456789</td>
-                            <td>123 Main St</td>
-                            <td>Male</td>
-                            <td>john@example.com</td>
-                            <td>666161</td>
-                            <td>2</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>2</td>
-                            <td>user2</td>
-                            <td>pass456</td>
-                            <td>Jane Smith</td>
-                            <td>987654321</td>
-                            <td>456 Elm St</td>
-                            <td>Female</td>
-                            <td>jane@example.com</td>
-                            <td>123456</td>
-                            <td>1</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>3</td>
-                            <td>user3</td>
-                            <td>pass789</td>
-                            <td>Mark Taylor</td>
-                            <td>555123456</td>
-                            <td>789 Oak St</td>
-                            <td>Male</td>
-                            <td>mark@example.com</td>
-                            <td>789012</td>
-                            <td>3</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>4</td>
-                            <td>user4</td>
-                            <td>pass101</td>
-                            <td>Linda Brown</td>
-                            <td>111222333</td>
-                            <td>321 Pine St</td>
-                            <td>Female</td>
-                            <td>linda@example.com</td>
-                            <td>456789</td>
-                            <td>2</td>
-                        </tr>
-                        <tr onclick="showPopup(this)">
-                            <td>5</td>
-                            <td>user5</td>
-                            <td>pass202</td>
-                            <td>Alex Green</td>
-                            <td>333444555</td>
-                            <td>654 Maple St</td>
-                            <td>Male</td>
-                            <td>alex@example.com</td>
-                            <td>321654</td>
-                            <td>1</td>
-                        </tr>
-                        <!-- Additional rows can be added similarly -->
+                    <tbody id="accountTableBody">
+                        <!-- Account rows will be dynamically inserted here -->
                     </tbody>
-
                 </table>
+            </div>
         </div>
     </div>
-    </div>
+
 
     <div class="footer"></div>
 
@@ -574,8 +360,10 @@
     <script src="../../Content/js/bootstrap-datepicker.js"></script>
     <script src="../../Content/js/jquery.timepicker.min.js"></script>
     <script src="../../Content/js/scrollax.min.js"></script>
-    <script src="../../Content/js/main.js
-</script>
+    <script src="../../Content/js/main.js"></script>
+    <script src="../../Content/js/accmng.js"></script>
+
+    </script>
 </body>
 
 </html>

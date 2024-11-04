@@ -1,19 +1,5 @@
 let accounts = []; // Store account data
 
-// Load accounts
-function loadAccounts() {
-    accounts = [
-        { id: 1, username: "user1", password: "pass123", name: "John Doe", phone: "123456789", address: "123 Main St", gender: "Male", email: "john@example.com", verificationCode: "666161", roleId: 2 },
-        { id: 2, username: "user2", password: "pass456", name: "Jane Smith", phone: "987654321", address: "456 Elm St", gender: "Female", email: "jane@example.com", verificationCode: "123456", roleId: 1 }
-    ];
-
-    const savedAccounts = localStorage.getItem('accounts');
-    if (savedAccounts) {
-        accounts = JSON.parse(savedAccounts);
-    }
-    renderAccountTable();
-}
-
 // Render account table
 function renderAccountTable() {
     const tbody = document.getElementById('accountTableBody');
@@ -112,7 +98,7 @@ function submitForm() {
 function deleteAccount() {
     const accountId = parseInt(document.getElementById('id').value);
     accounts = accounts.filter(account => account.id !== accountId);
-    
+
     localStorage.setItem('accounts', JSON.stringify(accounts));
     renderAccountTable();
     closePopup();
@@ -129,6 +115,7 @@ function searchAccounts() {
     });
 }
 
+// Initialize page and reset accounts
 document.addEventListener('DOMContentLoaded', loadAccounts);
 
 // Load accounts

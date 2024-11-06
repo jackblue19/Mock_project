@@ -1,0 +1,65 @@
+﻿@model PagedList.IPagedList<EmpManagement.Models.tblEmp>
+
+@using PagedList.Mvc
+
+@{
+
+    Layout = null;
+
+}
+
+<div id="content">
+
+    <table class="table">
+
+        <tr>
+
+            <th>
+
+                ID
+
+            </th>
+
+            <th>
+
+                Name
+
+            </th>
+
+        </tr>
+
+        @foreach (var item in Model)
+
+        {
+
+            <tr>
+
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.id)
+
+                </td>
+
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.name)
+
+                </td>
+
+            </tr>
+
+        }
+
+    </table>
+
+    <br />
+
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    <div id="contentPager">
+
+        @Html.PagedListPager(Model, page => Url.Action("GetData", new { page }))
+
+    </div>
+
+</div>

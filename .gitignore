@@ -249,3 +249,4 @@ paket-files/
 /ZetsyBite/appsettings.json
 /ZetsyBite/appsettings.Development.json
 /ZetsyBite/Models/ZetsyBiteContext.cs
+/ZetsyBite/Models/ZestyBiteContext.cs

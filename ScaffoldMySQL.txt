@@ -1,0 +1,17 @@
+NuGet Pakcages:
+Microsoft.EntityFrameworkCore.Tools
+MySql.EntityFrameworkCore
+
+
+(appsetting.json)
+{
+  "ConnectionStrings": {
+    "MySqlConnection": "Server=localhost;Database=ZestyBite;User Id=root;Password=123456"
+  }
+}
+
+
+
+(Use Package Manager Console)
+
+Scaffold-DbContext "Server=localhost;Database=ZestyBite;User Id=root;Password=123456xyz;TreatTinyAsBoolean=False" MySql.EntityFrameworkCore -OutputDir Models -f

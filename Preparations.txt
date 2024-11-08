@@ -1,5 +1,7 @@
 NuGet Pakcages:
+Microsoft.EntityFrameworkCore
 Microsoft.EntityFrameworkCore.Tools
+Microsoft.VisualStudio.Web.CodeGeneration.Design
 MySql.EntityFrameworkCore
 
 
@@ -12,6 +14,6 @@ MySql.EntityFrameworkCore
 
 
 
-(Use Package Manager Console)
+Scaffold MySQL (Use Package Manager Console)
 
 Scaffold-DbContext "Server=localhost;Database=ZestyBite;User Id=root;Password=123456xyz;TreatTinyAsBoolean=False" MySql.EntityFrameworkCore -OutputDir Models -f

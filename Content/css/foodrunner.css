@@ -1,19 +1,66 @@
-
+html, body {
+    height: 100%;
+    margin: 0; 
+    overflow: hidden; 
+}
   /* Container chứa sidebar và main-content */
   .container-content {
       display: flex; 
-      height: calc(100vh - 60px);
+      height: 100vh; 
   }
-  
+  .main-content{
+    flex-grow: 1; 
+    padding: 20px; 
+    overflow-y: auto;
+    height: 100vh; 
+  }
   /* Sidebar cố định chiều rộng */
   .sidebar {
-      width: 250px; 
-      background-color: #233331; 
+      width: 115px; 
+      background-color:rgba(113, 99,186,255); 
       color: white;
-      padding: 20px; 
-      box-sizing: border-box; 
+      padding: 0 1.7rem; 
+      box-sizing: border-box;
+      overflow: hidden;
+      transition: all 0.5s linear;
+      top:0;
+      position: stickfixed;
+      height: 100vh;
   }
-  
+  .sidebar:hover{
+    width: 240px;
+    transition: 0.5s;
+  }
+  .menu{
+    height: 88%;
+    position: relative;
+    list-style: none;
+    padding: 0;
+  }
+  .menu li{
+    padding: 1rem;
+    margin: 8px 0;
+    border-radius: 8px;
+    transition: all 0.5s ease-in-out;
+  }
+  .menu li:hover,
+  .active {
+    background: #e0e0e058;
+  }
+  .menu a{
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap:1.5rem;
+}
+.menu a span{
+    overflow: hidden;
+}
+.menu a i{
+    font-size: 1.2rem;
+}
   /* Main Content chiếm phần còn lại */
   .main-content {
       display: flex;
@@ -125,53 +172,6 @@
   .text-content h2, .text-content h3 {
       line-height: 1.2;
   }
-  
-  
-  
-  
-  /* Xóa margin của ul để loại bỏ khoảng cách giữa các mục */
-  .sidebar nav ul {
-      list-style-type: none; 
-      padding-left: 0; 
-      margin: 0; 
-  }
-  nav {
-      background-color: #233331; 
-      padding: 20px; 
-  }
-  
-  nav ul {
-      list-style-type: none; 
-      padding: 0; 
-      margin: 0; 
-  }
-  
-  nav ul li {
-      margin-bottom: 15px; 
-  }
-  
-  nav ul li a {
-      display: flex;
-      align-items: center; 
-      text-decoration: none; 
-      color: #ffffff; 
-      padding: 12px 20px; 
-      border-radius: 20px; 
-      background-color: #344d4f; 
-      transition: background-color 0.3s, transform 0.3s; 
-      border: 2px solid transparent; 
-  }
-  
-  nav ul li a:hover {
-      background-color: #3a4d4f;
-      transform: scale(1.05); 
-      border: 2px solid #ffffff; 
-  }
-  
-  nav ul li a i {
-      margin-right: 10px; 
-  }
-  /* màu cho bảng table */
   /* Kiểu dáng cho bảng table-order */
   .table-order-wrapper {
       max-height: 300px;
@@ -185,7 +185,7 @@
   
   /* Kiểu dáng cho tiêu đề bảng */
   .table-order thead {
-      background-color: #4d5257; /* Màu nền cho tiêu đề bảng */
+    background-color:rgba(113, 99,186,255);
       color: #000000; 
       position: sticky;
       top: 0; 
@@ -226,11 +226,10 @@
   /* Kiểu dáng cho các hàng trong bảng */
   .table-order tbody tr {
       background-color: #6b6969; 
-      border-bottom: 1px solid #000000; 
+      border-bottom: 1px solid #8b8989; 
       display: table; 
       width: 100%;
-  }
-  
+  }  
   .table-order td.no-cell {
       width: 70px; 
       text-align: center;
@@ -301,15 +300,4 @@
       font-size: 14px;
       background-color: #6b6969;
       color: #ffffff; 
-  }
-  
-  /* Màu xen kẽ cho các dòng */
-  .table-order-note tr:nth-child(even) {
-      background-color: #b45454; 
-  }
-  
-  /* Hiệu ứng khi di chuột qua */
-  .table-order-note tr:hover {
-      background-color: #5e84b3;
-      cursor: pointer;
   }

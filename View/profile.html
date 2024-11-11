@@ -26,94 +26,6 @@
     <link rel="stylesheet" href="../Content/css/profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-
-
-<style>
-      .body-config{
-        background-image: url("../Content/images/bg_3.jpg");
-    }
-    .bg-dark {
-    background-color: black;
-    }
-   .list-group {
-    width: 80%; /* Đổi chiều rộng thành 80% */
-    height: 800px; /* Chiều cao vẫn giữ nguyên */
-    margin: 0 auto; /* Căn giữa thẻ */
-   }
-    .form-config {
-    background-color: rgba(22, 19, 19, 0.7);
-    width: 80%; /* Đổi chiều rộng thành 80% */
-    height: 750px; /* Chiều cao vẫn giữ nguyên */
-    margin: 0 auto; /* Căn giữa thẻ */
-    }
-    .text-primary {
-    color: #ecedee; /* Màu xanh dương */   
-    }
-    .form-label {
-    color: #ffffff; /* Màu cam cho các nhãn */
-    }
-
-    .text-light {
-    color: #6c757d; /* Màu xám cho văn bản thông báo */
-    }
-
-    .list-group-flush .list-group-item {
-    border-top: 0;
-    background-color: rgba(22, 19, 19, 0.7); /* Màu nền đen mờ cho tất cả các mục */
-    color: #fff; /* Màu chữ trắng cho tất cả các mục */
-    font-size: 14px; /* Tăng kích thước chữ cho tất cả các mục */
-    }
-    .list-group-flush {
-    margin-top: 20px; /* Điều chỉnh giá trị để di chuyển danh sách xuống */
-    }
-    .form-config {
-    margin-top: 50px; /* Điều chỉnh giá trị để tạo khoảng cách từ thanh taskbar */
-}
-.gender-options {
-    display: flex; /* Sắp xếp theo chiều ngang */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    margin-top: 10px; /* Khoảng cách giữa label Gender và các nút radio */
-}
-
-.gender-option {
-    margin-right: 100px; /* Khoảng cách giữa các tùy chọn Nam và Nữ */
-}
-
-.gender-option:last-child {
-    margin-right: 0; /* Không thêm khoảng cách bên phải cho tùy chọn cuối */
-}
-
-.gender-option label {
-    color: rgb(255, 255, 255); /* Đặt màu chữ cho nhãn thành màu xanh */
-}
-.form-controler {
-    display: block; /* Đảm bảo input là khối */
-    width: 100%; /* Đặt chiều rộng cho input */
-    height: 80%;
-    margin-top: 5px; /* Khoảng cách giữa label và input */
-    padding: 10px 0; /* Thêm padding trên và dưới */
-    border: none; /* Loại bỏ toàn bộ viền */
-    border-bottom: 2px solid white; /* Đường kẻ trắng phía dưới */
-    background-color: transparent; /* Đảm bảo nền trong suốt */
-    color: rgb(255, 255, 255); /* Màu chữ */
-    outline: none; /* Loại bỏ viền khi focus */
-}
-
-.form-label {
-    color:rgb(255, 255, 255); /* Thay đổi màu chữ thành màu xanh */
-    /* Bạn có thể thay đổi màu khác tùy thích, ví dụ: */
-    /* color: #007BFF; /* Màu xanh dương */
-    /* color: red; /* Màu đỏ */
-}
-@media screen and (max-width: 430px) {
-    .col-md-3 pt-0{
-        height: 330px;
-    }
-}
-
-    
-
-</style>
 </head>
 <body class="body-config">
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
@@ -221,18 +133,18 @@
     <script>
         // Thêm sự kiện khi chọn file
         document.getElementById('file-input').addEventListener('change', function(event) {
-            const file = event.target.files[0]; // Lấy file được chọn
+            const file = event.target.files[0]; 
             if (file) {
-                const reader = new FileReader(); // Tạo đối tượng FileReader
+                const reader = new FileReader(); 
                 reader.onload = function(e) {
                     const iconPlaceholder = document.getElementById('icon-placeholder');
     
                     // Đặt ảnh tải lên làm src của thẻ img
                     iconPlaceholder.src = e.target.result; // Đặt ảnh tải lên vào icon
     
-                    // (Tuỳ chọn) Nếu bạn muốn thay đổi kích thước hoặc các thuộc tính khác của ảnh
-                    iconPlaceholder.style.width = '150px'; // Kích thước của ảnh
-                    iconPlaceholder.style.height = '150px'; // Kích thước của ảnh       
+                    
+                    iconPlaceholder.style.width = '150px'; 
+                    iconPlaceholder.style.height = '150px';   
                 }
                 reader.readAsDataURL(file); // Đọc file ảnh
             }

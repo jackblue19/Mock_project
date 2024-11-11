@@ -1,4 +1,13 @@
-
+body {
+    font-family: "Poppins", Arial, sans-serif;
+    /* background: #121618; */
+    font-size: 15px;
+    line-height: 1.8;
+    font-weight: 300;
+    color: gray;
+    background-size: cover;
+    background-color: #D0CECA;
+}
 .container {
     display: flex;
     align-items: center; /* Căn giữa theo chiều dọc */
@@ -8,16 +17,16 @@
 
 .icon-light {
     color: rgb(255, 255, 255);
-    font-size: 30px; /* Thay đổi giá trị này để làm biểu tượng lớn hơn */
-    margin-left: 50px; /* Di chuyển icon sang bên phải (giá trị dương) */
+    font-size: 30px; 
+    margin-left: 50px; 
 }
 /* Modal styling */
 table {
-    color: #ffffff; /* Đặt màu chữ trắng cho toàn bộ bảng */
+    color: #ffffff; 
 }
 
 table th, table td {
-    color: #ffffff; /* Đặt màu chữ trắng cho các ô trong bảng */
+    color: #ffffff; 
 }
 #SupplyForm .modal-content {
     background-image: url('../images/backgro.jpg');
@@ -33,7 +42,7 @@ table th, table td {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(228, 223, 223, 0.5);
-    color: #ffffff; /* Đặt màu chữ cho toàn bộ modal */
+    color: #ffffff; 
 }
 
 .modal-header {
@@ -56,7 +65,7 @@ table th, table td {
     font-weight: bold;
     margin-bottom: 5px;
     display: block;
-    color: #f3eef2; /* Đặt màu chữ cho nhãn */
+    color: #f3eef2;
 }
 
 .inputField input {
@@ -64,8 +73,8 @@ table th, table td {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    color: #ffffff; /* Đặt màu chữ cho input */
-    background-color: #333; /* Màu nền của input */
+    color: #ffffff;
+    background-color: #333;
 }
 .btn-warning {
     margin-top: 20px;
@@ -74,18 +83,18 @@ table th, table td {
     border-color: #ffc107;
 }
 .modal-header {
-    text-align: center; /* Canh giữa tiêu đề */
-    position: relative; /* Đảm bảo rằng button đóng vẫn nằm ở vị trí chính xác */
+    text-align: center;
+    position: relative; 
 }
 
 .modal-header .modal-title {
-    color: yellow; /* Đổi màu chữ thành màu vàng */
-    margin: 0 auto; /* Canh giữa tiêu đề theo chiều ngang */
+    color: yellow;
+    margin: 0 auto; 
 }
 
 .modal-header .close {
     position: absolute;
-    right: 15px; /* Giữ nút đóng ở góc phải */
+    right: 15px; 
     top: 50%;
     transform: translateY(-50%);
     color: yellow;
@@ -155,34 +164,34 @@ button, input, optgroup, select, textarea {
 }
 .col-12 {
     display: flex;
-    justify-content: space-between; /* This will push the items apart */
-    align-items: center; /* Vertically aligns them */
-    margin-bottom: 1rem; /* Adds space below */
+    justify-content: space-between; 
+    align-items: center; 
 }
 .custom-link {
-    color: #060606; /* Replace #ffa500 with your desired color, e.g., orange */
+    color: #060606; 
 }
 /* Hover effect for dropdown items */
 .custom-link:hover {
-    color: #050505; /* Darker shade for hover effect */
+    color: #050505; 
 }
 /* Smaller font size for dropdown items */
 .dropdown-menu .dropdown-item {
-    font-size: 0.875rem; /* Smaller font size */
-    padding: 5px 10px; /* Less padding */
+    font-size: 0.875rem; 
+    padding: 5px 10px;
 }
 
 /* Adjust the size of icons */
 .dropdown-menu .dropdown-item i {
-    font-size: 1rem; /* Smaller icons */
+    font-size: 1rem;
 }
 
 /* Optionally, reduce the width of the dropdown */
 .dropdown-menu {
-    min-width: 150px; /* Reduce the width */
+    min-width: 150px;
 }
 
 /* Adjust hover styles for better interaction */
 .dropdown-item:hover {
-    background-color: #d7d3d3; /* Light background on hover */
+    background-color: #d7d3d3;
 }
+

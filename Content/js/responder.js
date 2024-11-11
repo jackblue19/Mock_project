@@ -1,289 +1,198 @@
-// Constants
-const PAGE_SIZE = 9;
+const MAX_DEPTH = 2; // Maximum allowable reply depth
 
-// Sample Data Structure
-const sampleData = [
+const comments = [
     {
-        id: 1,
-        feedback: "Đồ ăn rất ngon, nhưng phục vụ hơi chậm",
-        response: "Cảm ơn phản hồi của bạn. Chúng tôi sẽ cải thiện tốc độ phục vụ!",
-        dateTime: "2023-06-15T14:30:00"
+        comment_id: 1,
+        account_name: "John Doe",
+        date: "June 27, 2018 at 2:21pm",
+        item_id: "Spaghetti Bolognese",
+        feedback: "Absolutely delicious! Would recommend.",
+        replies: []
     },
     {
-        id: 2,
-        feedback: "Pizza hơi mặn",
-        response: "Xin lỗi về trải nghiệm của bạn. Chúng tôi sẽ điều chỉnh lại công thức.",
-        dateTime: "2023-06-14T18:45:00"
+        comment_id: 1,
+        account_name: "John Doe",
+        date: "June 27, 2018 at 2:21pm",
+        item_id: "Spaghetti Bolognese",
+        feedback: "Absolutely delicious! Would recommend.",
+        replies: []
     },
     {
-        id: 3,
-        feedback: "Nhân viên rất thân thiện",
-        response: "Cảm ơn bạn đã góp ý tích cực!",
-        dateTime: "2023-06-16T12:15:00"
+        comment_id: 2,
+        account_name: "John Doe",
+        date: "June 27, 2018 at 2:21pm",
+        item_id: "Spaghetti Bolognese",
+        feedback: "Absolutely phenomenal! The freshness of the fish and the delicate balance of flavors in each bite left me wanting more. Sushi heaven! 🍣",
+        replies: []
     },
     {
-        id: 4,
-        feedback: "Cần thêm các loại topping",
-        response: null,
-        dateTime: "2023-06-13T20:00:00"
+        comment_id: 3,
+        account_name: "John Doe",
+        date: "June 27, 2018 at 2:21pm",
+        item_id: "Spaghetti Bolognese",
+        feedback: "Juicy, flavorful, and cooked to perfection. A burger that hits all the right spots. Thumbs up! 🍔",
+        replies: []
     },
     {
-        id: 5,
-        feedback: "Không gian quán rất đẹp và thoáng mát",
-        response: "Cảm ơn bạn đã đánh giá tích cực về không gian của chúng tôi!",
-        dateTime: "2023-06-17T15:20:00"
+        comment_id: 3,
+        account_name: "John Doe",
+        date: "June 27, 2018 at 2:21pm",
+        item_id: "Spaghetti Bolognese",
+        feedback: "The perfect blend of sweet, tangy, and spicy. This Pad Thai is a symphony of flavors that transports you straight to Thailand with each bite. Truly a culinary masterpiece!",
+        replies: []
     },
     {
-        id: 6,
-        feedback: "Giá hơi cao so với mặt bằng chung",
-        response: "Chúng tôi luôn cố gắng đảm bảo chất lượng tương xứng với giá thành.",
-        dateTime: "2023-06-18T11:30:00"
+        comment_id: 5,
+        account_name: "John Doe",
+        date: "June 27, 2018 at 2:21pm",
+        item_id: "Spaghetti Bolognese",
+        feedback: "Perfect balance of crunchy and creamy, with a zing of lemon. This Caesar Salad is a refreshing and satisfying choice for any meal. 🥗",
+        replies: []
     },
     {
-        id: 7,
-        feedback: "Mì Ý hơi nhạt",
-        response: null,
-        dateTime: "2023-06-19T19:45:00"
-    },
-    {
-        id: 8,
-        feedback: "Wifi không ổn định",
-        response: "Chúng tôi sẽ kiểm tra và nâng cấp hệ thống wifi.",
-        dateTime: "2023-06-20T13:15:00"
-    },
-    {
-        id: 9,
-        feedback: "Salad rất tươi ngon",
-        response: "Cảm ơn bạn! Chúng tôi luôn chọn nguyên liệu tươi nhất.",
-        dateTime: "2023-06-21T12:00:00"
-    },
-    {
-        id: 10,
-        feedback: "Nước uống ngon nhưng hơi ít đá",
-        response: "Chúng tôi sẽ lưu ý điều này với nhân viên pha chế.",
-        dateTime: "2023-06-22T16:30:00"
-    },
-    {
-        id: 11,
-        feedback: "Bánh pizza đế dày quá",
-        response: null,
-        dateTime: "2023-06-23T18:20:00"
-    },
-    {
-        id: 12,
-        feedback: "Nhạc nền hay nhưng hơi to",
-        response: "Cảm ơn góp ý của bạn, chúng tôi sẽ điều chỉnh âm lượng phù hợp hơn.",
-        dateTime: "2023-06-24T20:45:00"
-    },
-    {
-        id: 13,
-        feedback: "Món tráng miệng rất ngon",
-        response: "Rất vui khi bạn thích món tráng miệng của chúng tôi!",
-        dateTime: "2023-06-25T21:10:00"
-    },
-    {
-        id: 14,
-        feedback: "Cần thêm menu cho trẻ em",
-        response: "Chúng tôi đang phát triển menu đặc biệt cho trẻ em.",
-        dateTime: "2023-06-26T14:25:00"
-    },
-    {
-        id: 15,
-        feedback: "Bàn ghế hơi cứng",
-        response: null,
-        dateTime: "2023-06-27T17:40:00"
-    },
-    {
-        id: 16,
-        feedback: "Phục vụ rất nhanh và chu đáo",
-        response: "Cảm ơn bạn đã ghi nhận nỗ lực của đội ngũ nhân viên!",
-        dateTime: "2023-06-28T19:15:00"
-    },
-    {
-        id: 17,
-        feedback: "Nên có thêm combo cho nhóm",
-        response: "Chúng tôi sẽ cân nhắc thêm các combo cho nhóm đông người.",
-        dateTime: "2023-06-29T12:50:00"
-    },
-    {
-        id: 18,
-        feedback: "Khuyến mãi hấp dẫn",
-        response: "Cảm ơn bạn đã ủng hộ!",
-        dateTime: "2023-06-30T16:05:00"
-    },
-    {
-        id: 19,
-        feedback: "Cần cải thiện việc đặt bàn online",
-        response: null,
-        dateTime: "2023-07-01T13:30:00"
-    },
-    {
-        id: 20,
-        feedback: "Món ăn trình bày đẹp mắt",
-        response: "Cảm ơn bạn! Chúng tôi luôn chú trọng đến việc trình bày món ăn.",
-        dateTime: "2023-07-02T18:00:00"
-    },
-    {
-        id: 21,
-        feedback: "Nhà vệ sinh sạch sẽ",
-        response: "Cảm ơn bạn đã ghi nhận. Vệ sinh là ưu tiên hàng đầu của chúng tôi.",
-        dateTime: "2023-07-03T15:45:00"
-    },
-    {
-        id: 22,
-        feedback: "Nên có thêm món chay",
-        response: null,
-        dateTime: "2023-07-04T11:20:00"
-    },
-    {
-        id: 23,
-        feedback: "Không gian phù hợp để làm việc",
-        response: "Cảm ơn bạn đã chọn quán chúng tôi làm không gian làm việc!",
-        dateTime: "2023-07-05T14:10:00"
-    },
-    {
-        id: 24,
-        feedback: "Cần thêm ổ cắm điện cho khách",
-        response: "Chúng tôi sẽ bổ sung thêm ổ cắm điện để phục vụ khách hàng tốt hơn.",
-        dateTime: "2023-07-06T17:25:00"
-    },
-    {
-        id: 25,
-        feedback: "Nước sốt pizza rất đặc biệt",
-        response: "Cảm ơn bạn đã ửng hộ",
-        dateTime: "2024-07-06T17:25:00"
+        comment_id: 6,
+        account_name: "John Doe",
+        date: "June 27, 2018 at 2:21pm",
+        item_id: "Spaghetti Bolognese",
+        feedback: "A slice of heaven. The crust is perfectly crispy, the sauce is rich, and the toppings are fresh. This pizza is a true Italian masterpiece. 🍕",
+        replies: []
     }
 ];
 
-// State Management
-let currentPage = 1;
-const totalPages = Math.ceil(sampleData.length / PAGE_SIZE);
+let activeReplyBox = null;
 
-// Utility Functions
-const formatDateTime = (dateTimeString) => {
-    const dateTime = new Date(dateTimeString);
-    return dateTime.toLocaleString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-};
+// Recursive function to display comments and replies with depth limit
+function displayComments(commentsToDisplay, container, level = 0) {
+    container.innerHTML = ""; // Clear existing comments in the container
 
-const createFeedbackElement = (item) => {
-    const itemContainer = document.createElement('div');
-    itemContainer.className = 'feedback-container';
-    
-    const feedbackDiv = document.createElement('div');
-    feedbackDiv.className = 'feedback-item';
-    feedbackDiv.setAttribute('data-id', item.id);
-    feedbackDiv.setAttribute('data-date', item.dateTime);
-    
-    feedbackDiv.innerHTML = `
-        <p>${item.feedback}</p>
-        <small>${formatDateTime(item.dateTime)}</small>
-    `;
-    
-    feedbackDiv.onclick = () => showPopup(item.id, item.feedback);
-    itemContainer.appendChild(feedbackDiv);
+    commentsToDisplay.forEach(comment => {
+        const commentItem = document.createElement("li");
+        commentItem.classList.add("comment", "nested-comment");
+        commentItem.style.marginLeft = `${level * 15}px`; // Indentation based on level
 
-    const responseDiv = document.createElement('div');
-    responseDiv.className = 'saved-response';
-    responseDiv.textContent = item.response ? `Response: ${item.response}` : 'No response yet';
-    itemContainer.appendChild(responseDiv);
+        // Generate comment HTML with conditional reply box
+        commentItem.innerHTML = `
+            <div class="vcard bio">
+                <img src="../../Content/images/person_1.jpg" alt="Image placeholder">
+            </div>
+            <div class="comment-body">
+                <h3>${comment.account_name}</h3>
+                <div class="meta">${comment.date}</div>
+                <p>Ate: ${comment.item_id}</p>
+                <p class="feedback">Feedback: ${comment.feedback}</p>
+                ${level < MAX_DEPTH ? `<p><a href="#" class="reply" data-id="${comment.comment_id}">Reply</a></p>` : ""}
+                
+                <!-- Hidden reply box, only shown when "Reply" is clicked -->
+                <div class="reply-box" id="replyBox-${comment.comment_id}" style="display: none;">
+                    <input type="text" placeholder="Write a reply..." id="replyInput-${comment.comment_id}">
+                    <button onclick="submitReply(${comment.comment_id}, ${level})">Enter</button>
+                </div>
 
-    return itemContainer;
-};
+                <!-- Replies list container for nested replies -->
+                <ul class="replies-list" id="repliesList-${comment.comment_id}"></ul>
+            </div>
+        `;
+        container.appendChild(commentItem);
 
-// Page Loading Functions
-const loadPage = (pageNumber) => {
-    currentPage = pageNumber;
-    const contentContainer = document.getElementById('view');
-    contentContainer.innerHTML = '';
+        // Add click event listener for the reply button
+        const replyButton = commentItem.querySelector('.reply');
+        const replyBox = document.getElementById(`replyBox-${comment.comment_id}`);
+        const replyInput = document.getElementById(`replyInput-${comment.comment_id}`);
 
-    const start = (pageNumber - 1) * PAGE_SIZE;
-    const end = Math.min(start + PAGE_SIZE, sampleData.length);
+        if (replyButton) {
+            replyButton.addEventListener('click', function (event) {
+                event.preventDefault();
 
-    sampleData.slice(start, end).forEach(item => {
-        contentContainer.appendChild(createFeedbackElement(item));
-    });
+                // Toggle the reply box visibility
+                if (activeReplyBox && activeReplyBox !== replyBox) {
+                    activeReplyBox.style.display = 'none';
+                }
+                replyBox.style.display = replyBox.style.display === 'none' ? 'block' : 'none';
+                activeReplyBox = replyBox.style.display === 'block' ? replyBox : null;
+                replyInput.focus();
+            });
 
-    updatePagination();
-};
+            // Add keypress event listener for the Enter key
+            replyInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    submitReply(comment.comment_id, level);
+                }
+            });
+        }
 
-const updatePagination = () => {
-    const paginationContainer = document.getElementById('pagination');
-    paginationContainer.innerHTML = '';
-
-    Array.from({ length: totalPages }, (_, i) => i + 1).forEach(pageNum => {
-        const li = document.createElement('li');
-        li.className = `page-item${pageNum === currentPage ? ' active' : ''}`;
-        li.innerHTML = `<a class="page-link" href="#" onclick="loadPage(${pageNum})">${pageNum}</a>`;
-        paginationContainer.appendChild(li);
-    });
-};
-
-// Popup Management
-const showPopup = (feedbackId, feedbackMessage) => {
-    const feedbackMessageEl = document.getElementById('feedbackMessage');
-    const responseTextEl = document.getElementById('responseText');
-    const existingResponse = sampleData.find(item => item.id === feedbackId)?.response;
-
-    feedbackMessageEl.innerText = feedbackMessage;
-    feedbackMessageEl.setAttribute('data-id', feedbackId);
-    responseTextEl.value = existingResponse || '';
-
-    document.getElementById('popupOverlay').style.display = 'block';
-    document.getElementById('infoPopup').style.display = 'block';
-};
-
-const closePopup = () => {
-    document.getElementById('popupOverlay').style.display = 'none';
-    document.getElementById('infoPopup').style.display = 'none';
-};
-
-// Response Handling
-const sendResponse = () => {
-    const feedbackId = parseInt(document.getElementById('feedbackMessage').getAttribute('data-id'));
-    const responseText = document.getElementById('responseText').value;
-
-    if (!responseText) {
-        alert('Vui lòng nhập response trước khi gửi.');
-        return;
-    }
-
-    const feedbackItem = sampleData.find(item => item.id === feedbackId);
-    if (feedbackItem) {
-        feedbackItem.response = responseText;
-        alert('Response đã được lưu thành công!');
-        closePopup();
-        loadPage(currentPage);
-    } else {
-        alert('Không tìm thấy feedback tương ứng.');
-    }
-};
-
-// Sorting Functions
-const sortFeedbackByDate = (sortOrder) => {
-    const feedbackContainer = document.getElementById('view');
-    const feedbackItems = Array.from(feedbackContainer.getElementsByClassName('feedback-container'));
-
-    feedbackItems.sort((a, b) => {
-        const dateA = new Date(a.querySelector('.feedback-item').dataset.date);
-        const dateB = new Date(b.querySelector('.feedback-item').dataset.date);
-        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+        // Recursively display replies, incrementing the level for nested replies
+        if (comment.replies.length > 0) {
+            const repliesContainer = document.getElementById(`repliesList-${comment.comment_id}`);
+            displayComments(comment.replies, repliesContainer, level + 1);
+        }
     });
 
-    feedbackContainer.innerHTML = '';
-    feedbackItems.forEach(item => feedbackContainer.appendChild(item));
-};
-
-// Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-    loadPage(1);
-
-    document.getElementById('dateSortFilter').addEventListener('change', (e) => {
-        sortFeedbackByDate(e.target.value);
+    // Close reply box when clicking outside
+    document.addEventListener('mousedown', function (event) {
+        if (activeReplyBox && !activeReplyBox.contains(event.target) && !event.target.classList.contains('reply')) {
+            activeReplyBox.style.display = 'none';
+            activeReplyBox = null;
+        }
     });
-});
+}
+
+// Temporary function to submit reply and save it in-memory with depth checking
+function submitReply(commentId, level) {
+    const replyInput = document.getElementById(`replyInput-${commentId}`);
+    const replyText = replyInput.value.trim();
+
+    if (replyText === "") return; // Skip empty replies
+    if (level >= MAX_DEPTH) return; // Prevent reply submission beyond max depth
+
+    const replyDate = new Date().toLocaleString();
+    const newReply = {
+        comment_id: Date.now(), // Temporary unique ID
+        account_name: "My Name", // Replace with actual user's name
+        date: replyDate,
+        item_id: "",
+        feedback: replyText,
+        replies: [] // Allows for nested replies
+    };
+
+    // Find the parent comment in the comments array and add the reply
+    const addReplyToComment = (comments, id) => {
+        for (let comment of comments) {
+            if (comment.comment_id === id) {
+                comment.replies.push(newReply);
+                return true;
+            } else if (comment.replies.length > 0) {
+                if (addReplyToComment(comment.replies, id)) return true;
+            }
+        }
+        return false;
+    };
+    addReplyToComment(comments, commentId);
+
+    // Clear the input field and hide the reply box
+    replyInput.value = "";
+    document.getElementById(`replyBox-${commentId}`).style.display = "none";
+
+    // Re-render comments to show the new reply
+    displayComments(comments, document.getElementById("commentList"));
+}
+
+// Search function
+function searchComments(event) {
+    const searchTerm = event.target.value.toLowerCase();
+    const filteredComments = searchTerm
+        ? comments.filter(comment => commentMatchesSearch(comment, searchTerm))
+        : comments;
+
+    displayComments(filteredComments, document.getElementById("commentList"));
+}
+
+function commentMatchesSearch(comment, searchTerm) {
+    return comment.account_name.toLowerCase().includes(searchTerm) ||
+        comment.item_id.toLowerCase().includes(searchTerm) ||
+        comment.feedback.toLowerCase().includes(searchTerm) ||
+        comment.replies.some(reply => commentMatchesSearch(reply, searchTerm));
+}
+
+// Initial load of comments
+displayComments(comments, document.getElementById("commentList"));
+document.querySelector('.res-ser-bar input[type="text"]').addEventListener('input', searchComments);

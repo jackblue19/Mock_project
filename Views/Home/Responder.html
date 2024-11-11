@@ -24,201 +24,162 @@
     <link rel="stylesheet" href="../../Content/css/style.css" />
 
     <style>
-        /* Navbar style*/
-#ftco-navbar {
-    height: 80px !important;
-}
+        /* Main Layout Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #D0CECA;
+            color: #333;
+        }
 
-/* main style*/
-.response-main {
-    height: 100vh;
-    background-color: #D0CECA;
-}
+        /* Navbar */
+        #ftco-navbar {
+            height: 80px !important;
+        }
 
-/* search style*/
-.response-search {
-    height: 120px;
-    display: flex;
-    flex-direction: row;
-    margin: 0px 50px;
-}
+        /* Main Content */
+        .response-main {
+            padding: 20px;
+            background-color: #D0CECA;
+        }
 
-/* filter style */
-.res-fil {
-    height: 50px;
-    width: 50%;
-    display: flex;
-    justify-content: flex-end;
-    align-self: center;
-    margin: 20px;
-}
+        /* Search and Filter */
+        .response-search {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 50px;
+            border-bottom: 1px solid #ddd;
+        }
 
-.res-fil select {
-    border-radius: 10px;
-    border: 3px solid #000000;
-    background-color: #D0CECA;
-    font-size: 18px;
-}
+        .response-search input[type="text"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #000000;
+        }
 
-.res-ser-bar {
-    height: 50px;
-    width: 50%;
-    display: flex;
-    align-self: center;
-    margin: 20px;
-}
+        .response-search select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #000000;
+        }
 
-/* Popup styles */
-.popup-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
+        /* Comments List */
+        .comment-list-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 20px 50px;
+        }
 
-.popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 50%;
-    background-color: #b6ccca;
-    border: 1px solid #000000;
-    padding: 20px;
-    z-index: 1000;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-}
+        .comment {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
 
-.popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
+        .vcard img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
 
-.popup-header h3 {
-    color: #000000;
-}
+        .comment-body {
+            background-color: #b9c9ba;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 1px 3px 6px;
+            width: 100%;
+            position: relative;
+        }
 
-.popup-close {
-    cursor: pointer;
-    font-size: 1.5em;
-    color: #000000;
-}
-.feedback-message {
-    margin-bottom: 15px;
-    color: #333;
-}
+        /* Comment Details */
+        .comment-body h3 {
+            margin: 0;
+            font-size: 1.2em bold;
+            color: #000000;
+        }
 
-.response-textarea {
-    width: 100%;
-    height: 80px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    padding: 10px; /* Optional: adds some padding inside the textarea */
-    border: 1px solid #000000; /* Optional: adds a border */
-    resize: vertical; /* Optional: allows vertical resizing only */
-    font-family: inherit; /* Optional: maintains consistent font */
-    background-color: #ddd8d8;
-    
-}
+        .meta {
+            font-size: 1.2em;
+            color: #000000;
+            margin-bottom: 10px;
+        }
 
-/* Optional: Style the textarea when focused */
-.response-textarea:focus {
-    outline: none;
-    border-color: #d1d1d1; /* Matches your theme color */
-    box-shadow: 0 0 5px rgba(97, 178, 129, 0.3);
-}
+        .feedback {
+            font-size: 1.2em;
+            color: #000000;
+            margin-bottom: 10px;
+        }
 
-/* Feedback and Response styles */
-.feedback-item {
-    display: block;
-    font-size: 1.5em;
-    font-style: bold;
-    background-color: #a5c2bd;
-    color: #000000;
-    padding: 15px;
-    margin: 10px;
-    border: #000000;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        .reply {
+            font-size: 0.9em;
+            color: #000000;
+            cursor: pointer;
+            text-decoration: none;
+        }
 
-.feedback-item:hover {
-    background-color: #9ec2bc;
-}
+        /* Reply Box */
+        .reply-box {
+            display: none;
+            margin-top: 10px;
+        }
 
-/* Response animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        .reply-box input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #000000;
+            margin-bottom: 5px;
+        }
 
-/* Combined response styles */
-.saved-response {
-    display: block;
-    font-size: 1.5em;
-    font-style: bold;
-    color: #000000;
-    /* background-color: #b9d3c1; */
-    margin: 0px 10px 0px 25px;
-    padding: 10px 15px;
-    border-left: 3px solid #626262;
-    animation: fadeIn 0.5s ease-out;
-}
+        .reply-box button {
+            background-color: #484848;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-/* View styles */
-.feedback-view {
-    height: 80vh;
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    margin: 10px;
-}
+        /* Nested Comments */
+        .nested-comment {
+            margin-left: 30px;
+            /* Indentation for nested comments */
+            border-left: 2px solid #484848;
+            padding-left: 15px;
+        }
 
-.view {
-    height: auto;
-    width: auto;
-    display: flex;
-    align-content: center;
-    flex-direction: column;
-    margin: 40px;
-    overflow-y: auto;
-}
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
 
-.view::-webkit-scrollbar {
-    display: none;
-}
+        .pagination li {
+            list-style: none;
+            margin: 0 5px;
+        }
 
-.pagination {
-    justify-content: center;
-    margin-top: 10px;
-}
+        .pagination a {
+            color: #afafaf;
+            text-decoration: none;
+        }
 
-.footer {
-    height: 1px;
-    background-clip: black;
-}
+        .pagination a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" href="#"><span
-                    class="flaticon-pizza-1 mr-1"></span>Pizza<br /><small>Delicous</small></a>
+            <a class="navbar-brand" href="#"><span class="flaticon-pizza-1 mr-1"></span>Delicious<br /><small>Food
+                    Reviews</small></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
                 aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
@@ -232,43 +193,28 @@
         </div>
     </nav>
 
-    <!-- Popup and overlay for feedback response -->
-    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
-    <div class="popup" id="infoPopup">
-        <div class="popup-header">
-            <h3>Response</h3>
-            <span class="popup-close" onclick="closePopup()">×</span>
-        </div>
-        <!-- Display feedback message -->
-        <div id="feedbackMessage" class="feedback-message" data-id="" ></div>
-        <!-- Text box for the response -->
-        <textarea id="responseText" class="response-textarea" placeholder="Write your response..."></textarea>
-        <!-- Send and Delete buttons -->
-        <div style="display: flex; justify-content: space-between;">
-            <button onclick="sendResponse()"
-                style="padding: 8px 12px; background-color: #94cf96; color: #333; border: none; cursor: pointer; border-radius: 4px;">Send</button>
-            <button onclick="deleteFeedback()"
-                style="padding: 8px 12px; background-color: #d5908b; color: #333; border: none; cursor: pointer; border-radius: 4px;">Delete</button>
-        </div>
-    </div>
-    </div>
-
-
+    <!-- Main Content -->
     <div class="response-main">
+        <!-- Search and Filter Section -->
         <div class="response-search">
-            <div class="res-ser-bar"></div>
+            <div class="res-ser-bar">
+                <input type="text" placeholder="Search comments..." />
+            </div>
             <div class="res-fil">
                 <select id="dateSortFilter">
                     <option value="">Sort by Date</option>
-                    <option value="none">None (All)</option>
                     <option value="newest">Newest First</option>
                     <option value="oldest">Oldest First</option>
                 </select>
             </div>
         </div>
+
+        <!-- Comments and Replies Section -->
         <div class="feedback-view">
-            <div id="view" class="view">
-                <!-- Feedback items will be dynamically loaded here -->
+            <div class="comment-list-container">
+                <ul class="comment-list" id="commentList">
+                    <!-- Comments will be dynamically generated here -->
+                </ul>
             </div>
             <nav>
                 <ul id="pagination" class="pagination">
@@ -278,7 +224,9 @@
         </div>
     </div>
 
-    <div class="footer"></div>
+    <footer class="footer"></footer>
+
+    <!-- JavaScript Files -->
     <script src="../../Content/js/jquery.min.js"></script>
     <script src="../../Content/js/jquery-migrate-3.0.1.min.js"></script>
     <script src="../../Content/js/popper.min.js"></script>
@@ -293,9 +241,10 @@
     <script src="../../Content/js/bootstrap-datepicker.js"></script>
     <script src="../../Content/js/jquery.timepicker.min.js"></script>
     <script src="../../Content/js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="../../Content/js/google-map.js"></script>
     <script src="../../Content/js/main.js"></script>
     <script src="../../Content/js/responder.js"></script>
-
 </body>
 
 </html>

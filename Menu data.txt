@@ -1,0 +1,140 @@
+const menuItems = [
+    {
+        C04_Item_Image: "../Content/images/bg_2.png",
+        C04_Item_Name: "Pizza Margherita",
+        C04_Item_Description: "Classic Italian pizza with tomatoes, mozzarella cheese, and fresh basil.",
+        C04_Price: 12.99,
+        C04_Item_Category: "Main course",
+        C04_Item_Status: "Available"
+    },
+
+    {
+       C04_Item_Image: "../Content/images/drink-6.jpg",
+       C04_Item_Name: "Spaghetti Carbonara",
+       C04_Item_Description: "Traditional Roman pasta dish made with eggs, cheese, pancetta, and pepper.",
+       C04_Price: 14.99,
+       C04_Item_Category: "Main course",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/burger-1.jpg",
+       C04_Item_Name: "Tiramisu",
+       C04_Item_Description: "Delicious coffee-flavored Italian dessert made with mascarpone cheese and cocoa.",
+       C04_Price: 6.99,
+       C04_Item_Category: "Dessert",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-7.jpg",
+       C04_Item_Name: "Caesar Salad",
+       C04_Item_Description: "Crisp romaine lettuce with Caesar dressing, croutons, and parmesan cheese.",
+       C04_Price: 8.99,
+       C04_Item_Category: "Salad",
+       C04_Item_Status: "Unavailable"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-1.jpg",
+       C04_Item_Name: "Margarita",
+       C04_Item_Description: "Classic cocktail made with tequila, lime juice, and triple sec.",
+       C04_Price: 10.99,
+       C04_Item_Category: "Drink",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-9.jpg",
+       C04_Item_Name: "Chocolate Cake",
+       C04_Item_Description: "Rich and moist chocolate cake topped with creamy chocolate frosting.",
+       C04_Price: 5.99,
+       C04_Item_Category: "Dessert",
+       C04_Item_Status: "Unavailable"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-1.jpg",
+       C04_Item_Name: "Fruit Salad",
+       C04_Item_Description: "A refreshing mix of seasonal fruits, served chilled.",
+       C04_Price: 7.99,
+       C04_Item_Category: "Fruit",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/burger-3.jpg",
+       C04_Item_Name: "Grilled Chicken",
+       C04_Item_Description: "Juicy grilled chicken breast served with a side of vegetables.",
+       C04_Price: 15.99,
+       C04_Item_Category: "Main course",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-2.jpg",
+       C04_Item_Name: "Lemonade",
+       C04_Item_Description: "Refreshing homemade lemonade, perfect for a hot day.",
+       C04_Price: 3.99,
+       C04_Item_Category: "Drink",
+       C04_Item_Status: "Unavailable"
+    },
+    {
+       C04_Item_Image: "../Content/images/burger-3.jpg",
+       C04_Item_Name: "Lasagna",
+       C04_Item_Description: "Layers of pasta, meat, cheese, and rich tomato sauce baked to perfection.",
+       C04_Price: 13.99,
+       C04_Item_Category: "Main course",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-5.jpg",
+       C04_Item_Name: "Cheesecake",
+       C04_Item_Description: "Creamy cheesecake with a graham cracker crust and fruit topping.",
+       C04_Price: 7.49,
+       C04_Item_Category: "Dessert",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-4.jpg",
+       C04_Item_Name: "Greek Salad",
+       C04_Item_Description: "A fresh mix of tomatoes, cucumbers, olives, and feta cheese.",
+       C04_Price: 9.99,
+       C04_Item_Category: "Salad",
+       C04_Item_Status: "Unavailable"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-3.jpg",
+       C04_Item_Name: "Iced Tea",
+       C04_Item_Description: "Chilled tea served with lemon and mint for a refreshing drink.",
+       C04_Price: 2.99,
+       C04_Item_Category: "Drink",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-7.jpg",
+       C04_Item_Name: "Pavlova",
+       C04_Item_Description: "Light meringue dessert topped with whipped cream and fresh fruits.",
+       C04_Price: 8.49,
+       C04_Item_Category: "Dessert",
+       C04_Item_Status: "Unavailable"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-9.jpg",
+       C04_Item_Name: "Fruit Smoothie",
+       C04_Item_Description: "A blend of fresh fruits and yogurt, perfect for a healthy snack.",
+       C04_Price: 5.99,
+       C04_Item_Category: "Fruit",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/burger-1.jpg",
+       C04_Item_Name: "Beef Stroganoff",
+       C04_Item_Description: "Tender beef strips cooked in a creamy mushroom sauce served over egg noodles.",
+       C04_Price: 16.99,
+       C04_Item_Category: "Main course",
+       C04_Item_Status: "Available"
+    },
+    {
+       C04_Item_Image: "../Content/images/drink-4.jpg",
+       C04_Item_Name: "Soda",
+       C04_Item_Description: "Chilled soft drink available in various flavors.",
+       C04_Price: 1.99,
+       C04_Item_Category: "Drink",
+       C04_Item_Status: "Unavailable"
+    }
+    // Add more items here with appropriate categories and statuses
+];

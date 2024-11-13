@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using ZestyBiteWebAppSolution.Models
+@inject SignInManager<Accounts> signInManager
+
+@if (signInManager.IsSignedIn(User)) {
+    <li class="nav-item dropdown d-none d-lg-block">
+        <a class="nav-link custom-nav-link" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="transform: translateY(5px); text-align: center;">
+            <i class="fas fa-user" style="margin-right: 5px;"></i>
+            <span class="username">@User.Identity.Name</span> 
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="@Url.Action("EditProfile", "User")">Edit Profile</a>
+            <a class="dropdown-item" href="@Url.Action("ChangePassword", "User")">Change Password</a>
+            <a class="dropdown-item" href="@Url.Action("Logout", "User")">Log Out</a>
+        </div>
+    </li>
+
+    <li class="nav-item d-lg-none">
+        <a class="nav-link" href="@Url.Action("EditProfile", "User")">Edit Profile</a>
+    </li>
+    <li class="nav-item d-lg-none">
+        <a class="nav-link" href="@Url.Action("ChangePassword", "User")">Change Password</a>
+    </li>
+    <li class="nav-item d-lg-none">
+        <a class="nav-link" href="@Url.Action("Logout", "User")">Log Out</a>
+    </li>
+
+} else {
+    <li class="nav-item dropdown d-none d-lg-block">
+        <a class="nav-link custom-nav-link" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="transform: translateY(5px); text-align: center;">
+            <i class="fas fa-user" style="margin-right: 5px;"></i>
+            <span class="username">UserName</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="@Url.Action("SignUp", "User")">Sign Up</a>
+            <a class="dropdown-item" href="@Url.Action("SignIn", "User")">Sign In</a>
+        </div>
+    </li>
+
+    <li class="nav-item d-lg-none">
+        <a class="nav-link" href="@Url.Action("SignUp", "User")">Sign Up</a>
+    </li>
+    <li class="nav-item d-lg-none">
+        <a class="nav-link" href="@Url.Action("SignIn", "User")">Sign In</a>
+    </li>
+}

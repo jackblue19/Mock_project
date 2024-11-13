@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Server";
+    Layout = "~/Areas/Server_Staff/Views/Shared/_Layout.cshtml";
+}
+
+<body id="body-config">
+    <!-- BEGIN nav -->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container nav-config">
+            <a class="navbar-brand" href="@Url.Action(" Index", "Home" )">
+                <span class="flaticon-pizza-1 mr-1"></span>Zesty Bites<br><small>Delicious</small>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                    aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Log out
+            </button>
+        </div>
+    </nav>
+    <!-- END nav -->
+    <!-- Middle Part -->
+    <div class="middle">
+        <div class="top-middle">
+            <div class="avt">
+                <img alt="">
+            </div>
+            <div class="avt-name">
+                <p><b>Nguyen Bao<br>Server</b></p>
+            </div>
+        </div>
+        <div class="bot-middle">
+            <div class="heading-txt">
+                <p>Table</p>
+            </div>
+            <div class="table-label">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="table-config">
+                <div class="table-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>01</td>
+                                <td>Empty</td>
+                            </tr>
+                            <tr>
+                                <td>02</td>
+                                <td>Serving</td>
+                            </tr>
+                            <tr>
+                                <td>03</td>
+                                <td>Empty</td>
+                            </tr>
+                            <tr>
+                                <td>04</td>
+                                <td>Reservation</td>
+                            </tr>
+                            <tr>
+                                <td>05</td>
+                                <td>Empty</td>
+                            </tr>
+                            <tr>
+                                <td>06</td>
+                                <td>Empty</td>
+                            </tr>
+                            <tr>
+                                <td>07</td>
+                                <td>Empty</td>
+                            </tr>
+                            <tr>
+                                <td>08</td>
+                                <td>Empty</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="div-space">
+    <div class="btn-config">
+        <div class="remove-btn"><button>Delete</button></div>
+        <div class="update-btn"><button>Update</button></div>
+        <div class="view-btn"><button>View</button></div>
+        <div class="add-btn"><button>Create</button></div>
+    </div>
+    <hr class="div-space">
+    <!-- Done Middle Part -->
+</body>

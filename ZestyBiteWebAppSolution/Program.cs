@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models; // Đảm bảo có using này để dùng OpenApi
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models; 
 using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,18 +16,6 @@ builder.Services.AddSession(options => {
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-builder.Services.AddIdentity<Accounts, IdentityRole>(options => {
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 8;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
-    options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
-    options.SignIn.RequireConfirmedAccount = false;
-})
-    .AddEntityFrameworkStores<ZestyBiteContext>()
-    .AddDefaultTokenProviders();
 // Cấu hình Swagger
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo {
@@ -40,11 +26,19 @@ builder.Services.AddSwaggerGen(c => {
 });
 
 // Cấu hình chuỗi kết nối MySQL
-builder.Services.AddDbContext<ZestyBiteContext>(options => {
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("MySqlConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySqlConnection")));
-});
+
+var connectionString = "server=localhost;user=root;password=hung300403.;database=zestybite";
+var serverVersion = ServerVersion.AutoDetect(connectionString);
+
+// Register the DbContext with the DI container.
+builder.Services.AddDbContext<ZestybiteContext>(
+    dbContextOptions => dbContextOptions
+        .UseMySql(connectionString, serverVersion)
+        .LogTo(Console.WriteLine, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
+);
+
 // Xây dựng ứng dụng
 var app = builder.Build();
 

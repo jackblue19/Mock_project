@@ -15,14 +15,6 @@ input.invalid {
 #nav-config {
     width: 500px !important;
 }
-/* Form Styles */
-.form-config {
-    background-color: black;
-    width: 720px !important;
-    height: 800px !important;
-    opacity: 80%;
-    margin-bottom: 0;
-}
 
 #nextBtn, #prevBtn {
     border-radius: 10px;
@@ -67,7 +59,7 @@ input.invalid {
         margin: auto;
         background-color: black;
         width: 720px !important;
-        height: 800px !important;
+        height: 900px !important;
         opacity: 80%;
         margin-bottom: 0;
     }

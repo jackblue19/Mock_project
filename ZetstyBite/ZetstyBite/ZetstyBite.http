@@ -1,0 +1,53 @@
+﻿@ZetstyBite_HostAddress = https://localhost:7062
+
+POST {{ZetstyBite_HostAddress}}/api/account/signup
+Content-Type: application/json
+
+{
+    "username": "dotnetlord",
+    "password": "StrongP@ssw0rd!",
+    "fullName": "hacker lord",
+    "phone": "1234567890",
+    "address": "123 Elm Street, Springfield",
+    "gender": true,
+    "email": "daonxemand@gmail.com",
+}
+
+###
+
+POST http://localhost:5221/api/account/signup
+Content-Type: application/json
+
+{
+    "username": "dotnetlord",
+    "password": "StrongP@ssw0rd!",
+    "fullName": "Hacker Lord",
+    "phone": "1234567890",
+    "address": "123 Elm Street, Springfield",
+    "gender": true,
+    "email": "daonxemand@gmail.com",
+    "RoleDescription": "Customer"
+}
+
+###
+GET {{ZetstyBite_HostAddress}}/api/account
+
+###
+
+POST http://localhost:5221/api/account/signup1
+Content-Type: application/json
+
+{
+    "id": 14,
+    "username": "do0r23dzzxczn",
+    "password": "StrongP@ssw0rd!",
+    "fullName": "Hacker Lord Z",
+    "phone": "1234567890",
+    "address": "123 Elm Street, Springfield",
+    "gender": false,
+    "email": "daon1nahnd@gmail.com",
+    "roleDescription": "Customer",
+    "profileImg": "default null"
+}
+
+###

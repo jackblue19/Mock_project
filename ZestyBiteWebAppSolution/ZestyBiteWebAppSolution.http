@@ -1,0 +1,19 @@
+﻿@ZestyBiteWebAppSolution_HostAddress = http://localhost:5024
+
+POST {{ZestyBiteWebAppSolution_HostAddress}}/api/account/signup2
+Content-Type: application/json
+
+{
+
+}
+
+###
+
+POST {{ZestyBiteWebAppSolution_HostAddress}}/api/account/register
+Content-Type: application/json
+
+{
+  //AccountDTO
+}
+
+###

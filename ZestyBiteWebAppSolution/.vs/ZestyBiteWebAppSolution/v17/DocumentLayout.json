@@ -1,18 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\",
+  "WorkspaceRootPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\zestybitewebappsolution\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{22EAA935-4045-48A3-83D5-B9812B4BB1DF}|ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\zestybitewebappsolution\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22EAA935-4045-48A3-83D5-B9812B4BB1DF}|ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj|solutionrelative:zestybitewebappsolution\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\zestybitewebappsolution\\models\\dtos\\accountdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:models\\dtos\\accountdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{22EAA935-4045-48A3-83D5-B9812B4BB1DF}|ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\zestybitewebappsolution\\migrations\\20241113095124_zestybite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22EAA935-4045-48A3-83D5-B9812B4BB1DF}|ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj|solutionrelative:zestybitewebappsolution\\migrations\\20241113095124_zestybite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\zestybitewebappsolution\\models\\entities\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:models\\entities\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{22EAA935-4045-48A3-83D5-B9812B4BB1DF}|ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\zestybitewebappsolution\\data\\zestybitecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22EAA935-4045-48A3-83D5-B9812B4BB1DF}|ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj|solutionrelative:zestybitewebappsolution\\data\\zestybitecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22EAA935-4045-48A3-83D5-B9812B4BB1DF}|ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\zestybitewebappsolution\\models\\accounts.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22EAA935-4045-48A3-83D5-B9812B4BB1DF}|ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj|solutionrelative:zestybitewebappsolution\\models\\accounts.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,41 +62,54 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Register.cshtml",
-              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Views\\Account\\Register.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\Register.cshtml",
-              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Views\\Account\\Register.cshtml",
-              "RelativeToolTip": "Views\\Account\\Register.cshtml",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAAAH0AAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-19T08:09:24.558Z",
+              "DocumentIndex": 1,
+              "Title": "20241113095124_ZestyBite.cs",
+              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Migrations\\20241113095124_ZestyBite.cs",
+              "RelativeDocumentMoniker": "ZestyBiteWebAppSolution\\Migrations\\20241113095124_ZestyBite.cs",
+              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Migrations\\20241113095124_ZestyBite.cs",
+              "RelativeToolTip": "ZestyBiteWebAppSolution\\Migrations\\20241113095124_ZestyBite.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAQwE4AAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-13T09:51:25.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Accounts.cs",
+              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Models\\Accounts.cs",
+              "RelativeDocumentMoniker": "ZestyBiteWebAppSolution\\Models\\Accounts.cs",
+              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Models\\Accounts.cs",
+              "RelativeToolTip": "ZestyBiteWebAppSolution\\Models\\Accounts.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-13T09:48:27.429Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Account.cs",
-              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Models\\Entities\\Account.cs",
-              "RelativeDocumentMoniker": "Models\\Entities\\Account.cs",
-              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Models\\Entities\\Account.cs",
-              "RelativeToolTip": "Models\\Entities\\Account.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAkwAAAAAAAAAAAAAAAAA==",
+              "Title": "ZestyBiteContext.cs",
+              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Data\\ZestyBiteContext.cs",
+              "RelativeDocumentMoniker": "ZestyBiteWebAppSolution\\Data\\ZestyBiteContext.cs",
+              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Data\\ZestyBiteContext.cs",
+              "RelativeToolTip": "ZestyBiteWebAppSolution\\Data\\ZestyBiteContext.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAswEAAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-19T08:08:47.794Z",
+              "WhenOpened": "2024-11-13T09:37:29.769Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AccountDTO.cs",
-              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Models\\DTOs\\AccountDTO.cs",
-              "RelativeDocumentMoniker": "Models\\DTOs\\AccountDTO.cs",
-              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Models\\DTOs\\AccountDTO.cs",
-              "RelativeToolTip": "Models\\DTOs\\AccountDTO.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAAwAkAAAAZAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "ZestyBiteWebAppSolution\\Controllers\\UserController.cs",
+              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\Controllers\\UserController.cs",
+              "RelativeToolTip": "ZestyBiteWebAppSolution\\Controllers\\UserController.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAUwBAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-19T08:08:23.198Z",
+              "WhenOpened": "2024-11-13T09:09:18.174Z",
               "EditorCaption": ""
             }
           ]

@@ -1,0 +1,282 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="home-slider owl-carousel img" style="background-image: url(/images/bg_1.jpg)">
+    <div class="slider-item">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row slider-text align-items-center" data-scrollax-parent="true">
+
+                <div class="col-md-6 col-sm-12 ftco-animate">
+                    <span class="subheading">Delicious</span>
+                    <h1 class="mb-4">Italian Cuizine</h1>
+                    <p class="mb-4 mb-md-5"><p>Italian cuisine is celebrated for its vibrant flavors and fresh ingredients. Famous for dishes like pizza and pasta, it emphasizes simplicity and quality. Each region offers unique specialties, making Italian food a delightful exploration of taste and tradition.</p>
+                    <p><a href="#" class="btn btn-primary p-3 px-xl-4 py-xl-3">Order Now</a> <a href="@Url.Action("Menu", "Home")" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3">View Menu</a></p>
+                </div>
+                <div class="col-md-6 ftco-animate">
+                    <img src="~/images/bg_1.png" class="img-fluid" alt="">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="slider-item">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row slider-text align-items-center" data-scrollax-parent="true">
+                <div class="col-md-6 col-sm-12 order-md-last ftco-animate">
+                    <span class="subheading">Crunchy</span>
+                    <h1 class="mb-4">Italian Pizza</h1>
+                    <p class="mb-4 mb-md-5"><p>Italian pizza is a beloved dish known for its thin, crispy crust and fresh toppings. Originating from Naples, traditional pizza features simple ingredients like tomatoes, mozzarella cheese, fresh basil, and olive oil. Each bite captures the essence of Italian culinary artistry, making it a favorite around the world.</p>
+                    <p><a href="#" class="btn btn-primary p-3 px-xl-4 py-xl-3">Order Now</a> <a href="@Url.Action("Menu", "Home")" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3">View Menu</a></p>
+                </div>
+                <div class="col-md-6 ftco-animate">
+                    <img src="~/images/bg_2.png" class="img-fluid" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slider-item" style="background-image: url(/images/bg_3.jpg);">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
+
+                <div class="col-md-7 col-sm-12 text-center ftco-animate">
+                    <span class="subheading">Welcome</span>
+                    <h1 class="mb-4">We cooked your desired Pizza Recipe</h1>
+                    <p class="mb-4 mb-md-5"><p>Welcome to Zesty Bites, where we bring the flavors of Italy to your table! Our passion for authentic Italian cuisine shines through in every dish we serve. Join us for a delightful dining experience filled with fresh ingredients, traditional recipes, and a warm, inviting atmosphere. Buon appetito!</p>
+                    <p><a href="#" class="btn btn-primary p-3 px-xl-4 py-xl-3">Order Now</a> <a href="@Url.Action("Menu", "Home")" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3">View Menu</a></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-about d-md-flex">
+    <div class="one-half img" style="background-image: url(/images/about.jpg);"></div>
+    <div class="one-half ftco-animate">
+        <div class="heading-section ftco-animate ">
+            <h2 class="mb-4">Welcome to <span class="flaticon-pizza">Zesty Bites</span> Restaurant</h2>
+        </div>
+        <div>
+            <p>Where every meal is a celebration of authentic Italian flavors! Our menu features a delightful array of dishes crafted from the finest ingredients, ensuring that each bite transports you to Italy. Whether you’re here for a casual dinner or a special occasion, our friendly staff is dedicated to providing you with an unforgettable dining experience. Join us and savor the true taste of Italy!</p>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section ftco-services">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 heading-section ftco-animate text-center">
+                <h2 class="mb-4">Our Services</h2>
+                <p><p>At Zesty Bites, we offer a range of exceptional services, including dine-in, takeout, and catering for special events. Our commitment to quality ensures that every meal is prepared with care, using the freshest ingredients to deliver an authentic Italian experience.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 ftco-animate">
+                <div class="media d-block text-center block-6 services">
+                    <div class="icon d-flex justify-content-center align-items-center mb-5">
+                        <span class="flaticon-diet"></span>
+                    </div>
+                    <div class="media-body">
+                        <h3 class="heading">Healthy Foods</h3>
+                        <p>At Zesty Bites, we prioritize your well-being by offering a variety of healthy dishes that are both flavorful and nourishing. Our menu is designed to delight your taste buds while supporting a balanced lifestyle.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 ftco-animate">
+                <div class="media d-block text-center block-6 services">
+                    <div class="icon d-flex justify-content-center align-items-center mb-5">
+                        <span class="flaticon-bicycle"></span>
+                    </div>
+                    <div class="media-body">
+                        <h3 class="heading">Fastest Delivery</h3>
+                        <p>We understand the importance of prompt service. That's why we guarantee the fastest delivery, ensuring that your favorite meals arrive fresh and hot at your doorstep, ready to enjoy.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 ftco-animate">
+                <div class="media d-block text-center block-6 services">
+                    <div class="icon d-flex justify-content-center align-items-center mb-5"><span class="flaticon-pizza-1"></span></div>
+                    <div class="media-body">
+                        <h3 class="heading">Original Recipes</h3>
+                        <p>Our culinary team is dedicated to crafting original recipes that highlight the authentic flavors of Italy. Each dish is a unique creation, made with love and the finest ingredients, promising an unforgettable dining experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 heading-section ftco-animate text-center">
+                <h2 class="mb-4">Hot Pizza Meals</h2>
+                <p class="flip"><span class="deg1"></span><span class="deg2"></span><span class="deg3"></span></p>
+            </div>
+        </div>
+    </div>
+    <div class="container-wrap">
+        <div class="row no-gutters d-flex">
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3 mt-5 pt-5">
+            <div class="col-md-7 heading-section text-center ftco-animate">
+                <h2 class="mb-4">Our Menu Pricing</h2>
+                <p class="flip"><span class="deg1"></span><span class="deg2"></span><span class="deg3"></span></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+            </div>
+
+            <div class="col-md-6">
+                <div class="pricing-entry d-flex ftco-animate">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-counter ftco-bg-dark img" id="section-counter" style="background-image: url(/images/bg_2.jpg);" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+                        <div class="block-18 text-center">
+                            <div class="text">
+                                <div class="icon"><span class="flaticon-pizza-1"></span></div>
+                                <strong class="number" data-number="50">0</strong>
+                                <span>Pizza Branches</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+                        <div class="block-18 text-center">
+                            <div class="text">
+                                <div class="icon"><span class="flaticon-medal"></span></div>
+                                <strong class="number" data-number="40">0</strong>
+                                <span>Number of Awards</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+                        <div class="block-18 text-center">
+                            <div class="text">
+                                <div class="icon"><span class="flaticon-laugh"></span></div>
+                                <strong class="number" data-number="10000">0</strong>
+                                <span>Happy Customer</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+                        <div class="block-18 text-center">
+                            <div class="text">
+                                <div class="icon"><span class="flaticon-chef"></span></div>
+                                <strong class="number" data-number="100">0</strong>
+                                <span>Staff</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-menu">
+    <div class="container-fluid">
+        <div class="row d-md-flex">
+            <div class="col-lg-4 ftco-animate img f-menu-img mb-5 mb-md-0" style="background-image: url(/images/about.jpg);">
+            </div>
+            <div class="col-lg-8 ftco-animate p-md-5">
+                <div class="row">
+                    <div class="col-md-12 nav-link-wrap mb-5">
+                        <div class="nav ftco-animate nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab" aria-controls="v-pills-1" aria-selected="true">Pizza</a>
+
+                            <a class="nav-link" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2" aria-selected="false">Drinks</a>
+
+                            <a class="nav-link" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-3" role="tab" aria-controls="v-pills-3" aria-selected="false">Burgers</a>
+
+                            <a class="nav-link" id="v-pills-4-tab" data-toggle="pill" href="#v-pills-4" role="tab" aria-controls="v-pills-4" aria-selected="false">Pasta</a>
+                        </div>
+                    </div>
+                    <div class="col-md-12 d-flex align-items-center">
+
+                        <div class="tab-content ftco-animate" id="v-pills-tabContent">
+
+                            <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
+                                <div class="row">
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-2-tab">
+                                <div class="row">
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="v-pills-3" role="tabpanel" aria-labelledby="v-pills-3-tab">
+                                <div class="row">
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="v-pills-4" role="tabpanel" aria-labelledby="v-pills-4-tab">
+                                <div class="row">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 heading-section ftco-animate text-center">
+                <h2 class="mb-4">Recent from blog</h2>
+            </div>
+        </div>
+        <div class="row d-flex">
+        </div>
+    </div>
+</section>
+
+<section class="ftco-appointment">
+    <div class="overlay"></div>
+    <div class="container-wrap">
+        <div class="row no-gutters d-md-flex align-items-center justify-content-center">
+            <div class="col-md-6 appointment ftco-animate">
+                <h3 class="mb-3 text-center">Contact Us</h3>
+                <form action="#" class="appointment-form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="" id="" cols="30" rows="3" class="form-control" placeholder="Message"></textarea>
+                    </div>
+                    <div class="form-group text-center">
+                        <input type="submit" value="Send" class="btn btn-primary py-3 px-4">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

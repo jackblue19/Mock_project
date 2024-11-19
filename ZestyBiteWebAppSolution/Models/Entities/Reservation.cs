@@ -15,6 +15,8 @@ public partial class Reservation
 
     public DateTime ReservationEnd { get; set; }
 
+    public decimal ReservationCost { get; set; }
+
     public virtual Bill Bill { get; set; } = null!;
 
     public virtual Table Table { get; set; } = null!;

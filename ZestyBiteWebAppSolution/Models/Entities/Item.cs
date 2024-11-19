@@ -11,7 +11,7 @@ public partial class Item
 
     public string ItemCategory { get; set; } = null!;
 
-    public ulong ItemStatus { get; set; }
+    public int ItemStatus { get; set; }
 
     public string ItemDescription { get; set; } = null!;
 
@@ -19,7 +19,7 @@ public partial class Item
 
     public string ItemImage { get; set; } = null!;
 
-    public ulong IsServed { get; set; }
+    public int IsServed { get; set; }
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
@@ -28,4 +28,6 @@ public partial class Item
     public virtual ICollection<TableDetail> TableDetails { get; set; } = new List<TableDetail>();
 
     public virtual ICollection<Table> Tables { get; set; } = new List<Table>();
+
+    public virtual ICollection<Supply> SuppliesNavigation { get; set; } = new List<Supply>();
 }

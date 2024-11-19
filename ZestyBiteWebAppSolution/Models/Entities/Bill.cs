@@ -3,7 +3,7 @@
 public partial class Bill {
     public int BillId { get; set; }
 
-    public ulong BillStatus { get; set; }
+    public int BillStatus { get; set; }
 
     public int PaymentId { get; set; }
 
@@ -15,7 +15,7 @@ public partial class Bill {
 
     public DateTime BillDatetime { get; set; }
 
-    public ulong BillType { get; set; }
+    public int BillType { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 

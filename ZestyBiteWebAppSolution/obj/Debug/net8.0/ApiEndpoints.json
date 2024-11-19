@@ -84,5 +84,15 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
+    "Method": "Register",
+    "RelativePath": "api/Account/Register",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

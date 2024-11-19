@@ -14,7 +14,7 @@ public class Account {
     public string Password { get; set; } = null!;
 
     [Required]
-    public string FullName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     [Required]
     [Phone]
@@ -24,7 +24,7 @@ public class Account {
     public string Address { get; set; } = null!;
 
     [Required]
-    public string Gender { get; set; } = null!;
+    public int Gender { get; set; }
 
     [Required]
     [EmailAddress]

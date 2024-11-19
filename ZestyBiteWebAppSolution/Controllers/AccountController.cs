@@ -41,23 +41,28 @@ namespace ZestyBiteWebAppSolution.Controllers {
         //    return View(logIn);
         //}
 
-        // GET: api/Account
-        //[HttpGet]
-        //[Route("Register")]
-        //public IActionResult Register() {
-        //    return View();
-        //}
+        //GET: api/Account
+        [HttpGet]
+        [Route("Register")]
+        public IActionResult Register() {
+            return View();
+        }
 
         [HttpPost]
         [Route("register")]
-        public async Task<IResult> Register([FromBody] AccountDTO accountDto) {
+        public async Task<IActionResult> Register([FromBody] AccountDTO accountDto) {
+            if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
+
             try {
                 var created = await _service.SignUpAsync(accountDto);
-                return TypedResults.Created($"/api/account/{created.Id}", created);
+                return Created($"/api/account/{created.Id}", created);
             } catch (InvalidOperationException ex) {
-                return TypedResults.BadRequest(new { Message = ex.Message });
+                return BadRequest(new { Message = ex.Message });
+            } catch (Exception ex) {
+                return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
             }
         }
+
 
         public IActionResult EditProfile() {
             return View();

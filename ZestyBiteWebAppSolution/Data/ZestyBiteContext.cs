@@ -32,6 +32,11 @@ public partial class ZestybiteContext : DbContext {
     public virtual DbSet<Table> Tables { get; set; }
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=localhost;user=root;password=hung300403.;database=zestybite", ServerVersion.Parse("9.0.1-mysql"));
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
@@ -49,12 +54,11 @@ public partial class ZestybiteContext : DbContext {
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.Email).HasMaxLength(255);
-            entity.Property(e => e.Gender).HasMaxLength(10);
-            entity.Property(e => e.FullName)
-                .HasMaxLength(255)
-                .HasColumnName("FullName");
+            entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Password).HasMaxLength(255);
-            entity.Property(e => e.PhoneNumber).HasMaxLength(20);
+            entity.Property(e => e.PhoneNumber)
+                .HasMaxLength(20)
+                .HasColumnName("Phone_Number");
             entity.Property(e => e.ProfileImage)
                 .HasColumnType("text")
                 .HasColumnName("Profile_Image");
@@ -80,23 +84,17 @@ public partial class ZestybiteContext : DbContext {
 
             entity.HasIndex(e => e.TableId, "Table_ID");
 
-            entity.Property(e => e.BillId)
-                .ValueGeneratedNever()
-                .HasColumnName("Bill_ID");
+            entity.Property(e => e.BillId).HasColumnName("Bill_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.BillDatetime)
                 .HasColumnType("datetime")
                 .HasColumnName("Bill_Datetime");
-            entity.Property(e => e.BillStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Bill_Status");
-            entity.Property(e => e.BillType)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Bill_Type");
+            entity.Property(e => e.BillStatus).HasColumnName("Bill_Status");
+            entity.Property(e => e.BillType).HasColumnName("Bill_Type");
             entity.Property(e => e.PaymentId).HasColumnName("Payment_ID");
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.TotalCost)
-                .HasPrecision(15)
+                .HasPrecision(12)
                 .HasColumnName("Total_Cost");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Bills)
@@ -124,9 +122,7 @@ public partial class ZestybiteContext : DbContext {
 
             entity.HasIndex(e => e.ItemId, "Item_ID");
 
-            entity.Property(e => e.FbId)
-                .ValueGeneratedNever()
-                .HasColumnName("Fb_ID");
+            entity.Property(e => e.FbId).HasColumnName("Fb_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.FbContent)
                 .HasMaxLength(255)
@@ -152,12 +148,8 @@ public partial class ZestybiteContext : DbContext {
 
             entity.ToTable("item");
 
-            entity.Property(e => e.ItemId)
-                .ValueGeneratedNever()
-                .HasColumnName("Item_ID");
-            entity.Property(e => e.IsServed)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Is_Served");
+            entity.Property(e => e.ItemId).HasColumnName("Item_ID");
+            entity.Property(e => e.IsServed).HasColumnName("Is_Served");
             entity.Property(e => e.ItemCategory)
                 .HasColumnType("enum('Main course','Dessert','Drink','Salad','Fruit')")
                 .HasColumnName("Item_Category");
@@ -170,11 +162,9 @@ public partial class ZestybiteContext : DbContext {
             entity.Property(e => e.ItemName)
                 .HasMaxLength(255)
                 .HasColumnName("Item_Name");
-            entity.Property(e => e.ItemStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Item_Status");
+            entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
             entity.Property(e => e.SuggestedPrice)
-                .HasPrecision(15)
+                .HasPrecision(12)
                 .HasColumnName("Suggested_Price");
         });
 
@@ -183,12 +173,8 @@ public partial class ZestybiteContext : DbContext {
 
             entity.ToTable("payment");
 
-            entity.Property(e => e.PaymentId)
-                .ValueGeneratedNever()
-                .HasColumnName("Payment_ID");
-            entity.Property(e => e.PaymentMethod)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Payment_Method");
+            entity.Property(e => e.PaymentId).HasColumnName("Payment_ID");
+            entity.Property(e => e.PaymentMethod).HasColumnName("Payment_Method");
         });
 
         modelBuilder.Entity<Profit>(entity => {
@@ -226,10 +212,11 @@ public partial class ZestybiteContext : DbContext {
 
             entity.HasIndex(e => e.TableId, "Table_ID");
 
-            entity.Property(e => e.ReservationId)
-                .ValueGeneratedNever()
-                .HasColumnName("Reservation_ID");
+            entity.Property(e => e.ReservationId).HasColumnName("Reservation_ID");
             entity.Property(e => e.BillId).HasColumnName("Bill_ID");
+            entity.Property(e => e.ReservationCost)
+                .HasPrecision(12)
+                .HasColumnName("Reservation_Cost");
             entity.Property(e => e.ReservationEnd)
                 .HasColumnType("datetime")
                 .HasColumnName("Reservation_End");
@@ -273,9 +260,7 @@ public partial class ZestybiteContext : DbContext {
 
             entity.HasIndex(e => e.VendorPhone, "Vendor_Phone").IsUnique();
 
-            entity.Property(e => e.SupplyId)
-                .ValueGeneratedNever()
-                .HasColumnName("Supply_ID");
+            entity.Property(e => e.SupplyId).HasColumnName("Supply_ID");
             entity.Property(e => e.DateExpiration)
                 .HasColumnType("datetime")
                 .HasColumnName("Date_Expiration");
@@ -290,12 +275,12 @@ public partial class ZestybiteContext : DbContext {
                 .HasColumnType("enum('Food','Drink','Facility')")
                 .HasColumnName("Supply_Category");
             entity.Property(e => e.SupplyPrice)
-                .HasPrecision(15)
+                .HasPrecision(12)
                 .HasColumnName("Supply_Price");
-            entity.Property(e => e.SupplyQuantity).HasColumnName("Supply_Quantity");
-            entity.Property(e => e.SupplyStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Supply_Status");
+            entity.Property(e => e.SupplyQuantity)
+                .HasPrecision(10, 2)
+                .HasColumnName("Supply_Quantity");
+            entity.Property(e => e.SupplyStatus).HasColumnName("Supply_Status");
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.VendorAddress)
                 .HasMaxLength(255)
@@ -314,6 +299,27 @@ public partial class ZestybiteContext : DbContext {
                 .HasForeignKey(d => d.TableId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("supply_ibfk_1");
+
+            entity.HasMany(d => d.Items).WithMany(p => p.SuppliesNavigation)
+                .UsingEntity<Dictionary<string, object>>(
+                    "SupplyItem",
+                    r => r.HasOne<Item>().WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("supply_item_ibfk_2"),
+                    l => l.HasOne<Supply>().WithMany()
+                        .HasForeignKey("SupplyId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("supply_item_ibfk_1"),
+                    j => {
+                        j.HasKey("SupplyId", "ItemId")
+                            .HasName("PRIMARY")
+                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                        j.ToTable("supply_item");
+                        j.HasIndex(new[] { "ItemId" }, "Item_ID");
+                        j.IndexerProperty<int>("SupplyId").HasColumnName("Supply_ID");
+                        j.IndexerProperty<int>("ItemId").HasColumnName("Item_ID");
+                    });
         });
 
         modelBuilder.Entity<Table>(entity => {
@@ -327,25 +333,19 @@ public partial class ZestybiteContext : DbContext {
 
             entity.HasIndex(e => e.ReservationId, "Reservation_ID");
 
-            entity.Property(e => e.TableId)
-                .ValueGeneratedNever()
-                .HasColumnName("Table_ID");
+            entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.ReservationId).HasColumnName("Reservation_ID");
             entity.Property(e => e.TableCapacity).HasColumnName("Table_Capacity");
-            entity.Property(e => e.TableMaintenance)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Table_Maintenance");
+            entity.Property(e => e.TableMaintenance).HasColumnName("Table_Maintenance");
             entity.Property(e => e.TableNote)
                 .HasMaxLength(255)
                 .HasColumnName("Table_Note");
             entity.Property(e => e.TableStatus)
                 .HasColumnType("enum('Served','Empty','Waiting','Deposit')")
                 .HasColumnName("Table_Status");
-            entity.Property(e => e.TableType)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Table_Type");
+            entity.Property(e => e.TableType).HasColumnName("Table_Type");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Tables)
                 .HasForeignKey(d => d.AccountId)

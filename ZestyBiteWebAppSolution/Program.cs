@@ -30,7 +30,7 @@ builder.Services.AddSwaggerGen(c => {
 });
 
 // Configure MySQL Connection
-var connectionString = "server=localhost;user=root;password=hung300403.;database=zestybite";
+var connectionString = "Server=Jack-Blue;Port=3306;Database=zestybite;Uid=jack;Pwd=jack1624.,";
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
 builder.Services.AddDbContext<ZestybiteContext>(dbContextOptions =>
@@ -44,6 +44,10 @@ builder.Services.AddDbContext<ZestybiteContext>(dbContextOptions =>
 // Register Repositories and Services in DI
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IRoleService , RoleService>();
+builder.Services.AddScoped<IRoleRepository , RoleRepository>();
+
+builder.Services.AddEndpointsApiExplorer();
 
 // Configure CORS
 builder.Services.AddCors(options => {
@@ -82,6 +86,7 @@ app.UseRouting();
 
 // Add Session Middleware (after routing and before authorization)
 app.UseSession();
+//app.MapControllers();
 
 // Middleware for Authorization
 app.UseAuthorization();

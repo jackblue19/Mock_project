@@ -3,6 +3,8 @@ using ZetstyBite.Models.Entities;
 using ZetstyBite.Repositories.Interfaces;
 using ZetstyBite.Services.Interfaces;
 using Humanizer;
+using ZetstyBite.Models.DTOs;
+
 
 namespace ZetstyBite.Services.Implementations
 {
@@ -36,7 +38,7 @@ namespace ZetstyBite.Services.Implementations
             return created;
         }
 
-        public async Task<Account> SignUpAsync(Account dto)
+        public async Task<Account> SignUpAsync(AccountDTO dto)
         {
             if (dto == null)
             {
@@ -56,15 +58,13 @@ namespace ZetstyBite.Services.Implementations
             }
 
             var role = await _roleRepository.GetById(7);
-            dto.Role = role;
-            dto.RoleId = 7;
             var acc = new Account
             {
-                AccountId = dto.AccountId,
+                AccountId = dto.Id,
                 Username = dto.Username,
-                Name = dto.Name,
+                Name = dto.FullName,
                 Password = dto.Password,
-                PhoneNumber = dto.PhoneNumber,
+                PhoneNumber = dto.Phone,
                 Address = dto.Address,
                 Gender = dto.Gender,
                 Email = dto.Email,

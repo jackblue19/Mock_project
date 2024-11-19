@@ -1,4 +1,6 @@
 ﻿using ZetstyBite.Models.Entities;
+using ZetstyBite.Models.DTOs;
+
 
 namespace ZetstyBite.Services.Interfaces
 {
@@ -7,7 +9,7 @@ namespace ZetstyBite.Services.Interfaces
         Task<IEnumerable<Account?>> GetALlAccountAsync();
         Task<Account> CreateAccountAsync(Account account);
         Task<Account> GetAccountById(int id);
-        Task<Account> SignUpAsync(Account dto);
+        Task<Account> SignUpAsync(AccountDTO dto);
     }
 }
     

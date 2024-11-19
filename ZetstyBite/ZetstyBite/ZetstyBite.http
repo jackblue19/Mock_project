@@ -19,7 +19,7 @@ GET {{ZetstyBite_HostAddress}}/api/account
 
 ###
 
-GET http://localhost:5221/api/account/signup2
+GET http://localhost:5221/api/account/10
 
 ###
 
@@ -27,14 +27,14 @@ POST http://localhost:5221/api/account/signup2
 Content-Type: application/json
 
 {
-    "accountId": 16,
-    "username": "neaccount19c39",
+    "accountId": 17,
+    "username": "neacco7unt19c39",
     "password": "StrongP@ssw0rd!",
     "name": "Hacker Lord Z",
     "phoneNumber": "1234567890",
     "address": "123 Elm Street, Springfield",
     "gender": 0, 
-    "email": "dao3z19cz0d@gmail.com",
+    "email": "dao7z19cz0d@gmail.com",
     "profileImage": "default null",
     "verificationCode": "abc123",
     "role":{

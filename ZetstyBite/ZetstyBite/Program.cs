@@ -6,6 +6,8 @@ using ZetstyBite.Repositories.Interfaces;
 using ZetstyBite.Repositories.Implementations;
 using ZetstyBite.Services.Implementations;
 using ZetstyBite.Services.Interfaces;
+using ZetstyBite.Models.DTOs;
+
 
 internal class Program
 {

@@ -1,6 +1,7 @@
 ﻿using ZetstyBite.Models.Entities;
 
 
+
 namespace ZetstyBite.Repositories.Interfaces
 {
     public interface IAccountRepository : IRepository<Account>

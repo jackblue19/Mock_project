@@ -6,7 +6,7 @@ using ZetstyBite.Services.Implementations;
 using Microsoft.AspNetCore.Http; // For StatusCodes
 using ZetstyBite.Models.Entities;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-
+using ZetstyBite.Models.DTOs;
 
 namespace ZetstyBite.Controllers
 {
@@ -23,7 +23,7 @@ namespace ZetstyBite.Controllers
 
         // no typedResult
         [HttpPost("signup")]
-        public async Task<ActionResult<Account>> SignUpAction([FromBody] Account dto)
+        public async Task<ActionResult<Account>> SignUpAction([FromBody] AccountDTO dto)
         {
             if (!ModelState.IsValid)
             {
@@ -41,7 +41,7 @@ namespace ZetstyBite.Controllers
             }
         }
         [HttpPost("signup2")]
-        public async Task<IResult> SignUpSecond([FromBody] Account acc)
+        public async Task<IResult> SignUpSecond([FromBody] AccountDTO acc)
         {
             try
             {

@@ -27,6 +27,8 @@ internal class Program
         //  register
         builder.Services.AddScoped<IAccountService , AccountService>();
         builder.Services.AddScoped<IAccountRepository , AccountRepository>();
+        builder.Services.AddScoped<IRoleService, RoleService>();
+        builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
         builder.Services.AddEndpointsApiExplorer();
 

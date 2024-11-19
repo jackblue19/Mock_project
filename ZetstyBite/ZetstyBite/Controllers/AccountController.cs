@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ZetstyBite.Services;
-using ZetstyBite.Models.DTOs;
 using ZetstyBite.Services.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ZetstyBite.Services.Implementations;
 using Microsoft.AspNetCore.Http; // For StatusCodes
+using ZetstyBite.Models.Entities;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 
 namespace ZetstyBite.Controllers
@@ -22,9 +23,9 @@ namespace ZetstyBite.Controllers
 
         // no typedResult
         [HttpPost("signup")]
-        public async Task<ActionResult<AccountDTO>> SignUpAction([FromBody] AccountDTO dto)
+        public async Task<ActionResult<Account>> SignUpAction([FromBody] Account dto)
         {
-            if ( !ModelState.IsValid )
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -32,46 +33,45 @@ namespace ZetstyBite.Controllers
             try
             {
                 var createdAccount = await _service.SignUpAsync(dto);
-                return CreatedAtAction(nameof(SignUpAction) , new { id = createdAccount.Id } , createdAccount);
+                return CreatedAtAction(nameof(SignUpAction), new { id = createdAccount.AccountId }, createdAccount);
             }
-            catch ( InvalidOperationException ex )
+            catch (InvalidOperationException ex)
             {
                 return BadRequest(new { Message = ex.Message });
             }
         }
-        
-        //  with TypedResult sol 1:
-        [HttpPost("signup1")]
-        public async Task<Results<Created<AccountDTO> , BadRequest>> SignUpFirst([FromBody] AccountDTO dto)
-        {
-            try
-            {
-                var created = await _service.SignUpAsync(dto);
-                return TypedResults.Created($"/api/account/{created.Id}" , created);
-            }
-            catch ( InvalidOperationException ex )
-            {
-                return TypedResults.BadRequest();
-            }
-        }
-
-
-        //  with TypedResult sol 1:
         [HttpPost("signup2")]
-        public async Task<IResult> SignUpSecond([FromBody] AccountDTO accountDto)
+        public async Task<IResult> SignUpSecond([FromBody] Account acc)
         {
             try
             {
-                var created = await _service.SignUpAsync(accountDto);
-                return TypedResults.Created($"/api/account/{created.Id}" , created);
+                var created = await _service.SignUpAsync(acc);
+                return TypedResults.Created($"/api/account/{created.AccountId}", created);
             }
-            catch ( InvalidOperationException ex )
+            catch (InvalidOperationException ex)
             {
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
+        [HttpGet("api/account/{id}")]
+        public async Task<IResult> ViewProfile(int id)
+        {
+            try
+            {
+                var existed = await _service.GetAccountById(id);
+                if(existed == null){
+                    return TypedResults.NotFound();
+                }
+                return TypedResults.Ok(existed);
+            }
+            catch (Exception e)
+            {
+                return TypedResults.BadRequest(new { Message = e.Message });
+                // return TypedResults.BadRequest();
+            }
+        }
 
-    
+
         public IActionResult Index()
         {
             return View();

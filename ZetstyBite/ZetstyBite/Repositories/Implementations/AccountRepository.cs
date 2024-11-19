@@ -3,6 +3,7 @@ using System.Security.Principal;
 using Microsoft.EntityFrameworkCore;
 using ZetstyBite.Repositories.Interfaces;
 using ZetstyBite.Models.Entities;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace ZetstyBite.Repositories.Implementations
@@ -14,70 +15,61 @@ namespace ZetstyBite.Repositories.Implementations
         {
             _context = context;
         }
-        /*      the logic inside shud be implemented for Service layer
-         public async Task<Account> CreateAccountAsync(Account account)
+
+                                /* Interface */
+        public async Task<IEnumerable<Account?>> SearchAccountByNamesAsync(string name)
         {
-            var existed = await _context.Accounts
-                                        .FirstOrDefaultAsync(acc => acc.Username == account.Username);
-            if ( existed != null )
-            {
-                throw new InvalidOperationException($"Username '{account.Username}' already exists.");
-            }
-            await _context.Accounts.AddAsync(account);
-            await _context.SaveChangesAsync();
-            //return await Task.FromResult(account);
-            return account;
+            return await _context.Accounts
+                                 .Where(acc => acc.Name == name)
+                                 .ToListAsync();
         }
-        */
-        public async Task<Account> CreateAccountAsync(Account account)
+        public async Task<Account> CreateAccountAsync(Account account, sbyte roleId)
         {
+            account.RoleId = roleId;
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
             return account;
         }
         public async Task<Account?> GetAccountByUsnAsync(string usn)
         {
-            return await _context.Accounts.FirstOrDefaultAsync(acc => acc.Username == usn);
+            return await _context.Accounts
+                                 .FirstOrDefaultAsync(acc => acc.Username == usn);
+        }
+        public async Task<Account?> GetAccountByEmailAsync(string email){
+            return await _context.Accounts
+                                 .FirstOrDefaultAsync(acc => acc.Email == email);
         }
 
-        public async Task<Account> AddAsync(Account account)
+                                /* Generic */
+        public async Task<IEnumerable<Account?>> GetAllAsync()
         {
-            _context.Accounts.Add(account);
-            await _context.SaveChangesAsync();
-            return account;
+            return await _context.Accounts.ToListAsync();
         }
-
-        //  method below for fun -> dont use
+        public async Task<Account?> GetByIdAsync(Account entity)
+        {
+            return await _context.Accounts
+                                 .Where(acc => acc.AccountId == entity.AccountId)
+                                 .SingleOrDefaultAsync();
+        }
         public async Task<Account> CreateAsync(Account entity)
         {
-            await _context.Set<Account>().AddAsync(entity);
+            // await _context.Set<Account>().AddAsync(entity);  // => not sure to test
+            // await _context.Accounts.AddAsync(entity); // => not rcm to use
+            _context.Accounts.Add(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
-
-        public Task<bool> DeletedAsync(int id)
+        public async Task<Account> UpdateAsync(Account entity)
         {
-            throw new NotImplementedException();
+            _context.Accounts.Update(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
-
-        public Task<IEnumerable<Account>> GetAllAsync()
+        public async Task<Account> DeletedAsync(Account entity)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Account>> GetByIdAsnyc(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Account>> SearchAccountByNamesAsync(string names)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Account> UpdateAsync(Account entity)
-        {
-            throw new NotImplementedException();
+            _context.Accounts.Remove(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
     }
 }

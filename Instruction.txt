@@ -766,4 +766,89 @@ Các loại Filters trong ASP.NET Core
 	4. Exception Filters: Xử lý ngoại lệ (exception) nếu action method xảy ra lỗi.
 	5. Resource Filters: Can thiệp vào các tài nguyên trước khi chúng được nạp vào.
 
+/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=
+/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=
+/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=/*-+=
+
+public interface IProductRepository
+{
+    Task AddProductsAsync(List<Product> products);
+}
+
+public class ProductRepository : IProductRepository
+{
+    private readonly DbContext _dbContext; // Giả lập DbContext của EF Core
+
+    public ProductRepository(DbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task AddProductsAsync(List<Product> products)
+    {
+        // Sử dụng EF Core để thêm danh sách sản phẩm
+        await _dbContext.Products.AddRangeAsync(products);
+        await _dbContext.SaveChangesAsync();
+    }
+}
+
+public interface IProductService
+{
+    Task AddProductsAsync(List<Product> products);
+}
+
+public class ProductService : IProductService
+{
+    private readonly IProductRepository _repository;
+
+    public ProductService(IProductRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task AddProductsAsync(List<Product> products)
+    {
+        // Thực hiện logic bổ sung trước khi thêm
+        foreach (var product in products)
+        {
+            if (string.IsNullOrWhiteSpace(product.Name))
+                throw new ArgumentException("Product name cannot be empty.");
+
+            if (product.Price <= 0)
+                throw new ArgumentException($"Invalid price for product {product.Name}");
+        }
+
+        // Gọi repository để lưu dữ liệu
+        await _repository.AddProductsAsync(products);
+    }
+}
+
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    private readonly IProductService _productService;
+
+    public ProductsController(IProductService productService)
+    {
+        _productService = productService;
+    }
+
+    [HttpPost]
+    [Route("add-multiple")]
+    public async Task<IActionResult> AddProducts([FromBody] List<Product> products)
+    {
+        try
+        {
+            await _productService.AddProductsAsync(products);
+            return Ok("Products added successfully!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+}
+
+Dưới đây là ví dụ cụ thể để tạo một tính năng Sign-In trong RESTful API.
 

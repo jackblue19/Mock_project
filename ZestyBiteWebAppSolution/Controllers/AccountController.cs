@@ -12,7 +12,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         private readonly IAccountService _service;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ILogger<AccountController> logger , IAccountService accountService)
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService)
         {
             _logger = logger;
             _service = accountService;
@@ -58,20 +58,20 @@ namespace ZestyBiteWebAppSolution.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] AccountDTO accountDto)
         {
-            if ( accountDto == null ) return BadRequest(new { Message = "Invalid payload" });
+            if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
 
             try
             {
                 var created = await _service.SignUpAsync(accountDto);
-                return Created($"/api/account/{created.Id}" , created);
+                return Created($"/api/account/{created.Id}", created);
             }
-            catch ( InvalidOperationException ex )
+            catch (InvalidOperationException ex)
             {
                 return BadRequest(new { Message = ex.Message });
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
-                return StatusCode(500 , new { Message = "Internal Server Error" , Detail = ex.Message });
+                return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
             }
         }
 
@@ -81,9 +81,80 @@ namespace ZestyBiteWebAppSolution.Controllers
             try
             {
                 var created = await _service.SignUpAsync(acc);
-                return TypedResults.Created($"/api/account/{created.Id}" , created);
+                return TypedResults.Created($"/api/account/{created.Id}", created);
             }
-            catch ( InvalidOperationException ex )
+            catch (InvalidOperationException ex)
+            {
+                return TypedResults.BadRequest(new { Message = ex.Message });
+            }
+        }
+        [HttpGet("profile/{id}")]
+        public async Task<IResult> ViewProfile(int id)
+        {
+            try
+            {
+                var dto = await _service.GetAccountByIdAsync(id);
+                if (dto == null)
+                    return TypedResults.NotFound();
+                // return TypedResults.Ok($"/api/account/{account.UserName}", account); // => usage for page redirect
+                return TypedResults.Ok(dto); // => api in json only =)))
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                return TypedResults.BadRequest(new { Message = ex.Message });
+            }
+            catch (ArgumentException ex) // Xử lý lỗi từ service
+            {
+                return TypedResults.BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex) // Bắt lỗi bất kỳ khác
+            {
+                return TypedResults.Problem($"Internal Server Error: {ex.Message}");
+            }
+
+        }
+        [HttpGet("all")]
+        public async Task<IResult> GetAllAccount()
+        {
+            try
+            {
+                var accounts = await _service.GetALlAccountAsync();
+                if (!accounts.Any()) return TypedResults.NotFound();
+                return TypedResults.Ok(accounts);
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                return TypedResults.BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [HttpPut("changepassword")]
+        public async Task<IResult> ChangePassword([FromBody] ChangePwdDTO dto)
+        {
+            try
+            {
+                await _service.ChangePwd(dto);
+                return TypedResults.Ok(dto);    // dùng tạm thời để check ngay trên response
+                // return TypedResults.NoContent(); //  => nếu hoành thành rồi thì nên trả về NoContent cho chuẩn
+            }
+            catch (InvalidOperationException ex)
+            {
+                return TypedResults.BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [HttpPut("modify")]
+        public async Task<IResult> UpdateProfile([FromBody] UpdateProfileDTO dto)
+        {
+            try
+            {
+                await _service.UpdateProfile(dto);
+                return TypedResults.Ok(dto);    // dùng tạm thời để check ngay trên response
+                // return TypedResults.NoContent(); //  => nếu hoành thành rồi thì nên trả về NoContent cho chuẩn
+            }
+            catch (InvalidOperationException ex)
             {
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
@@ -108,7 +179,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Index" , "Home");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

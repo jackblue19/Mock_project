@@ -20,6 +20,16 @@ builder.Services.AddSession(options => {
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+//  4 dòng code dưới để có thể return về 1 Entity mà không cần chuyển sang DTO
+//  -> tuy nhiên rủi ro kha cao
+//  => nên kết hợp cùng [JsonIgnore] có thể tham khảo ở Entity Role (class) <4 loc>
+/*builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    });*/
+
+
 // Configure Swagger
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo {
@@ -30,7 +40,7 @@ builder.Services.AddSwaggerGen(c => {
 });
 
 // Configure MySQL Connection
-var connectionString = "Server=Jack-Blue;Port=3306;Database=zestybite;Uid=jack;Pwd=jack1624.,";
+var connectionString = "Server=Jack-Blue;Port=3306;Database=zestybite;Uid=root;Pwd=123456789";
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
 builder.Services.AddDbContext<ZestybiteContext>(dbContextOptions =>

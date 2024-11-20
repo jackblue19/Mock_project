@@ -30,6 +30,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         public async Task<Account?> GetAccountByUsnAsync(string usn)
         {
             return await _context.Accounts
+                                 .Include(acc => acc.Role)
                                  .FirstOrDefaultAsync(acc => acc.UserName == usn);
         }
         public async Task<Account?> GetAccountByEmailAsync(string email)
@@ -41,13 +42,18 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
                                     /* Generic */
         public async Task<IEnumerable<Account?>> GetAllAsync()
         {
-            return await _context.Accounts.ToListAsync();
+            return await _context.Accounts
+                                 .Include(acc => acc.Role)
+                                 .ToListAsync();
         }
         public async Task<Account?> GetByIdAsync(int id)
         {
+            // return await _context.Accounts
+            //                      .Where(acc => acc.AccountId == id)
+            //                      .SingleOrDefaultAsync();
             return await _context.Accounts
-                                 .Where(acc => acc.AccountId == id)
-                                 .SingleOrDefaultAsync();
+                                 .Include(acc => acc.Role)
+                                 .FirstOrDefaultAsync(acc => acc.AccountId == id);
         }
         public async Task<Account> CreateAsync(Account acc)
         {

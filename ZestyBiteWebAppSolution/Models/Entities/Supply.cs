@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ZestyBiteWebAppSolution.Models1.Entities;
+namespace ZestyBiteWebAppSolution.Models.Entities;
 
 public partial class Supply
 {
@@ -9,11 +9,11 @@ public partial class Supply
 
     public string ProductName { get; set; } = null!;
 
-    public int SupplyQuantity { get; set; }
+    public decimal SupplyQuantity { get; set; }
 
     public decimal SupplyPrice { get; set; }
 
-    public ulong SupplyStatus { get; set; }
+    public int SupplyStatus { get; set; }
 
     public DateTime DateImport { get; set; }
 
@@ -36,4 +36,6 @@ public partial class Supply
     public virtual ICollection<Profit> Profits { get; set; } = new List<Profit>();
 
     public virtual Table Table { get; set; } = null!;
+
+    public virtual ICollection<Item> Items { get; set; } = new List<Item>();
 }

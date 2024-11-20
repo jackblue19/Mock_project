@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ZestyBiteWebAppSolution.Models1.Entities;
+namespace ZestyBiteWebAppSolution.Models.Entities;
 
 public partial class Feedback
 {

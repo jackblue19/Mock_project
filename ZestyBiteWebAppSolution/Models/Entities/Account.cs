@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ZestyBiteWebAppSolution.Models1.Entities;
+namespace ZestyBiteWebAppSolution.Models.Entities;
 
-public class Account
-{
+public class Account {
     [Key]
     public int AccountId { get; set; }
 
@@ -16,10 +14,7 @@ public class Account
     public string Password { get; set; } = null!;
 
     [Required]
-    public string FirstName { get; set; } = null!;
-
-    [Required]
-    public string LastName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     [Required]
     [Phone]
@@ -29,21 +24,18 @@ public class Account
     public string Address { get; set; } = null!;
 
     [Required]
-    public string Gender { get; set; } = null!;
+    public int Gender { get; set; }
 
     [Required]
     [EmailAddress]
     public string Email { get; set; } = null!;
 
-    public string? VerificationCode { get; set; } 
+    public string? VerificationCode { get; set; }
 
     public string? ProfileImage { get; set; }
 
     [Required]
     public sbyte RoleId { get; set; }
-
-    [NotMapped]
-    public string ConfirmPassword { get; set; } = null!;
 
     // Navigation properties
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();

@@ -1,4 +1,9 @@
-﻿namespace ZestyBiteWebAppSolution.Services.Interfaces {
-    public class IRoleService {
+﻿using ZestyBiteWebAppSolution.Models.Entities;
+
+namespace ZestyBiteWebAppSolution.Services.Interfaces
+{
+    public interface IRoleService
+    {
+        Task<Role?> GetRoleByIdAsync(int id);
     }
 }

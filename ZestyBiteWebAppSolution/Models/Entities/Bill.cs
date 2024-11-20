@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Models1.Entities;
-
-public partial class Bill
-{
+public partial class Bill {
     public int BillId { get; set; }
 
-    public ulong BillStatus { get; set; }
+    public int BillStatus { get; set; }
 
     public int PaymentId { get; set; }
 
@@ -19,7 +15,7 @@ public partial class Bill
 
     public DateTime BillDatetime { get; set; }
 
-    public ulong BillType { get; set; }
+    public int BillType { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 

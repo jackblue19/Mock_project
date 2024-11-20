@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
-using ZestyBiteWebAppSolution.Models1.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ZestyBiteWebAppSolution.Models.Entities;
 
 namespace ZestyBiteWebAppSolution.Data;
 
-public partial class ZestybiteContext : DbContext
-{
-    public ZestybiteContext()
-    {
+public partial class ZestybiteContext : DbContext {
+    public ZestybiteContext() {
     }
 
     public ZestybiteContext(DbContextOptions<ZestybiteContext> options)
-        : base(options)
-    {
+        : base(options) {
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
@@ -36,16 +30,15 @@ public partial class ZestybiteContext : DbContext
     public virtual DbSet<Supply> Supplies { get; set; }
 
     public virtual DbSet<Table> Tables { get; set; }
-
+     
     public virtual DbSet<TableDetail> TableDetails { get; set; }
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Account>(entity =>
-        {
+        modelBuilder.Entity<Account>(entity => {
             entity.HasKey(e => e.AccountId).HasName("PRIMARY");
 
             entity.ToTable("account");
@@ -57,22 +50,15 @@ public partial class ZestybiteContext : DbContext
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.Email).HasMaxLength(255);
-            entity.Property(e => e.FirstName)
-                .HasMaxLength(255)
-                .HasColumnName("First_Name");
-            entity.Property(e => e.Gender).HasMaxLength(10);
-            entity.Property(e => e.LastName)
-                .HasMaxLength(255)
-                .HasColumnName("Last_Name");
+            entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Password).HasMaxLength(255);
-            entity.Property(e => e.PhoneNumber).HasMaxLength(20);
+            entity.Property(e => e.PhoneNumber)
+                .HasMaxLength(20)
+                .HasColumnName("Phone_Number");
             entity.Property(e => e.ProfileImage)
                 .HasColumnType("text")
                 .HasColumnName("Profile_Image");
             entity.Property(e => e.RoleId).HasColumnName("Role_ID");
-            entity.Property(e => e.VerificationCode)
-                .HasMaxLength(50)
-                .HasColumnName("Verification_Code");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.RoleId)
@@ -80,8 +66,7 @@ public partial class ZestybiteContext : DbContext
                 .HasConstraintName("account_ibfk_1");
         });
 
-        modelBuilder.Entity<Bill>(entity =>
-        {
+        modelBuilder.Entity<Bill>(entity => {
             entity.HasKey(e => e.BillId).HasName("PRIMARY");
 
             entity.ToTable("bill");
@@ -92,23 +77,17 @@ public partial class ZestybiteContext : DbContext
 
             entity.HasIndex(e => e.TableId, "Table_ID");
 
-            entity.Property(e => e.BillId)
-                .ValueGeneratedNever()
-                .HasColumnName("Bill_ID");
+            entity.Property(e => e.BillId).HasColumnName("Bill_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.BillDatetime)
                 .HasColumnType("datetime")
                 .HasColumnName("Bill_Datetime");
-            entity.Property(e => e.BillStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Bill_Status");
-            entity.Property(e => e.BillType)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Bill_Type");
+            entity.Property(e => e.BillStatus).HasColumnName("Bill_Status");
+            entity.Property(e => e.BillType).HasColumnName("Bill_Type");
             entity.Property(e => e.PaymentId).HasColumnName("Payment_ID");
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.TotalCost)
-                .HasPrecision(15)
+                .HasPrecision(12)
                 .HasColumnName("Total_Cost");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Bills)
@@ -127,8 +106,7 @@ public partial class ZestybiteContext : DbContext
                 .HasConstraintName("bill_ibfk_3");
         });
 
-        modelBuilder.Entity<Feedback>(entity =>
-        {
+        modelBuilder.Entity<Feedback>(entity => {
             entity.HasKey(e => e.FbId).HasName("PRIMARY");
 
             entity.ToTable("feedback");
@@ -137,9 +115,7 @@ public partial class ZestybiteContext : DbContext
 
             entity.HasIndex(e => e.ItemId, "Item_ID");
 
-            entity.Property(e => e.FbId)
-                .ValueGeneratedNever()
-                .HasColumnName("Fb_ID");
+            entity.Property(e => e.FbId).HasColumnName("Fb_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.FbContent)
                 .HasMaxLength(255)
@@ -160,18 +136,13 @@ public partial class ZestybiteContext : DbContext
                 .HasConstraintName("feedback_ibfk_2");
         });
 
-        modelBuilder.Entity<Item>(entity =>
-        {
+        modelBuilder.Entity<Item>(entity => {
             entity.HasKey(e => e.ItemId).HasName("PRIMARY");
 
             entity.ToTable("item");
 
-            entity.Property(e => e.ItemId)
-                .ValueGeneratedNever()
-                .HasColumnName("Item_ID");
-            entity.Property(e => e.IsServed)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Is_Served");
+            entity.Property(e => e.ItemId).HasColumnName("Item_ID");
+            entity.Property(e => e.IsServed).HasColumnName("Is_Served");
             entity.Property(e => e.ItemCategory)
                 .HasColumnType("enum('Main course','Dessert','Drink','Salad','Fruit')")
                 .HasColumnName("Item_Category");
@@ -184,30 +155,22 @@ public partial class ZestybiteContext : DbContext
             entity.Property(e => e.ItemName)
                 .HasMaxLength(255)
                 .HasColumnName("Item_Name");
-            entity.Property(e => e.ItemStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Item_Status");
+            entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
             entity.Property(e => e.SuggestedPrice)
-                .HasPrecision(15)
+                .HasPrecision(12)
                 .HasColumnName("Suggested_Price");
         });
 
-        modelBuilder.Entity<Payment>(entity =>
-        {
+        modelBuilder.Entity<Payment>(entity => {
             entity.HasKey(e => e.PaymentId).HasName("PRIMARY");
 
             entity.ToTable("payment");
 
-            entity.Property(e => e.PaymentId)
-                .ValueGeneratedNever()
-                .HasColumnName("Payment_ID");
-            entity.Property(e => e.PaymentMethod)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Payment_Method");
+            entity.Property(e => e.PaymentId).HasColumnName("Payment_ID");
+            entity.Property(e => e.PaymentMethod).HasColumnName("Payment_Method");
         });
 
-        modelBuilder.Entity<Profit>(entity =>
-        {
+        modelBuilder.Entity<Profit>(entity => {
             entity.HasKey(e => e.Date).HasName("PRIMARY");
 
             entity.ToTable("profit");
@@ -233,8 +196,7 @@ public partial class ZestybiteContext : DbContext
                 .HasConstraintName("profit_ibfk_1");
         });
 
-        modelBuilder.Entity<Reservation>(entity =>
-        {
+        modelBuilder.Entity<Reservation>(entity => {
             entity.HasKey(e => e.ReservationId).HasName("PRIMARY");
 
             entity.ToTable("reservation");
@@ -243,10 +205,11 @@ public partial class ZestybiteContext : DbContext
 
             entity.HasIndex(e => e.TableId, "Table_ID");
 
-            entity.Property(e => e.ReservationId)
-                .ValueGeneratedNever()
-                .HasColumnName("Reservation_ID");
+            entity.Property(e => e.ReservationId).HasColumnName("Reservation_ID");
             entity.Property(e => e.BillId).HasColumnName("Bill_ID");
+            entity.Property(e => e.ReservationCost)
+                .HasPrecision(12)
+                .HasColumnName("Reservation_Cost");
             entity.Property(e => e.ReservationEnd)
                 .HasColumnType("datetime")
                 .HasColumnName("Reservation_End");
@@ -266,8 +229,7 @@ public partial class ZestybiteContext : DbContext
                 .HasConstraintName("reservation_ibfk_1");
         });
 
-        modelBuilder.Entity<Role>(entity =>
-        {
+        modelBuilder.Entity<Role>(entity => {
             entity.HasKey(e => e.RoleId).HasName("PRIMARY");
 
             entity.ToTable("role");
@@ -280,8 +242,7 @@ public partial class ZestybiteContext : DbContext
                 .HasColumnName("Role_Description");
         });
 
-        modelBuilder.Entity<Supply>(entity =>
-        {
+        modelBuilder.Entity<Supply>(entity => {
             entity.HasKey(e => e.SupplyId).HasName("PRIMARY");
 
             entity.ToTable("supply");
@@ -292,9 +253,7 @@ public partial class ZestybiteContext : DbContext
 
             entity.HasIndex(e => e.VendorPhone, "Vendor_Phone").IsUnique();
 
-            entity.Property(e => e.SupplyId)
-                .ValueGeneratedNever()
-                .HasColumnName("Supply_ID");
+            entity.Property(e => e.SupplyId).HasColumnName("Supply_ID");
             entity.Property(e => e.DateExpiration)
                 .HasColumnType("datetime")
                 .HasColumnName("Date_Expiration");
@@ -309,12 +268,12 @@ public partial class ZestybiteContext : DbContext
                 .HasColumnType("enum('Food','Drink','Facility')")
                 .HasColumnName("Supply_Category");
             entity.Property(e => e.SupplyPrice)
-                .HasPrecision(15)
+                .HasPrecision(12)
                 .HasColumnName("Supply_Price");
-            entity.Property(e => e.SupplyQuantity).HasColumnName("Supply_Quantity");
-            entity.Property(e => e.SupplyStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Supply_Status");
+            entity.Property(e => e.SupplyQuantity)
+                .HasPrecision(10, 2)
+                .HasColumnName("Supply_Quantity");
+            entity.Property(e => e.SupplyStatus).HasColumnName("Supply_Status");
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.VendorAddress)
                 .HasMaxLength(255)
@@ -333,10 +292,30 @@ public partial class ZestybiteContext : DbContext
                 .HasForeignKey(d => d.TableId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("supply_ibfk_1");
+
+            entity.HasMany(d => d.Items).WithMany(p => p.SuppliesNavigation)
+                .UsingEntity<Dictionary<string, object>>(
+                    "SupplyItem",
+                    r => r.HasOne<Item>().WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("supply_item_ibfk_2"),
+                    l => l.HasOne<Supply>().WithMany()
+                        .HasForeignKey("SupplyId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("supply_item_ibfk_1"),
+                    j => {
+                        j.HasKey("SupplyId", "ItemId")
+                            .HasName("PRIMARY")
+                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                        j.ToTable("supply_item");
+                        j.HasIndex(new[] { "ItemId" }, "Item_ID");
+                        j.IndexerProperty<int>("SupplyId").HasColumnName("Supply_ID");
+                        j.IndexerProperty<int>("ItemId").HasColumnName("Item_ID");
+                    });
         });
 
-        modelBuilder.Entity<Table>(entity =>
-        {
+        modelBuilder.Entity<Table>(entity => {
             entity.HasKey(e => e.TableId).HasName("PRIMARY");
 
             entity.ToTable("table");
@@ -347,25 +326,19 @@ public partial class ZestybiteContext : DbContext
 
             entity.HasIndex(e => e.ReservationId, "Reservation_ID");
 
-            entity.Property(e => e.TableId)
-                .ValueGeneratedNever()
-                .HasColumnName("Table_ID");
+            entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.ReservationId).HasColumnName("Reservation_ID");
             entity.Property(e => e.TableCapacity).HasColumnName("Table_Capacity");
-            entity.Property(e => e.TableMaintenance)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Table_Maintenance");
+            entity.Property(e => e.TableMaintenance).HasColumnName("Table_Maintenance");
             entity.Property(e => e.TableNote)
                 .HasMaxLength(255)
                 .HasColumnName("Table_Note");
             entity.Property(e => e.TableStatus)
                 .HasColumnType("enum('Served','Empty','Waiting','Deposit')")
                 .HasColumnName("Table_Status");
-            entity.Property(e => e.TableType)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Table_Type");
+            entity.Property(e => e.TableType).HasColumnName("Table_Type");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Tables)
                 .HasForeignKey(d => d.AccountId)
@@ -383,8 +356,7 @@ public partial class ZestybiteContext : DbContext
                 .HasConstraintName("table_ibfk_3");
         });
 
-        modelBuilder.Entity<TableDetail>(entity =>
-        {
+        modelBuilder.Entity<TableDetail>(entity => {
             entity.HasKey(e => new { e.TableId, e.ItemId })
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });

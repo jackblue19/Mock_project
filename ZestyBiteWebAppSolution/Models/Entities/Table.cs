@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ZestyBiteWebAppSolution.Models1.Entities;
+namespace ZestyBiteWebAppSolution.Models.Entities;
 
 public partial class Table
 {
@@ -9,13 +9,13 @@ public partial class Table
 
     public int TableCapacity { get; set; }
 
-    public ulong TableMaintenance { get; set; }
+    public int TableMaintenance { get; set; }
 
     public int ReservationId { get; set; }
 
     public int ItemId { get; set; }
 
-    public ulong TableType { get; set; }
+    public int TableType { get; set; }
 
     public string TableStatus { get; set; } = null!;
 

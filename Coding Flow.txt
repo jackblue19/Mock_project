@@ -1,0 +1,56 @@
+Coding Flow
+
+- Model
+- Tạo DTO của các attribute cần sử dụng
+- trong Repo
+	+ gọi dbcontext
+	+ Tạo interface (giữ các hàm không null, tránh lỗi)
+	+ Tạo Impl
+- Service
+	+_Gọi repo tạo itf, giữ các hàm đối số không null
+	+ Tạo impl
+- Controller
+	+ Viết hàm 
+
+Check DTO, repository interfaces, repository implementations, service interfaces, and service implementations.
+
+Data Flow
+- User Interface gửi yêu cầu đến Controller.
+- Controller gọi phương thức từ Service để xử lý yêu cầu.
+- Service sử dụng Repository để truy cập dữ liệu từ Database thông qua DTO (giam loi).
+- Repo sử dụng ZestyBiteContext để truy cập thay đổi dữ liệu trong Db
+- Dữ liệu được chuyển đổi giữa Entity và DTO khi cần thiết.
+- Service trả về DTO cho Controller.
+- Controller chuyển đổi DTO thành dữ liệu có thể hiển thị và trả về cho User Interface.
+
+1. Review of Repository and Service Classes
+Repository Review
+Your IFeedbackRepository interface and FeedbackRepository implementation look tổng quát. Here are the methods you have:
+
+GetFeedbacksByItemIdAsync: Fetches feedbacks related to a specific item.
+GetAllAsync: Fetches all feedbacks.
+GetByIdAsync: Fetches a feedback by its ID.
+CreateAsync: Creates a new feedback.
+UpdateAsync: Updates an existing feedback.
+DeleteAsync: Deletes a feedback.
+GetAllAsync (with pagination): Fetches feedbacks with pagination.
+SubmitFeedbackAsync: Submits a new feedback.
+GetFeedbackRepliesAsync: Fetches replies to a specific feedback.
+Service Review
+Your IFeedbackService interface and FeedbackService implementation also look good. Here are the methods you have:
+
+GetFeedbacksForItemAsync: Gets feedbacks for a specific item.
+SubmitFeedbackAsync: Submits feedback.
+GetAllFeedbackAsync: Gets all feedbacks with pagination.
+GetFeedbacksByItemIdAsync: Gets feedbacks for a specific item (duplicate of the first method).
+GetRepliesForFeedbackAsync: Gets replies for a specific feedback.
+Gaps and Suggestions
+Duplicate Method: You have two methods in the service for getting feedbacks by item ID. You might want to remove one of them.
+Update and Delete Methods: You might want to add methods in the service for updating and deleting feedbacks. This would allow the controller to handle these operations.
+Validation: Consider adding validation logic in the service layer to ensure that feedback submissions meet certain criteria (e.g., content length, item existence).
+2. Suggestions for Polishing or Adding Functionality
+Feedback Rating: Consider adding a rating system (e.g., stars) to allow users to rate feedback.
+Sorting and Filtering: Implement sorting and filtering options for feedbacks (e.g., by date, rating).
+Notification System: If a user replies to feedback, consider notifying the original feedback author.
+Feedback Status: Add a status field to indicate whether feedback is published, pending, or deleted.
+Search Functionality: Implement a search feature to find feedback based on keywords.

@@ -1,0 +1,16 @@
+using ZetstyBite.Models.Entities; // Ensure you have this using directive
+
+namespace ZetstyBite.Models.DTOs
+{
+    public class FeedbackDTO
+    {
+        public int Id { get; set; } // Maps to FbId
+        public string Content { get; set; } = null!; // Maps to FbContent
+        public DateTime DateTime { get; set; } // Maps to FbDatetime
+        public int AccountId { get; set; } // Maps to AccountId
+        public int ItemId { get; set; } // Maps to ItemId
+
+        public virtual Account Account { get; set; } = null!; // Navigation property for Account
+        public virtual Item Item { get; set; } = null!; // Navigation property for Item
+    }
+}

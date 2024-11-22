@@ -1,0 +1,213 @@
+﻿/* Base Tablink Styles */
+.tablink {
+    background-color: #555;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 17px;
+    width: 25%;
+}
+
+    .tablink:hover {
+        background-color: #777;
+    }
+
+/* Tab Content */
+.tabcontent {
+    color: white;
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+
+/* Individual Tab Background Colors */
+#All {
+    background-color: yellow;
+}
+
+#Main {
+    background-color: red;
+}
+
+#FruitnSalad {
+    background-color: green;
+}
+
+#DrinknDessert {
+    background-color: blue;
+}
+
+/* Table Quantity Style */
+.styleQuantity {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+}
+
+/* Tab Config */
+.tab-config {
+    width: 100%;
+}
+
+    .tab-config .tabcontent .detailcontent .menu-content {
+        width: 100%;
+        text-align: center;
+    }
+
+        .tab-config .tabcontent .detailcontent .menu-content .t-index {
+            width: 10%;
+            padding: 0 3px;
+        }
+
+        .tab-config .tabcontent .detailcontent .menu-content .t-name {
+            width: 45%;
+        }
+
+        .tab-config .tabcontent .detailcontent .menu-content .t-update {
+            width: 45%;
+        }
+
+            .tab-config .tabcontent .detailcontent .menu-content .t-update .t-less,
+            .tab-config .tabcontent .detailcontent .menu-content .t-update .t-more {
+                border-radius: 8px;
+                width: 50%;
+            }
+
+            .tab-config .tabcontent .detailcontent .menu-content .t-update .t-less {
+                margin-right: 2px;
+            }
+
+/* Bot Middle */
+.bot-middle .tab-config {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-family: Arial;
+    overflow: auto;
+}
+
+/* Detail Content */
+.detailcontent .menu-content tbody .t-update .styleQuantity {
+    color: black;
+    display: flex;
+    flex-direction: row;
+}
+
+    .detailcontent .menu-content tbody .t-update .styleQuantity .t-less {
+        color: white;
+        background-color: red;
+    }
+
+    .detailcontent .menu-content tbody .t-update .styleQuantity .t-more {
+        color: white;
+        background-color: green;
+    }
+
+/* Detail Order */
+.detail-order {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: wheat;
+    color: black;
+}
+
+    .detail-order .heading-bot {
+        text-align: center;
+        font-size: 30px;
+        color: black;
+    }
+
+    .detail-order .table-info {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+        .detail-order .table-info .left-info,
+        .detail-order .table-info .right-info {
+            width: 50%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        .detail-order .table-info .attr-filt {
+            color: yellow;
+            border-radius: 10%;
+            padding: 0 3px;
+            background: black;
+        }
+
+        .detail-order .table-info select {
+            text-align: center;
+            width: 100%;
+            border-radius: 60px;
+        }
+
+/* Detail Cover */
+.detail-cover {
+    background-color: wheat;
+    height: 350px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+    .detail-cover .detail-info {
+        background-color: black;
+        height: 65%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .detail-cover .detail-info .detail-head {
+            height: 20%;
+            background-color: red;
+            border-radius: 4px;
+            display: flex;
+            text-align: center;
+            padding: 0 2px;
+        }
+
+            .detail-cover .detail-info .detail-head .d-index {
+                width: 10%;
+            }
+
+            .detail-cover .detail-info .detail-head .d-name {
+                width: 45%;
+                padding: 0;
+                word-break: break-all;
+            }
+
+            .detail-cover .detail-info .detail-head .d-origin {
+                width: 10%;
+            }
+
+            .detail-cover .detail-info .detail-head .d-status {
+                width: 25%;
+                word-break: break-all;
+                padding: 0;
+            }
+
+            .detail-cover .detail-info .detail-head .d-quantity {
+                width: 10%;
+            }
+
+        .detail-cover .detail-info .detail-body {
+            height: 80%;
+            background-color: blue;
+            border-radius: 4px;
+            overflow: auto;
+            text-align: center;
+            padding: 0 2px;
+        }
+
+    .detail-cover .note-info {
+        background-color: white;
+        height: 35%;
+    }

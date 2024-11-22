@@ -1,0 +1,29 @@
+﻿@ZestyBiteWebAppSolution_HostAddress = https://localhost:7131
+
+POST https://localhost:7131/api/feedback
+Content-Type: application/json
+
+{
+    "id": 1,
+    "content": "Great product!",
+    "dateTime": "2024-11-21T15:14:00",
+    "accountId": 123,
+    "username": "user1",
+    "profileImage": null,
+    "itemId": 456,
+    "itemName": "ProductName",
+    "parentFb": null
+}
+
+
+
+###
+
+POST {{ZestyBiteWebAppSolution_HostAddress}}/api/feedback
+Content-Type: application/json
+
+{
+  //FeedbackDTO
+}
+
+###

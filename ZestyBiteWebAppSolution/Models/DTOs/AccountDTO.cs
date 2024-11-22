@@ -5,8 +5,6 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
 {
     public class AccountDTO
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "Username is required.")]
         [StringLength(255, ErrorMessage = "Username cannot exceed 255 characters.")]
         public string Username { get; set; } = null!;
@@ -21,6 +19,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         public string ConfirmPassword { get; set; } = null!;
 
         [Required(ErrorMessage = "Full Name is required.")]
+        [DataType(DataType.Text)]
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Email is required.")]

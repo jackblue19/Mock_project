@@ -5,8 +5,6 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -63,7 +61,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             try
             {
                 var created = await _service.SignUpAsync(accountDto);
-                return Created($"/api/account/{created.Id}", created);
+                return Ok();
             }
             catch (InvalidOperationException ex)
             {
@@ -74,6 +72,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
             }
         }
+
         [HttpGet("profile/{id}")]
         public async Task<IResult> ViewProfile(int id)
         {
@@ -150,26 +149,6 @@ namespace ZestyBiteWebAppSolution.Controllers
         {
             return View();
         }
-
-        [HttpPost]
-        [Route("send-verification-code")]
-        public async Task<IActionResult> SendVerificationCode([FromBody] VerifyEmailDTO emailDto) {
-            if (emailDto == null || string.IsNullOrEmpty(emailDto.Email)) {
-                return BadRequest(new { Message = "Invalid payload" });
-            }
-
-            try {
-                var isSent = await _service.SendVerificationCodeAsync(emailDto.Email);
-                if (!isSent) {
-                    return NotFound(new { Message = "Email not found." });
-                }
-
-                return Ok(new { Message = "Verification code has been sent to your email." });
-            } catch (Exception ex) {
-                return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
-            }
-        }
-
 
         public IActionResult ChangePassword()
         {

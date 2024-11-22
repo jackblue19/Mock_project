@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
@@ -41,12 +43,36 @@ builder.Services.AddDbContext<ZestybiteContext>(dbContextOptions =>
         .EnableDetailedErrors()
 );
 
+builder.Services.AddIdentity<Account, IdentityRole>()
+                .AddEntityFrameworkStores<ZestybiteContext>()
+                .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+
+    // Default SignIn settings.
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
+
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 10;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequiredUniqueChars = 6;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+    options.Lockout.MaxFailedAccessAttempts = 10;
+    options.Lockout.AllowedForNewUsers = true;
+});
+
 // Register Repositories and Services in DI
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IRoleService , RoleService>();
 builder.Services.AddScoped<IRoleRepository , RoleRepository>();
-builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -92,6 +118,7 @@ app.UseSession();
 
 // Middleware for Authorization
 app.UseAuthorization();
+app.UseAuthentication();
 
 // Configure Routing for Areas
 app.MapControllerRoute(

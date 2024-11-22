@@ -1,33 +1,41 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ZestyBiteWebAppSolution.Models.Entities;
 
-public class Account {
+public class Account : IdentityUser {
     [Key]
     public int AccountId { get; set; }
 
     [Required]
     [StringLength(255)]
+    [PersonalData]
     public string UserName { get; set; } = null!;
 
     [Required]
+    [PersonalData]
     public string Password { get; set; } = null!;
 
     [Required]
+    [PersonalData]
     public string Name { get; set; } = null!;
 
     [Required]
     [Phone]
+    [PersonalData]
     public string PhoneNumber { get; set; } = null!;
 
     [Required]
+    [PersonalData]
     public string Address { get; set; } = null!;
 
     [Required]
+    [PersonalData]
     public int Gender { get; set; }
 
     [Required]
     [EmailAddress]
+    [PersonalData]
     public string Email { get; set; } = null!;
 
     public string? VerificationCode { get; set; }

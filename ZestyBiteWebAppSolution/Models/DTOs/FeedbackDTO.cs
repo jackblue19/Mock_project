@@ -17,7 +17,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
 
         public int? ParentFb { get; set; } = null!;
 
-        //// To include the parent feedback's details
-        //public FeedbackDTO? ParentFeedback { get; set; }
+        // To include the parent feedback's details
+        public FeedbackDTO? ParentFeedback { get; set; }
     }
 }

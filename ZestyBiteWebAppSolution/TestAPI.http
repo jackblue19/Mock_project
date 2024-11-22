@@ -48,3 +48,17 @@ Content-Type: application/json
 Get http://localhost:5024/api/feedback/all
 
 ###
+POST http://localhost:5024/api/feedback
+Content-Type: application/json
+
+{
+    "content": "This pizza was absolutely delicious! The crust was perfectly crispy and the toppings were fresh.",
+    "dateTime": "2023-11-22T15:00:00",
+    "accountId": 1,
+    "username": "john_doe",
+    "profileImage": null,
+    "itemId": 6,
+    "itemName": "Pizza Margherita"
+}
+###
+

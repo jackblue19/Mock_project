@@ -123,8 +123,9 @@
             address: document.querySelector('input[name="Address"]').value,
             gender: parseInt(document.querySelector('select[name="Gender"]').value, 10),
         };
-        console.log(userData);
-            const url = 'https://localhost:7131/api/Account/register';
+        console.log('User data:', userData);
+
+            const url = 'https://localhost:7131/register';
 
         try {
             const response = await fetch(url, {

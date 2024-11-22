@@ -30,7 +30,7 @@ public partial class ZestybiteContext : DbContext {
     public virtual DbSet<Supply> Supplies { get; set; }
 
     public virtual DbSet<Table> Tables { get; set; }
-     
+
     public virtual DbSet<TableDetail> TableDetails { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -58,10 +58,10 @@ public partial class ZestybiteContext : DbContext {
             entity.Property(e => e.ProfileImage)
                 .HasColumnType("text")
                 .HasColumnName("Profile_Image");
-            entity.Property(e => e.RoleId).HasColumnName("Role_ID");
             entity.Property(e => e.VerificationCode)
                 .HasMaxLength(50)
                 .HasColumnName("Verification_Code");
+            entity.Property(e => e.RoleId).HasColumnName("Role_ID");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.RoleId)

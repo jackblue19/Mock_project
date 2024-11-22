@@ -37,8 +37,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
             await _context.SaveChangesAsync();
             return entity;
         }
-        public async Task<Role?> GetByIdAsync(int id)
-        {
+        public async Task<Role?> GetByIdAsync(int id) {
             return await _context.Roles.SingleOrDefaultAsync(r => r.RoleId == id);
         }
     }

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pizza - Free Bootstrap 4 Template by Colorlib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../Content/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../Content/css/animate.css">
+    <link rel="stylesheet" href="../Content/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../Content/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../Content/css/magnific-popup.css">
+    <link rel="stylesheet" href="../Content/css/aos.css">
+    <link rel="stylesheet" href="../Content/css/ionicons.min.css">
+    <link rel="stylesheet" href="../Content/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../Content/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="../Content/css/flaticon.css">
+    <link rel="stylesheet" href="../Content/css/icomoon.css">
+    <link rel="stylesheet" href="../Content/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Content/css/supply.css">
+    <link rel="stylesheet" href="../Content/css/foodrunner.css">
+    <link rel="stylesheet" href="../Content/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.40.0/apexcharts.min.js"></script>
+    <style>
+    .text-center {
+        overflow: auto;
+        width: 100%;
+    }
+    .text-content{
+        color: black;
+    }
+        /* Container styling for the menu */
+.MenuView {
+    padding: 1rem;
+}
+
+.MenuList {
+    overflow-x: auto; /* Allows horizontal scrolling for smaller screens */
+}
+
+/* Table styling */
+.List-Menu {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.List-Menu th, .List-Menu td {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.List-Menu th {
+    background-color: rgba(113, 99, 186, 255);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.List-Menu tbody td {
+    background-color: #f9f9f9;
+    font-size: 0.95rem;
+}
+
+/* Alternating row colors for better readability */
+.List-Menu tbody tr:nth-child(even) td {
+    background-color: #f1f1f1;
+}
+/* Image styling for table cells */
+.item-image {
+    width: 50px; 
+    height: 50px;
+    border-radius: 5px; 
+}
+
+</style>
+</head>
+<body class="body-config" style="background-color: rgb(216, 213, 213);">
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="flaticon-pizza-1 mr-1"></span>Zesty Bites<br><small>Delicious</small>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+        </div>
+    </nav>
+    <div class="container-content">
+        <div class="sidebar">
+            <nav>
+                <ul class="menu">
+                    <li class="">
+                        <a href="dashboard.html">
+                            <i class="bi bi-credit-card"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="AccountManagement.html">
+                            <i class="fas fa-user"></i>
+                            <span>Account</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payhistory.html">
+                            <i class="bi bi-currency-exchange"></i>
+                            <span> PayHistory</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="bi bi-chat-square-text-fill"></i>
+                            <span> FeedBack</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="menuManagement.html">
+                            <i class="bi bi-list"></i>  
+                            <span>MenuManage</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Procedures</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span> Service(..)</span>
+                        </a>
+                    </li>
+    
+                </ul>
+            </nav>
+        </div>
+        <div class="text-center" >
+            <section class="p-3">
+                <div class="content-text"><h1 style="color: black;font-weight: bold;">MenuManagement</h1></div>
+                    <div class= "col-12">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#SupplyForm">New Item</button>
+                        
+                        <!--search-->
+                        <div class="group">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+                              <g>
+                                <path
+                                  d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
+                                ></path>
+                              </g>
+                            </svg>
+                          
+                            <input
+                              id="query"
+                              class="input"
+                              type="search"
+                              placeholder="Search..."
+                              name="searchbar"
+                            />
+                          </div>
+        
+                    </div>
+            </section>
+            
+            <div class="MenuView">
+                <div class="MenuList">
+                    <table class="List-Menu">
+                        <thead>
+                            <tr>
+                                <th>Item ID</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Catetory</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Action</th> 
+                                
+                            </tr>
+                        </thead>
+                        <tbody class="text-content" id="data">
+
+                        </tbody>
+                    </table>
+                </div>
+        </div> 
+        <div id="pagination" class="mt-3"></div>
+        </div>
+    </div>
+    <!-- add item-->
+    <div class="modal fade" id="SupplyForm">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="SupplyFormLabel">Add Item</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" id="myForm">
+                        <div class="inputField">
+                            <div>
+                                <label for="itemId">Item ID</label>
+                                <input type="text" id="itemId" name="itemId" readonly> <!-- ID is usually read-only -->
+                            </div>
+                             <div>
+                            <label for="image">Image</label>
+                            <input type="file" id="image" name="image" accept="image/*">
+                            <br>
+                            <img id="imagePreview" src="" alt="Image Preview" style="max-width: 100%; display: none;">
+                        </div>
+                            <div>
+                                <label for="productName">Name</label>
+                                <input type="text" id="productName" name="productName">
+                            </div>
+                            <div>
+                                <label for="category">Category</label>
+                                <select id="category" name="category">
+                                    <option value="Main course">Main course</option>
+                                    <option value="Dessert">Dessert</option>
+                                    <option value="Drink">Drink</option>
+                                    <option value="Salad">Salad</option>
+                                    <option value="Fruit">Fruit</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="price">Price</label>
+                                <input type="text" id="price" name="price">
+                            </div>
+                            <div>
+                                <label for="description">Description</label>
+                                <input type="text" id="description" name="description">
+                            </div>
+                            <div>
+                                <label for="status">Status</label>
+                                <select id="status" name="status">
+                                    <option value="Still">Still</option>
+                                    <option value="Sold Out">Sold Out</option>
+                                </select>
+                            </div>
+                        </div>
+    
+                        <button type="submit" class="btn btn-warning" id="submitBtn">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+              <!-- Read Supply Form -->
+<div class="modal fade" id="readData">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Supply Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="myForm">
+                    <div class="inputField">
+                        <div>
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" disabled>
+                        </div>
+                        <div>
+                            <label for="category">Category</label>
+                            <input type="text" id="category" disabled>
+                        </div>
+                        <div>
+                            <label for="price">Price</label>
+                            <input type="text" id="price" disabled>
+                        </div>
+                        <div>
+                            <label for="description">Description</label>
+                            <input type="text" id="description" disabled>
+                        </div>
+                        <div>
+                            <label for="status">Status</label>
+                            <input type="text" id="status" disabled>
+                        </div>
+                        <div>
+                            <label for="imagePreview">Image</label>
+                            <img id="imagePreview" src="" alt="Image Preview" style="width: 200px;height: 50px; display: none;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    <script src="../Content/js/jquery.min.js"></script>
+    <script src="../Content/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="../Content/js/popper.min.js"></script>
+    <script src="../Content/js/bootstrap.min.js"></script>
+    <script src="../Content/js/jquery.easing.1.3.js"></script>
+    <script src="../Content/js/jquery.waypoints.min.js"></script>
+    <script src="../Content/js/jquery.stellar.min.js"></script>
+    <script src="../Content/js/owl.carousel.min.js"></script>
+    <script src="../Content/js/jquery.magnific-popup.min.js"></script>
+    <script src="../Content/js/aos.js"></script>
+    <script src="../Content/js/jquery.animateNumber.min.js"></script>
+    <script src="../Content/js/bootstrap-datepicker.js"></script>
+    <script src="../Content/js/jquery.timepicker.min.js"></script>
+    <script src="../Content/js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="../Content/js/google-map.js"></script>
+    <script src="../Content/js/main.js"></script>
+    <script src="../Content/js/menuManage.js"></script>
+    
+    
+</body>
+</html>

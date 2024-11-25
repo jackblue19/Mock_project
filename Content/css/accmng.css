@@ -1,172 +1,190 @@
-         /* Account div */
-         .AccountFunction {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            background-color: #D0CECA;
-            color: #000;
-        }
+    .AccountBody{
+        height: 100%;
+        width: 100%;
 
-        .AccountFunction * {
-            font-size: 24px;
-            /* This will apply to all child elements */
-        }
+    }
+     .AccountFunction {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        color: #000;
+    }
 
-        .AccountSearch {
-            width: 50%;
-            height: 80px;
-            display: flex;
-            margin-left: 15px;
-            justify-content: flex-start;
-            align-items: center;
-        }
+    .AccountFunction * {
+        font-size: 24px;
+        /* This will apply to all child elements */
+    }
 
-        .AccountCreate {
-            width: 50%;
-            height: 80px;
-            display: flex;
-            margin-right: 15px;
-            justify-content: flex-end;
-            align-items: center;
-        }
+    .AccountSearch {
+        width: 50%;
+        height: 80px;
+        display: flex;  
+        margin-left: 15px;
+        justify-content: flex-start;
+        align-items: center;
+    }
 
-
-        /* Account Gridview */
-        .AccountView {
-            background-color: #D0CECA;
-            width: 100%;
-            height: 500px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .AccountList {
-            overflow-y: scroll;
-            margin-left: 15px;
-            margin-right: 15px;
-            background-color: #FDFCE5;
-            width: 100%;
-            border: 2px solid #000;
-            /* Border for AccountList */
-            border-radius: 10px;
-            /* Rounded corners */
-            padding: 10px;
-            /* Optional padding */
-        }
-
-        .AccountList::-webkit-scrollbar {
-            width: 0px;
-            /* Thinner scrollbar width */
-        }
-
-        /* table style -----------------------------------------------------------*/
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table.List th,
-        table.List td {
-            color: black;
-            text-align: center;
-            /* Center-align text within table cells */
-            padding: 8px;
-            /* Padding within table cells for better readability */
-            vertical-align: middle;
-            /* Ensures text is vertically centered */
-        }
-
-        thead th {
-            position: sticky;
-            top: 0;
-            /* Keeps the header at the top while scrolling */
-            background-color:rgba(113, 99,186,255); 
-            /* Optional: background color for the header */
-            color: rgb(0, 0, 0);
-            /* Optional: text color for better contrast */
-            padding: 10px;
-            z-index: 1;
-            /* Ensure it stays above other table content */
-            border-bottom: 2px solid #ddd;
-            /* Adds a bottom border to the sticky header */
-            border-top: 2px solid #ddd;
-            /* Adds a top border if needed */
-            z-index: 1;
-            /* Keeps the header above table content */
-            /* Optional: border styling */
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            word-wrap: break-word;
-        }
-
-        th:nth-child(1),
-        td:nth-child(1) {
-            width: 30px;
-            word-wrap: break-word;
-            /* Ensure long text wraps instead of overflowing */
-        }
-
-        /* Popup styles ---------------------------------------------------------------*/
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50%;
-            background-color: #FDFCE5;
-            border: 1px solid #333;
-            padding: 20px;
-            z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-        }
+    .AccountCreate {
+        width: 50%;
+        height: 80px;
+        display: flex;
+        margin-right: 15px;
+        justify-content: flex-end;
+        align-items: center;
+    }
 
 
-        .popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+    /* Account Gridview */
+    .AccountView {
+        width: 100%;
+        height: 500px;
+        display: flex;
+        justify-content: center;
+    }
 
-        .popup-header h3 {
-            color: #000000;
-        }
+    .AccountList {
+        overflow-y: scroll;
+        margin-left: 15px;
+        margin-right: 15px;
+        background-color: #FDFCE5;
+        width: 100%;
+        border: 2px solid #000;
+        /* Border for AccountList */
+        border-radius: 10px;
+        /* Rounded corners */
+        padding: 10px;
+        /* Optional padding */
+    }
+
+    .AccountList::-webkit-scrollbar {
+        width: 0px;
+        /* Thinner scrollbar width */
+    }
+    .content-text h2{
+    display: grid;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0;
+    font-weight: bold;
+    color: #000
+    }
+    /* table style -----------------------------------------------------------*/
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table.List th,
+    table.List td {
+        color: black;
+        text-align: center;
+        /* Center-align text within table cells */
+        padding: 8px;
+        /* Padding within table cells for better readability */
+        vertical-align: middle;
+        /* Ensures text is vertically centered */
+    }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        /* Keeps the header at the top while scrolling */
+        background-color:rgba(113, 99,186,255); 
+        /* Optional: background color for the header */
+        color: rgb(0, 0, 0);
+        /* Optional: text color for better contrast */
+        padding: 10px;
+        z-index: 1;
+        /* Ensure it stays above other table content */
+        border-bottom: 2px solid #ddd;
+        /* Adds a bottom border to the sticky header */
+        border-top: 2px solid #ddd;
+        /* Adds a top border if needed */
+        z-index: 1;
+        /* Keeps the header above table content */
+        /* Optional: border styling */
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        word-wrap: break-word;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+        width: 30px;
+        word-wrap: break-word;
+        /* Ensure long text wraps instead of overflowing */
+    }
+
+    /* Popup styles ---------------------------------------------------------------*/
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        background-color: #FDFCE5;
+        border: 1px solid #333;
+        padding: 20px;
+        z-index: 1000;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+    }
 
 
-        .popup-close {
-            cursor: pointer;
-            font-size: 1.5em;
-            color: #333;
-        }
+    .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
 
-        /* Add styles for input fields in the popup */
-        .popup input[type="text"],
-        .popup input[type="password"],
-        .popup select {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 5px;
-        }
+    .popup-header h3 {
+        color: #000000;
+    }
 
-        /* footer --------------------------------------------------- */
-        .footer {
-            height: 15px;
-            background-color: #D0CECA;
-        }
+
+    .popup-close {
+        cursor: pointer;
+        font-size: 1.5em;
+        color: #333;
+    }
+
+    /* Add styles for input fields in the popup */
+    .popup input[type="text"],
+    .popup input[type="password"],
+    .popup select {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    /* footer --------------------------------------------------- */
+    .footer {
+        height: 15px;
+        background-color: #D0CECA;
+    }
+    table.List tr:nth-child(odd) {
+        background-color: #ffffff; /* Màu đậm cho hàng lẻ */
+    }
+    
+    table.List tr:nth-child(even) {
+        background-color: #dcdada; /* Màu đậm cho hàng chẵn */
+    }
+    
+    

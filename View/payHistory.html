@@ -125,9 +125,21 @@
             <nav>
                 <ul class="menu">
                     <li>
-                        <a href="foodrunner.html">
-                            <i class="fas fa-user"></i> 
-                            <span>FoodRunner</span>
+                        <a href="dashboard.html">
+                            <i class="bi bi-credit-card"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="AccountManagement.html">
+                            <i class="fas fa-user"></i>
+                            <span>Account</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="payhistory.html">
+                            <i class="bi bi-currency-exchange"></i>
+                            <span> PayHistory</span>
                         </a>
                     </li>
                     <li>
@@ -137,15 +149,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="fas fa-user"></i>
-                            <span>Service</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="bi bi-table"></i>
-                            <span> Reservations</span>
+                        <a href="menuManagement.html">
+                            <i class="bi bi-list"></i>  
+                            <span>MenuManage</span>
                         </a>
                     </li>
                     <li>
@@ -166,48 +172,12 @@
                             <span> Service(..)</span>
                         </a>
                     </li>
-                    <li class="active">
-                        <a href="dashboard.html">
-                            <i class="bi bi-credit-card"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
     
                 </ul>
             </nav>
         </div>
-        <div class="gird-container">
-            <div class="main-card">
-                <div class="card">
-                    <div class="card-inner">
-                        <p>Product</p>
-                        <i class="bi bi-cart"></i>
-                    </div>
-                    <a href="product.html" class="view-all">View All</a> <!-- Liên kết View All -->
-                </div>
-                <div class="card">
-                    <div class="card-inner">
-                        <p>Revenue</p>
-                        <i class="bi bi-graph-up"></i>
-                    </div>
-                    <a href="dashboard.html" class="view-all">View All</a> <!-- Liên kết View All -->
-                </div>
-                <div class="card">
-                    <div class="card-inner"  id="payHistoryCard">
-                        <p>Pay History</p>
-                        <i class="bi bi-currency-dollar"></i>
-                    </div>
-                    <a href="payhistory.html" class="view-all">View All</a> <!-- Liên kết View All -->
-                </div>
-                <div class="card">
-                    <div class="card-inner">
-                        <p>AccountList</p>
-                        <i class="bi bi-person-lines-fill"></i>
-                    </div>
-                    <a href="AccountManagement.html" class="view-all">View All</a> <!-- Liên kết View All -->
-                </div> 
+        <div class="main-content">
                 <!--View Page Bill-->
-                <div class="card charts-card">
                     <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
 
                     <!-- Popup Content -->
@@ -301,6 +271,8 @@
                     </div>
                     
                     <div class="AccountBody">
+                        <div class="content-text">
+                            <h2>Pay History</h2>
                         <div class="AccountFunction">
                             <div class="AccountSearch">
                                 <input id="search" type="search" placeholder="Search..." autofocus required
@@ -327,10 +299,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="footer"></div>
-                     
-            </div>
+        </div>
+        <div class="footer"></div>              
         </div>
     </div>
  <script>

@@ -90,7 +90,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 Gender = dto.Gender,
                 Email = dto.Email,
                 ProfileImage = dto.ProfileImg,
-                VerificationCode = dto.VerificationCode
+                //VerificationCode = dto.VerificationCode
             };
             //acc.Role = defaultRole;
             acc.RoleId = defaultRole.RoleId;

@@ -11,6 +11,9 @@ namespace ZestyBiteWebAppSolution.Repositories.Interfaces
 
         //CRUD for reply
         Task<IEnumerable<Feedback>> GetRepliesByParentIdAsync(int ParentFb);
-        //Task<Feedback> SubmitReplyAsync(Feedback reply);
+        // CRUD for replies
+        Task<Feedback> CreateReplyAsync(Feedback reply); 
+        Task<Feedback> UpdateReplyAsync(Feedback reply);
+        Task<bool> DeleteReplyAsync(Feedback replyId);
     }
 }

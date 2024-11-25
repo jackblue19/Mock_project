@@ -11,7 +11,7 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
         Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId);
 
         //Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync();
-        Task<IEnumerable<Feedback?>> GetAllFeedbacksAsync();
+        Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync();
         Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto);
         Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto);
         Task<bool> DeleteFeedbackAsync(int feedbackId);

@@ -19,5 +19,6 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
 
         // To include the parent feedback's details
         public FeedbackDTO? ParentFeedback { get; set; }
+        public bool IsReply { get; set; }
     }
 }

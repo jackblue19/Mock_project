@@ -21,6 +21,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
                 .OrderByDescending(f => f.FbDatetime)
                 .ToListAsync();
         }
+        public async Task<Feedback?> GetByIdAsync(int id) => await _context.Feedbacks.FindAsync(id);
 
         // Rely on the generic IRepository<T> methods for basic CRUD:
 
@@ -32,7 +33,14 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
                 .Take(pageSize)
                 .ToListAsync();
         }
-
+        public async Task<IEnumerable<Feedback?>> GetAllAsync()
+        {
+            return await _context.Feedbacks
+                .Include(f => f.Account)
+                .Include(f => f.Item)
+                .Include(f => f.ParentFbFlagNavigation)
+                .ToListAsync();
+        }
         public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb)
         {
             return await _context.Feedbacks
@@ -41,14 +49,6 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
                 .OrderBy(f => f.FbDatetime) // Oldest first
                 .ToListAsync();
         }
-
-        //public async Task<Feedback> SubmitFeedbackAsync(Feedback feedback)
-        //{
-        //    _context.Feedbacks.Add(feedback);
-        //    await _context.SaveChangesAsync();
-        //    return feedback;
-        //}
-
         public async Task<Feedback> CreateAsync(Feedback feedback)
         {
             _context.Feedbacks.Add(feedback);
@@ -62,14 +62,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return feedback;
         }
 
-        //public async Task<Feedback> DeleteAsync(int feedbackId)
-        //{
-        //    var feedback = await _context.Feedbacks.FindAsync(feedbackId);
-
-        //    _context.Feedbacks.Remove(feedback);
-        //    await _context.SaveChangesAsync();
-        //    return feedback; // Return the deleted feedback or null if not found
-        //}
+        public async Task<Feedback> DeleteAsync(Feedback feedback)
+        {
+            _context.Feedbacks.Remove(feedback);
+            await _context.SaveChangesAsync();
+            return feedback;
+        }
 
         //CRUD for reply
 
@@ -81,40 +79,23 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
                 .OrderBy(f => f.FbDatetime) // Oldest first
                 .ToListAsync();
         }
-        //public async Task<Feedback> SubmitReplyAsync(Feedback reply)
-        //{
-        //    _context.Feedbacks.Add(reply);
-        //    await _context.SaveChangesAsync();
-        //    return reply;
-        //}
-
-        //public async Task<Feedback> UpdateReplyAsync(Feedback reply)
-        //{
-        //    _context.Feedbacks.Update(reply);
-        //    await _context.SaveChangesAsync();
-        //    return reply;
-        //}
-
-        //public async Task<Feedback> DeleteReplyAsync(int replyId)
-        //{
-        //    var reply = await _context.Feedbacks.FindAsync(replyId);
-        //    _context.Feedbacks.Remove(reply);
-        //    await _context.SaveChangesAsync();
-        //    return reply; // Return the deleted reply or null if not found
-        //}
-
-        public async Task<IEnumerable<Feedback?>> GetAllAsync()
+        public async Task<Feedback> CreateReplyAsync(Feedback reply)
         {
-            return await _context.Feedbacks.ToListAsync();
-        }
-
-        public async Task<Feedback?> GetByIdAsync(int id) => await _context.Feedbacks.FindAsync(id);
-
-        public async Task<Feedback> DeleteAsync(Feedback feedback)
-        {
-            _context.Feedbacks.Remove(feedback);
+            _context.Feedbacks.Add(reply);
             await _context.SaveChangesAsync();
-            return feedback;
+            return reply;
+        }
+        public async Task<Feedback> UpdateReplyAsync(Feedback reply)
+        {
+            _context.Feedbacks.Update(reply);
+            await _context.SaveChangesAsync();
+            return reply;
+        }
+        public async Task<bool> DeleteReplyAsync(Feedback reply)
+        {
+            _context.Feedbacks.Remove(reply);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -1,29 +1,34 @@
 ﻿@ZestyBiteWebAppSolution_HostAddress = https://localhost:7131
 
-POST https://localhost:7131/api/feedback
+###
+POST http://localhost:7131/api/feedback
 Content-Type: application/json
 
 {
-    "id": 1,
-    "content": "Great product!",
+    "content": "awd awd awd wad ",
     "dateTime": "2024-11-21T15:14:00",
-    "accountId": 123,
-    "username": "user1",
+    "accountId": 1,
+    "username": "john_doe",
     "profileImage": null,
-    "itemId": 456,
-    "itemName": "ProductName",
-    "parentFb": null
+    "itemId": 1,
+    "itemName": "Pizza Margherita"
 }
-
-
+###
+GET http://localhost:7131/api/feedback/all
+###
+GET http://localhost:7131/api/feedback/allpage?pageNumber=1&pageSize=10
+###
+GET http://localhost:7131/api/feedback/item/6
+###
+DELETE http://localhost:7131/api/feedback/1
+###
 
 ###
 
-POST {{ZestyBiteWebAppSolution_HostAddress}}/api/feedback
-Content-Type: application/json
+###
 
-{
-  //FeedbackDTO
-}
+###
+
+###
 
 ###

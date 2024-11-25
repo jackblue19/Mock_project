@@ -37,10 +37,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 Id = feedback.FbId,
                 Content = feedback.FbContent,
                 DateTime = feedback.FbDatetime,
-                Username = feedback.Account.Username,
+                Username = feedback.Account.Username ?? "Unknown",
                 ProfileImage = feedback.Account.ProfileImage,
                 ItemId = feedback.ItemId,
-                ItemName = feedback.Item.ItemName,
+                ItemName = feedback.Item.ItemName ?? "Unknown",
                 ParentFb = feedback.ParentFbFlag,
                 ParentFeedback = parentFeedbackDTO
             };
@@ -83,7 +83,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         public async Task<IEnumerable<FeedbackDTO>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
         {
             var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync(pageNumber, pageSize);
-            return feedbacks.Select(MapToDTO).ToList();
+            return feedbacks?.Select(MapToDTO).ToList() ?? new List<FeedbackDTO>();
         }
 
         //public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync()
@@ -108,18 +108,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return feedbacks.ToList(); // Return the original Feedback entities
         }
 
-
-
-        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemAsync(int itemId)
-        {
-            var feedbacks = await _feedbackRepository.GetFeedbacksByItemIdAsync(itemId);
-            return feedbacks.Select(MapToDTO).ToList();
-        }
-
         public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId)
         {
             var feedbacks = await _feedbackRepository.GetFeedbacksByItemIdAsync(itemId);
-            return feedbacks.Select(MapToDTO).ToList();
+            return feedbacks?.Select(MapToDTO).ToList() ?? new List<FeedbackDTO>();
         }
 
         public async Task<IEnumerable<ReplyDTO>> GetRepliesForFeedbackAsync(int parentFbFlag)

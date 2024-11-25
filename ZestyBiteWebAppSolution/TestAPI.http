@@ -1,64 +1,32 @@
 ###
-
-POST http://localhost:5024/api/account/signup2
+POST http://localhost:5024/api/feedback
 Content-Type: application/json
 
 {
-    "username": "shyranne7z",
-    "password": "Shyran@496",
-    "name": "Jack Blue",
-    "gender": 0,
-    "phoneNumber": "0912345678",
-    "email": "htxq3724ccg@gmail.com",
-    "address": "DN NHS",
-    "confirmPassword": "Shyran@496",
-    "roleDescription": "null"
-}
-
-###
-POST http://localhost:5024/api/feedback/summitfeedback
-Content-Type: application/json
-
-{
-    "id": 11,
-    "content": "Great product!",
+    "content": "awd awd awd wad ",
     "dateTime": "2024-11-21T15:14:00",
     "accountId": 1,
     "username": "john_doe",
     "profileImage": null,
     "itemId": 1,
-    "itemName": "Pizza Margherita",
-    "parentFb": null,
-    "parentFeedback": null
-}
-###
-DELETE http://localhost:5024/api/feedback/1
-Content-Type: application/json
-
-{
-    "id": 1,
-    "content": "Great food and excellent service!",
-    "dateTime": "2024-10-15T14:30:00",
-    "accountId": 1,
-    "itemId": 1,
-    "parentFb": null
-}
-
-###
-Get http://localhost:5024/api/feedback/all
-
-###
-POST http://localhost:5024/api/feedback
-Content-Type: application/json
-
-{
-    "content": "This pizza was absolutely delicious! The crust was perfectly crispy and the toppings were fresh.",
-    "dateTime": "2023-11-22T15:00:00",
-    "accountId": 1,
-    "username": "john_doe",
-    "profileImage": null,
-    "itemId": 6,
     "itemName": "Pizza Margherita"
 }
 ###
+GET http://localhost:5024/api/feedback/all
+###
+GET http://localhost:5024/api/feedback/allpage?pageNumber=1&pageSize=10
+###
+GET http://localhost:5024/api/feedback/item/6
+###
+DELETE http://localhost:5024/api/feedback/18
+###
 
+###
+
+###
+
+###
+
+###
+
+###

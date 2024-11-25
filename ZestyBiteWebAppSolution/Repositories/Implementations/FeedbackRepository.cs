@@ -24,9 +24,13 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
 
         // Rely on the generic IRepository<T> methods for basic CRUD:
 
-        public Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            return await _context.Feedbacks
+                .OrderByDescending(f => f.FbDatetime)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb)
@@ -45,11 +49,11 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         //    return feedback;
         //}
 
-        public async Task<Feedback> CreateAsync(Feedback item)
+        public async Task<Feedback> CreateAsync(Feedback feedback)
         {
-            _context.Feedbacks.Add(item);
+            _context.Feedbacks.Add(feedback);
             await _context.SaveChangesAsync();
-            return item;
+            return feedback;
         }
         public async Task<Feedback> UpdateAsync(Feedback feedback)
         {

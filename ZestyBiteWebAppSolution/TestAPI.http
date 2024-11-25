@@ -1,3 +1,8 @@
+
+###
+GET /api/admin
+Authorization: Bearer {jwt-token-here}
+
 ###
 
 POST http://localhost:5024/api/account/signup2
@@ -62,3 +67,4 @@ GET http://localhost:5024/api/account/profile/13
         "roleDescription": "Customer"
     }
 }
+###

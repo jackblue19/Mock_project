@@ -90,4 +90,21 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
     }
 
     //  => both called by USERNAME
+
+    public class LoginDTO
+    {
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        public string Email { get; set; } = null!;
+
+                                /* OR */
+
+        [Required(ErrorMessage = "Username is required.")]
+        [StringLength(255, ErrorMessage = "Username cannot exceed 255 characters.")]
+        public string Username { get; set; } = null!;
+
+        [Required(ErrorMessage = "Password is required.")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long and not exceed 100 characters.")]
+        public string Password { get; set; } = null!;
+    }
 }

@@ -180,6 +180,22 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 return dto;
         }
 
+        public async Task<int> GetRoleIdByUsn(string usn){
+            var acc = await _repository.GetAccountByUsnAsync(usn);
+            return acc.RoleId;
+        }
+        public async Task<string?> GetRoleDescByUsn(string usn){
+            var acc = await _repository.GetAccountByUsnAsync(usn);
+            if(acc == null) return null;
+            return acc.Role.RoleDescription;
+        }
+        public async Task<bool> IsTrueAccount(string usn, string pwd){
+            var acc =  await _repository.GetAccountByUsnAsync(usn);
+            if (acc == null) return false;
+            if (acc.Password != pwd) return false;
+            return true;
+        }
+
         /* Other method */
         private string HashPassword(string password)
         {

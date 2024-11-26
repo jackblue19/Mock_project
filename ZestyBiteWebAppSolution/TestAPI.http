@@ -13,22 +13,24 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5024/api/feedback/all
+GET http://localhost:5024/api/feedback/GetFeedbacks
+###
+GET http://localhost:5024/api/feedback/GetItems
 ###
 GET http://localhost:5024/api/feedback/pagination?pageNumber=1&pageSize=10
 ###
 GET http://localhost:5024/api/feedback/item/1
 ###
-DELETE http://localhost:5024/api/feedback/18
+DELETE http://localhost:5024/api/feedback/30
 ###
 PUT http://localhost:5024/api/feedback
 Content-Type: application/json
 
 {
-    "id": 5,
-    "content": "ádawdawdawdawd",
+    "id": 25,
+    "content": "seffsbrf awefw4 fw",
     "dateTime": "2024-11-21T15:14:00",
-    "itemId": 11,  
+    "itemId": 1,  
     "username": "john_doe",  
     "profileImage": null,
     "itemName": "Spaghetti Carbonara", 

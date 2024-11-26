@@ -1,537 +1,114 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace ZestyBiteWebAppSolution.Models.DTOs
-{
-    public class FeedbackDTO
-    {
-        public int Id { get; set; }
-
-        [Required(ErrorMessage = "Feedback content is required.")]
-        public string Content { get; set; } = null!;
-        public DateTime DateTime { get; set; }
-        public string Username { get; set; } = null!;
-        public string? ProfileImage { get; set; }
-        public int ItemId { get; set; }
-        public string ItemName { get; set; } = null!;
-
-        public int? ParentFb { get; set; } = null!;
-
-        // To include the parent feedback's details
-        public FeedbackDTO? ParentFeedback { get; set; }
-    }
+@{
+    ViewBag.Title = "Feedback";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-using ZestyBiteWebAppSolution.Models.Entities;
+<head>
+    <title>Feedback</title>
+    <link href="~/css/Feedback.css" rel="stylesheet" />
+</head>
+<body>
+    <section class="ftco-appointment" style="background-image: url(/images/bg_4.jpg);">
+        <div class="container-wrap">
+            <div class="feedback-text ftco-animate">
+                <h1 class="text-center">Write your<br>Experience<br>Make the<br>Environment</h1>
+            </div>
+            <br>
+            <div class="feedback-input ftco-animate">
+                <div>
+                    <h1 class="text-center">Feedback</h1>
+                </div>
+                <div>
+                    <form action="#" id="feedbackForm" class="appointment-form" method="post">
+                        <div class="dish-select d-md-flex">
+                            <input type="text" class="form-control" placeholder="What dish do you want to feedback?" id="feedbackDish">
+                            <select id="dish-select" class="form-control"></select>
+                        </div>
+                        <div class="message d-md-flex">
+                            <textarea id="feedbackMessage" name="type-area" cols="30" rows="3" class="form-control" placeholder="Message"></textarea>
+                        </div>
+                        <div class="submit-button">
+                            <button type="button" id="submitFeedback" class="btn btn-primary py-3 px-4">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dishSelect = document.getElementById('dish-select');
 
-namespace ZestyBiteWebAppSolution.Repositories.Interfaces
-{
-    public interface IFeedbackRepository : IRepository<Feedback>
-    {
-        // Fetch feedbacks related to a specific item, including Account and Item relationships
-        Task<IEnumerable<Feedback>> GetFeedbacksByItemIdAsync(int itemId);
-        Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize);
-        Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb);
-
-        //CRUD for reply
-        Task<IEnumerable<Feedback>> GetRepliesByParentIdAsync(int ParentFb);
-        //Task<Feedback> SubmitReplyAsync(Feedback reply);
-    }
-}using Microsoft.EntityFrameworkCore;
-using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Models.Entities;
-using ZestyBiteWebAppSolution.Repositories.Interfaces;
-
-namespace ZestyBiteWebAppSolution.Repositories.Implementations
-{
-    public class FeedbackRepository : IRepository<Feedback>, IFeedbackRepository
-    {
-        private readonly ZestyBiteContext _context;
-        public FeedbackRepository(ZestyBiteContext context)
-        {
-            _context = context;
-        }
-        public async Task<IEnumerable<Feedback>> GetFeedbacksByItemIdAsync(int itemId)
-        {
-            return await _context.Feedbacks
-                .Where(f => f.ItemId == itemId && f.ParentFbFlag == null) // Exclude replies
-                                                                          //.Include(f => f.Account)
-                                                                          //.Include(f => f.Item)
-                .OrderByDescending(f => f.FbDatetime)
-                .ToListAsync();
-        }
-
-        // Rely on the generic IRepository<T> methods for basic CRUD:
-
-        public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
-        {
-            return await _context.Feedbacks
-                .OrderByDescending(f => f.FbDatetime)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb)
-        {
-            return await _context.Feedbacks
-                .Where(f => f.ParentFbFlag == ParentFb)
-                //.Include(f => f.Account)
-                .OrderBy(f => f.FbDatetime) // Oldest first
-                .ToListAsync();
-        }
-
-        //public async Task<Feedback> SubmitFeedbackAsync(Feedback feedback)
-        //{
-        //    _context.Feedbacks.Add(feedback);
-        //    await _context.SaveChangesAsync();
-        //    return feedback;
-        //}
-
-        public async Task<Feedback> CreateAsync(Feedback feedback)
-        {
-            _context.Feedbacks.Add(feedback);
-            await _context.SaveChangesAsync();
-            return feedback;
-        }
-        public async Task<Feedback> UpdateAsync(Feedback feedback)
-        {
-            _context.Feedbacks.Update(feedback);
-            await _context.SaveChangesAsync();
-            return feedback;
-        }
-
-        //public async Task<Feedback> DeleteAsync(int feedbackId)
-        //{
-        //    var feedback = await _context.Feedbacks.FindAsync(feedbackId);
-
-        //    _context.Feedbacks.Remove(feedback);
-        //    await _context.SaveChangesAsync();
-        //    return feedback; // Return the deleted feedback or null if not found
-        //}
-
-        //CRUD for reply
-
-        public async Task<IEnumerable<Feedback>> GetRepliesByParentIdAsync(int ParentFb)
-        {
-            return await _context.Feedbacks
-                .Where(f => f.ParentFbFlag == ParentFb)
-                //.Include(f => f.Account) // Include Account for Username and ProfileImage
-                .OrderBy(f => f.FbDatetime) // Oldest first
-                .ToListAsync();
-        }
-        //public async Task<Feedback> SubmitReplyAsync(Feedback reply)
-        //{
-        //    _context.Feedbacks.Add(reply);
-        //    await _context.SaveChangesAsync();
-        //    return reply;
-        //}
-
-        //public async Task<Feedback> UpdateReplyAsync(Feedback reply)
-        //{
-        //    _context.Feedbacks.Update(reply);
-        //    await _context.SaveChangesAsync();
-        //    return reply;
-        //}
-
-        //public async Task<Feedback> DeleteReplyAsync(int replyId)
-        //{
-        //    var reply = await _context.Feedbacks.FindAsync(replyId);
-        //    _context.Feedbacks.Remove(reply);
-        //    await _context.SaveChangesAsync();
-        //    return reply; // Return the deleted reply or null if not found
-        //}
-
-        public async Task<IEnumerable<Feedback?>> GetAllAsync()
-        {
-            return await _context.Feedbacks.ToListAsync();
-        }
-
-        public async Task<Feedback?> GetByIdAsync(int id) => await _context.Feedbacks.FindAsync(id);
-
-        public async Task<Feedback> DeleteAsync(Feedback feedback)
-        {
-            _context.Feedbacks.Remove(feedback);
-            await _context.SaveChangesAsync();
-            return feedback;
-        }
-    }
-}
-using ZestyBiteWebAppSolution.Models.DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ZestyBiteWebAppSolution.Models.Entities;
-
-namespace ZestyBiteWebAppSolution.Services.Interfaces
-{
-    public interface IFeedbackService
-    {
-        Task<IEnumerable<FeedbackDTO>> GetAllFeedbacksAsync(int pageNumber, int pageSize);
-        Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId);
-
-        //Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync();
-        Task<IEnumerable<Feedback?>> GetAllFeedbacksAsync();
-        Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto);
-        Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto);
-        Task<bool> DeleteFeedbackAsync(int feedbackId);
-
-        // CRUD for replies
-        Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto);
-        Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto);
-        Task<bool> DeleteReplyAsync(int replyId);
-        Task<IEnumerable<ReplyDTO>> GetRepliesForFeedbackAsync(int parentFbFlag);
-
-    }
-}
-using ZestyBiteWebAppSolution.Models.DTOs;
-using ZestyBiteWebAppSolution.Models.Entities;
-using ZestyBiteWebAppSolution.Repositories.Interfaces;
-using ZestyBiteWebAppSolution.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ZestyBiteWebAppSolution.Services.Implementations
-{
-    public class FeedbackService : IFeedbackService
-    {
-        private readonly IFeedbackRepository _feedbackRepository;
-        private readonly IAccountRepository _accountRepository;
-        private readonly IItemRepository _itemRepository;
-
-        public FeedbackService(IFeedbackRepository feedbackRepository, IAccountRepository accountRepository, IItemRepository itemRepository)
-        {
-            _feedbackRepository = feedbackRepository;
-            _accountRepository = accountRepository;
-            _itemRepository = itemRepository;
-        }
-
-        // Mapping functions
-        private FeedbackDTO MapToDTO(Feedback feedback)
-        {
-            if (feedback == null)
-            {
-                throw new ArgumentNullException(nameof(feedback));
+            // Fetch items from the API and populate the select element
+            function fetchItems() {
+                return [
+                    { item: "Pizza Margherita" },
+                    { item: "Pepperoni Pizza" },
+                    { item: "Hawaiian Pizza" },
+                    { item: "Veggie Pizza" },
+                    { item: "BBQ Chicken Pizza" }
+                ];
             }
 
-            FeedbackDTO parentFeedbackDTO = feedback.ParentFbFlagNavigation != null ? MapToDTO(feedback.ParentFbFlagNavigation) : null;
-
-            return new FeedbackDTO
-            {
-                Id = feedback.FbId,
-                Content = feedback.FbContent,
-                DateTime = feedback.FbDatetime,
-                Username = feedback.Account.Username ?? "Unknown",
-                ProfileImage = feedback.Account.ProfileImage,
-                ItemId = feedback.ItemId,
-                ItemName = feedback.Item.ItemName ?? "Unknown",
-                ParentFb = feedback.ParentFbFlag,
-                ParentFeedback = parentFeedbackDTO
-            };
-        }
-
-        private Feedback MapToItem(FeedbackDTO feedbackDTO)
-        {
-            return new Feedback
-            {
-                FbId = feedbackDTO.Id,
-                FbContent = feedbackDTO.Content,
-                FbDatetime = feedbackDTO.DateTime,
-                ItemId = feedbackDTO.ItemId,
-                ParentFbFlag = feedbackDTO.ParentFb
-            };
-        }
-
-        private ReplyDTO MapToReplyDTO(Feedback reply)
-        {
-            if (reply == null)
-            {
-                throw new ArgumentNullException(nameof(reply));
+            // Populate the select element with fetched items
+            function populateDishSelect(items) {
+                items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.item;
+                    option.textContent = item.item;
+                    dishSelect.appendChild(option);
+                });
             }
 
-            return new ReplyDTO
-            {
-                Id = reply.FbId,
-                Content = reply.FbContent,
-                DateTime = reply.FbDatetime,
-                AccountId = reply.AccountId,
-                Username = reply.Account.Username ?? "Unknown",
-                ProfileImage = reply.Account.ProfileImage,
-                ItemId = reply.ItemId,
-                ItemName = reply.Item.ItemName ?? "Unknown",
-                ParentFb = reply.ParentFbFlag ?? 0
-            };
-        }
+            // Fetch items and populate select element
+            const items = fetchItems();
+            populateDishSelect(items);
 
-        // Implement functions
-        public async Task<IEnumerable<FeedbackDTO>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
-        {
-            var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync(pageNumber, pageSize);
-            return feedbacks?.Select(MapToDTO).ToList() ?? new List<FeedbackDTO>();
-        }
+            document.getElementById('submitFeedback').addEventListener('click', function () {
+                const feedbackDish = document.getElementById('feedbackDish').value;
+                const feedbackMessage = document.getElementById('feedbackMessage').value;
 
-        //public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync()
-        //{
-        //    var feedbacks = await _feedbackRepository.GetAllAsync();
-        //    return feedbacks.Select(feedback => new FeedbackDTO
-        //    {
-        //        Id = feedback.FbId,
-        //        Content = feedback.FbContent,
-        //        DateTime = feedback.FbDatetime,
-        //        Username = feedback.Account.Username,
-        //        ProfileImage = feedback.Account.ProfileImage,
-        //        ItemId = feedback.ItemId,
-        //        ItemName = feedback.Item.ItemName,
-        //        ParentFb = feedback.ParentFbFlag,
-        //        ParentFeedback = feedback.ParentFbFlagNavigation != null ? MapToDTO(feedback.ParentFbFlagNavigation) : null
-        //    }).ToList();
-        //}
-        public async Task<IEnumerable<Feedback?>> GetAllFeedbacksAsync()
-        {
-            var feedbacks = await _feedbackRepository.GetAllAsync();
-            return feedbacks.ToList(); // Return the original Feedback entities
-        }
+                fetch('/api/feedback/SubmitFeedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content: feedbackMessage,
+                        dateTime: new Date().toISOString(),
+                        accountId: 1, // Replace with the actual account ID
+                        username: 'john_doe', // Replace with the actual username
+                        itemId: 1, // Replace with the actual item ID (you might need to retrieve this based on the dish name)
+                        itemName: feedbackDish
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Create a notification element
+                        const notification = document.createElement('div');
+                        notification.textContent = 'Feedback success! Redirecting to Blog...';
+                        notification.style.position = 'fixed';
+                        notification.style.top = '10px';
+                        notification.style.right = '10px';
+                        notification.style.padding = '10px';
+                        notification.style.backgroundColor = '#ffffff';
+                        notification.style.color = '#000000';
+                        notification.style.zIndex = '1000';
+                        document.body.appendChild(notification);
 
-        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId)
-        {
-            var feedbacks = await _feedbackRepository.GetFeedbacksByItemIdAsync(itemId);
-            return feedbacks?.Select(MapToDTO).ToList() ?? new List<FeedbackDTO>();
-        }
+                        // Set timeout for redirection
+                        setTimeout(() => {
+                            window.location.href = '/Home/Blog';
+                        }, 1000); // Redirect after 1 second
 
-        public async Task<IEnumerable<ReplyDTO>> GetRepliesForFeedbackAsync(int parentFbFlag)
-        {
-            var replies = await _feedbackRepository.GetFeedbackRepliesAsync(parentFbFlag);
-            return replies.Select(MapToReplyDTO).ToList();
-        }
-
-        public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto)
-        {
-            var account = await _accountRepository.GetAccountByUsnAsync(feedbackDto.Username);
-            var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-            if (account == null || item == null)
-            {
-                throw new InvalidOperationException("Invalid Account or Item.");
-            }
-
-            var feedback = new Feedback
-            {
-                FbContent = feedbackDto.Content,
-                FbDatetime = DateTime.Now,
-                AccountId = account.AccountId,
-                ItemId = feedbackDto.ItemId,
-                Account = account,
-                Item = item,
-                ParentFbFlag = null
-            };
-
-            await _feedbackRepository.CreateAsync(feedback);
-            feedbackDto.Id = feedback.FbId;
-            return feedbackDto;
-        }
-
-        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto)
-        {
-            var reply = new Feedback
-            {
-                FbContent = replyDto.Content,
-                FbDatetime = DateTime.Now,
-                AccountId = replyDto.AccountId,
-                ItemId = replyDto.ItemId,
-                ParentFbFlag = parentFbFlag
-            };
-
-            var submittedReply = await _feedbackRepository.CreateAsync(reply);
-            return MapToDTO(submittedReply);
-        }
-
-        public async Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto)
-        {
-            var feedback = await _feedbackRepository.GetByIdAsync(feedbackDto.Id);
-            if (feedback == null)
-            {
-                throw new InvalidOperationException("Feedback not found");
-            }
-            //var account = await _accountRepository.GetByIdAsync(feedbackDto.AccountId);
-            var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-            if (item == null)
-            {
-                throw new InvalidOperationException("Invalid Item.");
-            }
-
-            feedback.FbContent = feedbackDto.Content;
-            var updatedFeedback = await _feedbackRepository.UpdateAsync(feedback);
-            return MapToDTO(updatedFeedback);
-        }
-
-        public async Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto)
-        {
-            var existingReply = await _feedbackRepository.GetByIdAsync(replyDto.Id) ?? throw new KeyNotFoundException("Reply not found.");
-            existingReply.FbContent = replyDto.Content;
-            existingReply.FbDatetime = DateTime.Now;
-            var updatedReply = await _feedbackRepository.UpdateAsync(existingReply);
-            return MapToDTO(updatedReply);
-        }
-
-        public async Task<bool> DeleteFeedbackAsync(int feedbackId)
-        {
-            var feedback = await _feedbackRepository.GetByIdAsync(feedbackId);
-            if (feedback != null)
-            {
-                await _feedbackRepository.DeleteAsync(feedback);
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> DeleteReplyAsync(int replyId)
-        {
-            var existingReply = await _feedbackRepository.GetByIdAsync(replyId);
-            if (existingReply != null)
-            {
-                await _feedbackRepository.DeleteAsync(existingReply);
-                return true;
-            }
-            return false;
-        }
-    }
-}
-using Microsoft.AspNetCore.Mvc;
-using ZestyBiteWebAppSolution.Models.DTOs;
-using ZestyBiteWebAppSolution.Services.Interfaces;
-using System;
-using System.Threading.Tasks;
-
-namespace ZestyBiteWebAppSolution.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    public class FeedbackController : ControllerBase
-    {
-        private readonly IFeedbackService _feedbackService;
-
-        public FeedbackController(IFeedbackService feedbackService)
-        {
-            _feedbackService = feedbackService;
-        }
-
-        // GET: api/feedback/item/{itemId}
-        [HttpGet("item/{itemId}")]
-        public async Task<IActionResult> GetFeedbacksByItemId(int itemId)
-        {
-            try
-            {
-                var feedbacks = await _feedbackService.GetFeedbacksByItemIdAsync(itemId);
-                return Ok(feedbacks);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error while retrieving feedbacks for item {itemId}: {ex.Message}");
-            }
-        }
-
-        // POST: api/feedback
-        [HttpPost]
-        public async Task<IActionResult> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto);
-                return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error while submitting feedback: {ex.Message}");
-            }
-        }
-
-        // GET: api/feedback/all
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllFeedbacks()
-        {
-            try
-            {
-                var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
-                return Ok(feedbacks);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error while retrieving all feedbacks: {ex.Message}");
-            }
-        }
-
-        // GET: api/feedback
-        [HttpGet("pagination")]
-        public async Task<IActionResult> GetFeedbacks(int pageNumber = 1, int pageSize = 10)
-        {
-            try
-            {
-                var feedbacks = await _feedbackService.GetAllFeedbacksAsync(pageNumber, pageSize);
-                return Ok(feedbacks);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error while retrieving feedbacks: {ex.Message}");
-            }
-        }
-
-        // DELETE: api/feedback/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFeedback(int id)
-        {
-            try
-            {
-                var result = await _feedbackService.DeleteFeedbackAsync(id);
-                if (result)
-                {
-                    return NoContent();
-                }
-                return NotFound(new { Message = "Feedback not found" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error while deleting feedback: {ex.Message}");
-            }
-        }
-    }
-}
-###
-POST http://localhost:5024/api/feedback
-Content-Type: application/json
-
-{
-    "content": "awd awd awd wad ",
-    "dateTime": "2024-11-21T15:14:00",
-    "accountId": 1,
-    "username": "john_doe",
-    "profileImage": null,
-    "itemId": 1,
-    "itemName": "Pizza Margherita"
-}
-
-###
-GET http://localhost:5024/api/feedback/all
-###
-GET http://localhost:5024/api/feedback/pagination?pageNumber=1&pageSize=10
-###
-GET http://localhost:5024/api/feedback/item/1
-###
-DELETE http://localhost:5024/api/feedback/18
-###
-
-###
-
-###
-
-###
-
-###
-
-###
+                        // Remove notification after redirect (optional)
+                        setTimeout(() => {
+                            document.body.removeChild(notification);
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+</body>

@@ -149,7 +149,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             {
                 throw new InvalidOperationException("Invalid Item.");
             }
-
             feedback = MapToItem(feedbackDto);
             feedback.Item = item;
 

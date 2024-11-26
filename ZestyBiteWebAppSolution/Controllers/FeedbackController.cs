@@ -2,13 +2,14 @@
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FeedbackController : ControllerBase
+    public class FeedbackController : Controller
     {
         private readonly IFeedbackService _feedbackService;
 
@@ -17,7 +18,43 @@ namespace ZestyBiteWebAppSolution.Controllers
             _feedbackService = feedbackService;
         }
 
+        // Render the Feedback view
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> Index()
+        {
+            var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
+            return View(feedbacks);
+        }
+
+        // Render the Blog view
+        [HttpGet]
+        [Route("Blog")]
+        public IActionResult Blog()
+        {
+            return View();
+        }
+
         // CRUD Feedback
+
+        // GET: api/feedback/all
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllFeedbacks()
+        {
+            try
+            {
+                var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
+                return Ok(feedbacks);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error while retrieving all feedbacks: {ex.Message}");
+            }
+        }
 
         // GET: api/feedback/item/{itemId}
         [HttpGet("item/{itemId}")]
@@ -35,7 +72,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback
-        [HttpPost]
+        [HttpPost("SubmitFeedback")]
         public async Task<IActionResult> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
         {
             if (!ModelState.IsValid)
@@ -54,7 +91,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // PUT: api/feedback
-        [HttpPut]
+        [HttpPut("UpdateFeedback")]
         public async Task<IActionResult> UpdateFeedback([FromBody] FeedbackDTO feedbackDto)
         {
             if (!ModelState.IsValid)
@@ -76,27 +113,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        // GET: api/feedback/all
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllFeedbacks()
-        {
-            try
-            {
-                var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
-                return Ok(feedbacks);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error while retrieving all feedbacks: {ex.Message}");
-            }
-        }
-
         // GET: api/feedback
-        [HttpGet("pagination")]
+        [HttpGet("GetPagination")]
         public async Task<IActionResult> GetFeedbacks(int pageNumber = 1, int pageSize = 10)
         {
             try
@@ -130,7 +148,6 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // CRUD Reply
-
         // GET: api/feedback/replies/{parentFb}
         [HttpGet("replies/{parentFb}")]
         public async Task<IActionResult> GetRepliesForFeedback(int parentFb)

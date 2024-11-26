@@ -15,7 +15,5 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces {
         Task<int> GetRoleIdByUsn(string username);
         Task<bool> IsTrueAccount(string usn, string password);
         Task<string?> GetRoleDescByUsn(string usn);
-
-        
     }
 }

@@ -83,7 +83,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var acc = new Account()
             {
                 UserName = dto.Username,
-                Password = HashPassword(dto.Password),
+                // Password = HashPassword(dto.Password),
+                Password = dto.Password,
                 Name = dto.Name,
                 PhoneNumber = dto.PhoneNumber,
                 Address = dto.Address,
@@ -192,6 +193,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         public async Task<bool> IsTrueAccount(string usn, string pwd){
             var acc =  await _repository.GetAccountByUsnAsync(usn);
             if (acc == null) return false;
+            // if (acc.Password != HashPassword(pwd)) return false;
             if (acc.Password != pwd) return false;
             return true;
         }

@@ -93,8 +93,8 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
 
     public class LoginDTO
     {
-        [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        // [Required(ErrorMessage = "Email is required.")]
+        // [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; } = null!;
 
                                 /* OR */

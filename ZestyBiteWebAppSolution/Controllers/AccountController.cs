@@ -18,15 +18,11 @@ namespace ZestyBiteWebAppSolution.Controllers
     {
         private readonly IAccountService _service;
         private readonly ILogger<AccountController> _logger;
-        private readonly TokenService _token;
-        private readonly ApiClientService _apiClient;
 
-        public AccountController(ApiClientService apiClientService, ILogger<AccountController> logger, IAccountService accountService, TokenService tokenService)
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService)
         {
             _logger = logger;
             _service = accountService;
-            _token = tokenService;
-            _apiClient = apiClientService;
         }
 
         public IActionResult Index()
@@ -44,40 +40,35 @@ namespace ZestyBiteWebAppSolution.Controllers
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
+        /* Login */
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View(); // Hiển thị trang đăng nhập
+        }
+
         [HttpPost]
         [Route("LogIn")]
-        public IActionResult LogIn([FromBody] LoginDTO dto)
+        public async Task<IActionResult> LogIn([FromBody] LoginDTO dto)
         {
             // ModelState.AddModelError("UserName", "Tên đăng nhập không hợp lệ");
 
-            if (_service.IsTrueAccount(dto.Username, dto.Password).Result)
+            if (await _service.IsTrueAccount(dto.Username, dto.Password))
             {
-                string? roleDesc = _service.GetRoleDescByUsn(dto.Username).Result;
-                if (roleDesc == null) return Unauthorized(new { Message = "RoleDesc is not found" });
-                // Session stage
-                HttpContext.Session.SetString("Username", dto.Username);
-                HttpContext.Session.SetString("RoleDescription", roleDesc);
-
-                List<string> roles = new List<string> { (roleDesc) };
-
-                // string token = _token.GenerateToken(dto.Username, roleDesc.ToList()); 
-                string token = _token.GenerateToken(dto.Username, roles); // worked by using new List<string>{}
-                //  sol1
-                // HttpContext.Response.Cookies.Append("Token", token);
-                //  sol2
-                /*  cách khác cụ thể hơn */
-                HttpContext.Response.Cookies.Append("Token", token, new CookieOptions
+                HttpContext.Session.SetString("username", dto.Username);
+                Response.Cookies.Append("username", dto.Username, new CookieOptions
                 {
-                    Expires = DateTime.UtcNow.AddMinutes(2), // Thời gian hết hạn cookie
-                    HttpOnly = true, // Giới hạn chỉ gửi cookie qua HTTP (không thể truy cập bằng JavaScript)
-                    Secure = false, // Chỉ gửi cookie qua HTTPS (môi trường bảo mật), tạm thời để false để cho phép http test = vsc
-                    SameSite = SameSiteMode.Strict // Chính sách SameSite giúp bảo vệ khỏi CSRF
+                    Expires = DateTimeOffset.Now.AddMinutes(30),
+                    HttpOnly = true,
+                    Secure = false,
+                    SameSite = SameSiteMode.Strict
                 });
-
-                return Ok(new { Token = token });
-
+                return Ok("Login sucessfully");
+                // return RedirectToAction("Index", "Home");
             }
+            ViewBag.ErrorMessage = "Invalid username or password";
             return Unauthorized();
+            // return View();
             /*
             if (ModelState.IsValid)
         {
@@ -101,17 +92,13 @@ namespace ZestyBiteWebAppSolution.Controllers
         return View(model);  // Trả lại trang đăng nhập nếu đăng nhập thất bại
             */
         }
-        private LoginDTO AuthenticateUser(string usnomail, string pwd)
-        {
-            /*  logic from service maybe?*/
-            return new LoginDTO { Email = usnomail, Username = usnomail, Password = pwd };
-        }       // =-> không cần hàm này nữa vì đã có hàm called từ service "IsTrueAccount"
+
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            HttpContext.Response.Cookies.Delete("Token");
-            HttpContext.Session.Clear();
-            RedirectToAction("Login", "Account");
+            HttpContext.Session.Remove("username");
+            Response.Cookies.Delete("username");
+            // RedirectToAction("Login", "Account");
             return Ok("Log out sucessfully");
             // thêm case tắt trình duyệt thì auto log out
         }
@@ -163,19 +150,6 @@ namespace ZestyBiteWebAppSolution.Controllers
             try
             {
                 var created = await _service.SignUpAsync(acc);
-
-                List<string> roles = new List<string> { created.RoleDescription };
-
-                string token = _token.GenerateToken(created.Username, roles);
-                // HttpContext.Response.Cookies.Append("Token", token);
-                HttpContext.Response.Cookies.Append("Token", token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = false,
-                    Expires = DateTime.UtcNow.AddHours(1),
-                    SameSite = SameSiteMode.Strict
-                });
-                Ok(new { Token = token });
                 // return RedirectToAction("Profile", "User");return RedirectToAction("Profile", "User");
                 return TypedResults.Created($"/api/account/{created.Id}", created);
             }
@@ -224,7 +198,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
 
             // Thực hiện xác thực token và lấy thông tin người dùng từ token
-            var userInfo = _token.GetUserInfoFromToken(token); // Lấy thông tin người dùng từ token
+            var userInfo = "GetUserInfoFromToken(token)"; // Lấy thông tin người dùng từ token
 
             if (userInfo == null)
             {
@@ -232,8 +206,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
 
             // Trả về trang cá nhân với thông tin người dùng
-            ViewBag.UserName = userInfo.UserName;
-            ViewBag.Role = userInfo.Roles;
+            ViewBag.UserName = "userInfo.UserName";
+            ViewBag.Role = "userInfo.Roles";
 
             // return Ok(userInfo);
             return View("AnotherViewName", userInfo);
@@ -241,20 +215,6 @@ namespace ZestyBiteWebAppSolution.Controllers
             // return View(); // Trả về trang cá nhân (Profile)
         }
 
-        [HttpGet("profileee")] // => safer more security with RestfulAPI
-        public IActionResult Profile()
-        {
-            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var userInfo = _token.GetUserInfoFromToken(token);
-
-            if (userInfo == null)
-            {
-                return Unauthorized();
-            }
-
-            // Trả về thông tin người dùng
-            return Ok(userInfo);
-        }
 
         [Authorize]
         [HttpGet("profile/only/{username}")]
@@ -282,21 +242,6 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return Problem($"Internal Server Error: {ex.Message}");
             }
         }
-
-        [HttpGet("view/profile")]
-        public async Task<IActionResult> ViewProfileee()
-        {
-            var token = HttpContext.Request.Cookies["Token"];  // Lấy token từ cookie
-
-            if (string.IsNullOrEmpty(token))
-            {
-                return Unauthorized(new { Message = "No token provided" });
-            }
-
-            var profileData = await _apiClient.GetProfileDataAsync(token);
-            return Ok(new { ProfileData = profileData });
-        }
-
 
         [HttpGet("all")]
         public async Task<IResult> GetAllAccount()
@@ -345,7 +290,6 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-
         public IActionResult EditProfile()
         {
             return View();
@@ -360,7 +304,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         {
             return View();
         }
-        
+
 
 
     }

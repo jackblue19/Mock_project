@@ -8,8 +8,24 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+// using Microsoft.AspNetCore.Authentication;
+using ZestyBiteWebAppSolution.Middlewares;
 
-/*dotnet add package Microsoft.IdentityModel.Tokens*/
+/*dotnet add package Microsoft.IdentityModel.Tokens
+Install-Package Microsoft.AspNetCore.Session
+
+Install-Package Microsoft.AspNetCore.Authentication.Cookies
+
+Install-Package Microsoft.AspNetCore.Authorization
+
+Install-Package Microsoft.AspNetCore.Mvc
+
+Install-Package Microsoft.Extensions.DependencyInjection
+
+Install-Package Microsoft.AspNetCore.Http
+
+Install-Package Microsoft.AspNetCore.Http.Abstractions
+*/
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,46 +34,11 @@ builder.Services.AddDistributedMemoryCache(); // Store session in memory
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".Restaurant.Session";
-    options.IdleTimeout = TimeSpan.FromMinutes(2);
-    options.Cookie.HttpOnly = true; // => maybe comment vì hình như nó chặn http chỉ cho https
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = false; // => maybe comment vì hình như nó chặn http chỉ cho https => from TRUE to FALSE
     options.Cookie.IsEssential = true;
 });
-//  Configure JWT token 
-                        /* sol1*/
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-            ValidAudience = builder.Configuration["JwtSettings:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
-        };
-    });
-        /* sol2 cho Auth => del nen xai cach 2 vì complex -> dùng sol 1*/
-/*
-builder.Services.AddAuthentication("Bearer")
-.AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-        ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
-    };
-});
-*/
 
-// IHttpClientBuilder httpClientBuilder = builder.Services.AddHttpClient<ApiClientService>();
-builder.Services.AddHttpClient<ApiClientService>(); // áp dụng trong microservice -> cho phép sử dụng API bên ngoài nội bộ
 /*
 Cấu hình Redirect khi chưa đăng nhập (Login Redirect):
 ASP.NET Core sẽ tự động chuyển hướng người dùng đến trang đăng nhập mặc định nếu họ không được xác thực (tức là không có session, không có token hợp lệ, v.v.). Nếu bạn muốn tùy chỉnh trang đăng nhập hoặc thông báo lỗi, bạn có thể cấu hình như sau:
@@ -76,9 +57,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 */
 
-
 // Thêm dịch vụ Authorization và tạo các policies phân quyền
-
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("manager"));
@@ -95,15 +74,6 @@ builder.Services.AddAuthorization(options =>
 // Add Razor Pages and MVC
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
-//  4 dòng code dưới để có thể return về 1 Entity mà không cần chuyển sang DTO
-//  -> tuy nhiên rủi ro kha cao
-//  => nên kết hợp cùng [JsonIgnore] có thể tham khảo ở Entity Role (class) <4 loc>
-/*builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-    });*/
 
 
 // Configure Swagger
@@ -134,8 +104,6 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddSingleton<TokenService>(); // bổ sung interface để DI
-// builder.Services.AddSingleton<TokenService>(new TokenService(builder.Configuration));
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -209,6 +177,8 @@ app.UseRouting();
 
 // Add Session Middleware (after routing and before authorization)
 app.UseSession();
+app.UseMiddleware<AuthenticationMiddleware>();
+
 //app.MapControllers();
 
 // Middleware for Authorization

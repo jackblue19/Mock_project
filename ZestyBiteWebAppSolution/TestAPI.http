@@ -88,3 +88,77 @@ Content-Type: application/json
 POST http://localhost:5024/api/account/logout
 
 ###
+POST http://localhost:5024/api/feedback
+Content-Type: application/json
+
+{
+    "content": "awd awd awd wad ",
+    "dateTime": "2024-11-21T15:14:00",
+    "accountId": 1,
+    "username": "john_doe",
+    "profileImage": null,
+    "itemId": 1,
+    "itemName": "Pizza Margherita"
+}
+
+###
+GET http://localhost:5024/api/feedback/GetFeedbacks
+###
+GET http://localhost:5024/api/feedback/GetItems
+###
+GET http://localhost:5024/api/feedback/pagination?pageNumber=1&pageSize=10
+###
+GET http://localhost:5024/api/feedback/item/1
+###
+DELETE http://localhost:5024/api/feedback/30
+###
+PUT http://localhost:5024/api/feedback
+Content-Type: application/json
+
+{
+    "id": 25,
+    "content": "seffsbrf awefw4 fw",
+    "dateTime": "2024-11-21T15:14:00",
+    "itemId": 1,  
+    "username": "john_doe",  
+    "profileImage": null,
+    "itemName": "Spaghetti Carbonara", 
+    "parentFb": null
+}
+
+########################################################################
+POST http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
+{
+    "content": "Agreeeeeeeeeeeeeeeeeeeeeeeeeeeeee!",
+    "dateTime": "2024-09-18T14:30:00",
+    "accountId": 3, 
+    "username": "admin_user",  
+    "profileImage": null,  
+    "itemId": 7,  
+    "itemName": "awd awd",  
+    "parentFb": 11  
+}
+
+###
+PUT http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
+{
+    "content": "The fruit salad was indeed a great healthy option!",
+    "dateTime": "2024-09-18T14:45:00",
+    "accountId": 3,  
+    "username": "admin_user",  
+    "profileImage": null,  
+    "itemId": 7,  
+    "itemName": "Fruit Salad",  
+    "parentFb": 10  
+}
+
+###
+DELETE http://localhost:5024/api/feedback/reply/23
+
+###
+
+###

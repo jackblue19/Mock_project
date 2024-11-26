@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace ZestyBiteWebAppSolution.Repositories.Implementations {
     public class RoleRepository : IRoleRepository, IRepository<Role>
     {
-        private readonly ZestybiteContext _context;
-        public RoleRepository(ZestybiteContext context)
+        private readonly ZestyBiteContext _context;
+        public RoleRepository(ZestyBiteContext context)
         {
             _context = context;
         }

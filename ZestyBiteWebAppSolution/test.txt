@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Feedback";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -38,8 +38,8 @@
         document.addEventListener("DOMContentLoaded", function () {
             const dishSelect = document.getElementById('dish-select');
 
-            // Dummy function to simulate fetching data from the Bill table
-            function fetchBillItems() {
+            // Fetch items from the API and populate the select element
+            function fetchItems() {
                 return [
                     { item: "Pizza Margherita" },
                     { item: "Pepperoni Pizza" },
@@ -60,7 +60,7 @@
             }
 
             // Fetch items and populate select element
-            const items = fetchBillItems();
+            const items = fetchItems();
             populateDishSelect(items);
 
             document.getElementById('submitFeedback').addEventListener('click', function () {
@@ -90,8 +90,8 @@
                         notification.style.top = '10px';
                         notification.style.right = '10px';
                         notification.style.padding = '10px';
-                        notification.style.backgroundColor = '#BEBEBE';
-                        notification.style.color = '#000';
+                        notification.style.backgroundColor = '#ffffff';
+                        notification.style.color = '#000000';
                         notification.style.zIndex = '1000';
                         document.body.appendChild(notification);
 

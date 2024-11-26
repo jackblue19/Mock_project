@@ -276,3 +276,5 @@ __pycache__/
 appsettings.json
 appsettings.Development.json
 .fake
+
+ZestyBiteWebAppSolution/.vs

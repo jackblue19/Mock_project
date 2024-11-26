@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ZestyBiteWebAppSolution.Models.Entities;
 
 namespace ZestyBiteWebAppSolution.Data;

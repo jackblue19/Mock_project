@@ -14,10 +14,13 @@ namespace ZestyBiteSolution.Controllers
         {
             _accountService = accountService;
         }
+        public IActionResult Index() {
+            return View();
+        }
         //  aps dunjg cac ham cho controller khac 
-        public IActionResult Index()
+        public IActionResult Indez()
         {
-            string? userName = HttpContext.Session.GetString("Username");
+            string? userName = HttpContext.Session.GetString("username");
             string? roleId = HttpContext.Session.GetString("RoleId");
             string? userRole = HttpContext.Session.GetString("RoleDescription");
             // giờ là chia theo các case

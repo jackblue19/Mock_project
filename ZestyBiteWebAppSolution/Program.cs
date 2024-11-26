@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 // using Microsoft.AspNetCore.Authentication;
 using ZestyBiteWebAppSolution.Middlewares;
+using Microsoft.Identity;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session

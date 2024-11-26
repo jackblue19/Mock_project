@@ -147,14 +147,14 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 throw new ArgumentException(ex.Message);
             }
         }
-        public async Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto){
-            var current = await _repository.GetAccountByUsnAsync(dto.Username);
+        public async Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto, string usn){
+            var current = await _repository.GetAccountByUsnAsync(usn);
             current.Password = dto.NewPassword;
             await _repository.UpdateAsync(current);
             return dto;
         }
-        public async Task<UpdateProfileDTO> UpdateProfile(UpdateProfileDTO dto){
-            var current = await _repository.GetAccountByUsnAsync(dto.Username);
+        public async Task<UpdateProfileDTO> UpdateProfile(UpdateProfileDTO dto, string usn){
+            var current = await _repository.GetAccountByUsnAsync(usn);
             current.Name = dto.Name;
             current.PhoneNumber = dto.PhoneNumber;
             current.Address = dto.Address;

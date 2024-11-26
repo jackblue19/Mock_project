@@ -54,7 +54,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
 
     public class UpdateProfileDTO
     {
-        public string Username { get; set; } = null!;
+        // public string Username { get; set; } = null!;
         [Required(ErrorMessage = "Full Name is required.")]
         public string Name { get; set; } = null!;
 
@@ -73,7 +73,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
 
     public class ChangePwdDTO
     {
-        public string Username { get; set; } = null!;
+        // public string Username { get; set; } = null!;
 
         [Required(ErrorMessage = "Old password is required.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long and not exceed 100 characters.")]
@@ -95,7 +95,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
     {
         // [Required(ErrorMessage = "Email is required.")]
         // [EmailAddress(ErrorMessage = "Invalid email address.")]
-        public string Email { get; set; } = null!;
+        // public string Email { get; set; } = null!;
 
                                 /* OR */
 

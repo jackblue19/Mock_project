@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ZetstyBite.Models.Entities;
 
+
 public partial class Item
 {
     public int ItemId { get; set; }
@@ -11,7 +12,7 @@ public partial class Item
 
     public string ItemCategory { get; set; } = null!;
 
-    public ulong ItemStatus { get; set; }
+    public int ItemStatus { get; set; }
 
     public string ItemDescription { get; set; } = null!;
 
@@ -19,7 +20,7 @@ public partial class Item
 
     public string ItemImage { get; set; } = null!;
 
-    public ulong IsServed { get; set; }
+    public int IsServed { get; set; }
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 

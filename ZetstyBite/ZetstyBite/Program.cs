@@ -1,6 +1,6 @@
 global using Microsoft.EntityFrameworkCore;
 using ZetstyBite.Data;
-//using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using ZetstyBite.Repositories.Interfaces;
 using ZetstyBite.Repositories.Implementations;

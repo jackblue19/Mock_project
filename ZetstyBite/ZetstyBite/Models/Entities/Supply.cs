@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ZetstyBite.Models.Entities;
 
+
 public partial class Supply
 {
     public int SupplyId { get; set; }
@@ -13,7 +14,7 @@ public partial class Supply
 
     public decimal SupplyPrice { get; set; }
 
-    public ulong SupplyStatus { get; set; }
+    public int SupplyStatus { get; set; }
 
     public DateTime DateImport { get; set; }
 

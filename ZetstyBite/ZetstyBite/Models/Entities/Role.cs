@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ZetstyBite.Models.Entities;
 
+
 public partial class Role
 {
     public sbyte RoleId { get; set; }

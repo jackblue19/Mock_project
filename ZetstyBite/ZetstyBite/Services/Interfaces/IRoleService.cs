@@ -4,7 +4,7 @@ namespace ZetstyBite.Services.Interfaces
 {
     public interface IRoleService
     {
-        Task<Role> GetRoleByIdAsync(int id);
+        Task<Role?> GetRoleByIdAsync(int id);
     }
 }
     

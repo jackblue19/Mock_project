@@ -38,10 +38,6 @@ public partial class ZestyBiteDbContext : DbContext
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySQL("Server=Jack-Blue;Port=3306;Database=zestybite;Uid=jack;Pwd=jack1624.,");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -50,15 +46,13 @@ public partial class ZestyBiteDbContext : DbContext
 
             entity.ToTable("account");
 
-            entity.HasIndex(e => e.RoleId , "Role_ID");
+            entity.HasIndex(e => e.RoleId, "Role_ID");
 
-            entity.HasIndex(e => e.Username , "Username").IsUnique();
+            entity.HasIndex(e => e.Username, "Username").IsUnique();
 
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
-            // entity.Property(e => e.AccountId).HasColumnName("Account_ID").ValueGeneratedOnAdd();
             entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.Email).HasMaxLength(255);
-            entity.Property(e => e.Gender).HasColumnType("bit(1)");
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Password).HasMaxLength(255);
             entity.Property(e => e.PhoneNumber)
@@ -84,23 +78,19 @@ public partial class ZestyBiteDbContext : DbContext
 
             entity.ToTable("bill");
 
-            entity.HasIndex(e => e.AccountId , "Account_ID");
+            entity.HasIndex(e => e.AccountId, "Account_ID");
 
-            entity.HasIndex(e => e.PaymentId , "Payment_ID");
+            entity.HasIndex(e => e.PaymentId, "Payment_ID");
 
-            entity.HasIndex(e => e.TableId , "Table_ID");
+            entity.HasIndex(e => e.TableId, "Table_ID");
 
             entity.Property(e => e.BillId).HasColumnName("Bill_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.BillDatetime)
                 .HasColumnType("datetime")
                 .HasColumnName("Bill_Datetime");
-            entity.Property(e => e.BillStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Bill_Status");
-            entity.Property(e => e.BillType)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Bill_Type");
+            entity.Property(e => e.BillStatus).HasColumnName("Bill_Status");
+            entity.Property(e => e.BillType).HasColumnName("Bill_Type");
             entity.Property(e => e.PaymentId).HasColumnName("Payment_ID");
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.TotalCost)
@@ -129,9 +119,9 @@ public partial class ZestyBiteDbContext : DbContext
 
             entity.ToTable("feedback");
 
-            entity.HasIndex(e => e.AccountId , "Account_ID");
+            entity.HasIndex(e => e.AccountId, "Account_ID");
 
-            entity.HasIndex(e => e.ItemId , "Item_ID");
+            entity.HasIndex(e => e.ItemId, "Item_ID");
 
             entity.Property(e => e.FbId).HasColumnName("Fb_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
@@ -161,9 +151,7 @@ public partial class ZestyBiteDbContext : DbContext
             entity.ToTable("item");
 
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
-            entity.Property(e => e.IsServed)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Is_Served");
+            entity.Property(e => e.IsServed).HasColumnName("Is_Served");
             entity.Property(e => e.ItemCategory)
                 .HasColumnType("enum('Main course','Dessert','Drink','Salad','Fruit')")
                 .HasColumnName("Item_Category");
@@ -176,9 +164,7 @@ public partial class ZestyBiteDbContext : DbContext
             entity.Property(e => e.ItemName)
                 .HasMaxLength(255)
                 .HasColumnName("Item_Name");
-            entity.Property(e => e.ItemStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Item_Status");
+            entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
             entity.Property(e => e.SuggestedPrice)
                 .HasPrecision(12)
                 .HasColumnName("Suggested_Price");
@@ -191,9 +177,7 @@ public partial class ZestyBiteDbContext : DbContext
             entity.ToTable("payment");
 
             entity.Property(e => e.PaymentId).HasColumnName("Payment_ID");
-            entity.Property(e => e.PaymentMethod)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Payment_Method");
+            entity.Property(e => e.PaymentMethod).HasColumnName("Payment_Method");
         });
 
         modelBuilder.Entity<Profit>(entity =>
@@ -202,9 +186,9 @@ public partial class ZestyBiteDbContext : DbContext
 
             entity.ToTable("profit");
 
-            entity.HasIndex(e => e.BillId , "Bill_ID");
+            entity.HasIndex(e => e.BillId, "Bill_ID");
 
-            entity.HasIndex(e => e.SupplyId , "Supply_ID");
+            entity.HasIndex(e => e.SupplyId, "Supply_ID");
 
             entity.Property(e => e.Date).HasColumnType("date");
             entity.Property(e => e.BillId).HasColumnName("Bill_ID");
@@ -230,9 +214,9 @@ public partial class ZestyBiteDbContext : DbContext
 
             entity.ToTable("reservation");
 
-            entity.HasIndex(e => e.BillId , "Bill_ID");
+            entity.HasIndex(e => e.BillId, "Bill_ID");
 
-            entity.HasIndex(e => e.TableId , "Table_ID");
+            entity.HasIndex(e => e.TableId, "Table_ID");
 
             entity.Property(e => e.ReservationId).HasColumnName("Reservation_ID");
             entity.Property(e => e.BillId).HasColumnName("Bill_ID");
@@ -276,11 +260,11 @@ public partial class ZestyBiteDbContext : DbContext
 
             entity.ToTable("supply");
 
-            entity.HasIndex(e => e.ItemId , "Item_ID");
+            entity.HasIndex(e => e.ItemId, "Item_ID");
 
-            entity.HasIndex(e => e.TableId , "Table_ID");
+            entity.HasIndex(e => e.TableId, "Table_ID");
 
-            entity.HasIndex(e => e.VendorPhone , "Vendor_Phone").IsUnique();
+            entity.HasIndex(e => e.VendorPhone, "Vendor_Phone").IsUnique();
 
             entity.Property(e => e.SupplyId).HasColumnName("Supply_ID");
             entity.Property(e => e.DateExpiration)
@@ -302,9 +286,7 @@ public partial class ZestyBiteDbContext : DbContext
             entity.Property(e => e.SupplyQuantity)
                 .HasPrecision(10)
                 .HasColumnName("Supply_Quantity");
-            entity.Property(e => e.SupplyStatus)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Supply_Status");
+            entity.Property(e => e.SupplyStatus).HasColumnName("Supply_Status");
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.VendorAddress)
                 .HasMaxLength(255)
@@ -325,21 +307,21 @@ public partial class ZestyBiteDbContext : DbContext
                 .HasConstraintName("supply_ibfk_1");
 
             entity.HasMany(d => d.Items).WithMany(p => p.SuppliesNavigation)
-                .UsingEntity<Dictionary<string , object>>(
-                    "SupplyItem" ,
+                .UsingEntity<Dictionary<string, object>>(
+                    "SupplyItem",
                     r => r.HasOne<Item>().WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("supply_item_ibfk_2") ,
+                        .HasConstraintName("supply_item_ibfk_2"),
                     l => l.HasOne<Supply>().WithMany()
                         .HasForeignKey("SupplyId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("supply_item_ibfk_1") ,
+                        .HasConstraintName("supply_item_ibfk_1"),
                     j =>
                     {
-                        j.HasKey("SupplyId" , "ItemId").HasName("PRIMARY");
+                        j.HasKey("SupplyId", "ItemId").HasName("PRIMARY");
                         j.ToTable("supply_item");
-                        j.HasIndex(new[] { "ItemId" } , "Item_ID");
+                        j.HasIndex(new[] { "ItemId" }, "Item_ID");
                         j.IndexerProperty<int>("SupplyId").HasColumnName("Supply_ID");
                         j.IndexerProperty<int>("ItemId").HasColumnName("Item_ID");
                     });
@@ -351,29 +333,25 @@ public partial class ZestyBiteDbContext : DbContext
 
             entity.ToTable("table");
 
-            entity.HasIndex(e => e.AccountId , "Account_ID");
+            entity.HasIndex(e => e.AccountId, "Account_ID");
 
-            entity.HasIndex(e => e.ItemId , "Item_ID");
+            entity.HasIndex(e => e.ItemId, "Item_ID");
 
-            entity.HasIndex(e => e.ReservationId , "Reservation_ID");
+            entity.HasIndex(e => e.ReservationId, "Reservation_ID");
 
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.ReservationId).HasColumnName("Reservation_ID");
             entity.Property(e => e.TableCapacity).HasColumnName("Table_Capacity");
-            entity.Property(e => e.TableMaintenance)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Table_Maintenance");
+            entity.Property(e => e.TableMaintenance).HasColumnName("Table_Maintenance");
             entity.Property(e => e.TableNote)
                 .HasMaxLength(255)
                 .HasColumnName("Table_Note");
             entity.Property(e => e.TableStatus)
                 .HasColumnType("enum('Served','Empty','Waiting','Deposit')")
                 .HasColumnName("Table_Status");
-            entity.Property(e => e.TableType)
-                .HasColumnType("bit(1)")
-                .HasColumnName("Table_Type");
+            entity.Property(e => e.TableType).HasColumnName("Table_Type");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Tables)
                 .HasForeignKey(d => d.AccountId)
@@ -393,11 +371,11 @@ public partial class ZestyBiteDbContext : DbContext
 
         modelBuilder.Entity<TableDetail>(entity =>
         {
-            entity.HasKey(e => new { e.TableId , e.ItemId }).HasName("PRIMARY");
+            entity.HasKey(e => new { e.TableId, e.ItemId }).HasName("PRIMARY");
 
             entity.ToTable("table_details");
 
-            entity.HasIndex(e => e.ItemId , "Item_ID");
+            entity.HasIndex(e => e.ItemId, "Item_ID");
 
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");

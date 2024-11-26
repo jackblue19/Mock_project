@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-
-
 
 namespace ZetstyBite.Models.Entities;
 
@@ -21,7 +17,7 @@ public partial class Account
 
     public string Address { get; set; } = null!;
 
-    public ulong Gender { get; set; } // nen dung bool
+    public int Gender { get; set; }
 
     public string Email { get; set; } = null!;
 
@@ -30,12 +26,12 @@ public partial class Account
     public string? ProfileImage { get; set; }
 
     public sbyte RoleId { get; set; }
-    // [Newtonsoft.Json.JsonIgnore]
-    public virtual Role Role { get; set; } = null!;
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
+    public virtual Role Role { get; set; } = null!;
 
     public virtual ICollection<Table> Tables { get; set; } = new List<Table>();
 }

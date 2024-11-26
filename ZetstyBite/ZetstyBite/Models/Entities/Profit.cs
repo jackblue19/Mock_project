@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ZetstyBite.Models.Entities;
 
+
 public partial class Profit
 {
     public DateTime Date { get; set; }

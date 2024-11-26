@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ZetstyBite.Models.Entities;
 
+
 public partial class Feedback
 {
     public int FbId { get; set; }

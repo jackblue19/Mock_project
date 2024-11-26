@@ -52,13 +52,13 @@ namespace ZetstyBite.Repositories.Implementations
                                  .Where(acc => acc.AccountId == entity.AccountId)
                                  .SingleOrDefaultAsync();
         }
-        public async Task<Account> CreateAsync(Account entity)
+        public async Task<Account> CreateAsync(Account acc)
         {
             // await _context.Set<Account>().AddAsync(entity);  // => not sure to test
             // await _context.Accounts.AddAsync(entity); // => not rcm to use
-            _context.Accounts.Add(entity);
+            _context.Accounts.Add(acc);
             await _context.SaveChangesAsync();
-            return entity;
+            return acc;
         }
         public async Task<Account> UpdateAsync(Account entity)
         {

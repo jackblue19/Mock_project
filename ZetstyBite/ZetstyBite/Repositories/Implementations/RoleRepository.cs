@@ -41,7 +41,7 @@ namespace ZetstyBite.Repositories.Implementations
             await _context.SaveChangesAsync();
             return entity;
         }
-        public async Task<Role> GetById(int id)
+        public async Task<Role?> GetById(int id)
         {
             return await _context.Roles.SingleOrDefaultAsync(r => r.RoleId == id);
         }

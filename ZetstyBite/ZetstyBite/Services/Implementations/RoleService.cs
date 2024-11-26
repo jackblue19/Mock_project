@@ -12,7 +12,7 @@ namespace ZetstyBite.Services.Implementations
         {
             _repository = roleRepository;
         }
-        public async Task<Role> GetRoleByIdAsync(int id){
+        public async Task<Role?> GetRoleByIdAsync(int id){
             return await _repository.GetById(id);
         }
     }

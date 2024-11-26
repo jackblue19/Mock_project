@@ -57,7 +57,7 @@ namespace ZetstyBite.Services.Implementations
                 throw new InvalidOperationException($"Email '{dto.Email}' is already in use.");
             }
 
-            var role = await _roleRepository.GetById(7);
+            var roleCus = await _roleRepository.GetById(7);
             var acc = new Account
             {
                 AccountId = dto.Id,
@@ -66,13 +66,10 @@ namespace ZetstyBite.Services.Implementations
                 Password = dto.Password,
                 PhoneNumber = dto.Phone,
                 Address = dto.Address,
-                Gender = dto.Gender,
+                Gender = 0,
                 Email = dto.Email,
-                Role = dto.Role,
-                ProfileImage = dto.ProfileImage,
-                VerificationCode = dto.VerificationCode,
             };
-            // acc.Role = role;
+            acc.Role = roleCus;
             var created = await _repository.CreateAsync(acc);
             return created;
         }
@@ -83,7 +80,7 @@ namespace ZetstyBite.Services.Implementations
             return accounts;
         }
 
-        Task<Account> IAccountService.GetAccountById(int id)
+        public async Task<Account> GetAccountById(int id)
         {
             throw new NotImplementedException();
         }

@@ -1,0 +1,112 @@
+﻿#search-text {
+    border: none; /* Bỏ đường viền của ô nhập */
+    outline: none; /* Bỏ viền khi ô nhập được chọn */
+    background: none;
+    font-size: 18px;
+    width: 200px; /* Đặt chiều rộng cố định */
+    padding: 10px 0px 10px 15px; /* Đặt padding mặc định */
+    transition: all 0.25s ease-in-out;
+}
+
+
+#search-box {
+    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    background-color: white; /* Màu nền cho ô tìm kiếm */
+    border-radius: 30px; /* Bo góc cho ô tìm kiếm */
+}
+
+    #search-box:hover #search-text {
+        width: 200px;
+        padding: 10px 0px 10px 15px
+    }
+
+#search-btn {
+    background: none; /* Không có màu nền cho nút */
+    border: none; /* Bỏ đường viền cho nút */
+    cursor: pointer; /* Con trỏ chuột khi hover */
+    border-radius: 50%;
+    font-size: 18px
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.nav-item {
+    margin: 0 5px;
+    position: relative;
+}
+
+.btn-book-table {
+    background-color: #cea252; /* Button background color */
+    color: white;
+    padding: 10px 60px; /* Increase button size */
+    border-radius: 5px;
+    margin-top: 10px;
+    min-width: 150px; /* Minimum width */
+    text-align: center; /* Center text */
+    transition: background-color 0.3s, transform 0.3s; /* Hover effect */
+    font-size: 18px;
+}
+
+    .btn-book-table:hover {
+        transform: scale(1.1); /* Increase size on hover */
+        padding: 10px 30px; /* Adjust padding on hover */
+    }
+
+.dropdown-menu {
+    border: none; /* Remove border */
+    transform: translateX(50px); /* Adjust position to shift left */
+    position: absolute; /* Position dropdown */
+    z-index: 1000; /* Ensure dropdown is on top */
+    display: none; /* Hide by default */
+}
+
+.nav-item.dropdown:hover .dropdown-menu,
+.nav-item.dropdown.show .dropdown-menu {
+    display: block; /* Show dropdown on hover or when active */
+}
+
+.fa-user {
+    margin-left: -10px; /* Adjust user icon position */
+}
+
+.btn-container {
+    display: flex; /* Sử dụng Flexbox */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    height: 100%; /* Đảm bảo chiều cao của phần tử cha đủ lớn */
+    margin-bottom: 10px
+}
+
+.dropdown-menu a {
+    padding: 10px 20px; /* Padding for dropdown items */
+    text-decoration: none; /* Remove underline */
+    display: block; /* Full width */
+}
+
+.nav-item i {
+    font-size: 18px; /* Kích thước icon */
+    justify-content: center;
+    align-items: center
+}
+
+.dropdown-menu a:hover {
+    color: #cea252; /* Change color on hover */
+}
+
+.custom-nav-link i {
+    font-size: 1.5rem; /* Kích thước icon */
+    margin-right: 10px; /* Khoảng cách giữa icon và nút book */
+}
+
+.navbar-collapse.show .btn-container .btn-book-table {
+    width: 100%; /* Full width when navbar is open */
+}

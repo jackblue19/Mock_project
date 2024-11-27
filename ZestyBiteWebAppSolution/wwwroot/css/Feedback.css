@@ -48,6 +48,7 @@ select {
     display: flex;
     justify-content: center; /* Aligns submit button to the center */
 }
+
 #dish-select {
     background-color: black; /* Black background for the main select box */
     color: white; /* White text */
@@ -60,3 +61,85 @@ select {
         background-color: #333333; /* Dark background for dropdown options */
         color: white; /* White text for options */
     }
+
+
+.container-wrap {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.feedback-text {
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.feedback-input {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-center {
+    font-family: 'Segoe UI', Tahoma, Bold, Verdana, sans-serif;
+    font-size: 70px;
+    color: #F7F1E6;
+}
+
+.dish-select,
+.message,
+.submit-button {
+    margin-bottom: 30px; /* Adds spacing between elements */
+    width: 550px;
+}
+
+select {
+    height: 50px; /* Set to 50px */
+    font-size: 14px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: black;
+    color: white; /* White text */
+}
+
+.submit-button {
+    display: flex;
+    justify-content: center; /* Aligns submit button to the center */
+}
+
+#dish-select {
+    background-color: black; /* Black background for the main select box */
+    color: white; /* White text */
+    height: 50px;
+    font-size: 14px;
+    padding: 5px;
+}
+
+#dish-select option {
+    background-color: #333333; /* Dark background for dropdown options */
+    color: white; /* White text for options */
+}
+
+.notification {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    z-index: 1000;
+}
+
+    .notification.success {
+        background-color: #28a745; /* Green for success */
+        color: #fff;
+    }
+
+    .notification.error {
+        background-color: #dc3545; /* Red for error */
+        color: #fff;
+    }
+

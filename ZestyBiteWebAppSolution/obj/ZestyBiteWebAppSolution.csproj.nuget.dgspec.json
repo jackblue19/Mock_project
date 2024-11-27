@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {}
+    "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {}
   },
   "projects": {
-    "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {
+    "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
+        "projectUniqueName": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
         "projectName": "ZestyBiteWebAppSolution",
-        "projectPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
+        "projectPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
         "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution\\obj\\",
+        "outputPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -50,6 +50,34 @@
               "target": "Package",
               "version": "[4.0.3, )"
             },
+            "Microsoft.AspNetCore.Authentication.Cookies": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.AspNetCore.Authorization": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.AspNetCore.Authorization.Policy": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Http.Extensions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.11, )"
@@ -63,6 +91,10 @@
               "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Mvc.ViewFeatures": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Session": {
               "target": "Package",
               "version": "[2.2.0, )"
             },
@@ -85,6 +117,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.10, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[8.0.7, )"
             },
             "MySqlConnector": {
               "target": "Package",

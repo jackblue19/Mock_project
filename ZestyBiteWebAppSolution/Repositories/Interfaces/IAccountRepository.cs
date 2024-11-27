@@ -1,11 +1,13 @@
 ﻿using ZestyBiteWebAppSolution.Models.Entities;
 
 
-namespace ZestyBiteWebAppSolution.Repositories.Interfaces {
-    public interface IAccountRepository {
+namespace ZestyBiteWebAppSolution.Repositories.Interfaces
+{
+    public interface IAccountRepository : IRepository<Account>
+    {
         Task<Account?> GetAccountByUsnAsync(string usn);
-        Task<IEnumerable<Account>> SearchAccountByNamesAsync(string names);
-        Task<Account> CreateAccountAsync(Account account);   //  manager only
-        Task<Account> AddAsync(Account account);  // customer only
+        Task<Account?> GetAccountByEmailAsync(string email);
+        Task<IEnumerable<Account?>> SearchAccountByNamesAsync(string name);
+        Task<Account> CreateAccountAsync(Account account , sbyte roleId);   //  manager only
     }
 }

@@ -19,14 +19,14 @@ namespace ZestyBiteWebAppSolution.Mappings
                 .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName)) // Handles nested Item.Name
                 .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.FbContent))
                 .ForMember(dest => dest.ParentFeedback, opt => opt.MapFrom(src => src.FbContent != null
-                    ? new FeedbackDTO
-                    {
-                        Id = src.ParentFbFlagNavigation.FbId,
-                        Content = src.ParentFbFlagNavigation.FbContent,
-                        Username = src.ParentFbFlagNavigation.Username,
-                        
-                    }
-                    : null)) // Map only specific properties of ParentFeedback
+                   ? new FeedbackDTO
+                   {
+                       Id = src.ParentFbFlagNavigation.FbId,
+                       Content = src.ParentFbFlagNavigation.FbContent,
+                       Username = src.ParentFbFlagNavigation.Username,
+                  
+                   }
+                   : null)) // Map only specific properties of ParentFeedback
                 .ForMember(dest => dest.IsReply, opt => opt.MapFrom(src => src.FbContent != null));
 
             // Map Feedback to ReplyDTO

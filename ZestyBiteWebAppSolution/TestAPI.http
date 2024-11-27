@@ -7,21 +7,22 @@ GET http://localhost:5024/api/feedback/item/1
 ###
 POST http://localhost:5024/api/feedback/submitfeedback
 Content-Type: application/json
-Body:
+
 {
   "Content": "This is a feedback message.",
   "DateTime": "2023-10-01T12:00:00Z",
-  "Username": "john doe",
+  "Username": "john_doe",
   "ItemId": 1,
+  "ItemName": "Pizza Margherita",
   "ParentFb": null
 }
 ###
 PUT http://localhost:5024/api/feedback
 Content-Type: application/json
-Body:
+
 {
   "Id": 11,
-  "Content": "Updated feedback message.",
+  "Content": "aaevweg rh t rgsefhtt j",
   "DateTime": "2023-10-01T12:00:00Z",
   "Username": "testuser",
   "ItemId": 1,

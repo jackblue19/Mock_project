@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZestyBiteWebAppSolution.Services.Implementations
 {
@@ -45,6 +46,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }
 
+        [AllowAnonymous]
         public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto)
         {
             if (feedbackDto == null)

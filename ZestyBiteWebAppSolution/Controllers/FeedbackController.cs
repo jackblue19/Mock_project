@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ZestyBiteWebAppSolution.Controllers
-{   
+{
     [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
-    public class FeedbackController : Controller
+    public class FeedbackController : ControllerBase
     {
         private readonly IFeedbackService _feedbackService;
 
@@ -20,47 +20,32 @@ namespace ZestyBiteWebAppSolution.Controllers
             _feedbackService = feedbackService;
         }
 
-        // Render the Feedback view
-        [HttpGet]
-        [Route("")]
-        public async Task<IActionResult> Index()
+        // GET: api/feedback/items
+        [HttpGet("items")]
+        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetItems()
         {
-            var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
-            return View(feedbacks);
+            var items = await _feedbackService.GetAllItemsAsync();
+            return Ok(items);
         }
 
-        // Render the Blog view
-        [HttpGet]
-        [Route("Blog")]
-        public IActionResult Blog()
-        {
-            return View();
-        }
-
-        // CRUD Feedback
-
-        // GET: api/feedback/all
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllFeedbacks()
+        // GET: api/feedback
+        [HttpGet("allfeedbacks")]
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacks()
         {
             try
             {
                 var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
                 return Ok(feedbacks);
             }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while retrieving all feedbacks: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // GET: api/feedback/item/{itemId}
         [HttpGet("item/{itemId}")]
-        public async Task<IActionResult> GetFeedbacksByItemId(int itemId)
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacksByItemId(int itemId)
         {
             try
             {
@@ -69,13 +54,13 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while retrieving feedbacks for item {itemId}: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // POST: api/feedback
-        [HttpPost("SubmitFeedback")]
-        public async Task<IActionResult> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
+        [HttpPost("submitfeedback")]
+        public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
         {
             if (!ModelState.IsValid)
             {
@@ -88,13 +73,13 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while submitting feedback: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // PUT: api/feedback
-        [HttpPut("UpdateFeedback")]
-        public async Task<IActionResult> UpdateFeedback([FromBody] FeedbackDTO feedbackDto)
+        [HttpPut]
+        public async Task<ActionResult<FeedbackDTO>> UpdateFeedback([FromBody] FeedbackDTO feedbackDto)
         {
             if (!ModelState.IsValid)
             {
@@ -111,28 +96,28 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while updating feedback: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
-        // GET: api/feedback
-        [HttpGet("GetPagination")]
-        public async Task<IActionResult> GetFeedbacks(int pageNumber = 1, int pageSize = 10)
+        // GET: api/feedback/pagination
+        [HttpGet("pagination")]
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacks(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var feedbacks = await _feedbackService.GetAllFeedbacksAsync(pageNumber, pageSize);
+                var feedbacks = await _feedbackService.GetFeedbacksByPageAsync(pageNumber, pageSize);
                 return Ok(feedbacks);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while retrieving feedbacks: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // DELETE: api/feedback/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFeedback(int id)
+        public async Task<ActionResult> DeleteFeedback(int id)
         {
             try
             {
@@ -145,29 +130,29 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while deleting feedback: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // CRUD Reply
         // GET: api/feedback/replies/{parentFb}
         [HttpGet("replies/{parentFb}")]
-        public async Task<IActionResult> GetRepliesForFeedback(int parentFb)
+        public async Task<ActionResult<IEnumerable<ReplyDTO>>> GetRepliesForFeedback(int parentFb)
         {
             try
             {
-                var replies = await _feedbackService.GetRepliesForFeedbackAsync(parentFb);
+                var replies = await _feedbackService.GetRepliesByFeedbackAsync(parentFb);
                 return Ok(replies);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while retrieving replies: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // POST: api/feedback/reply
         [HttpPost("reply")]
-        public async Task<IActionResult> SubmitReply([FromBody] ReplyDTO replyDto)
+        public async Task<ActionResult<FeedbackDTO>> SubmitReply([FromBody] ReplyDTO replyDto)
         {
             if (!ModelState.IsValid)
             {
@@ -180,13 +165,13 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while submitting reply: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // PUT: api/feedback/reply
         [HttpPut("reply")]
-        public async Task<IActionResult> UpdateReply([FromBody] ReplyDTO replyDto)
+        public async Task<ActionResult<FeedbackDTO>> UpdateReply([FromBody] ReplyDTO replyDto)
         {
             if (!ModelState.IsValid)
             {
@@ -203,13 +188,13 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while updating reply: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // DELETE: api/feedback/reply/{id}
         [HttpDelete("reply/{id}")]
-        public async Task<IActionResult> DeleteReply(int id)
+        public async Task<ActionResult> DeleteReply(int id)
         {
             try
             {
@@ -222,7 +207,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error while deleting reply: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
     }

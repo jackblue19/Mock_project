@@ -23,34 +23,39 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         }
 
         // Mapping functions
-        private FeedbackDTO MapToDTO(Feedback feedback)
+        private FeedbackDTO MapToFeedbackDTO(Feedback? feedback)
         {
-            if (feedback == null)
-            {
-                throw new ArgumentNullException(nameof(feedback));
-            }
-
-            FeedbackDTO parentFeedbackDTO = null;
-            if (feedback.ParentFbFlagNavigation != null)
-            {
-                parentFeedbackDTO = MapToDTO(feedback.ParentFbFlagNavigation);
-            }
+            if (feedback == null) throw new ArgumentNullException(nameof(feedback));
 
             return new FeedbackDTO
             {
                 Id = feedback.FbId,
                 Content = feedback.FbContent,
                 DateTime = feedback.FbDatetime,
-                Username = feedback.Account?.UserName ?? "Unknown",
-                ProfileImage = feedback.Account?.ProfileImage,
+                Username = feedback.Username,
+                ProfileImage = feedback.UsernameNavigation?.ProfileImage ?? string.Empty,
                 ItemId = feedback.ItemId,
                 ItemName = feedback.Item?.ItemName ?? "Unknown",
                 ParentFb = feedback.ParentFbFlag,
-                ParentFeedback = parentFeedbackDTO,
-                IsReply = feedback.ParentFbFlag != null // Set IsReply based on ParentFbFlag
+                ParentFeedback = feedback.ParentFbFlagNavigation != null ? MapToFeedbackDTO(feedback.ParentFbFlagNavigation) : null,
+                IsReply = feedback.ParentFbFlag != null
             };
         }
 
+        private ItemDTO? MapToItemDTO(Item? item)
+        {
+            if (item == null) return null; return new ItemDTO
+            {
+                ItemId = item.ItemId,
+                ItemName = item.ItemName,
+                ItemCategory = item.ItemCategory,
+                ItemStatus = item.ItemStatus,
+                ItemDescription = item.ItemDescription,
+                SuggestedPrice = item.SuggestedPrice,
+                ItemImage = item.ItemImage,
+                IsServed = item.IsServed
+            };
+        }
         private Feedback MapToItem(FeedbackDTO feedbackDTO)
         {
             return new Feedback
@@ -63,160 +68,152 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             };
         }
 
-        private ReplyDTO MapToReplyDTO(Feedback reply)
-        {
-            if (reply == null)
-            {
-                throw new ArgumentNullException(nameof(reply));
-            }
 
-            return new ReplyDTO
+        private Feedback MapToFeedback(FeedbackDTO feedbackDTO)
+        {
+            if (feedbackDTO == null) throw new ArgumentNullException(nameof(feedbackDTO));
+
+            return new Feedback
             {
-                Id = reply.FbId,
-                Content = reply.FbContent,
-                DateTime = reply.FbDatetime,
-                AccountId = reply.AccountId,
-                Username = reply.Account?.UserName ?? "Unknown",
-                ProfileImage = reply.Account?.ProfileImage,
-                ItemId = reply.ItemId,
-                ItemName = reply.Item?.ItemName ?? "Unknown",
-                ParentFb = reply.ParentFbFlag ?? 0
+                FbId = feedbackDTO.Id,
+                FbContent = feedbackDTO.Content,
+                FbDatetime = feedbackDTO.DateTime,
+                ItemId = feedbackDTO.ItemId,
+                ParentFbFlag = feedbackDTO.ParentFb
             };
         }
 
         // CRUD Feedback
-        public async Task<IEnumerable<FeedbackDTO>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByPageAsync(int pageNumber, int pageSize)
         {
             var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync(pageNumber, pageSize);
-            return feedbacks?.Select(MapToDTO).ToList() ?? new List<FeedbackDTO>();
+            return feedbacks?.Select(MapToFeedbackDTO) ?? Enumerable.Empty<FeedbackDTO>();
         }
 
         public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync()
         {
             var feedbacks = await _feedbackRepository.GetAllAsync();
-            return feedbacks.Select(f => new FeedbackDTO
-            {
-                Id = f.FbId,
-                Content = f.FbContent,
-                DateTime = f.FbDatetime,
-                Username = f.Account?.UserName ?? "Unknown",
-                ProfileImage = f.Account?.ProfileImage,
-                ItemId = f.ItemId,
-                ItemName = f.Item?.ItemName ?? "Unknown",
-                ParentFb = f.ParentFbFlag,
-                ParentFeedback = f.ParentFbFlag != null ? MapToDTO(f.ParentFbFlagNavigation) : null,
-                IsReply = f.ParentFbFlag !=null
-            }).ToList();
+            return feedbacks.Select(MapToFeedbackDTO).ToList();
         }
-
 
         public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId)
         {
             var feedbacks = await _feedbackRepository.GetFeedbacksByItemIdAsync(itemId);
-            return feedbacks?.Select(MapToDTO).ToList() ?? new List<FeedbackDTO>();
+            return feedbacks?.Select(MapToFeedbackDTO) ?? Enumerable.Empty<FeedbackDTO>();
         }
 
         public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto)
         {
+            if (feedbackDto == null) throw new ArgumentNullException(nameof(feedbackDto));
+
             var account = await _accountRepository.GetAccountByUsnAsync(feedbackDto.Username);
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-            if (account == null || item == null)
-            {
-                throw new InvalidOperationException("Invalid Account or Item.");
-            }
+            if (account == null) throw new InvalidOperationException("Invalid Account.");
+            if (item == null) throw new InvalidOperationException("Invalid Item.");
 
-            var feedback = MapToItem(feedbackDto);
-            feedback.AccountId = account.AccountId;
-            feedback.ItemId = feedbackDto.ItemId;
-            feedback.Account = account;
+            var feedback = MapToFeedback(feedbackDto);
+            feedback.Username = account.Username;
+            feedback.UsernameNavigation = account;
             feedback.Item = item;
 
-            await _feedbackRepository.CreateAsync(feedback);
-            feedbackDto.Id = feedback.FbId;
-            return feedbackDto;
+            var createdFeedback = await _feedbackRepository.CreateAsync(feedback);
+            return MapToFeedbackDTO(createdFeedback);
         }
 
         public async Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto)
         {
+            if (feedbackDto == null) throw new ArgumentNullException(nameof(feedbackDto));
+
             var feedback = await _feedbackRepository.GetByIdAsync(feedbackDto.Id);
-            if (feedback == null)
-            {
-                throw new InvalidOperationException("Feedback not found");
-            }
+            if (feedback == null) throw new InvalidOperationException("Feedback not found.");
 
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-            if (item == null)
-            {
-                throw new InvalidOperationException("Invalid Item.");
-            }
-            feedback = MapToItem(feedbackDto);
+            if (item == null) throw new InvalidOperationException("Invalid Item.");
+
+            feedback = MapToFeedback(feedbackDto);
             feedback.Item = item;
 
             var updatedFeedback = await _feedbackRepository.UpdateAsync(feedback);
-            return MapToDTO(updatedFeedback);
+            return MapToFeedbackDTO(updatedFeedback);
         }
 
         public async Task<bool> DeleteFeedbackAsync(int feedbackId)
         {
             var feedback = await _feedbackRepository.GetByIdAsync(feedbackId);
-            if (feedback != null)
-            {
-                await _feedbackRepository.DeleteAsync(feedback);
-                return true;
-            }
-            return false;
+            if (feedback == null) return false;
+
+            await _feedbackRepository.DeleteAsync(feedback);
+            return true;
         }
 
-        //CRUD Reply
-        public async Task<IEnumerable<ReplyDTO>> GetRepliesForFeedbackAsync(int parentFbFlag)
+        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync()
+        {
+            var items = await _itemRepository.GetAllAsync();
+            return items.Select(MapToItemDTO);
+        }
+
+        // CRUD Reply
+        public async Task<IEnumerable<ReplyDTO>> GetRepliesByFeedbackAsync(int parentFbFlag)
         {
             var replies = await _feedbackRepository.GetFeedbackRepliesAsync(parentFbFlag);
-            return replies.Select(MapToReplyDTO).ToList();
+            return replies.Select(reply => new ReplyDTO
+            {
+                Id = reply.FbId,
+                Content = reply.FbContent,
+                DateTime = reply.FbDatetime,
+                Username = reply.Username,
+                ProfileImage = reply.UsernameNavigation?.ProfileImage ?? string.Empty,
+                ItemId = reply.ItemId,
+                ItemName = reply.Item?.ItemName ?? "Unknown",
+                ParentFb = reply.ParentFbFlag ?? 0
+            }).ToList();
         }
 
         public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto)
         {
+            if (replyDto == null) throw new ArgumentNullException(nameof(replyDto));
+
             var account = await _accountRepository.GetByIdAsync(replyDto.AccountId);
             var item = await _itemRepository.GetByIdAsync(replyDto.ItemId);
-            if (account == null || item == null)
-            {
-                throw new InvalidOperationException("Invalid Account or Item.");
-            }
+            if (account == null) throw new InvalidOperationException("Invalid Account.");
+            if (item == null) throw new InvalidOperationException("Invalid Item.");
 
             var reply = new Feedback
             {
                 FbContent = replyDto.Content,
-                FbDatetime = DateTime.Now,
-                AccountId = replyDto.AccountId,
+                FbDatetime = DateTime.UtcNow,
+                Username = replyDto.Username,
                 ItemId = replyDto.ItemId,
                 ParentFbFlag = parentFbFlag,
-                Account = account,
+                UsernameNavigation = account,
                 Item = item
             };
 
             var submittedReply = await _feedbackRepository.CreateReplyAsync(reply);
-            return MapToDTO(submittedReply);
+            return MapToFeedbackDTO(submittedReply);
         }
 
         public async Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto)
         {
-            var existingReply = await _feedbackRepository.GetByIdAsync(replyDto.Id) ?? throw new KeyNotFoundException("Reply not found.");
+            if (replyDto == null) throw new ArgumentNullException(nameof(replyDto));
+
+            var existingReply = await _feedbackRepository.GetByIdAsync(replyDto.Id);
+            if (existingReply == null) throw new KeyNotFoundException("Reply not found.");
+
             existingReply.FbContent = replyDto.Content;
-            existingReply.FbDatetime = DateTime.Now;
+            existingReply.FbDatetime = DateTime.UtcNow;
 
             var updatedReply = await _feedbackRepository.UpdateReplyAsync(existingReply);
-            return MapToDTO(updatedReply);
+            return MapToFeedbackDTO(updatedReply);
         }
 
         public async Task<bool> DeleteReplyAsync(int replyId)
         {
             var existingReply = await _feedbackRepository.GetByIdAsync(replyId);
-            if (existingReply != null)
-            {
-                await _feedbackRepository.DeleteReplyAsync(existingReply); // Pass the Feedback object
-                return true;
-            }
-            return false;
+            if (existingReply == null) return false;
+
+            await _feedbackRepository.DeleteReplyAsync(existingReply);
+            return true;
         }
     }
 }

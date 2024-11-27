@@ -5,7 +5,7 @@ namespace ZestyBiteWebAppSolution.Models.Entities;
 
 public partial class Profit
 {
-    public DateOnly Date { get; set; }
+    public DateTime Date { get; set; }
 
     public int SupplyId { get; set; }
 

@@ -36,7 +36,6 @@ public partial class ZestyBiteContext : DbContext
     public virtual DbSet<Table> Tables { get; set; }
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -47,9 +46,12 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasIndex(e => e.RoleId, "Role_ID");
 
-            entity.HasIndex(e => e.UserName, "Username").IsUnique();
+            entity.HasIndex(e => e.Username, "Username").IsUnique();
 
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
+            entity.Property(e => e.AccountStatus)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("Account_Status");
             entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.Name).HasMaxLength(255);
@@ -118,14 +120,11 @@ public partial class ZestyBiteContext : DbContext
 
             entity.ToTable("feedback");
 
-            entity.HasIndex(e => e.AccountId, "Account_ID");
-
-            entity.HasIndex(e => e.ParentFbFlag, "FK_Feedback_ParentFb_Flag");
-
             entity.HasIndex(e => e.ItemId, "Item_ID");
 
+            entity.HasIndex(e => e.Username, "Username");
+
             entity.Property(e => e.FbId).HasColumnName("Fb_ID");
-            entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.FbContent)
                 .HasMaxLength(255)
                 .HasColumnName("Fb_Content");
@@ -135,20 +134,16 @@ public partial class ZestyBiteContext : DbContext
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.ParentFbFlag).HasColumnName("ParentFb_Flag");
 
-            entity.HasOne(d => d.Account).WithMany(p => p.Feedbacks)
-                .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("feedback_ibfk_1");
-
             entity.HasOne(d => d.Item).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.ItemId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("feedback_ibfk_2");
 
-            entity.HasOne(d => d.ParentFbFlagNavigation).WithMany(p => p.InverseParentFbFlagNavigation)
-                .HasForeignKey(d => d.ParentFbFlag)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_Feedback_ParentFb_Flag");
+            entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Feedbacks)
+                .HasPrincipalKey(p => p.Username)
+                .HasForeignKey(d => d.Username)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("feedback_ibfk_1");
         });
 
         modelBuilder.Entity<Item>(entity =>
@@ -197,6 +192,7 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasIndex(e => e.SupplyId, "Supply_ID");
 
+            entity.Property(e => e.Date).HasColumnType("date");
             entity.Property(e => e.BillId).HasColumnName("Bill_ID");
             entity.Property(e => e.ProfitAmmount)
                 .HasPrecision(10)
@@ -254,9 +250,7 @@ public partial class ZestyBiteContext : DbContext
 
             entity.ToTable("role");
 
-            entity.Property(e => e.RoleId)
-                .ValueGeneratedNever()
-                .HasColumnName("Role_ID");
+            entity.Property(e => e.RoleId).HasColumnName("Role_ID");
             entity.Property(e => e.RoleDescription)
                 .HasColumnType("enum('Manager','Order Taker','Procurement Manager','Server Staff','Customer Service Staff','Food Runner','Customer')")
                 .HasColumnName("Role_Description");
@@ -292,7 +286,7 @@ public partial class ZestyBiteContext : DbContext
                 .HasPrecision(12)
                 .HasColumnName("Supply_Price");
             entity.Property(e => e.SupplyQuantity)
-                .HasPrecision(10, 2)
+                .HasPrecision(10)
                 .HasColumnName("Supply_Quantity");
             entity.Property(e => e.SupplyStatus).HasColumnName("Supply_Status");
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
@@ -327,9 +321,7 @@ public partial class ZestyBiteContext : DbContext
                         .HasConstraintName("supply_item_ibfk_1"),
                     j =>
                     {
-                        j.HasKey("SupplyId", "ItemId")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                        j.HasKey("SupplyId", "ItemId").HasName("PRIMARY");
                         j.ToTable("supply_item");
                         j.HasIndex(new[] { "ItemId" }, "Item_ID");
                         j.IndexerProperty<int>("SupplyId").HasColumnName("Supply_ID");
@@ -381,9 +373,7 @@ public partial class ZestyBiteContext : DbContext
 
         modelBuilder.Entity<TableDetail>(entity =>
         {
-            entity.HasKey(e => new { e.TableId, e.ItemId })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+            entity.HasKey(e => new { e.TableId, e.ItemId }).HasName("PRIMARY");
 
             entity.ToTable("table_details");
 

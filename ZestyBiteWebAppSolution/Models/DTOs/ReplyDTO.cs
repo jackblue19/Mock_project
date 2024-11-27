@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace ZestyBiteWebAppSolution.Models.DTOs {
-    public class ReplyDTO {
+namespace ZestyBiteWebAppSolution.Models.DTOs
+{
+    public class ReplyDTO
+    {
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Reply content is required.")]
@@ -12,6 +15,6 @@ namespace ZestyBiteWebAppSolution.Models.DTOs {
         public string? ProfileImage { get; set; }
         public int ItemId { get; set; }
         public string ItemName { get; set; } = null!;
-        public int ParentFb { get; set; }
+        public int ParentFb { get; set; } 
     }
 }

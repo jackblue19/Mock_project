@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ZestyBiteWebAppSolution.Models.DTOs {
     public class ChangePwdDTO {
-        public string Username { get; set; } = null!;
+        // public string Username { get; set; } = null!;
 
         [Required(ErrorMessage = "Old password is required.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long and not exceed 100 characters.")]

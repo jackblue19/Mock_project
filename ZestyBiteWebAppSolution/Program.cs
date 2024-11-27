@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Middlewares;
+using ZestyBiteWebAppSolution.Repositories;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +34,11 @@ builder.Services.AddAuthorization(options => {
 
 // Add Razor Pages and MVC
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 builder.Services.AddRazorPages();
 
 
@@ -50,7 +55,7 @@ builder.Services.AddSwaggerGen(c => {
 var connectionString = "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=hung300403.";
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
-builder.Services.AddDbContext<ZestybiteContext>(dbContextOptions =>
+builder.Services.AddDbContext<ZestyBiteContext>(dbContextOptions =>
     dbContextOptions
         .UseMySql(connectionString, serverVersion)
         .LogTo(Console.WriteLine, LogLevel.Information)
@@ -63,6 +68,9 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -130,19 +138,19 @@ app.UseRouting();
 app.UseSession();
 app.UseMiddleware<AuthenticationMiddleware>();
 
-app.MapControllers();
+//app.MapControllers();
 
 // Middleware for Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configure Routing for Areas
+// Configure Routing for Areas => nên sử dụng username thay thế =Đ
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
 );
 
-// Configure Default Routing
+// Configure Default Routing -> author theo role -> using folder Areas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

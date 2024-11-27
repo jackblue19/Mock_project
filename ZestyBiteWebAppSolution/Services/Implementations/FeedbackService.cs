@@ -2,31 +2,42 @@
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ZestyBiteWebAppSolution.Services.Implementations {
-    public class FeedbackService : IFeedbackService {
+namespace ZestyBiteWebAppSolution.Services.Implementations
+{
+    public class FeedbackService : IFeedbackService
+    {
         private readonly IFeedbackRepository _feedbackRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IItemRepository _itemRepository;
 
-        public FeedbackService(IFeedbackRepository feedbackRepository, IAccountRepository accountRepository, IItemRepository itemRepository) {
+        public FeedbackService(IFeedbackRepository feedbackRepository, IAccountRepository accountRepository, IItemRepository itemRepository)
+        {
             _feedbackRepository = feedbackRepository;
             _accountRepository = accountRepository;
             _itemRepository = itemRepository;
         }
 
         // Mapping functions
-        private FeedbackDTO MapToDTO(Feedback feedback) {
-            if (feedback == null) {
+        private FeedbackDTO MapToDTO(Feedback feedback)
+        {
+            if (feedback == null)
+            {
                 throw new ArgumentNullException(nameof(feedback));
             }
 
             FeedbackDTO parentFeedbackDTO = null;
-            if (feedback.ParentFbFlagNavigation != null) {
+            if (feedback.ParentFbFlagNavigation != null)
+            {
                 parentFeedbackDTO = MapToDTO(feedback.ParentFbFlagNavigation);
             }
 
-            return new FeedbackDTO {
+            return new FeedbackDTO
+            {
                 Id = feedback.FbId,
                 Content = feedback.FbContent,
                 DateTime = feedback.FbDatetime,
@@ -40,8 +51,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             };
         }
 
-        private Feedback MapToItem(FeedbackDTO feedbackDTO) {
-            return new Feedback {
+        private Feedback MapToItem(FeedbackDTO feedbackDTO)
+        {
+            return new Feedback
+            {
                 FbId = feedbackDTO.Id,
                 FbContent = feedbackDTO.Content,
                 FbDatetime = feedbackDTO.DateTime,
@@ -50,12 +63,15 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             };
         }
 
-        private ReplyDTO MapToReplyDTO(Feedback reply) {
-            if (reply == null) {
+        private ReplyDTO MapToReplyDTO(Feedback reply)
+        {
+            if (reply == null)
+            {
                 throw new ArgumentNullException(nameof(reply));
             }
 
-            return new ReplyDTO {
+            return new ReplyDTO
+            {
                 Id = reply.FbId,
                 Content = reply.FbContent,
                 DateTime = reply.FbDatetime,
@@ -69,14 +85,17 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         }
 
         // CRUD Feedback
-        public async Task<IEnumerable<FeedbackDTO>> GetAllFeedbacksAsync(int pageNumber, int pageSize) {
+        public async Task<IEnumerable<FeedbackDTO>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
+        {
             var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync(pageNumber, pageSize);
             return feedbacks?.Select(MapToDTO).ToList() ?? new List<FeedbackDTO>();
         }
 
-        public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync() {
+        public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync()
+        {
             var feedbacks = await _feedbackRepository.GetAllAsync();
-            return feedbacks.Select(f => new FeedbackDTO {
+            return feedbacks.Select(f => new FeedbackDTO
+            {
                 Id = f.FbId,
                 Content = f.FbContent,
                 DateTime = f.FbDatetime,
@@ -86,20 +105,23 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                 ItemName = f.Item?.ItemName ?? "Unknown",
                 ParentFb = f.ParentFbFlag,
                 ParentFeedback = f.ParentFbFlag != null ? MapToDTO(f.ParentFbFlagNavigation) : null,
-                IsReply = f.ParentFbFlag != null
+                IsReply = f.ParentFbFlag !=null
             }).ToList();
         }
 
 
-        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId) {
+        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId)
+        {
             var feedbacks = await _feedbackRepository.GetFeedbacksByItemIdAsync(itemId);
             return feedbacks?.Select(MapToDTO).ToList() ?? new List<FeedbackDTO>();
         }
 
-        public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto) {
+        public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto)
+        {
             var account = await _accountRepository.GetAccountByUsnAsync(feedbackDto.Username);
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-            if (account == null || item == null) {
+            if (account == null || item == null)
+            {
                 throw new InvalidOperationException("Invalid Account or Item.");
             }
 
@@ -114,14 +136,17 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return feedbackDto;
         }
 
-        public async Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto) {
+        public async Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto)
+        {
             var feedback = await _feedbackRepository.GetByIdAsync(feedbackDto.Id);
-            if (feedback == null) {
+            if (feedback == null)
+            {
                 throw new InvalidOperationException("Feedback not found");
             }
 
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-            if (item == null) {
+            if (item == null)
+            {
                 throw new InvalidOperationException("Invalid Item.");
             }
             feedback = MapToItem(feedbackDto);
@@ -131,9 +156,11 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return MapToDTO(updatedFeedback);
         }
 
-        public async Task<bool> DeleteFeedbackAsync(int feedbackId) {
+        public async Task<bool> DeleteFeedbackAsync(int feedbackId)
+        {
             var feedback = await _feedbackRepository.GetByIdAsync(feedbackId);
-            if (feedback != null) {
+            if (feedback != null)
+            {
                 await _feedbackRepository.DeleteAsync(feedback);
                 return true;
             }
@@ -141,19 +168,23 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         }
 
         //CRUD Reply
-        public async Task<IEnumerable<ReplyDTO>> GetRepliesForFeedbackAsync(int parentFbFlag) {
+        public async Task<IEnumerable<ReplyDTO>> GetRepliesForFeedbackAsync(int parentFbFlag)
+        {
             var replies = await _feedbackRepository.GetFeedbackRepliesAsync(parentFbFlag);
             return replies.Select(MapToReplyDTO).ToList();
         }
 
-        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto) {
+        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto)
+        {
             var account = await _accountRepository.GetByIdAsync(replyDto.AccountId);
             var item = await _itemRepository.GetByIdAsync(replyDto.ItemId);
-            if (account == null || item == null) {
+            if (account == null || item == null)
+            {
                 throw new InvalidOperationException("Invalid Account or Item.");
             }
 
-            var reply = new Feedback {
+            var reply = new Feedback
+            {
                 FbContent = replyDto.Content,
                 FbDatetime = DateTime.Now,
                 AccountId = replyDto.AccountId,
@@ -167,7 +198,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return MapToDTO(submittedReply);
         }
 
-        public async Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto) {
+        public async Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto)
+        {
             var existingReply = await _feedbackRepository.GetByIdAsync(replyDto.Id) ?? throw new KeyNotFoundException("Reply not found.");
             existingReply.FbContent = replyDto.Content;
             existingReply.FbDatetime = DateTime.Now;
@@ -176,9 +208,11 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return MapToDTO(updatedReply);
         }
 
-        public async Task<bool> DeleteReplyAsync(int replyId) {
+        public async Task<bool> DeleteReplyAsync(int replyId)
+        {
             var existingReply = await _feedbackRepository.GetByIdAsync(replyId);
-            if (existingReply != null) {
+            if (existingReply != null)
+            {
                 await _feedbackRepository.DeleteReplyAsync(existingReply); // Pass the Feedback object
                 return true;
             }

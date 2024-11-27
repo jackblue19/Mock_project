@@ -1,6 +1,10 @@
-﻿namespace ZestyBiteWebAppSolution.Models.Entities;
+﻿using System;
+using System.Collections.Generic;
 
-public partial class Feedback {
+namespace ZestyBiteWebAppSolution.Models.Entities;
+
+public partial class Feedback
+{
     public int FbId { get; set; }
 
     public string FbContent { get; set; } = null!;

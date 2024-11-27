@@ -23,9 +23,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:32156", // Add missing applicationUrl here
-      "sslPort": 44326
+      }
     },
     "WSL": {
       "commandName": "WSL2",
@@ -43,7 +41,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:32156", // Ensure it's matching here too
+      "applicationUrl": "http://localhost:32156",
       "sslPort": 44326
     }
   }

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ZestyBiteWebAppSolution.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ZestyBiteWebAppSolution.Services.Interfaces;
 
 
 namespace ZestyBiteSolution.Controllers {
@@ -64,10 +64,15 @@ namespace ZestyBiteSolution.Controllers {
             return View();
         }
         [Authorize]     // => force to login but dont care role
-        public IActionResult Contact() {
+        public IActionResult Contacto() {
             return View();
         }
         [Authorize(Policy = "UserPolicy")] // => sử dụng policy từ program.cs để cho gọn =)))
+        public IActionResult Feeder() {
+            return View();
+        }
+
+        [AllowAnonymous]
         public IActionResult Feedback() {
             return View();
         }
@@ -87,6 +92,9 @@ namespace ZestyBiteSolution.Controllers {
         }
 
         */
+        public IActionResult Contact() {
+            return View();
+        }
 
         public IActionResult Services() {
             return View();

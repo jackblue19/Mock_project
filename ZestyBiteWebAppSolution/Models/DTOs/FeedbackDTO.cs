@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace ZestyBiteWebAppSolution.Models.DTOs {
-    public class FeedbackDTO {
+namespace ZestyBiteWebAppSolution.Models.DTOs
+{
+    public class FeedbackDTO
+    {
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Feedback content is required.")]

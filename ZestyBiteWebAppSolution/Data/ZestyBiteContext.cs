@@ -1,14 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using ZestyBiteWebAppSolution.Models.Entities;
-
 namespace ZestyBiteWebAppSolution.Data;
 
-public partial class ZestybiteContext : DbContext {
-    public ZestybiteContext() {
+public partial class ZestyBiteContext : DbContext
+{
+    public ZestyBiteContext()
+    {
     }
 
-    public ZestybiteContext(DbContextOptions<ZestybiteContext> options)
-        : base(options) {
+    public ZestyBiteContext(DbContextOptions<ZestyBiteContext> options)
+        : base(options)
+    {
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
@@ -33,12 +37,10 @@ public partial class ZestybiteContext : DbContext {
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
-
-        modelBuilder.Entity<Account>(entity => {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Account>(entity =>
+        {
             entity.HasKey(e => e.AccountId).HasName("PRIMARY");
 
             entity.ToTable("account");
@@ -69,7 +71,8 @@ public partial class ZestybiteContext : DbContext {
                 .HasConstraintName("account_ibfk_1");
         });
 
-        modelBuilder.Entity<Bill>(entity => {
+        modelBuilder.Entity<Bill>(entity =>
+        {
             entity.HasKey(e => e.BillId).HasName("PRIMARY");
 
             entity.ToTable("bill");
@@ -109,12 +112,15 @@ public partial class ZestybiteContext : DbContext {
                 .HasConstraintName("bill_ibfk_3");
         });
 
-        modelBuilder.Entity<Feedback>(entity => {
+        modelBuilder.Entity<Feedback>(entity =>
+        {
             entity.HasKey(e => e.FbId).HasName("PRIMARY");
 
             entity.ToTable("feedback");
 
             entity.HasIndex(e => e.AccountId, "Account_ID");
+
+            entity.HasIndex(e => e.ParentFbFlag, "FK_Feedback_ParentFb_Flag");
 
             entity.HasIndex(e => e.ItemId, "Item_ID");
 
@@ -127,6 +133,7 @@ public partial class ZestybiteContext : DbContext {
                 .HasColumnType("datetime")
                 .HasColumnName("Fb_Datetime");
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
+            entity.Property(e => e.ParentFbFlag).HasColumnName("ParentFb_Flag");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.AccountId)
@@ -137,9 +144,15 @@ public partial class ZestybiteContext : DbContext {
                 .HasForeignKey(d => d.ItemId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("feedback_ibfk_2");
+
+            entity.HasOne(d => d.ParentFbFlagNavigation).WithMany(p => p.InverseParentFbFlagNavigation)
+                .HasForeignKey(d => d.ParentFbFlag)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Feedback_ParentFb_Flag");
         });
 
-        modelBuilder.Entity<Item>(entity => {
+        modelBuilder.Entity<Item>(entity =>
+        {
             entity.HasKey(e => e.ItemId).HasName("PRIMARY");
 
             entity.ToTable("item");
@@ -164,7 +177,8 @@ public partial class ZestybiteContext : DbContext {
                 .HasColumnName("Suggested_Price");
         });
 
-        modelBuilder.Entity<Payment>(entity => {
+        modelBuilder.Entity<Payment>(entity =>
+        {
             entity.HasKey(e => e.PaymentId).HasName("PRIMARY");
 
             entity.ToTable("payment");
@@ -173,7 +187,8 @@ public partial class ZestybiteContext : DbContext {
             entity.Property(e => e.PaymentMethod).HasColumnName("Payment_Method");
         });
 
-        modelBuilder.Entity<Profit>(entity => {
+        modelBuilder.Entity<Profit>(entity =>
+        {
             entity.HasKey(e => e.Date).HasName("PRIMARY");
 
             entity.ToTable("profit");
@@ -199,7 +214,8 @@ public partial class ZestybiteContext : DbContext {
                 .HasConstraintName("profit_ibfk_1");
         });
 
-        modelBuilder.Entity<Reservation>(entity => {
+        modelBuilder.Entity<Reservation>(entity =>
+        {
             entity.HasKey(e => e.ReservationId).HasName("PRIMARY");
 
             entity.ToTable("reservation");
@@ -232,7 +248,8 @@ public partial class ZestybiteContext : DbContext {
                 .HasConstraintName("reservation_ibfk_1");
         });
 
-        modelBuilder.Entity<Role>(entity => {
+        modelBuilder.Entity<Role>(entity =>
+        {
             entity.HasKey(e => e.RoleId).HasName("PRIMARY");
 
             entity.ToTable("role");
@@ -245,7 +262,8 @@ public partial class ZestybiteContext : DbContext {
                 .HasColumnName("Role_Description");
         });
 
-        modelBuilder.Entity<Supply>(entity => {
+        modelBuilder.Entity<Supply>(entity =>
+        {
             entity.HasKey(e => e.SupplyId).HasName("PRIMARY");
 
             entity.ToTable("supply");
@@ -307,7 +325,8 @@ public partial class ZestybiteContext : DbContext {
                         .HasForeignKey("SupplyId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("supply_item_ibfk_1"),
-                    j => {
+                    j =>
+                    {
                         j.HasKey("SupplyId", "ItemId")
                             .HasName("PRIMARY")
                             .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -318,7 +337,8 @@ public partial class ZestybiteContext : DbContext {
                     });
         });
 
-        modelBuilder.Entity<Table>(entity => {
+        modelBuilder.Entity<Table>(entity =>
+        {
             entity.HasKey(e => e.TableId).HasName("PRIMARY");
 
             entity.ToTable("table");
@@ -359,7 +379,8 @@ public partial class ZestybiteContext : DbContext {
                 .HasConstraintName("table_ibfk_3");
         });
 
-        modelBuilder.Entity<TableDetail>(entity => {
+        modelBuilder.Entity<TableDetail>(entity =>
+        {
             entity.HasKey(e => new { e.TableId, e.ItemId })
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });

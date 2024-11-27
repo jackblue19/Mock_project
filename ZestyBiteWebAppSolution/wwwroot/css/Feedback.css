@@ -55,6 +55,9 @@ select {
     height: 50px;
     font-size: 14px;
     padding: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
     #dish-select option {
@@ -62,7 +65,9 @@ select {
         color: white; /* White text for options */
     }
 
-
+    .search-container {
+        margin-right: 10px; /* Space between search box and dropdown */
+    }
 .container-wrap {
     height: 100vh;
     display: flex;

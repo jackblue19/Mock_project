@@ -1,114 +1,199 @@
-@{
-    ViewBag.Title = "Feedback";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+Entity ------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+
+namespace ZestyBiteWebAppSolution.Models.Entities;
+
+public partial class Feedback
+{
+    public int FbId { get; set; }
+
+    public string FbContent { get; set; } = null!;
+
+    public DateTime FbDatetime { get; set; }
+
+    public string Username { get; set; } = null!;
+
+    public int ItemId { get; set; }
+
+    public int? ParentFbFlag { get; set; }
+
+    public virtual Item Item { get; set; } = null!;
+
+    public virtual Account UsernameNavigation { get; set; } = null!;
+
+    public virtual ICollection<Feedback> InverseParentFbFlagNavigation { get; set; } = new List<Feedback>();
+
+    public virtual Feedback? ParentFbFlagNavigation { get; set; }
 }
-<head>
-    <title>Feedback</title>
-    <link href="~/css/Feedback.css" rel="stylesheet" />
-</head>
-<body>
-    <section class="ftco-appointment" style="background-image: url(/images/bg_4.jpg);">
-        <div class="container-wrap">
-            <div class="feedback-text ftco-animate">
-                <h1 class="text-center">Write your<br>Experience<br>Make the<br>Environment</h1>
-            </div>
-            <br>
-            <div class="feedback-input ftco-animate">
-                <div>
-                    <h1 class="text-center">Feedback</h1>
-                </div>
-                <div>
-                    <form action="#" id="feedbackForm" class="appointment-form" method="post">
-                        <div class="dish-select d-md-flex">
-                            <input type="text" class="form-control" placeholder="What dish do you want to feedback?" id="feedbackDish">
-                            <select id="dish-select" class="form-control"></select>
-                        </div>
-                        <div class="message d-md-flex">
-                            <textarea id="feedbackMessage" name="type-area" cols="30" rows="3" class="form-control" placeholder="Message"></textarea>
-                        </div>
-                        <div class="submit-button">
-                            <button type="button" id="submitFeedback" class="btn btn-primary py-3 px-4">Send</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const dishSelect = document.getElementById('dish-select');
+DTO ------------------------------------------------------------------------------
+using System;
+using System.ComponentModel.DataAnnotations;
 
-            // Fetch items from the API and populate the select element
-            function fetchItems() {
-                return [
-                    { item: "Pizza Margherita" },
-                    { item: "Pepperoni Pizza" },
-                    { item: "Hawaiian Pizza" },
-                    { item: "Veggie Pizza" },
-                    { item: "BBQ Chicken Pizza" }
-                ];
-            }
+namespace ZestyBiteWebAppSolution.Models.DTOs
+{
+    public class FeedbackDTO
+    {
+        public int Id { get; set; }
 
-            // Populate the select element with fetched items
-            function populateDishSelect(items) {
-                items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.item;
-                    option.textContent = item.item;
-                    dishSelect.appendChild(option);
-                });
-            }
+        [Required(ErrorMessage = "Feedback content is required.")]
+        public string Content { get; set; } = null!;
+        public DateTime DateTime { get; set; }
+        public string Username { get; set; } = null!;
+        public string? ProfileImage { get; set; }
+        public int ItemId { get; set; }
+        public string ItemName { get; set; } = null!;
+        public int? ParentFb { get; set; } = null!;
+        //to include parent feedback if needed
+        public FeedbackDTO? ParentFeedback { get; set; }
+        public bool IsReply { get; set; }
+    }
+}
+Repository ----------------------------------------------------------------------------
+ public async Task<Feedback> CreateAsync(Feedback feedback)
+ {
+     _context.Feedbacks.Add(feedback);
+     await _context.SaveChangesAsync();
+     return feedback;
+ }
+Service ----------------------------------------------------------------------------
 
-            // Fetch items and populate select element
-            const items = fetchItems();
-            populateDishSelect(items);
+private FeedbackDTO MapToFeedbackDTO(Feedback? feedback)
+{
+    if (feedback == null) throw new ArgumentNullException(nameof(feedback));
 
-            document.getElementById('submitFeedback').addEventListener('click', function () {
-                const feedbackDish = document.getElementById('feedbackDish').value;
-                const feedbackMessage = document.getElementById('feedbackMessage').value;
+    return new FeedbackDTO
+    {
+        Id = feedback.FbId,
+        Content = feedback.FbContent,
+        DateTime = feedback.FbDatetime,
+        Username = feedback.Username,
+        ProfileImage = feedback.UsernameNavigation?.ProfileImage ?? string.Empty,
+        ItemId = feedback.ItemId,
+        ItemName = feedback.Item?.ItemName ?? "Unknown",
+        ParentFb = feedback.ParentFbFlag,
+        ParentFeedback = feedback.ParentFbFlagNavigation != null ? MapToFeedbackDTO(feedback.ParentFbFlagNavigation) : null,
+        IsReply = feedback.ParentFbFlag != null
+    };
+}
 
-                fetch('/api/feedback/SubmitFeedback', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        content: feedbackMessage,
-                        dateTime: new Date().toISOString(),
-                        accountId: 1, // Replace with the actual account ID
-                        username: 'john_doe', // Replace with the actual username
-                        itemId: 1, // Replace with the actual item ID (you might need to retrieve this based on the dish name)
-                        itemName: feedbackDish
-                    })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Create a notification element
-                        const notification = document.createElement('div');
-                        notification.textContent = 'Feedback success! Redirecting to Blog...';
-                        notification.style.position = 'fixed';
-                        notification.style.top = '10px';
-                        notification.style.right = '10px';
-                        notification.style.padding = '10px';
-                        notification.style.backgroundColor = '#ffffff';
-                        notification.style.color = '#000000';
-                        notification.style.zIndex = '1000';
-                        document.body.appendChild(notification);
+private Feedback MapToFeedback(FeedbackDTO feedbackDTO)
+{
+    if (feedbackDTO == null) throw new ArgumentNullException(nameof(feedbackDTO));
 
-                        // Set timeout for redirection
-                        setTimeout(() => {
-                            window.location.href = '/Home/Blog';
-                        }, 1000); // Redirect after 1 second
+    return new Feedback
+    {
+        FbId = feedbackDTO.Id,
+        FbContent = feedbackDTO.Content,
+        FbDatetime = feedbackDTO.DateTime,
+        ItemId = feedbackDTO.ItemId,
+        ParentFbFlag = feedbackDTO.ParentFb
+    };
+}
 
-                        // Remove notification after redirect (optional)
-                        setTimeout(() => {
-                            document.body.removeChild(notification);
-                        }, 2000);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
+public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto)
+{
+    if (feedbackDto == null) throw new ArgumentNullException(nameof(feedbackDto));
+
+    var account = await _accountRepository.GetAccountByUsnAsync(feedbackDto.Username);
+    var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
+    if (account == null) throw new InvalidOperationException("Invalid Account.");
+    if (item == null) throw new InvalidOperationException("Invalid Item.");
+
+    var feedback = MapToFeedback(feedbackDto);
+    feedback.Username = account.Username;
+    feedback.UsernameNavigation = account;
+    feedback.Item = item;
+
+    // Call the repository method to create the feedback and save changes
+    var createdFeedback = await _feedbackRepository.CreateAsync(feedback);
+
+    // Map the created feedback back to a DTO
+    return MapToFeedbackDTO(createdFeedback);
+}
+
+Controller ----------------------------------------------------------------------------
+
+[HttpPost("submitfeedback")]
+public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+    try
+    {
+        var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto);
+        return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Internal server error: {ex.Message}");
+    }
+}
+
+Cshtml --------------------------------------------------------------------------------
+
+<button type="submit" id="submitFeedback" class="btn btn-primary py-3 px-4">Send</button>
+
+Js --------------------------------------------------------------------------------
+
+// Fetch items and populate select element
+fetchItems();
+
+document.getElementById('submitFeedback').addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const feedbackMessage = document.getElementById('feedbackMessage').value;
+    const selectedDishId = dishSelect.value; // Get the selected dish ID
+
+    fetch('/api/feedback/submitfeedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content: feedbackMessage,
+            dateTime: new Date().toISOString(),
+            username: 'john_doe', // Replace with the actual username
+            itemId: selectedDishId // Use the selected dish ID
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            const notification = document.createElement('div');
+            notification.textContent = 'Feedback success! Redirecting to Blog...';
+            notification.style.position = 'fixed';
+            notification.style.top = '10px';
+            notification.style.right = '10px';
+            notification.style.padding = '10px';
+            notification.style.backgroundColor = '#BEBEBE';
+            notification.style.color = '#000';
+            notification.style.zIndex = '1000';
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                window.location.href = '/Home/Blog';
+            }, 1000);
+
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 2000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const errorNotification = document.createElement('div');
+            errorNotification.textContent = 'Error submitting feedback. Please try again.';
+            errorNotification.style.position = 'fixed';
+            errorNotification.style.top = '10px';
+            errorNotification.style.right = '10px';
+            errorNotification.style.padding = '10px';
+            errorNotification.style.backgroundColor = '#FFCCCC';
+            errorNotification.style.color = '#000';
+            errorNotification.style.zIndex = '1000';
+            document.body.appendChild(errorNotification);
+
+            setTimeout(() => {
+                document.body.removeChild(errorNotification);
+            }, 3000);
         });
-    </script>
-</body>

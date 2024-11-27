@@ -5,13 +5,14 @@ using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 using System.Text;
 // using Microsoft.AspNetCore.Authentication;
 using ZestyBiteWebAppSolution.Middlewares;
 using Microsoft.Identity;
 using ZestyBiteWebAppSolution.Repositories;
+using ZestyBiteWebAppSolution.Mappings;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session
@@ -90,7 +91,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configure MySQL Connection
-var connectionString = "Server=Jack-Blue;Port=3306;Database=zestybite;Uid=root;Pwd=123456789";
+var connectionString = "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456";
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
 builder.Services.AddDbContext<ZestyBiteContext>(dbContextOptions =>
@@ -104,13 +105,20 @@ builder.Services.AddDbContext<ZestyBiteContext>(dbContextOptions =>
 // Register Repositories and Services in DI
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
+builder.Services.AddScoped<IItemService, ItemService>();
 
 builder.Services.AddEndpointsApiExplorer();
+
+// Add AutoMapper services
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -122,32 +130,32 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Name = "Authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
+//builder.Services.AddSwaggerGen(options =>
+//{
+//    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+//    {
+//        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+//        Name = "Authorization",
+//        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+//        BearerFormat = "JWT",
+//        Scheme = "Bearer"
+//    });
 
-    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
-});
+//    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+//    {
+//        {
+//            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+//            {
+//                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+//                {
+//                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+//                    Id = "Bearer"
+//                }
+//            },
+//            new string[] {}
+//        }
+//    });
+//});
 
 
 // Build the app

@@ -28,10 +28,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 throw new ArgumentNullException(nameof(account), "Account cannot be null");
             }
 
-            var existed = await _repository.GetAccountByUsnAsync(account.UserName);
+            var existed = await _repository.GetAccountByUsnAsync(account.Username);
             if (existed != null)
             {
-                throw new InvalidOperationException($"Username '{account.UserName}' is already in use.");
+                throw new InvalidOperationException($"Username '{account.Username}' is already in use.");
             }
 
             var created = await _repository.CreateAsync(account);
@@ -82,7 +82,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var defaultRole = await _roleRepository.GetByIdAsync(7);
             var acc = new Account()
             {
-                UserName = dto.Username,
+                Username = dto.Username,
                 // Password = HashPassword(dto.Password),
                 Password = dto.Password,
                 Name = dto.Name,
@@ -106,7 +106,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var accounts = await _repository.GetAllAsync();
             return accounts.Select(acc => new AccountDTO{
                 Id = acc.AccountId,
-                Username = acc.UserName,
+                Username = acc.Username,
                 Password = acc.Password,
                 Email = acc.Email,
                 Name = acc.Name,
@@ -130,7 +130,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 var dto = new AccountDTO()
                 {
                     Id = account.AccountId, // có thể dòng này del cần vì tính bảo mật =)))) nhưng mà em nghĩ có thể lơ được
-                    Username = account.UserName,
+                    Username = account.Username,
                     Password = account.Password,
                     Name = account.Name,
                     PhoneNumber = account.PhoneNumber,
@@ -168,7 +168,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var dto = new AccountDTO()
                 {
                     Id = current.AccountId,
-                    Username = current.UserName,
+                    Username = current.Username,
                     Password = current.Password,
                     Name = current.Name,
                     PhoneNumber = current.PhoneNumber,

@@ -1,4 +1,4 @@
-dotnet ef dbcontext scaffold "Server=Jack-Blue;Port=3306;Database=zestybite;Uid=jack;Pwd=jack1624.," MySql.EntityFrameworkCore -o Models -c ZestyBiteDbContext
+dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456" MySql.EntityFrameworkCore -o Models/Entities -c ZestyBiteContext
 
 Tình huống 1: Không có Repository (Tất cả logic trong Service Layer)
 

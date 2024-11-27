@@ -8,9 +8,6 @@ namespace ZestyBiteWebAppSolution.Repositories.Interfaces
         Task<IEnumerable<Feedback>> GetFeedbacksByItemIdAsync(int itemId);
         Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize);
         Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb);
-
-        //CRUD for reply
-        Task<IEnumerable<Feedback>> GetRepliesByParentIdAsync(int ParentFb);
         // CRUD for replies
         Task<Feedback> CreateReplyAsync(Feedback reply); 
         Task<Feedback> UpdateReplyAsync(Feedback reply);

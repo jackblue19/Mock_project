@@ -47,7 +47,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
 
         public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto)
         {
-            if (feedbackDto == null) throw new ArgumentNullException(nameof(feedbackDto));
+            if (feedbackDto == null)
+            {
+                throw new ArgumentNullException(nameof(feedbackDto));
+            }
 
             var account = await _accountRepository.GetAccountByUsnAsync(feedbackDto.Username);
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
@@ -65,13 +68,22 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
 
         public async Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto)
         {
-            if (feedbackDto == null) throw new ArgumentNullException(nameof(feedbackDto));
+            if (feedbackDto == null)
+            {
+                throw new ArgumentNullException(nameof(feedbackDto));
+            }
 
             var feedback = await _feedbackRepository.GetByIdAsync(feedbackDto.Id);
-            if (feedback == null) throw new InvalidOperationException("Feedback not found.");
+            if (feedback == null)
+            {
+                throw new InvalidOperationException("Feedback not found.");
+            }
 
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-            if (item == null) throw new InvalidOperationException("Invalid Item.");
+            if (item == null)
+            {
+                throw new InvalidOperationException("Invalid Item.");
+            }
 
             feedback = _mapper.Map<Feedback>(feedbackDto);
             feedback.Item = item;
@@ -103,7 +115,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         }
         public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto)
         {
-            if (replyDto == null) throw new ArgumentNullException(nameof(replyDto));
+            if (replyDto == null)
+            {
+                throw new ArgumentNullException(nameof(replyDto));
+            }
 
             // Retrieve account using username
             var account = await _accountRepository.GetAccountByUsnAsync(replyDto.Username);
@@ -129,10 +144,16 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
 
         public async Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto)
         {
-            if (replyDto == null) throw new ArgumentNullException(nameof(replyDto));
+            if (replyDto == null)
+            {
+                throw new ArgumentNullException(nameof(replyDto));
+            }
 
             var existingReply = await _feedbackRepository.GetByIdAsync(replyDto.Id);
-            if (existingReply == null) throw new KeyNotFoundException("Reply not found.");
+            if (existingReply == null)
+            {
+                throw new KeyNotFoundException("Reply not found.");
+            }
 
             existingReply.FbContent = replyDto.Content;
             existingReply.FbDatetime = DateTime.UtcNow;

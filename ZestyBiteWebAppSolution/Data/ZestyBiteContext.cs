@@ -36,6 +36,7 @@ public partial class ZestyBiteContext : DbContext
     public virtual DbSet<Table> Tables { get; set; }
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -122,6 +123,8 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasIndex(e => e.ItemId, "Item_ID");
 
+            entity.HasIndex(e => e.ParentFbFlag, "ParentFb_Flag");
+
             entity.HasIndex(e => e.Username, "Username");
 
             entity.Property(e => e.FbId).HasColumnName("Fb_ID");
@@ -138,6 +141,10 @@ public partial class ZestyBiteContext : DbContext
                 .HasForeignKey(d => d.ItemId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("feedback_ibfk_2");
+
+            entity.HasOne(d => d.ParentFbFlagNavigation).WithMany(p => p.InverseParentFbFlagNavigation)
+                .HasForeignKey(d => d.ParentFbFlag)
+                .HasConstraintName("feedback_ibfk_3");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Feedbacks)
                 .HasPrincipalKey(p => p.Username)

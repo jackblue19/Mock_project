@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    [AllowAnonymous]
+    // [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase

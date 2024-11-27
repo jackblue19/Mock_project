@@ -125,7 +125,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             await _repository.UpdateAsync(current);
             return dto;
         }
-        public async Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn) {
+        public async Task<UpdateProfileDTO> UpdateProfile(UpdateProfileDTO dto, string usn) {
             var current = await _repository.GetAccountByUsnAsync(usn);
             current.Name = dto.Name;
             current.PhoneNumber = dto.PhoneNumber;
@@ -175,18 +175,5 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return passwordHasher.HashPassword("", password); // Pass null for the user parameter
         }
 
-        public async Task<ProfileDTO> ViewProfileByUsnAsync(string usn) {
-            var acc = await _repository.GetAccountByUsnAsync(usn);
-            var dto = new ProfileDTO() {
-                Name = acc.Name,
-                PhoneNumber = acc.PhoneNumber,
-                Email = acc.Email,
-                Gender = acc.Gender,
-                Address = acc.Address,
-                ProfileImg = acc.ProfileImage
-            };
-
-            return dto;
-        }
     }
 }

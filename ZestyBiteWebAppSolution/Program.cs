@@ -11,6 +11,7 @@ using System.Text;
 // using Microsoft.AspNetCore.Authentication;
 using ZestyBiteWebAppSolution.Middlewares;
 using Microsoft.Identity;
+using ZestyBiteWebAppSolution.Repositories;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session
@@ -92,7 +93,7 @@ builder.Services.AddSwaggerGen(c =>
 var connectionString = "Server=Jack-Blue;Port=3306;Database=zestybite;Uid=root;Pwd=123456789";
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
-builder.Services.AddDbContext<ZestybiteContext>(dbContextOptions =>
+builder.Services.AddDbContext<ZestyBiteContext>(dbContextOptions =>
     dbContextOptions
         .UseMySql(connectionString, serverVersion)
         .LogTo(Console.WriteLine, LogLevel.Information)
@@ -105,6 +106,9 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 

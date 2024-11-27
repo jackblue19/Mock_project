@@ -8,8 +8,8 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
     public class AccountRepository : IAccountRepository, IRepository<Account>
     {
-        private readonly ZestybiteContext _context;
-        public AccountRepository(ZestybiteContext context)
+        private readonly ZestyBiteContext _context;
+        public AccountRepository(ZestyBiteContext context)
         {
             _context = context;
         }

@@ -4,9 +4,11 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZestyBiteWebAppSolution.Controllers
-{
+{   
+    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class FeedbackController : Controller

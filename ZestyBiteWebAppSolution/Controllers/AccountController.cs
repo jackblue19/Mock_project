@@ -86,7 +86,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] AccountDTO accountDto)
+        public async Task<IActionResult> Register([FromForm] AccountDTO accountDto)
         {
             if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
 

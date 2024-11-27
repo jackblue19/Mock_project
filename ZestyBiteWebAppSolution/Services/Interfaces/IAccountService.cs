@@ -11,9 +11,11 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces {
         Task<RegisterDTO?> GetAccountByUsnAsync(string usn);
         Task<RegisterDTO> SignUpAsync(RegisterDTO dto);
         Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto, string usn);
-        Task<UpdateProfileDTO> UpdateProfile(UpdateProfileDTO dto, string usn);
+        Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn);
         Task<int> GetRoleIdByUsn(string username);
         Task<bool> IsTrueAccount(string usn, string password);
         Task<string?> GetRoleDescByUsn(string usn);
+
+        Task <ProfileDTO > ViewProfileByUsnAsync(string usn);
     }
 }

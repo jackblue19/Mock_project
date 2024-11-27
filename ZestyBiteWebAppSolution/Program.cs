@@ -91,7 +91,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configure MySQL Connection
-var connectionString = "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456";
+var connectionString = "Server=Jack-Blue;Port=3306;Database=zestybite;Uid=root;Pwd=123456789";
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
 builder.Services.AddDbContext<ZestyBiteContext>(dbContextOptions =>

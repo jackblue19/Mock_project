@@ -5,5 +5,6 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
 {
     public interface ITableService
     {
+        Task<TableDTO> CreateTableAsync(TableDTO dto);
     }
 }

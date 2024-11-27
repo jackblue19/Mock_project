@@ -11,8 +11,8 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         public int ReservationId { get; set; }
         public int ItemId { get; set; }
         public int TableType { get; set; }
-        public string TableStatus { get; set; }
-        public string? TableNote { get; set; }
+        public string TableStatus { get; set; } = null!;
+        public string? TableNote { get; set; } = null!;
         public int AccountId { get; set; }
 
     }

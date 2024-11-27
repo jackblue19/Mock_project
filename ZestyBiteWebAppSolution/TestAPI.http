@@ -1,95 +1,3 @@
-
-###
-GET /api/admin
-Authorization: Bearer {jwt-token-here}
-
-###
-GET http://localhost:5024/api/feedback/all
-###
-GET http://localhost:5024/api/localhost:5024/api/feedback/GetItems
-###
-POST http://localhost:5024/api/account/signup2
-Content-Type: application/json
-
-{
-    "username": "doraemon1234",
-    "password": "doraemon@1234",
-    "name": "Doraemon Nek",
-    "gender": 1,
-    "phoneNumber": "0912345678",
-    "email": "doraemon1234@gmail.com",
-    "address": "DN NHS",
-    "confirmPassword": "doraemon@1234",
-    "roleDescription": "null"
-}
-###
-
-GET http://localhost:5024/api/account/all
-
-###
-PUT http://localhost:5024/api/account/changepassword
-Content-Type: application/json
-
-{
-    "username": "shyranne7z",
-    "oldPassword": "Shyran@496",
-    "newPassword": "tretrou12z3",
-    "ConfirmPassword": "tretrou12z3"
-}
-
-###
-
-PUT http://localhost:5024/api/account/modify
-Content-Type: application/json
-
-{
-    "username": "shyranne7z",
-    "name": "Jack Blue",
-    "phoneNumber": "091234567899",
-    "address": "DN NHS HC",
-    "gender": 0,
-    "profileImg": "default null"
-}
-
-###
-GET http://localhost:5024/api/account/profile
-
-###
-{
-    "username": "neacco7unt19c3zz9",
-    "password": "StrongP@ssw0rd!",
-    "name": "Hacker Lord Z",
-    "phoneNumber": "1234567890",
-    "address": "123 Elm Street, Springfield",
-    "gender": 0, 
-    "email": "dao7zz19cz0d@gmail.com",
-    "profileImage": "default null",
-    "verificationCode": "abc123",
-    "role":{
-        "roleId": 7,
-        "roleDescription": "Customer"
-    }
-}
-###
-POST http://localhost:5024/api/account/login
-Content-Type: application/json
-
-{
-    "username": "doraemon1234",
-    "password": "doraemon@1234"
-}
-###
-
-POST http://localhost:5024/api/account/login
-Content-Type: application/json
-
-{
-    "username": "admin_user",
-    "password": "adminpass"
-}
-###
-POST http://localhost:5024/api/account/logout
-
 ########################################################################
 GET http://localhost:5024/api/feedback/items
 ###
@@ -97,7 +5,9 @@ GET http://localhost:5024/api/feedback/allfeedbacks
 ###
 GET http://localhost:5024/api/feedback/item/1
 ###
-POST http://localhost:5024/api/feedback
+POST http://localhost:5024/api/feedback/submitfeedback
+Content-Type: application/json
+Body:
 {
   "Content": "This is a feedback message.",
   "DateTime": "2023-10-01T12:00:00Z",
@@ -107,8 +17,10 @@ POST http://localhost:5024/api/feedback
 }
 ###
 PUT http://localhost:5024/api/feedback
+Content-Type: application/json
+Body:
 {
-  "Id": 33,
+  "Id": 11,
   "Content": "Updated feedback message.",
   "DateTime": "2023-10-01T12:00:00Z",
   "Username": "testuser",
@@ -118,30 +30,34 @@ PUT http://localhost:5024/api/feedback
 ###
 GET http://localhost:5024/api/feedback/pagination?pageNumber=1&pageSize=10
 ###
-DELETE http://localhost:5024/api/feedback/30
+DELETE http://localhost:5024/api/feedback/8
 ###
 GET http://localhost:5024/api/feedback/replies/9
 ###
 POST http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+Body:
 {
   "Content": "This is a reply message.",
   "DateTime": "2023-10-01T12:00:00Z",
   "Username": "testuser",
   "ItemId": 1,
-  "ParentFb": 1
+  "ParentFb": 9
 }
 ###
 PUT http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+Body:
 {
-  "Id": 1,
+  "Id": 12,
   "Content": "Updated reply message.",
   "DateTime": "2023-10-01T12:00:00Z",
   "Username": "testuser",
   "ItemId": 1,
-  "ParentFb": 1
+  "ParentFb": 9
 }
 ###
-DELETE http://localhost:5024/api/feedback/reply/1
+DELETE http://localhost:5024/api/feedback/reply/12
 ###
 
 ###

@@ -5,7 +5,7 @@ git pull origin HuynhBE
 git push
 
 //database first
-dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456" MySql.EntityFrameworkCore -o Models -c ZestyBiteContext
+dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456" MySql.EntityFrameworkCore -o /Models/Entities -c ZestyBiteContext
 
 //Coding flow
 - Tạo Model 
@@ -19,6 +19,7 @@ dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=zestybite;Uid=
 	+ Tạo impl
 - Controller
 	+ Viết hàm 
+FeedbackDTO, IFeedbackRepository, FeedbackRepository, IFeedbackService, FeedbackService, FeedbackController
 //Code không chạy 
 Check DTO, repository interfaces, repository implementations, service interfaces, and service implementations.
 

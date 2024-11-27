@@ -17,13 +17,16 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         public async Task<IEnumerable<Feedback>> GetFeedbacksByItemIdAsync(int itemId)
         {
             return await _context.Feedbacks
-                .Where(f => f.ItemId == itemId && f.ParentFbFlag == null) // Exclude replies
+                .Where(f => f.ItemId == itemId) // Exclude replies
+                .Include(f => f.UsernameNavigation)
+                .Include(f => f.Item)
                 .OrderByDescending(f => f.FbDatetime)
                 .ToListAsync();
         }
 
         public async Task<Feedback?> GetByIdAsync(int id) => await _context.Feedbacks.FindAsync(id);
 
+        // Rely on the generic IRepository<T> methods for basic CRUD:
         public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
         {
             return await _context.Feedbacks
@@ -32,22 +35,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
                 .Take(pageSize)
                 .ToListAsync();
         }
-
         public async Task<IEnumerable<Feedback?>> GetAllAsync()
         {
             return await _context.Feedbacks
-                .Include(f => f.UsernameNavigation) // Corrected from Username
+                .Include(f => f.UsernameNavigation)
                 .Include(f => f.Item)
                 .Include(f => f.ParentFbFlagNavigation)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb)
-        {
-            return await _context.Feedbacks
-                .Where(f => f.ParentFbFlag == ParentFb)
-                .Include(f => f.UsernameNavigation)
-                .OrderBy(f => f.FbDatetime) // Oldest first
                 .ToListAsync();
         }
 
@@ -57,7 +50,6 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             await _context.SaveChangesAsync();
             return feedback;
         }
-
         public async Task<Feedback> UpdateAsync(Feedback feedback)
         {
             _context.Feedbacks.Update(feedback);
@@ -73,20 +65,26 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         }
 
         // CRUD for reply
+        public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb)
+        {
+            return await _context.Feedbacks
+                .Where(f => f.ParentFbFlag == ParentFb)
+                .Include(f => f.UsernameNavigation)
+                .OrderBy(f => f.FbDatetime) // Oldest first
+                .ToListAsync();
+        }
         public async Task<Feedback> CreateReplyAsync(Feedback reply)
         {
             _context.Feedbacks.Add(reply);
             await _context.SaveChangesAsync();
             return reply;
         }
-
         public async Task<Feedback> UpdateReplyAsync(Feedback reply)
         {
             _context.Feedbacks.Update(reply);
             await _context.SaveChangesAsync();
             return reply;
         }
-
         public async Task<bool> DeleteReplyAsync(Feedback reply)
         {
             _context.Feedbacks.Remove(reply);

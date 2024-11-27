@@ -28,7 +28,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             return Ok(items);
         }
 
-        // GET: api/feedback
+        // GET: api/feedback/allfeedbacks
         [HttpGet("allfeedbacks")]
         public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacks()
         {
@@ -58,7 +58,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        // POST: api/feedback
+        // POST: api/feedback/submitfeedback
         [HttpPost("submitfeedback")]
         public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
         {
@@ -152,7 +152,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         // POST: api/feedback/reply
         [HttpPost("reply")]
-        public async Task<ActionResult<FeedbackDTO>> SubmitReply([FromBody] ReplyDTO replyDto)
+        public async Task<ActionResult<ReplyDTO>> SubmitReply([FromBody] ReplyDTO replyDto)
         {
             if (!ModelState.IsValid)
             {
@@ -171,7 +171,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         // PUT: api/feedback/reply
         [HttpPut("reply")]
-        public async Task<ActionResult<FeedbackDTO>> UpdateReply([FromBody] ReplyDTO replyDto)
+        public async Task<ActionResult<ReplyDTO>> UpdateReply([FromBody] ReplyDTO replyDto)
         {
             if (!ModelState.IsValid)
             {

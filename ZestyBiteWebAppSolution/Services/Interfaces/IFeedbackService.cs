@@ -21,5 +21,6 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
         Task<bool> DeleteReplyAsync(int replyId);
         Task<IEnumerable<ReplyDTO>> GetRepliesByFeedbackAsync(int parentFbFlag);
 
+
     }
 }

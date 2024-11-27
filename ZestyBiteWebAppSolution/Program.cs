@@ -7,11 +7,13 @@ using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 using System.Text;
 // using Microsoft.AspNetCore.Authentication;
 using ZestyBiteWebAppSolution.Middlewares;
 using Microsoft.Identity;
 using ZestyBiteWebAppSolution.Repositories;
+using ZestyBiteWebAppSolution.Mappings;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session
@@ -104,13 +106,20 @@ builder.Services.AddDbContext<ZestyBiteContext>(dbContextOptions =>
 // Register Repositories and Services in DI
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
+builder.Services.AddScoped<IItemService, ItemService>();
 
 builder.Services.AddEndpointsApiExplorer();
+
+// Add AutoMapper services
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Configure CORS
 builder.Services.AddCors(options =>

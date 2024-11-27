@@ -1,4 +1,7 @@
-﻿ @if (User.Identity != null && User.Identity.IsAuthenticated) {
+﻿@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+
+ @if (User.Identity != null && User.Identity.IsAuthenticated) {
      <!-- Hiển thị khi người dùng đã đăng nhập -->
      <li class="nav-item dropdown d-none d-lg-block">
          <a class="nav-link custom-nav-link" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="transform: translateY(5px); text-align: center;">

@@ -3,7 +3,7 @@
      Layout = "~/Views/Shared/_Layout.cshtml";
  }
  @using ZestyBiteWebAppSolution.Models.DTOs
- @model AccountDTO
+ @model RegisterDTO
 
  <head>
      <link href="~/css/signup.css" rel="stylesheet" />
@@ -124,7 +124,7 @@
             gender: parseInt(document.querySelector('select[name="Gender"]').value, 10),
         };
         console.log(userData);
-            const url = 'https://localhost:44326/register';
+            const url = 'https://localhost:44326/api/Account/Register';
 
         try {
             const response = await fetch(url, {
@@ -142,6 +142,7 @@
 
             const result = await response.json();
             console.log('User registered successfully:', result);
+                window.location.href = '/login'; // Adjust the path as needed
         } catch (error) {
             console.error('Error registering user:', error);
         }

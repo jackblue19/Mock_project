@@ -11,7 +11,6 @@ namespace ZestyBiteWebAppSolution.Models.DTOs {
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long and not exceed 100 characters.")]
         public string Password { get; set; } = null!;
 
-        [Display(Name = "Remember me")]
         public bool RememberMe { get; set; }
     }
 }

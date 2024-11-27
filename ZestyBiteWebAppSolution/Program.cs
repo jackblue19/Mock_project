@@ -1,26 +1,41 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Session
 builder.Services.AddDistributedMemoryCache(); // Store session in memory
 builder.Services.AddSession(options => {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout duration
-    options.Cookie.HttpOnly = true; // Secure cookie
-    options.Cookie.IsEssential = true; // Essential cookie
+    options.Cookie.Name = ".Restaurant.Session";
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = false; // => maybe comment vì hình như nó chặn http chỉ cho https => from TRUE to FALSE
+    options.Cookie.IsEssential = true;
+});
+
+// Thêm dịch vụ Authorization và tạo các policies phân quyền
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("manager"));
+    options.AddPolicy("UserPolicy", policy => policy.RequireRole("order taker", "staff"));
+    options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("manager"));
+    options.AddPolicy("OrderTakerPolicy", policy => policy.RequireRole("order taker"));
+    options.AddPolicy("StaffPolicy", policy => policy.RequireRole("staff"));
+    options.AddPolicy("KitchenPolicy", policy => policy.RequireRole("kitchen"));
+    options.AddPolicy("CustomerPolicy", policy => policy.RequireRole("customer"));
+    options.AddPolicy("FoodRunnerPolicy", policy => policy.RequireRole("food runner"));
+    options.AddPolicy("ServicerPolicy", policy => policy.RequireRole("servicer"));
 });
 
 // Add Razor Pages and MVC
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 
 // Configure Swagger
 builder.Services.AddSwaggerGen(c => {
@@ -32,7 +47,7 @@ builder.Services.AddSwaggerGen(c => {
 });
 
 // Configure MySQL Connection
-var connectionString = "Server=localhost;Port=3306;Database=zestybite;Uid=root;Password=hung300403.";
+var connectionString = "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=hung300403.";
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
 builder.Services.AddDbContext<ZestybiteContext>(dbContextOptions =>
@@ -43,37 +58,11 @@ builder.Services.AddDbContext<ZestybiteContext>(dbContextOptions =>
         .EnableDetailedErrors()
 );
 
-builder.Services.AddIdentity<Account, IdentityRole>()
-                .AddEntityFrameworkStores<ZestybiteContext>()
-                .AddDefaultTokenProviders();
-
-builder.Services.Configure<IdentityOptions>(options =>
-{
-
-    // Default SignIn settings.
-    options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
-
-    // Password settings
-    options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 10;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequiredUniqueChars = 6;
-
-    // Lockout settings
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-    options.Lockout.MaxFailedAccessAttempts = 10;
-    options.Lockout.AllowedForNewUsers = true;
-});
-
 // Register Repositories and Services in DI
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<IRoleService , RoleService>();
-builder.Services.AddScoped<IRoleRepository , RoleRepository>();
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -85,6 +74,31 @@ builder.Services.AddCors(options => {
               .AllowAnyHeader();
     });
 });
+builder.Services.AddSwaggerGen(options => {
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme {
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 
 // Build the app
 var app = builder.Build();
@@ -114,11 +128,13 @@ app.UseRouting();
 
 // Add Session Middleware (after routing and before authorization)
 app.UseSession();
-//app.MapControllers();
+app.UseMiddleware<AuthenticationMiddleware>();
+
+app.MapControllers();
 
 // Middleware for Authorization
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure Routing for Areas
 app.MapControllerRoute(

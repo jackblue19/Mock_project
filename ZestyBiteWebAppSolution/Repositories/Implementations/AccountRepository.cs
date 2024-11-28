@@ -6,7 +6,7 @@ using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
-    public class AccountRepository : IAccountRepository, IRepository<Account>
+    public class AccountRepository :IAccountRepository, IRepository<Account>
     {
         private readonly ZestyBiteContext _context;
         public AccountRepository(ZestyBiteContext context)

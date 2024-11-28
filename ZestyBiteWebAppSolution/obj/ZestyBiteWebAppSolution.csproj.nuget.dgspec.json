@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {}
+    "D:\\OJT\\FEnBE\\Jack\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {}
   },
   "projects": {
-    "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {
+    "D:\\OJT\\FEnBE\\Jack\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
+        "projectUniqueName": "D:\\OJT\\FEnBE\\Jack\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
         "projectName": "ZestyBiteWebAppSolution",
-        "projectPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
-        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\obj\\",
+        "projectPath": "D:\\OJT\\FEnBE\\Jack\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+        "outputPath": "D:\\OJT\\FEnBE\\Jack\\ZestyBiteWebAppSolution\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,13 +42,18 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.0.3, )"
@@ -110,17 +118,21 @@
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[8.0.10, )"
+              "version": "[8.0.11, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.10, )"
+              "version": "[8.0.11, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[8.0.7, )"
+            },
+            "MySql.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
             },
             "MySqlConnector": {
               "target": "Package",
@@ -162,7 +174,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

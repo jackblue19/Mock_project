@@ -8,37 +8,35 @@ namespace ZestyBiteWebAppSolution.Mappings
     {
         public MappingProfile()
         {
-            // Map Feedback to FeedbackDTO
             CreateMap<Feedback, FeedbackDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
+            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
+            .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UsernameNavigation.Username))
+            .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
+            .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
+            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
+            .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag))
+            .ForMember(dest => dest.ParentFeedback, opt => opt.MapFrom(src => src.ParentFbFlagNavigation))
+            .ForMember(dest => dest.IsReply, opt => opt.MapFrom(src => src.ParentFbFlag != null));
+
+            CreateMap<FeedbackDTO, Feedback>()
+                .ForMember(dest => dest.FbId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.FbContent, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.FbDatetime, opt => opt.MapFrom(src => src.DateTime))
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
+                .ForMember(dest => dest.ParentFbFlag, opt => opt.MapFrom(src => src.ParentFb));
+
+            CreateMap<Feedback, ReplyDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
-                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbContent))
+                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))
-                .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.FbContent)) // Optional
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UsernameNavigation.Username))
+                .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
-                .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName)) // Handles nested Item.Name
-                .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.FbContent))
-                .ForMember(dest => dest.ParentFeedback, opt => opt.MapFrom(src => src.FbContent != null
-                   ? new FeedbackDTO
-                   {
-                       Id = src.ParentFbFlagNavigation.FbId,
-                       Content = src.ParentFbFlagNavigation.FbContent,
-                       Username = src.ParentFbFlagNavigation.Username,
-                  
-                   }
-                   : null)) // Map only specific properties of ParentFeedback
-                .ForMember(dest => dest.IsReply, opt => opt.MapFrom(src => src.FbContent != null));
-
-            // Map Feedback to ReplyDTO
-            CreateMap<Feedback, ReplyDTO>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbContent))
-                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
-                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbContent))
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))
-                .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.FbContent)) // Optional
-                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
-                .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName)) // Handles nested Item.Name
-                .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag ?? 0)); // Default to 0 if null
+                .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
+                .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag));
 
             // Map Item to ItemDTO
             CreateMap<Item, ItemDTO>()

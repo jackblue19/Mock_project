@@ -5,15 +5,17 @@ using ZestyBiteWebAppSolution.Models.Entities;
 namespace ZestyBiteWebAppSolution.Services.Interfaces {
     public interface IAccountService
     {
-        Task<IEnumerable<AccountDTO?>> GetALlAccountAsync();
+        Task<IEnumerable<RegisterDTO?>> GetALlAccountAsync();
         Task<Account> CreateStaffAsync(Account account, int roleId); 
-        Task<AccountDTO?> GetAccountByIdAsync(int id);  
-        Task<AccountDTO?> GetAccountByUsnAsync(string usn);
-        Task<AccountDTO> SignUpAsync(AccountDTO dto);
+        Task<RegisterDTO?> GetAccountByIdAsync(int id);  
+        Task<RegisterDTO?> GetAccountByUsnAsync(string usn);
+        Task<RegisterDTO> SignUpAsync(RegisterDTO dto);
         Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto, string usn);
-        Task<UpdateProfileDTO> UpdateProfile(UpdateProfileDTO dto, string usn);
+        Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn);
         Task<int> GetRoleIdByUsn(string username);
         Task<bool> IsTrueAccount(string usn, string password);
         Task<string?> GetRoleDescByUsn(string usn);
+
+        Task <ProfileDTO > ViewProfileByUsnAsync(string usn);
     }
 }

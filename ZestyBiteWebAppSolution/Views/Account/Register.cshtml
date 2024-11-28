@@ -2,8 +2,8 @@
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@using ZestyBiteWebAppSolution.Models.DTOs
-@model AccountDTO
+
+@model ZestyBiteWebAppSolution.Models.DTOs.RegisterDTO
 
 <head>
     <link href="~/css/signup.css" rel="stylesheet" />
@@ -115,55 +115,14 @@
             </div>
 
             <p class="text-center mt-2" style="transform: translateY(5px)">
-                Already have an account? <a asp-controller="User" asp-action="SignIn"
+                Already have an account? <a asp-controller="Account" asp-action="Register"
                     class="text-decoration-none">Login</a>
             </p>
             <div class="text-center">
                 <a asp-controller="Home" asp-action="Index" class="text-decoration-none mt-3">Back to home</a>
             </div>
             <input asp-for="RoleDescription" style="display: none" type="text"
-                                    class="form-control" placeholder="roledesc"  value="null"/>
+                   class="form-control" placeholder="roledesc" value="null" />
         </form>
     </div>
-    @* <script>
-        document.getElementById('submit').addEventListener('click', async function (event) {
-            event.preventDefault();
-
-            const userData = {
-                username: document.querySelector('input[name="Username"]').value,
-                password: document.querySelector('input[name="Password"]').value,
-                confirmPassword: document.querySelector('input[name="ConfirmPassword"]').value,
-                phoneNumber: document.querySelector('input[name="PhoneNumber"]').value,
-                email: document.querySelector('input[name="Email"]').value,
-                name: document.querySelector('input[name="Name"]').value,
-                address: document.querySelector('input[name="Address"]').value,
-                gender: parseInt(document.querySelector('select[name="Gender"]').value, 10),
-            };
-            console.log(userData);
-            const url = 'https://localhost:7131/api/Account/register';
-            const urlvsc = 'http://localhost:5024/api/Account/signup2';
-
-            try {
-                const response = await fetch(urlvsc, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(userData),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Server responded with error:", errorData);
-                    throw new Error(errorData.message || 'Unknown error');
-                }
-
-                const result = await response.json();
-                console.log('User registered successfully:', result);
-            } catch (error) {
-                console.error('Error registering user:', error);
-            }
-            console.log("Response from server:", await response.json());
-        });
-    </script> *@
 </body>

@@ -1,238 +1,139 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ZestyBiteWebAppSolution.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Services.Interfaces;
-using ZestyBiteWebAppSolution.Services.Implementations;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Humanizer;
-using NuGet.Common;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using Microsoft.AspNetCore.Authorization;
-using ZestyBiteWebAppSolution.Models.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace ZestyBiteWebAppSolution.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AccountController : Controller
-    {
+namespace ZestyBiteWebAppSolution.Controllers {
+    [AllowAnonymous]
+    public class AccountController : Controller {
         private readonly IAccountService _service;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService)
-        {
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService) {
             _logger = logger;
             _service = accountService;
         }
 
-        /* Login */
-        // [HttpGet]
-        // public IActionResult Login()
-        //     return View(); // Hiển thị trang đăng nhập
+        public IActionResult Login() {
+            return View(); // Hiển thị trang đăng nhập
+        }
+
         [AllowAnonymous]
         [HttpPost]
-        [Route("LogIn")]
-        public async Task<IActionResult> LogIn([FromBody] LoginDTO dto)
-        {
-            // ModelState.AddModelError("UserName", "Tên đăng nhập không hợp lệ");
-            HttpContext.Session.Remove("username");
-            Response.Cookies.Delete("username");
-            if (await _service.IsTrueAccount(dto.Username, dto.Password))
-            {
+        public async Task<IActionResult> Login([FromForm] LoginDTO dto) {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
                 HttpContext.Session.SetString("username", dto.Username);
-                Response.Cookies.Append("username", dto.Username, new CookieOptions
-                {
+                Response.Cookies.Append("username", dto.Username, new CookieOptions {
                     Expires = DateTimeOffset.Now.AddMinutes(30),
                     HttpOnly = true,
                     Secure = false,
                     SameSite = SameSiteMode.Strict
                 });
-                return Ok("Login sucessfully");
-                // return RedirectToAction("Index", "Home");
+
+                 return RedirectToAction("Index", "Home");
             }
-            ViewBag.ErrorMessage = "Invalid username or password";
-            return Unauthorized();
-            // return View();
-            /*
-                if (ModelState.IsValid)
-                    if (user != null)
-                    else
-                        ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);  // Trả lại trang đăng nhập nếu đăng nhập thất bại
-            */
-        }
 
-        [HttpPost("logout")]
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Remove("username");
-            Response.Cookies.Delete("username");
-            // RedirectToAction("Login", "Account");
-            return Ok("Log out sucessfully");
-            //  return RedirectToAction("Index", "Home");
-            //  thêm case tắt trình duyệt thì auto log out
+            return Unauthorized(new { message = "Invalid username or password" });
         }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("Register")]
-        public IActionResult Register()
-        {
+        public IActionResult Register() {
             return View();
         }
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromForm] AccountDTO accountDto)
-        {
+        public async Task<IActionResult> Register([FromForm] RegisterDTO accountDto) {
             if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
 
-            try
-            {
+            try {
                 var created = await _service.SignUpAsync(accountDto);
-                return Created($"/api/account/{created.Id}", created);
-            }
-            catch (InvalidOperationException ex)
-            {
+                return RedirectToAction("Login", "Account");
+            } catch (InvalidOperationException ex) {
                 return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
             }
         }
 
         [AllowAnonymous]
-        [HttpPost("signup2")]
-        public async Task<IResult> SignUpSecond([FromBody] AccountDTO acc)
-        {
-            try
-            {
-                var created = await _service.SignUpAsync(acc);
-                // return RedirectToAction("Profile", "User");return RedirectToAction("Profile", "User");
-                return TypedResults.Created($"/api/account/{created.Id}", created);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> ViewProfile() {
+            try {
+                var username = User.Identity.Name;
+                if (string.IsNullOrEmpty(username)) {
+                    return Unauthorized(); // Hoặc Redirect đến trang login
+                }
+
+                var dto = await _service.ViewProfileByUsnAsync(username);
+                if (dto == null)
+                    return NotFound(); 
+
+                return View(dto);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 
         [Authorize]
-        [HttpGet("profile")]
-        public async Task<IResult> ViewProfile()
-        {
-            try
-            {
+        [HttpPut("Account/UpdateProfile")] // Thêm route đầy đủ
+        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto) {
+            try {
                 var username = User.Identity.Name;
+                if (string.IsNullOrEmpty(username)) return Unauthorized();
 
-                if (string.IsNullOrEmpty(username))
-                {
-                    // return RedirectToAction("Login", "Account");
-                    return (IResult)Unauthorized();
+                // Gọi service để cập nhật thông tin
+                await _service.UpdateProfile(dto, username);
+
+                // Trả về kết quả thành công
+                return Ok(new { Message = "Profile updated successfully." });
+            } catch (InvalidOperationException ex) {
+                return BadRequest(new { Message = ex.Message });
+            } catch (Exception ex) {
+                return StatusCode(500, new { Message = $"Internal Server Error: {ex.Message}" });
+            }
+        }
+
+
+        [AllowAnonymous]
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePwdDTO dto) {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid data received");
+
+            try {
+                var username = User.Identity.Name;
+                if (string.IsNullOrEmpty(username)) {
+                    return Unauthorized(); // Hoặc Redirect đến trang login
                 }
-                var dto = await _service.GetAccountByUsnAsync(username);
 
-                if (dto == null)
-                    return TypedResults.NotFound();
-                // return TypedResults.Ok($"/api/account/{account.UserName}", account); // => usage for page redirect
-                return TypedResults.Ok(dto); // => api in json only =)))
-                // return RedirectToAction("Profile", "User", new { username = dto.Username }); // Chuyển hướng đến action Profile của UserController
-            }
-            catch (InvalidOperationException ex)
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
-            catch (ArgumentException ex) // Xử lý lỗi từ service
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex) // Bắt lỗi bất kỳ khác
-            {
-                return TypedResults.Problem($"Internal Server Error: {ex.Message}");
+                await _service.ChangePwd(dto, username);
+                return Ok(new { Message = "Password changed successfully" });
+            } catch (Exception ex) {
+                return BadRequest(new { Message = ex.Message });
             }
         }
 
         [Authorize(Roles = "Manager")]
-        [HttpGet("all")]
-        public async Task<IResult> GetAllAccount()
-        {
-            try
-            {
+        public async Task<IResult> GetAllAccount() {
+            try {
                 var accounts = await _service.GetALlAccountAsync();
                 if (!accounts.Any()) return TypedResults.NotFound();
                 return TypedResults.Ok(accounts);
 
-            }
-            catch (InvalidOperationException ex)
-            {
+            } catch (InvalidOperationException ex) {
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
 
-        [Authorize]
-        [HttpPut("changepassword")]
-        public async Task<IResult> ChangePassword([FromBody] ChangePwdDTO dto)
-        {
-            if (ModelState.IsValid)
-            {
-                var username = User.Identity.Name;
-
-                if (string.IsNullOrEmpty(username))
-                    // return RedirectToAction("Login", "Account");
-                    return (IResult)Unauthorized();
-                try
-                {
-                    await _service.ChangePwd(dto, username);
-                    return TypedResults.Ok(dto);    // dùng tạm thời để check ngay trên response
-                                                    // return TypedResults.NoContent(); //  => nếu hoành thành rồi thì nên trả về NoContent cho chuẩn
-                }
-                catch (InvalidOperationException ex)
-                {
-                    return TypedResults.BadRequest(new { Message = ex.Message });
-                }
-            }
-            return TypedResults.BadRequest();
+        public IActionResult Logout() {
+            HttpContext.Session.Remove("username");
+            Response.Cookies.Delete("username");
+            return RedirectToAction("Index", "Home");
         }
-
-        [Authorize]
-        [HttpPut("modify")]
-        public async Task<IResult> UpdateProfile([FromBody] UpdateProfileDTO dto)
-        {
-            try
-            {
-                var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username)) return (IResult)Unauthorized();
-                await _service.UpdateProfile(dto, username);
-                return TypedResults.Ok(dto);    // dùng tạm thời để check ngay trên response
-                // return TypedResults.NoContent(); //  => nếu hoành thành rồi thì nên trả về NoContent cho chuẩn
-            }
-            catch (InvalidOperationException ex)
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
-        }
-
-        public IActionResult EditProfile()
-        {
-            return View();
-        }
-
-        public IActionResult VerifyEmail()
-        {
-            return View();
-        }
-
-        public IActionResult ChangePassword()
-        {
-            return View();
-        }
-
-
-
     }
 }
-

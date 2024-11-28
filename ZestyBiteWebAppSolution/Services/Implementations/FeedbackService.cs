@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ZestyBiteWebAppSolution.Services.Implementations
 {
@@ -46,22 +48,22 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }
 
-        [AllowAnonymous]
-        public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto)
+        //[AllowAnonymous]
+        public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto, string usn)
         {
             if (feedbackDto == null)
             {
                 throw new ArgumentNullException(nameof(feedbackDto));
             }
 
-            var account = await _accountRepository.GetAccountByUsnAsync(feedbackDto.Username);
+            var account = await _accountRepository.GetAccountByUsnAsync(usn);
             //var username = User.Identity.Name;
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
             if (account == null) throw new InvalidOperationException("Invalid Account.");
             if (item == null) throw new InvalidOperationException("Invalid Item.");
 
             var feedback = _mapper.Map<Feedback>(feedbackDto);
-            feedback.Username = account.Username;
+            feedback.Username = usn;
             feedback.UsernameNavigation = account;
             feedback.Item = item;
 

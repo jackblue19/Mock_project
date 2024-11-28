@@ -59,6 +59,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback/submitfeedback
+        [Authorize]
         [HttpPost("submitfeedback")]
         public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
         {
@@ -68,7 +69,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try
             {
-                var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto);
+                var username = User.Identity.Name;
+                var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
                 return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
             }
             catch (Exception ex)

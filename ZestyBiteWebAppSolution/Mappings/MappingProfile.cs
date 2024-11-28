@@ -28,7 +28,7 @@ namespace ZestyBiteWebAppSolution.Mappings
                    }
                    : null)) // Map only specific properties of ParentFeedback
                 .ForMember(dest => dest.IsReply, opt => opt.MapFrom(src => src.FbContent != null));
-
+                //Dit mia may
             // Map Feedback to ReplyDTO
             CreateMap<Feedback, ReplyDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbContent))

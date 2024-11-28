@@ -121,9 +121,11 @@
             <div class="text-center">
                 <a asp-controller="Home" asp-action="Index" class="text-decoration-none mt-3">Back to home</a>
             </div>
+            <input asp-for="RoleDescription" style="display: none" type="text"
+                                    class="form-control" placeholder="roledesc"  value="null"/>
         </form>
     </div>
-    <script>
+    @* <script>
         document.getElementById('submit').addEventListener('click', async function (event) {
             event.preventDefault();
 
@@ -163,5 +165,5 @@
             }
             console.log("Response from server:", await response.json());
         });
-    </script>
+    </script> *@
 </body>

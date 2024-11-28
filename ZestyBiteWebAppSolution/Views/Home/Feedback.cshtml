@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "Feedback";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <title>Feedback</title>
+    <link href="~/css/Feedback.css" rel="stylesheet" />
+</head>
+<body>
+    <section class="ftco-appointment" style="background-image: url(/images/bg_4.jpg);">
+        <div class="container-wrap">
+            <div class="feedback-text ftco-animate">
+                <h1 class="text-center">Write your<br>Experience<br>Make the<br>Environment</h1>
+            </div>
+            <br>
+            <div class="feedback-input ftco-animate">
+                <div>
+                    <h1 class="text-center">Feedback</h1>
+                </div>
+                <div>
+                    <form action="#" id="feedbackForm" class="appointment-form" method="post">
+                        <div class="dish-select d-md-flex">
+                            <input type="text" class="form-control" placeholder="What dish do you want to feedback?" id="feedbackDish">
+                            <select id="dish-select" class="form-control"></select>
+                        </div>
+                        <div class="message d-md-flex">
+                            <textarea id="feedbackMessage" name="type-area" cols="30" rows="3" class="form-control" placeholder="Message"></textarea>
+                        </div>
+                        <div class="submit-button">
+                            <button type="button" id="submitFeedback" class="btn btn-primary py-3 px-4">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dishSelect = document.getElementById('dish-select');
+
+            // Dummy function to simulate fetching data from the Bill table
+            function fetchBillItems() {
+                return [
+                    { item: "Pizza Margherita" },
+                    { item: "Pepperoni Pizza" },
+                    { item: "Hawaiian Pizza" },
+                    { item: "Veggie Pizza" },
+                    { item: "BBQ Chicken Pizza" }
+                ];
+            }
+
+            // Populate the select element with fetched items
+            function populateDishSelect(items) {
+                items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.item;
+                    option.textContent = item.item;
+                    dishSelect.appendChild(option);
+                });
+            }
+
+            // Fetch items and populate select element
+            const items = fetchBillItems();
+            populateDishSelect(items);
+
+            document.getElementById('submitFeedback').addEventListener('click', function () {
+                const feedbackDish = document.getElementById('feedbackDish').value;
+                const feedbackMessage = document.getElementById('feedbackMessage').value;
+
+                fetch('/api/feedback/SubmitFeedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content: feedbackMessage,
+                        dateTime: new Date().toISOString(),
+                        accountId: 1, // Replace with the actual account ID
+                        username: 'john_doe', // Replace with the actual username
+                        itemId: 1, // Replace with the actual item ID (you might need to retrieve this based on the dish name)
+                        itemName: feedbackDish
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Create a notification element
+                        const notification = document.createElement('div');
+                        notification.textContent = 'Feedback success! Redirecting to Blog...';
+                        notification.style.position = 'fixed';
+                        notification.style.top = '10px';
+                        notification.style.right = '10px';
+                        notification.style.padding = '10px';
+                        notification.style.backgroundColor = '#BEBEBE';
+                        notification.style.color = '#000';
+                        notification.style.zIndex = '1000';
+                        document.body.appendChild(notification);
+
+                        // Set timeout for redirection
+                        setTimeout(() => {
+                            window.location.href = '/Home/Blog';
+                        }, 1000); // Redirect after 1 second
+
+                        // Remove notification after redirect (optional)
+                        setTimeout(() => {
+                            document.body.removeChild(notification);
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+</body>

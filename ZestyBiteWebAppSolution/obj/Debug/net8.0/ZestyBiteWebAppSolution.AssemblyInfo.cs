@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZestyBiteWebAppSolution")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aef667f69a9d0319f7f8a5c3c89294cf39073b43")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2c56932788e73bf573ba7427796744f49cb81e9a")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZestyBiteWebAppSolution")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZestyBiteWebAppSolution")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

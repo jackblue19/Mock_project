@@ -18,7 +18,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
             return View(); // Hiển thị trang đăng nhập
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login([FromForm] LoginDTO dto) {
             if (!ModelState.IsValid) {
@@ -34,7 +33,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     SameSite = SameSiteMode.Strict
                 });
 
-                 return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             return Unauthorized(new { message = "Invalid username or password" });
@@ -43,7 +42,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
             return View();
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register([FromForm] RegisterDTO accountDto) {
             if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
@@ -58,8 +56,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-        [AllowAnonymous]
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> ViewProfile() {
             try {
@@ -70,7 +66,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
                 var dto = await _service.ViewProfileByUsnAsync(username);
                 if (dto == null)
-                    return NotFound(); 
+                    return NotFound();
 
                 return View(dto);
             } catch (Exception ex) {
@@ -78,10 +74,13 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-        [Authorize]
-        [HttpPut("Account/UpdateProfile")] // Thêm route đầy đủ
+        [HttpPut]
         public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto) {
             try {
+                if (dto == null) {
+                    return BadRequest(new { Message = "Profile data is missing." });
+                }
+
                 var username = User.Identity.Name;
                 if (string.IsNullOrEmpty(username)) return Unauthorized();
 
@@ -98,8 +97,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
         }
 
 
-        [AllowAnonymous]
-        [Authorize]
         [HttpPut]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePwdDTO dto) {
             if (!ModelState.IsValid)
@@ -136,5 +133,4 @@ namespace ZestyBiteWebAppSolution.Controllers {
             return RedirectToAction("Index", "Home");
         }
     }
-    
 }

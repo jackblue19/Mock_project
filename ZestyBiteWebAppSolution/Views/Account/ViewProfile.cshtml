@@ -48,11 +48,11 @@
                     <label class="form-label">Gender</label>
                     <div class="gender-options">
                         <div class="gender-option">
-                            <input type="radio" id="male" name="gender" value="male" disabled />
+                            <input type="radio" id="male" name="gender" value="0" disabled />
                             <label for="male">Male</label>
                         </div>
                         <div class="gender-option">
-                            <input type="radio" id="female" name="gender" value="female" disabled />
+                            <input type="radio" id="female" name="gender" value="1" disabled />
                             <label for="female">Female</label>
                         </div>
                     </div>
@@ -90,40 +90,33 @@
 
         async function saveChanges() {
             const dto = {
+                Name: document.getElementById("nameField").value,
+                Email: document.getElementById("emailField").value,
                 PhoneNumber: document.getElementById("phoneNumberField").value,
                 Address: document.getElementById("addressField").value,
-                Gender: document.querySelector('input[name="gender"]:checked')?.value || null
+                Gender: document.querySelector('input[name="gender"]:checked')?.value === 'male' ? 1 : 0,
+                ProfileImg: null
             };
 
             try {
-                const response = await fetch('/Account/UpdateProfile', {
+                const response = await fetch('https://localhost:7131/Account/UpdateProfile', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dto)
                 });
 
-
                 if (response.ok) {
                     const result = await response.json();
-                    alert(result.Message); // Thông báo thành công
                     disableEdit();
                 } else {
                     const error = await response.json();
-                    alert("Failed to update profile: " + (error.Message || "Unknown error"));
                 }
             } catch (error) {
                 console.error("Error updating profile:", error);
-                alert("An unexpected error occurred.");
             }
         }
 
-
-        // Cancel editing (reset to the original values)
         function cancelChanges() {
-            // Placeholder for resetting the values (in case the user clicks Cancel)
-            // You can reload the data or just reset values manually if needed
-
-            // Disable the fields
             disableEdit();
         }
 

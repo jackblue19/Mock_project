@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using AutoMapper; 
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
@@ -55,6 +55,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             }
 
             var account = await _accountRepository.GetAccountByUsnAsync(feedbackDto.Username);
+            //var username = User.Identity.Name;
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
             if (account == null) throw new InvalidOperationException("Invalid Account.");
             if (item == null) throw new InvalidOperationException("Invalid Item.");

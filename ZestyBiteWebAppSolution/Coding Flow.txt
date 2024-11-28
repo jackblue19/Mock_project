@@ -3,9 +3,13 @@ git add .
 git commit -m "abcxyz"
 git pull origin HuynhBE
 git push
+---------------------
+git merge nameofbranch
+--------------------
+git log
 
 //database first
-dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456" MySql.EntityFrameworkCore -o /Models/Entities -c ZestyBiteContext
+dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456" MySql.EntityFrameworkCore -o Models/Entities -c ZestyBiteContext
 
 //Coding flow
 - Tạo Model 

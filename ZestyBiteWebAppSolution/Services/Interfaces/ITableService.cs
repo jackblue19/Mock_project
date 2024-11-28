@@ -5,6 +5,10 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
 {
     public interface ITableService
     {
-        Task<TableDTO> CreateTableAsync(TableDTO dto);
+        Task<IEnumerable<Table?>> GetAllTablesAsync();
+        Task<Table?> GetTableByIdAsync(int id);
+        Task<Table> CreateTableAsync(Table table);
+        Task<Table> UpdateTableAsync(int id, Table table);
+        Task<bool> DeleteTableAsync(int id);
     }
 }

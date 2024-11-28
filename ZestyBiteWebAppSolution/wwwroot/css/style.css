@@ -10206,7 +10206,6 @@ a {
 h1, h2, h3, h4, h5,
 .h1, .h2, .h3, .h4, .h5 {
     line-height: 1.4;
-    color: #fff;
     font-weight: 400;
     font-family: "Josefin Sans", Arial, sans-serif;
 }

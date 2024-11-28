@@ -1,136 +1,18 @@
 [
   {
     "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "ViewProfile",
-    "RelativePath": "api/Account",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "ChangePassword",
-    "RelativePath": "api/Account",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "VerifyEmail",
-    "RelativePath": "api/Account",
-    "HttpMethod": "",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "GetAllAccount",
-    "RelativePath": "api/Account/all",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "ChangePassword",
-    "RelativePath": "api/Account/changepassword",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "dto",
-        "Type": "ZestyBiteWebAppSolution.Models.DTOs.ChangePwdDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "Login",
-    "RelativePath": "api/Account/LogIn",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "LogIn",
-    "RelativePath": "api/Account/LogIn",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "dto",
-        "Type": "ZestyBiteWebAppSolution.Models.DTOs.LoginDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "Logout",
-    "RelativePath": "api/Account/logout",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
     "Method": "UpdateProfile",
-    "RelativePath": "api/Account/modify",
+    "RelativePath": "Account/UpdateProfile",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "ZestyBiteWebAppSolution.Models.DTOs.UpdateProfileDTO",
+        "Type": "ZestyBiteWebAppSolution.Models.DTOs.ProfileDTO",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "Register",
-    "RelativePath": "api/Account/register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "accountDto",
-        "Type": "ZestyBiteWebAppSolution.Models.DTOs.RegisterDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZestyBiteWebAppSolution.Controllers.AccountController",
-    "Method": "Register",
-    "RelativePath": "api/Account/Register",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {

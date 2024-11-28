@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {}
+    "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {}
   },
   "projects": {
-    "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {
+    "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
+        "projectUniqueName": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
         "projectName": "ZestyBiteWebAppSolution",
-        "projectPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
-        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\obj\\",
+        "projectPath": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\ZestyBiteWebAppSolution.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -162,7 +162,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

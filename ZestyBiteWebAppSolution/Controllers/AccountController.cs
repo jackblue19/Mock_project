@@ -70,30 +70,34 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
                 var dto = await _service.ViewProfileByUsnAsync(username);
                 if (dto == null)
-                    return NotFound(); // Trả về 404 nếu không tìm thấy tài khoản
+                    return NotFound(); 
 
-                // Nếu bạn dùng MVC (thay vì API), trả về View và truyền model vào.
                 return View(dto);
             } catch (Exception ex) {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 
-        [Authorize(Roles = "Manager")]
-        public async Task<IResult> GetAllAccount() {
+        [Authorize]
+        [HttpPut("Account/UpdateProfile")] // Thêm route đầy đủ
+        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto) {
             try {
-                var accounts = await _service.GetALlAccountAsync();
-                if (!accounts.Any()) return TypedResults.NotFound();
-                return TypedResults.Ok(accounts);
+                var username = User.Identity.Name;
+                if (string.IsNullOrEmpty(username)) return Unauthorized();
 
+                // Gọi service để cập nhật thông tin
+                await _service.UpdateProfile(dto, username);
+
+                // Trả về kết quả thành công
+                return Ok(new { Message = "Profile updated successfully." });
             } catch (InvalidOperationException ex) {
-                return TypedResults.BadRequest(new { Message = ex.Message });
+                return BadRequest(new { Message = ex.Message });
+            } catch (Exception ex) {
+                return StatusCode(500, new { Message = $"Internal Server Error: {ex.Message}" });
             }
         }
 
-        public IActionResult ChangePassword() {
-            return View();
-        }
+
         [AllowAnonymous]
         [Authorize]
         [HttpPut]
@@ -114,25 +118,18 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-        [Authorize]
-        [HttpPut]
-        [Route("UpdateProfile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto) {
+        [Authorize(Roles = "Manager")]
+        public async Task<IResult> GetAllAccount() {
             try {
-                var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username)) return Unauthorized();
-                await _service.UpdateProfile(dto, username);
-                return RedirectToAction("ViewProfile", "Account");
+                var accounts = await _service.GetALlAccountAsync();
+                if (!accounts.Any()) return TypedResults.NotFound();
+                return TypedResults.Ok(accounts);
+
             } catch (InvalidOperationException ex) {
-                return BadRequest();
+                return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
 
-        public IActionResult VerifyEmail() {
-            return View();
-        }
-
-        //[Route("Logout")]
         public IActionResult Logout() {
             HttpContext.Session.Remove("username");
             Response.Cookies.Delete("username");

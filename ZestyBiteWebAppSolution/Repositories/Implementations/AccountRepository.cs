@@ -27,6 +27,13 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             await _context.SaveChangesAsync();
             return account;
         }
+
+        public async Task UpdateAccountAsync(Account account) {
+            _context.Accounts.Update(account);
+            await _context.SaveChangesAsync();
+        }
+
+
         public async Task<Account?> GetAccountByUsnAsync(string usn)
         {
             return await _context.Accounts

@@ -125,9 +125,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             await _repository.UpdateAsync(current);
             return dto;
         }
+
         public async Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn) {
             var current = await _repository.GetAccountByUsnAsync(usn);
-            current.Name = dto.Name;
+            //current.Name = dto.Name;
             current.PhoneNumber = dto.PhoneNumber;
             current.Address = dto.Address;
             current.Gender = dto.Gender;
@@ -135,6 +136,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             await _repository.UpdateAsync(current);
             return dto;
         }
+
         public async Task<RegisterDTO?> GetAccountByUsnAsync(string username) {
             var current = await _repository.GetAccountByUsnAsync(username);
             var dto = new RegisterDTO() {

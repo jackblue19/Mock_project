@@ -12,6 +12,26 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         {
             _context = context;
         }
+        public async Task<Table?> GetTableByIdAsync(int tableId)
+        {
+            return await _context.Tables
+                                 .Where(t => t.TableId == tableId)
+                                 .SingleOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Table>> GetTablesByAccountIdAsync(int accountId)
+        {
+            return await _context.Tables
+                                 .Where(t => t.AccountId == accountId)
+                                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Table>> GetAvailableTablesAsync()
+        {
+            return await _context.Tables
+                                 .Where(t => t.TableStatus == "Available")
+                                 .ToListAsync();
+        }
         public async Task<IEnumerable<Table?>> GetAllAsync()
         {
             return await _context.Tables.ToListAsync();

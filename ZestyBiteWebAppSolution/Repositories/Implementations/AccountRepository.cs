@@ -38,7 +38,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         {
             return await _context.Accounts
                                  .Include(acc => acc.Role)
-                                 .FirstOrDefaultAsync(acc => acc.UserName == usn);
+                                 .FirstOrDefaultAsync(acc => acc.Username == usn);
         }
         public async Task<Account?> GetAccountByEmailAsync(string email)
         {

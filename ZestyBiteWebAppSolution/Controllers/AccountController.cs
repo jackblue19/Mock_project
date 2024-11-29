@@ -15,7 +15,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
         }
 
         public IActionResult Login() {
-            return View(); // Hiển thị trang đăng nhập
+            return View(); 
         }
 
         [HttpPost]
@@ -68,7 +68,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
             } catch (InvalidOperationException ex) {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(accountDto);
-            } catch (Exception ex) {
+            } catch (Exception) {
                 ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
                 return View(accountDto);
             }
@@ -97,7 +97,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
         public async Task<IActionResult> UpdateProfile(ProfileDTO dto) {
             try {
                 if (!ModelState.IsValid) {
-                    // Nếu dữ liệu không hợp lệ, trả về ViewProfile với lỗi validation
                     return View("ViewProfile", dto);
                 }
 
@@ -139,7 +138,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 // Thông báo thành công
                 TempData["SuccessMessage"] = "Password changed successfully!";
                 return RedirectToAction("ViewProfile", "Account");  
-            } catch (Exception ex) {
+            } catch (Exception) {
                 // Xử lý lỗi nếu có
                 TempData["ErrorMessage"] = "An error occurred while changing password!";
                 return View(dto);

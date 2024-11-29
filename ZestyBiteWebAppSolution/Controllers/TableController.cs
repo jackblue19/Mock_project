@@ -1,176 +1,182 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ZestyBiteWebAppSolution.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Models.Entities;
+using ZestyBiteWebAppSolution.Models.DTOs;
+using ZestyBiteWebAppSolution.Services.Implementations;
+using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    public class TableController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TableController : ControllerBase
     {
-        private readonly ZestybiteContext _context;
+        private readonly ITableService _tableService;
 
-        public TableController(ZestybiteContext context)
+        public TableController(ITableService tableService)
         {
-            _context = context;
+            _tableService = tableService;
         }
 
-        // GET: Tables
-        public async Task<IActionResult> Index()
+        // GET: api/table/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTableByIdAsync(int id)
         {
-            var zestybiteContext = _context.Tables.Include(t => t.Account).Include(t => t.Item).Include(t => t.Reservation);
-            return View(await zestybiteContext.ToListAsync());
-        }
-
-        // GET: Tables/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var table = await _context.Tables
-                .Include(t => t.Account)
-                .Include(t => t.Item)
-                .Include(t => t.Reservation)
-                .FirstOrDefaultAsync(m => m.TableId == id);
+            var table = await _tableService.GetTableByIdAsync(id);
             if (table == null)
             {
-                return NotFound();
+                return NotFound($"Table with ID {id} not found.");
             }
 
-            return View(table);
+            // Convert the Table entity to TableDTO
+            var tableDTO = new TableDTO
+            {
+                TableId = table.TableId,
+                TableCapacity = table.TableCapacity,
+                TableMaintenance = table.TableMaintenance,
+                TableStatus = table.TableStatus,
+                TableNote = table.TableNote,
+                ReservationId = table.ReservationId,
+                ItemId = table.ItemId,
+                TableType = table.TableType,
+                AccountId = table.AccountId
+            };
+
+            return Ok(tableDTO);
         }
 
-        // GET: Tables/Create
-        public IActionResult Create()
+        // GET: api/table
+        [HttpGet]
+        public async Task<IActionResult> GetAllTablesAsync()
         {
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "Address");
-            ViewData["ItemId"] = new SelectList(_context.Items, "ItemId", "ItemId");
-            ViewData["ReservationId"] = new SelectList(_context.Reservations, "ReservationId", "ReservationId");
-            return View();
+            var tables = await _tableService.GetAllTablesAsync();
+
+            if (tables == null || !tables.Any())
+            {
+                return NotFound("No tables found.");
+            }
+
+            // Convert each Table entity to TableDTO
+            var tableDTOs = tables.Select(t => new TableDTO
+            {
+                TableId = t.TableId,
+                TableCapacity = t.TableCapacity,
+                TableMaintenance = t.TableMaintenance,
+                TableStatus = t.TableStatus,
+                TableNote = t.TableNote,
+                ReservationId = t.ReservationId,
+                ItemId = t.ItemId,
+                TableType = t.TableType,
+                AccountId = t.AccountId
+            }).ToList();
+
+            return Ok(tableDTOs);
         }
 
-        // POST: Tables/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: api/table
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TableId,TableCapacity,TableMaintenance,ReservationId,ItemId,TableType,TableStatus,TableNote,AccountId")] Table table)
+        public async Task<IActionResult> CreateTableAsync([FromBody] TableDTO tableDTO)
         {
-            if (ModelState.IsValid)
+            if (tableDTO == null)
             {
-                _context.Add(table);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Table data is null.");
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "Address", table.AccountId);
-            ViewData["ItemId"] = new SelectList(_context.Items, "ItemId", "ItemId", table.ItemId);
-            ViewData["ReservationId"] = new SelectList(_context.Reservations, "ReservationId", "ReservationId", table.ReservationId);
-            return View(table);
+
+            // Convert TableDTO to Table entity
+            var table = new Table
+            {
+                TableCapacity = tableDTO.TableCapacity,
+                TableMaintenance = tableDTO.TableMaintenance,
+                TableStatus = tableDTO.TableStatus,
+                TableNote = tableDTO.TableNote,
+                ReservationId = tableDTO.ReservationId,
+                ItemId = tableDTO.ItemId,
+                TableType = tableDTO.TableType,
+                AccountId = tableDTO.AccountId
+            };
+
+            var createdTable = await _tableService.CreateTableAsync(table);
+
+            // Convert created Table entity to TableDTO
+            var createdTableDTO = new TableDTO
+            {
+                TableId = createdTable.TableId,
+                TableCapacity = createdTable.TableCapacity,
+                TableMaintenance = createdTable.TableMaintenance,
+                TableStatus = createdTable.TableStatus,
+                TableNote = createdTable.TableNote,
+                ReservationId = createdTable.ReservationId,
+                ItemId = createdTable.ItemId,
+                TableType = createdTable.TableType,
+                AccountId = createdTable.AccountId
+            };
+
+            return CreatedAtAction(nameof(GetTableByIdAsync), new { id = createdTable.TableId }, createdTableDTO);
         }
 
-        // GET: Tables/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // PUT: api/table/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTableAsync(int id, [FromBody] TableDTO tableDTO)
         {
-            if (id == null)
+            if (tableDTO == null)
             {
-                return NotFound();
+                return BadRequest("Table data is null.");
             }
 
-            var table = await _context.Tables.FindAsync(id);
-            if (table == null)
+            try
             {
-                return NotFound();
-            }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "Address", table.AccountId);
-            ViewData["ItemId"] = new SelectList(_context.Items, "ItemId", "ItemId", table.ItemId);
-            ViewData["ReservationId"] = new SelectList(_context.Reservations, "ReservationId", "ReservationId", table.ReservationId);
-            return View(table);
-        }
-
-        // POST: Tables/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TableId,TableCapacity,TableMaintenance,ReservationId,ItemId,TableType,TableStatus,TableNote,AccountId")] Table table)
-        {
-            if (id != table.TableId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                var table = new Table
                 {
-                    _context.Update(table);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
+                    TableId = id, // Ensure the ID is passed as part of the update
+                    TableCapacity = tableDTO.TableCapacity,
+                    TableMaintenance = tableDTO.TableMaintenance,
+                    TableStatus = tableDTO.TableStatus,
+                    TableNote = tableDTO.TableNote,
+                    ReservationId = tableDTO.ReservationId,
+                    ItemId = tableDTO.ItemId,
+                    TableType = tableDTO.TableType,
+                    AccountId = tableDTO.AccountId
+                };
+
+                var updatedTable = await _tableService.UpdateTableAsync(id, table);
+
+                var updatedTableDTO = new TableDTO
                 {
-                    if (!TableExists(table.TableId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    TableId = updatedTable.TableId,
+                    TableCapacity = updatedTable.TableCapacity,
+                    TableMaintenance = updatedTable.TableMaintenance,
+                    TableStatus = updatedTable.TableStatus,
+                    TableNote = updatedTable.TableNote,
+                    ReservationId = updatedTable.ReservationId,
+                    ItemId = updatedTable.ItemId,
+                    TableType = updatedTable.TableType,
+                    AccountId = updatedTable.AccountId
+                };
+
+                return Ok(updatedTableDTO);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        // DELETE: api/table/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTableAsync(int id)
+        {
+            try
+            {
+                bool isDeleted = await _tableService.DeleteTableAsync(id);
+                if (isDeleted)
+                {
+                    return NoContent(); // Successful deletion
                 }
-                return RedirectToAction(nameof(Index));
+                return NotFound($"Table with ID {id} not found.");
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "Address", table.AccountId);
-            ViewData["ItemId"] = new SelectList(_context.Items, "ItemId", "ItemId", table.ItemId);
-            ViewData["ReservationId"] = new SelectList(_context.Reservations, "ReservationId", "ReservationId", table.ReservationId);
-            return View(table);
-        }
-
-        // GET: Tables/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
+            catch (InvalidOperationException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-
-            var table = await _context.Tables
-                .Include(t => t.Account)
-                .Include(t => t.Item)
-                .Include(t => t.Reservation)
-                .FirstOrDefaultAsync(m => m.TableId == id);
-            if (table == null)
-            {
-                return NotFound();
-            }
-
-            return View(table);
-        }
-
-        // POST: Tables/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var table = await _context.Tables.FindAsync(id);
-            if (table != null)
-            {
-                _context.Tables.Remove(table);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool TableExists(int id)
-        {
-            return _context.Tables.Any(e => e.TableId == id);
         }
     }
 }

@@ -60,6 +60,11 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         {
             return await _context.TableDetails.ToListAsync();
         }
+
+        public Task<TableDetail?> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

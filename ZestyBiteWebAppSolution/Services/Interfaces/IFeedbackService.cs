@@ -1,17 +1,9 @@
 ﻿using ZestyBiteWebAppSolution.Models.DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ZestyBiteWebAppSolution.Models.Entities;
-
-<<<<<<< HEAD
-namespace ZestyBiteWebAppSolution.Services.Interfaces {
+namespace ZestyBiteWebAppSolution.Services.Interfaces;
     public interface IFeedbackService {
-=======
-namespace ZestyBiteWebAppSolution.Services.Interfaces
-{
+
     public interface IFeedbackService
     {
->>>>>>> 5a3b472325e4d2d4a3ebe71e13dd739e0034368d
         Task<IEnumerable<FeedbackDTO>> GetFeedbacksByPageAsync(int pageNumber, int pageSize);
         Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId);
         Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync();

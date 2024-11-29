@@ -5,9 +5,7 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    // [AllowAnonymous]
-    [ApiController]
-    [Route("api/[Controller]")]
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -59,7 +57,6 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
 
             if (!ModelState.IsValid) {
-                // Nếu dữ liệu không hợp lệ, trả về view cùng thông báo lỗi
                 return View(accountDto);
             }
 
@@ -187,8 +184,8 @@ namespace ZestyBiteWebAppSolution.Controllers
         {
             HttpContext.Session.Remove("username");
             Response.Cookies.Delete("username");
-            // return RedirectToAction("Index", "Home");
-            return Ok("Log out done");
+            return RedirectToAction("Index", "Home");
+            //return Ok("Log out done");
         }
     }
 }

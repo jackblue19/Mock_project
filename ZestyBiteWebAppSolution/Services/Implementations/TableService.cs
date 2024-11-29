@@ -9,20 +9,12 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
     public class TableService : ITableService
     {
         private readonly ITableRepository _repository;
-        private readonly IItemRepository _itemRepository;
-        private readonly IReservationRepository _reservationRepository;
-        private readonly IAccountRepository _accountRepository;
 
-        public TableService(
-            ITableRepository tableRepository,
-            IItemRepository itemRepository,
-            IReservationRepository reservationRepository,
-            IAccountRepository accountRepository)
+
+        public TableService( ITableRepository tableRepository)
         {
             _repository = tableRepository;
-            _itemRepository = itemRepository;
-            _reservationRepository = reservationRepository;
-            _accountRepository = accountRepository;
+;
         }
 
         public async Task<Table?> GetTableByIdAsync(int id)

@@ -14,7 +14,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<TableDetail?> GetTableDetailAsync(int tableId, int itemId)
+        public async Task<TableDetail?> GetTableDetailByIdAsync(int tableId, int itemId)
         {
             return await _context.TableDetails
                                  .Where(td => td.TableId == tableId && td.ItemId == itemId)
@@ -35,38 +35,31 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
                                  .ToListAsync();
         }
 
-        public async Task<TableDetail> CreateAsync(TableDetail tableDetail)
+        public async Task<TableDetail> CreateAsync(TableDetail entity)
         {
-            _context.TableDetails.Add(tableDetail);
+            _context.TableDetails.Add(entity);
             await _context.SaveChangesAsync();
-            return tableDetail;
+            return entity;
         }
 
-        public async Task<TableDetail> UpdateAsync(TableDetail tableDetail)
+        public async Task<TableDetail> UpdateAsync(TableDetail entity)
         {
-            _context.TableDetails.Update(tableDetail);
+            _context.TableDetails.Update(entity);
             await _context.SaveChangesAsync();
-            return tableDetail;
+            return entity;
         }
 
-        public async Task<TableDetail> DeleteAsync(TableDetail tableDetail)
+        public async Task<TableDetail> DeleteAsync(TableDetail entity)
         {
-            _context.TableDetails.Remove(tableDetail);
+            _context.TableDetails.Remove(entity);
             await _context.SaveChangesAsync();
-            return tableDetail;
+            return entity;
         }
 
-        // Generic repository methods (for example, GetAllAsync, GetByIdAsync) can be reused if needed.
         public async Task<IEnumerable<TableDetail>> GetAllAsync()
         {
             return await _context.TableDetails.ToListAsync();
         }
-
-        public async Task<TableDetail?> GetByIdAsync(int id)
-        {
-            return await _context.TableDetails
-                                 .Where(td => td.TableId == id)
-                                 .SingleOrDefaultAsync();
-        }
     }
 }
+

@@ -5,8 +5,8 @@ namespace ZestyBiteWebAppSolution.Repositories.Interfaces
 {
     public interface ITableDetailRepository : IRepository<TableDetail>
     {
-        Task<TableDetail?> GetTableDetailAsync(int tableId, int itemId);
-        Task<IEnumerable<TableDetail>> GetTableDetailsByTableIdAsync(int tableId);
+        Task<TableDetail?> GetTableDetailByIdAsync(int tableId, int itemId);
         Task<IEnumerable<TableDetail>> GetTableDetailsByItemIdAsync(int itemId);
+        Task<IEnumerable<TableDetail>> GetTableDetailsByTableIdAsync(int tableId);
     }
 }

@@ -5,6 +5,7 @@ using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using ZestyBiteWebAppSolution.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using System.Text;
@@ -13,6 +14,9 @@ using ZestyBiteWebAppSolution.Middlewares;
 using Microsoft.Identity;
 using ZestyBiteWebAppSolution.Repositories;
 using ZestyBiteWebAppSolution.Mappings;
+using System.Net;
+using System.Net.Mail;
+using Microsoft.Extensions.Options;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session
@@ -90,8 +94,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+//  Email sender
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 // Configure MySQL Connection
-var connectionString = "Server=Jack-Blue;Port=3306;Database=zestybite;Uid=root;Pwd=123456789";
+var connectionString = builder.Configuration.GetConnectionString("ZestyBiteDb");
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
 builder.Services.AddDbContext<ZestyBiteContext>(dbContextOptions =>
@@ -114,6 +121,9 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
+
+builder.Services.AddScoped<IVerifyService, VerifySerivce>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -182,7 +192,7 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// Enable CORS
+// Enable CORS  
 app.UseCors("AllowAll");
 
 // Middleware for Routing

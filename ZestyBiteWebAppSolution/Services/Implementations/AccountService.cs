@@ -3,6 +3,7 @@ using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using ZestyBiteWebAppSolution.Helpers;
 
 namespace ZestyBiteWebAppSolution.Services.Implementations
 {
@@ -38,7 +39,35 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return created;
         }
 
-        // cần thêm verification code cho cái hàm SignUpAsync này =Đ
+        public async Task<bool> IsVerified(string usn, string code)
+        {
+            var acc = await _repository.GetAccountByUsnAsync(usn);
+            if (acc.VerificationCode != code) return false;
+            acc.AccountStatus = 1;
+            await _repository.UpdateAsync(acc);
+            return true;
+        }
+
+        public async Task<bool> IsDeleteUnregistedAccount(string usn)
+        {
+            try
+            {
+                Account? acc = await _repository.GetAccountByUsnAsync(usn);
+                if (acc == null) return true;
+                if (acc.AccountStatus == 0)
+                {
+                    await _repository.DeleteAsync(acc);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw new InvalidOperationException($"Sth went wrong: {ex.Message}");
+            }
+        }
+
         public async Task<RegisterDTO> SignUpAsync(RegisterDTO dto)
         {
             if (dto == null)
@@ -90,8 +119,9 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             acc.RoleId = defaultRole.RoleId;
 
             var created = await _repository.CreateAsync(acc);
+            dto.VerificationCode = "ai cho ma` xem =D";
             dto.RoleDescription = created.Role.RoleDescription;
-            dto.Id = acc.AccountId;
+            dto.Id = acc.AccountId;     //      cos theer xoas + xoas ben dto
             return dto;
         }
         public async Task<IEnumerable<RegisterDTO?>> GetALlAccountAsync()
@@ -222,14 +252,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             };
 
             return dto;
-        }
-
-        public async Task<bool> IsVerified(string usn, string code)
-        {
-            var acc = await _repository.GetAccountByUsnAsync(usn);
-            acc.AccountStatus = 1;
-            await _repository.UpdateAsync(acc);
-            return true;
         }
     }
 }

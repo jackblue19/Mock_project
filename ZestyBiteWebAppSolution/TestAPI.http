@@ -9,21 +9,26 @@ Content-Type: application/json
   "Password": "doraemon@12"
 }
 ###
-PUT  http://localhost:5024/api/account/verifyacc
+POST  http://localhost:5024/api/account/VerifyCode
+Content-Type: application/json
+
+{
+  "code": "376299"
+}
 
 ###
 POST  http://localhost:5024/api/account/signup
 Content-Type: application/json
 
 {
-  "username": "doraemon12",
-    "password": "doraemon@12",
+  "username": "doraemon12345",
+    "password": "doraemon@12345",
     "name": "Doraemon Nek",
     "gender": 1,
     "phoneNumber": "0912345678",
-    "email": "doraemon12@gmail.com",
+    "email": "git.jack1624@gmail.com",
     "address": "DN NHS",
-    "confirmPassword": "doraemon@12",
+    "confirmPassword": "doraemon@12345",
     "roleDescription": "null"
 }
 ###

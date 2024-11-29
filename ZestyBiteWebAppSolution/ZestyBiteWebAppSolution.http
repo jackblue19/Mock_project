@@ -1,1 +1,9 @@
-﻿
+﻿@ZestyBiteWebAppSolution_HostAddress = https://localhost:7131
+
+GET {{ZestyBiteWebAppSolution_HostAddress}}/api/table/getall
+
+###
+
+GET {{ZestyBiteWebAppSolution_HostAddress}}/api/table
+
+###

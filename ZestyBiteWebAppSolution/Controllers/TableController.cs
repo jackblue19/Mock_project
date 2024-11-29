@@ -6,8 +6,8 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class TableController : ControllerBase
     {
         private readonly ITableService _tableService;
@@ -46,6 +46,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         // GET: api/table
         [HttpGet]
+        [Route("getall")]
         public async Task<IActionResult> GetAllTablesAsync()
         {
             var tables = await _tableService.GetAllTablesAsync();
@@ -56,20 +57,20 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
 
             // Convert each Table entity to TableDTO
-            var tableDTOs = tables.Select(t => new TableDTO
-            {
-                TableId = t.TableId,
-                TableCapacity = t.TableCapacity,
-                TableMaintenance = t.TableMaintenance,
-                TableStatus = t.TableStatus,
-                TableNote = t.TableNote,
-                ReservationId = t.ReservationId,
-                ItemId = t.ItemId,
-                TableType = t.TableType,
-                AccountId = t.AccountId
-            }).ToList();
+            //var tableDTOs = tables.Select(t => new TableDTO
+            //{
+            //    TableId = t.TableId,
+            //    TableCapacity = t.TableCapacity,
+            //    TableMaintenance = t.TableMaintenance,
+            //    TableStatus = t.TableStatus,
+            //    TableNote = t.TableNote,
+            //    ReservationId = t.ReservationId,
+            //    ItemId = t.ItemId,
+            //    TableType = t.TableType,
+            //    AccountId = t.AccountId
+            //}).ToList();
 
-            return Ok(tableDTOs);
+            return Ok(tables);
         }
 
         // POST: api/table

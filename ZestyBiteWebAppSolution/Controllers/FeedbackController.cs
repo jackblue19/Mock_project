@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    // [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
@@ -102,8 +101,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        // GET: api/feedback/pagination
-        [HttpGet("pagination")]
+        // GET: api/feedback/feedbackpagination
+        [HttpGet("feedbackpagination")]
         public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacks(int pageNumber = 1, int pageSize = 10)
         {
             try

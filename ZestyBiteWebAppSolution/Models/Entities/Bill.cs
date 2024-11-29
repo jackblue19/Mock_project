@@ -1,31 +1,32 @@
-﻿namespace ZestyBiteWebAppSolution.Models.Entities
-{
-    public partial class Bill
-    {
-        public int BillId { get; set; }
+﻿using System;
+using System.Collections.Generic;
 
-        public int BillStatus { get; set; }
+namespace ZestyBiteWebAppSolution.Models.Entities;
 
-        public int PaymentId { get; set; }
+public partial class Bill {
+    public int BillId { get; set; }
 
-        public int AccountId { get; set; }
+    public int BillStatus { get; set; }
 
-        public int TableId { get; set; }
+    public int PaymentId { get; set; }
 
-        public decimal TotalCost { get; set; }
+    public int AccountId { get; set; }
 
-        public DateTime BillDatetime { get; set; }
+    public int TableId { get; set; }
 
-        public int BillType { get; set; }
+    public decimal TotalCost { get; set; }
 
-        public virtual Account Account { get; set; } = null!;
+    public DateTime BillDatetime { get; set; }
 
-        public virtual Payment Payment { get; set; } = null!;
+    public int BillType { get; set; }
 
-        public virtual ICollection<Profit> Profits { get; set; } = new List<Profit>();
+    public virtual Account Account { get; set; } = null!;
 
-        public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+    public virtual Payment Payment { get; set; } = null!;
 
-        public virtual Table Table { get; set; } = null!;
-    }
+    public virtual ICollection<Profit> Profits { get; set; } = new List<Profit>();
+
+    public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+
+    public virtual Table Table { get; set; } = null!;
 }

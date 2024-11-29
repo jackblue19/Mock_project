@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace ZestyBiteWebAppSolution.Models.Entities;
 
-public partial class Item
-{
+public partial class Item {
     public int ItemId { get; set; }
 
     public string ItemName { get; set; } = null!;

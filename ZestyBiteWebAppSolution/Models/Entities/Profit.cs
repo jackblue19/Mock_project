@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Models.Entities;
-
-public partial class Profit
-{
-    public DateOnly Date { get; set; }
+public partial class Profit {
+    public DateTime Date { get; set; }
 
     public int SupplyId { get; set; }
 

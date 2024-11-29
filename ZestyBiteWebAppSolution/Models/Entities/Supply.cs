@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Models.Entities;
-
-public partial class Supply
-{
+public partial class Supply {
     public int SupplyId { get; set; }
 
     public string ProductName { get; set; } = null!;

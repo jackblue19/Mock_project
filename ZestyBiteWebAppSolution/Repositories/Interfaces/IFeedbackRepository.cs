@@ -1,4 +1,4 @@
-﻿using ZestyBiteWebAppSolution.Models.Entities;
+﻿﻿using ZestyBiteWebAppSolution.Models.Entities;
 
 namespace ZestyBiteWebAppSolution.Repositories.Interfaces {
     public interface IFeedbackRepository : IRepository<Feedback> {

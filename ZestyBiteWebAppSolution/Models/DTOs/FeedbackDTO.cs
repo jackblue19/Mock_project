@@ -14,10 +14,8 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         public string? ProfileImage { get; set; }
         public int ItemId { get; set; }
         public string ItemName { get; set; } = null!;
-
         public int? ParentFb { get; set; } = null!;
-
-        // To include the parent feedback's details
+        //to include parent feedback if needed
         public FeedbackDTO? ParentFeedback { get; set; }
         public bool IsReply { get; set; }
     }

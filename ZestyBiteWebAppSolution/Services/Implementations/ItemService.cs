@@ -16,30 +16,28 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         {
             _itemRepository = itemRepository;
         }
-
-        public async Task<IEnumerable<ItemDTO>> GetAllItemsAsync()
-        {
-            var items = await _itemRepository.GetAllAsync();
-            return items.Select(MapToDTO);
-        }
-
-        private ItemDTO MapToDTO(Item item)
+        private ItemDTO? MapToItemDTO(Item? item)
         {
             if (item == null) return null;
 
             return new ItemDTO
             {
-                ItemId = item.ItemId, 
-                ItemName = item.ItemName, 
-                ItemDescription = item.ItemDescription, 
-                SuggestedPrice = item.SuggestedPrice, 
-                ItemCategory = item.ItemCategory, 
+                ItemId = item.ItemId,
+                ItemName = item.ItemName,
+                ItemDescription = item.ItemDescription,
+                SuggestedPrice = item.SuggestedPrice,
+                ItemCategory = item.ItemCategory,
                 ItemStatus = item.ItemStatus,
-                ItemImage = item.ItemImage, 
-                IsServed = item.IsServed 
+                ItemImage = item.ItemImage,
+                IsServed = item.IsServed
             };
         }
 
+        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync()
+        {
+            var items = await _itemRepository.GetAllAsync();
+            return items.Select(MapToItemDTO);
+        }
         public async Task<Item?> GetItemByIdAsync(int id)
         {
             return await _itemRepository.GetByIdAsync(id);
@@ -54,9 +52,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         {
             return await _itemRepository.UpdateAsync(item);
         }
-        public async Task<bool> DeleteItemAsync(int itemid)
+
+        public async Task<bool> DeleteItemAsync(int itemId)
         {
-            var item = await _itemRepository.GetByIdAsync(itemid);
+            var item = await _itemRepository.GetByIdAsync(itemId);
             if (item != null)
             {
                 await _itemRepository.DeleteAsync(item);

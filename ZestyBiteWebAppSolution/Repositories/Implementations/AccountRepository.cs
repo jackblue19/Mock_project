@@ -6,7 +6,7 @@ using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
-    public class AccountRepository : IAccountRepository, IRepository<Account>
+    public class AccountRepository :IAccountRepository, IRepository<Account>
     {
         private readonly ZestyBiteContext _context;
         public AccountRepository(ZestyBiteContext context)
@@ -27,13 +27,6 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             await _context.SaveChangesAsync();
             return account;
         }
-
-        public async Task UpdateAccountAsync(Account account) {
-            _context.Accounts.Update(account);
-            await _context.SaveChangesAsync();
-        }
-
-
         public async Task<Account?> GetAccountByUsnAsync(string usn)
         {
             return await _context.Accounts

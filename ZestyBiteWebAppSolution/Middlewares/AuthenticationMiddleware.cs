@@ -1,33 +1,44 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
 
-namespace ZestyBiteWebAppSolution.Middlewares {
+namespace ZestyBiteWebAppSolution.Middlewares
+{
 
-    public class AuthenticationMiddleware {
+    public class AuthenticationMiddleware
+    {
         private readonly RequestDelegate _next;
+        // private readonly IAccountService accountService;
 
-        public AuthenticationMiddleware(RequestDelegate next) {
+        public AuthenticationMiddleware(RequestDelegate next /*, IAccountService accountService*/)
+        {
             _next = next;
+            // accountService = accountService;
         }
 
-        public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider) {
-            using (var scope = serviceProvider.CreateScope()) {
+        public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
                 var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
                 // Lấy thông tin người dùng từ Session
                 var username = context.Session.GetString("username");
 
-                if (string.IsNullOrEmpty(username)) {
+                if (string.IsNullOrEmpty(username))
+                {
                     // Nếu không có trong Session, kiểm tra Cookie
                     username = context.Request.Cookies["username"];
                 }
 
                 string userrole = "Customer";
-                if (!string.IsNullOrEmpty(username)) {
+                if (!string.IsNullOrEmpty(username))
+                {
                     userrole = await accountService.GetRoleDescByUsn(username) ?? "Customer";
                 }
 
-                if (!string.IsNullOrEmpty(username)) {
+                if (!string.IsNullOrEmpty(username))
+                {
                     // Tạo ClaimsPrincipal từ thông tin người dùng
                     var claims = new List<Claim>
             {
@@ -40,7 +51,7 @@ namespace ZestyBiteWebAppSolution.Middlewares {
                 }
             }
 
-            await _next(context);
+            await _next(context); // Tiến hành các middleware tiếp theo
         }
     }
 

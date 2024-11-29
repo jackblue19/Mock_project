@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Controllers {
-    [AllowAnonymous]
-    public class AccountController : Controller {
+namespace ZestyBiteWebAppSolution.Controllers
+{
+    // [AllowAnonymous]
+    [ApiController]
+    [Route("api/[Controller]")]
+    public class AccountController : Controller
+    {
         private readonly IAccountService _service;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService) {
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService)
+        {
             _logger = logger;
             _service = accountService;
         }
@@ -24,21 +29,25 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 return BadRequest(ModelState);
             }
 
-            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
+            if (await _service.IsTrueAccount(dto.Username, dto.Password))
+            {
                 HttpContext.Session.SetString("username", dto.Username);
-                Response.Cookies.Append("username", dto.Username, new CookieOptions {
+                Response.Cookies.Append("username", dto.Username, new CookieOptions
+                {
                     Expires = DateTimeOffset.Now.AddMinutes(30),
                     HttpOnly = true,
                     Secure = false,
                     SameSite = SameSiteMode.Strict
                 });
 
-                return RedirectToAction("Index", "Home");
+                // return RedirectToAction("Index", "Home");
+                return Ok("Log in suceess");
             }
 
             return Unauthorized(new { message = "Invalid username or password" });
         }
-        public IActionResult Register() {
+        public IActionResult Register()
+        {
             return View();
         }
 
@@ -54,7 +63,8 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 return View(accountDto);
             }
 
-            try {
+            try
+            {
                 var created = await _service.SignUpAsync(accountDto);
 
                 if (created != null) {
@@ -76,10 +86,14 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
 
         [HttpGet]
-        public async Task<IActionResult> ViewProfile() {
-            try {
+        [Route("viewprofile")]
+        public async Task<IActionResult> ViewProfile()
+        {
+            try
+            {
                 var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username)) {
+                if (string.IsNullOrEmpty(username))
+                {
                     return Unauthorized(); // Hoặc Redirect đến trang login
                 }
 
@@ -87,8 +101,11 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 if (dto == null)
                     return NotFound();
 
-                return View(dto);
-            } catch (Exception ex) {
+                // return View(dto);
+                return Ok(dto);
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
@@ -126,7 +143,8 @@ namespace ZestyBiteWebAppSolution.Controllers {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data received");
 
-            try {
+            try
+            {
                 var username = User.Identity.Name;
                 if (string.IsNullOrEmpty(username)) {
                     return Unauthorized();
@@ -147,21 +165,30 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
 
         [Authorize(Roles = "Manager")]
-        public async Task<IResult> GetAllAccount() {
-            try {
+        [HttpGet]
+        [Route("getallacc")]
+        public async Task<IResult> GetAllAccount()
+        {
+            try
+            {
                 var accounts = await _service.GetALlAccountAsync();
                 if (!accounts.Any()) return TypedResults.NotFound();
                 return TypedResults.Ok(accounts);
 
-            } catch (InvalidOperationException ex) {
+            }
+            catch (InvalidOperationException ex)
+            {
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
-
-        public IActionResult Logout() {
+        [HttpPost]
+        [Route("logout")]
+        public IActionResult Logout()
+        {
             HttpContext.Session.Remove("username");
             Response.Cookies.Delete("username");
-            return RedirectToAction("Index", "Home");
+            // return RedirectToAction("Index", "Home");
+            return Ok("Log out done");
         }
     }
 }

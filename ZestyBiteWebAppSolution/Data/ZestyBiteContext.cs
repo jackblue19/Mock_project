@@ -313,7 +313,8 @@ public partial class ZestyBiteContext : DbContext {
                         .HasForeignKey("SupplyId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("supply_item_ibfk_1"),
-                    j => {
+                    j =>
+                    {
                         j.HasKey("SupplyId", "ItemId").HasName("PRIMARY");
                         j.ToTable("supply_item");
                         j.HasIndex(new[] { "ItemId" }, "Item_ID");
@@ -363,7 +364,8 @@ public partial class ZestyBiteContext : DbContext {
                 .HasConstraintName("table_ibfk_3");
         });
 
-        modelBuilder.Entity<TableDetail>(entity => {
+        modelBuilder.Entity<TableDetail>(entity =>
+        {
             entity.HasKey(e => new { e.TableId, e.ItemId }).HasName("PRIMARY");
 
             entity.ToTable("table_details");

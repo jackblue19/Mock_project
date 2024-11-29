@@ -1,0 +1,106 @@
+###
+GET http://localhost:5024/api/feedback/items
+###
+POST  http://localhost:5024/api/account/login
+Content-Type: application/json
+
+{
+  "Username": "doraemon12",
+  "Password": "doraemon@12"
+}
+###
+PUT  http://localhost:5024/api/account/verifyacc
+
+###
+POST  http://localhost:5024/api/account/signup
+Content-Type: application/json
+
+{
+  "username": "doraemon12",
+    "password": "doraemon@12",
+    "name": "Doraemon Nek",
+    "gender": 1,
+    "phoneNumber": "0912345678",
+    "email": "doraemon12@gmail.com",
+    "address": "DN NHS",
+    "confirmPassword": "doraemon@12",
+    "roleDescription": "null"
+}
+###
+GET http://localhost:5024/api/feedback/allfeedbacks
+###
+GET http://localhost:5024/api/feedback/item/1
+###
+POST http://localhost:5024/api/feedback/submitfeedback
+Content-Type: application/json
+
+{
+  "Content": "This is a feedback message.",
+  "Username": "john_doe",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": null
+}
+###
+PUT http://localhost:5024/api/feedback
+Content-Type: application/json
+
+{
+  "Id": 31,
+  "Content": "halohalo",
+  "Username": "john_doe",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": null
+}
+###
+GET http://localhost:5024/api/feedback/pagination?pageNumber=1&pageSize=10
+###
+DELETE http://localhost:5024/api/feedback/31
+###
+GET http://localhost:5024/api/feedback/replies/9
+###
+POST http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
+{
+  "Content": "This is a reply message.",
+  "Username": "john_doe",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": 9
+}
+###
+PUT http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
+{
+  "Id": 32,
+  "Content": "Updated reply message.",
+  "Username": "john_doe",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": 9
+}
+###
+DELETE http://localhost:5024/api/feedback/reply/12
+###
+POST http://localhost:5024/api/account/login
+Content-Type: application/json
+
+{
+    "username": "john_doe",
+    "password": "password123"
+}
+###
+
+###
+
+###
+
+###
+
+###
+
+
+########################################################################

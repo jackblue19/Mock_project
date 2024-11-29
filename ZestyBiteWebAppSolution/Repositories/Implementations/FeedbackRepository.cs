@@ -7,11 +7,21 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
     public class FeedbackRepository : IRepository<Feedback>, IFeedbackRepository {
         private readonly ZestyBiteContext _context;
 
+<<<<<<< HEAD
         public FeedbackRepository(ZestyBiteContext context) {
             _context = context;
         }
 
         public async Task<IEnumerable<Feedback>> GetFeedbacksByItemIdAsync(int itemId) {
+=======
+        public FeedbackRepository(ZestyBiteContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Feedback>> GetFeedbacksByItemIdAsync(int itemId)
+        {
+>>>>>>> 5a3b472325e4d2d4a3ebe71e13dd739e0034368d
             return await _context.Feedbacks
                 .Where(f => f.ItemId == itemId) // Exclude replies
                 .Include(f => f.UsernameNavigation)
@@ -23,7 +33,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
         public async Task<Feedback?> GetByIdAsync(int id) => await _context.Feedbacks.FindAsync(id);
 
         // Rely on the generic IRepository<T> methods for basic CRUD:
+<<<<<<< HEAD
         public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize) {
+=======
+        public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
+        {
+>>>>>>> 5a3b472325e4d2d4a3ebe71e13dd739e0034368d
             return await _context.Feedbacks
                 .OrderByDescending(f => f.FbDatetime)
                 .Skip((pageNumber - 1) * pageSize)
@@ -38,7 +53,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
                 .ToListAsync();
         }
 
+<<<<<<< HEAD
         public async Task<Feedback> CreateAsync(Feedback feedback) {
+=======
+        public async Task<Feedback> CreateAsync(Feedback feedback)
+        {
+>>>>>>> 5a3b472325e4d2d4a3ebe71e13dd739e0034368d
             _context.Feedbacks.Add(feedback);
             await _context.SaveChangesAsync();
             return feedback;
@@ -56,7 +76,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
         }
 
         // CRUD for reply
+<<<<<<< HEAD
         public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb) {
+=======
+        public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb)
+        {
+>>>>>>> 5a3b472325e4d2d4a3ebe71e13dd739e0034368d
             return await _context.Feedbacks
                 .Where(f => f.ParentFbFlag == ParentFb)
                 .Include(f => f.UsernameNavigation)

@@ -9,6 +9,5 @@ namespace ZestyBiteWebAppSolution.Repositories.Interfaces
         Task<Account?> GetAccountByEmailAsync(string email);
         Task<IEnumerable<Account?>> SearchAccountByNamesAsync(string name);
         Task<Account> CreateAccountAsync(Account account , sbyte roleId);   //  manager only
-        Task UpdateAccountAsync(Account acc);
     }
 }

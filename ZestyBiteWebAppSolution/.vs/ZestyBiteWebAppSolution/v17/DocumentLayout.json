@@ -1,22 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Project OJT\\ZestyBiteWebAppSolution\\",
+  "WorkspaceRootPath": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\workspace\\ojt\\zestybitewebappsolution\\wwwroot\\css\\signup.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:wwwroot\\css\\signup.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\workspace\\ojt\\zestybitewebappsolution\\models\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:models\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\workspace\\ojt\\zestybitewebappsolution\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\views\\account\\changepassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:views\\account\\changepassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\workspace\\ojt\\zestybitewebappsolution\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\services\\implementations\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\workspace\\ojt\\zestybitewebappsolution\\services\\implementations\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:services\\implementations\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|d:\\project ojt\\zestybitewebappsolution\\models\\dtos\\changepwddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A446C3E0-55CA-48A7-B2E0-FA7325EAD142}|ZestyBiteWebAppSolution.csproj|solutionrelative:models\\dtos\\changepwddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,54 +66,67 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ChangePwdDTO.cs",
-              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\Models\\DTOs\\ChangePwdDTO.cs",
-              "RelativeDocumentMoniker": "Models\\DTOs\\ChangePwdDTO.cs",
-              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\Models\\DTOs\\ChangePwdDTO.cs",
-              "RelativeToolTip": "Models\\DTOs\\ChangePwdDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-28T16:15:04.777Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ChangePassword.cshtml",
-              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\Views\\Account\\ChangePassword.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\ChangePassword.cshtml",
-              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\Views\\Account\\ChangePassword.cshtml",
-              "RelativeToolTip": "Views\\Account\\ChangePassword.cshtml",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAA8AAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-28T15:58:29.149Z",
+              "DocumentIndex": 0,
+              "Title": "signup.css",
+              "DocumentMoniker": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\wwwroot\\css\\signup.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\signup.css",
+              "ToolTip": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\wwwroot\\css\\signup.css",
+              "RelativeToolTip": "wwwroot\\css\\signup.css",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-11-29T01:25:07.628Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AccountService.cs",
-              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\Services\\Implementations\\AccountService.cs",
-              "RelativeDocumentMoniker": "Services\\Implementations\\AccountService.cs",
-              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\Services\\Implementations\\AccountService.cs",
-              "RelativeToolTip": "Services\\Implementations\\AccountService.cs",
-              "ViewState": "AgIAAG0AAAAAAAAAAAAhwH8AAAAAAAAAAAAAAA==",
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
+              "ToolTip": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Controllers\\AccountController.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAgwDkAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-28T15:46:18.348Z",
+              "WhenOpened": "2024-11-29T01:14:09.564Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "D:\\Project OJT\\ZestyBiteWebAppSolution\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
-              "ToolTip": "D:\\Project OJT\\ZestyBiteWebAppSolution\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AgIAAGUAAAAAAAAAAAAuwG4AAAARAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "AccountService.cs",
+              "DocumentMoniker": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\Services\\Implementations\\AccountService.cs",
+              "RelativeDocumentMoniker": "Services\\Implementations\\AccountService.cs",
+              "ToolTip": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\Services\\Implementations\\AccountService.cs",
+              "RelativeToolTip": "Services\\Implementations\\AccountService.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAwwDIAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-28T09:26:41.679Z",
+              "WhenOpened": "2024-11-29T01:13:04.808Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RegisterDTO.cs",
+              "DocumentMoniker": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\Models\\DTOs\\RegisterDTO.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\RegisterDTO.cs",
+              "ToolTip": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\Models\\DTOs\\RegisterDTO.cs",
+              "RelativeToolTip": "Models\\DTOs\\RegisterDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-29T01:12:46.709Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\Views\\Account\\Register.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\Register.cshtml",
+              "ToolTip": "D:\\Workspace\\OJT\\ZestyBiteWebAppSolution\\Views\\Account\\Register.cshtml",
+              "RelativeToolTip": "Views\\Account\\Register.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-29T01:12:20.334Z",
               "EditorCaption": ""
             }
           ]
@@ -125,6 +142,10 @@
             {
               "$type": "Bookmark",
               "Name": "ST:14:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
             }
           ]
         },

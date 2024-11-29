@@ -10186,10 +10186,6 @@ body {
         width: 100%;
     }
 
-span {
-    color: #bfbfbf;
-}
-
 a {
     -webkit-transition: .3s all ease;
     -o-transition: .3s all ease;

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZestyBiteWebAppSolution")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f4e2fd7ed07759edb972b5e156277cb696ed55f3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f08e0e960b950c7d86a721b33edf66694f49189")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZestyBiteWebAppSolution")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZestyBiteWebAppSolution")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

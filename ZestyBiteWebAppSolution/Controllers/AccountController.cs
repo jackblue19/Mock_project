@@ -19,7 +19,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromForm] LoginDTO dto) {
+        public async Task<IActionResult> Login(LoginDTO dto) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
@@ -43,18 +43,37 @@ namespace ZestyBiteWebAppSolution.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromForm] RegisterDTO accountDto) {
-            if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
+        public async Task<IActionResult> Register(RegisterDTO accountDto) {
+            if (accountDto == null) {
+                ModelState.AddModelError(string.Empty, "Invalid payload.");
+                return View(accountDto); // Trả về view cùng dữ liệu người dùng đã nhập.
+            }
+
+            if (!ModelState.IsValid) {
+                // Nếu dữ liệu không hợp lệ, trả về view cùng thông báo lỗi
+                return View(accountDto);
+            }
 
             try {
                 var created = await _service.SignUpAsync(accountDto);
-                return RedirectToAction("Login", "Account");
+
+                if (created != null) {
+                    TempData["SuccessMessage"] = "Account created successfully. Please log in.";
+                    return RedirectToAction("Login", "Account");
+                }
+
+                // Nếu không tạo được tài khoản, thêm lỗi và trả về view
+                ModelState.AddModelError(string.Empty, "Failed to create the account. Please try again.");
+                return View(accountDto);
             } catch (InvalidOperationException ex) {
-                return BadRequest(new { Message = ex.Message });
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(accountDto);
             } catch (Exception ex) {
-                return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                return View(accountDto);
             }
         }
+
 
         [HttpGet]
         public async Task<IActionResult> ViewProfile() {
@@ -74,46 +93,59 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto) {
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(ProfileDTO dto) {
             try {
-                if (dto == null) {
-                    return BadRequest(new { Message = "Profile data is missing." });
+                if (!ModelState.IsValid) {
+                    // Nếu dữ liệu không hợp lệ, trả về ViewProfile với lỗi validation
+                    return View("ViewProfile", dto);
                 }
 
                 var username = User.Identity.Name;
                 if (string.IsNullOrEmpty(username)) return Unauthorized();
 
-                // Gọi service để cập nhật thông tin
                 await _service.UpdateProfile(dto, username);
 
-                // Trả về kết quả thành công
-                return Ok(new { Message = "Profile updated successfully." });
+                ViewBag.SuccessMessage = "Profile updated successfully."; 
+                return View("ViewProfile", dto); 
             } catch (InvalidOperationException ex) {
-                return BadRequest(new { Message = ex.Message });
+                ViewBag.ErrorMessage = ex.Message;
+                return View("ViewProfile", dto);
             } catch (Exception ex) {
-                return StatusCode(500, new { Message = $"Internal Server Error: {ex.Message}" });
+                ViewBag.ErrorMessage = "Internal Server Error: " + ex.Message;
+                return View("ViewProfile", dto);
             }
         }
 
+        [HttpGet]
+        public IActionResult ChangePassword() { 
+            return View();
+        }
 
-        [HttpPut]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePwdDTO dto) {
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePwdDTO dto) {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data received");
 
             try {
                 var username = User.Identity.Name;
                 if (string.IsNullOrEmpty(username)) {
-                    return Unauthorized(); // Hoặc Redirect đến trang login
+                    return Unauthorized();
                 }
 
+                // Gọi service để thay đổi mật khẩu
                 await _service.ChangePwd(dto, username);
-                return Ok(new { Message = "Password changed successfully" });
+
+                // Thông báo thành công
+                TempData["SuccessMessage"] = "Password changed successfully!";
+                return RedirectToAction("ViewProfile", "Account");  
             } catch (Exception ex) {
-                return BadRequest(new { Message = ex.Message });
+                // Xử lý lỗi nếu có
+                TempData["ErrorMessage"] = "An error occurred while changing password!";
+                return View(dto);
             }
         }
+
 
         [Authorize(Roles = "Manager")]
         public async Task<IResult> GetAllAccount() {

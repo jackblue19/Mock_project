@@ -1,5 +1,31 @@
-########################################################################
+###
 GET http://localhost:5024/api/feedback/items
+###
+POST  http://localhost:5024/api/account/login
+Content-Type: application/json
+
+{
+  "Username": "doraemon12",
+  "Password": "doraemon@12"
+}
+###
+PUT  http://localhost:5024/api/account/verifyacc
+
+###
+POST  http://localhost:5024/api/account/signup
+Content-Type: application/json
+
+{
+  "username": "doraemon12",
+    "password": "doraemon@12",
+    "name": "Doraemon Nek",
+    "gender": 1,
+    "phoneNumber": "0912345678",
+    "email": "doraemon12@gmail.com",
+    "address": "DN NHS",
+    "confirmPassword": "doraemon@12",
+    "roleDescription": "null"
+}
 ###
 GET http://localhost:5024/api/feedback/allfeedbacks
 ###

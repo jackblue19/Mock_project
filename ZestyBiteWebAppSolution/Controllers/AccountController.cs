@@ -3,64 +3,99 @@ using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Controllers {
-    [AllowAnonymous]
-    public class AccountController : Controller {
+namespace ZestyBiteWebAppSolution.Controllers
+{
+    // [AllowAnonymous]
+    [ApiController]
+    [Route("api/[Controller]")]
+    public class AccountController : Controller
+    {
         private readonly IAccountService _service;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService) {
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService)
+        {
             _logger = logger;
             _service = accountService;
         }
 
-        public IActionResult Login() {
+        public IActionResult Login()
+        {
             return View(); // Hiển thị trang đăng nhập
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromForm] LoginDTO dto) {
-            if (!ModelState.IsValid) {
+        [Route("login")]
+        // public async Task<IActionResult> Login([FromForm] LoginDTO dto)
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
-            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
+            if (await _service.IsTrueAccount(dto.Username, dto.Password))
+            {
                 HttpContext.Session.SetString("username", dto.Username);
-                Response.Cookies.Append("username", dto.Username, new CookieOptions {
+                Response.Cookies.Append("username", dto.Username, new CookieOptions
+                {
                     Expires = DateTimeOffset.Now.AddMinutes(30),
                     HttpOnly = true,
                     Secure = false,
                     SameSite = SameSiteMode.Strict
                 });
 
-                return RedirectToAction("Index", "Home");
+                // return RedirectToAction("Index", "Home");
+                return Ok("Log in suceess");
             }
 
             return Unauthorized(new { message = "Invalid username or password" });
         }
-        public IActionResult Register() {
+        public IActionResult Register()
+        {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromForm] RegisterDTO accountDto) {
+        [Route("signup")]
+        // public async Task<IActionResult> Register([FromForm] RegisterDTO accountDto)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO accountDto)
+        {
             if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
 
-            try {
+            try
+            {
                 var created = await _service.SignUpAsync(accountDto);
-                return RedirectToAction("Login", "Account");
-            } catch (InvalidOperationException ex) {
+                // return RedirectToAction("Login", "Account");
+                HttpContext.Session.SetString("username", created.Username);
+                Response.Cookies.Append("username", created.Username, new CookieOptions
+                {
+                    Expires = DateTimeOffset.Now.AddMinutes(10),
+                    HttpOnly = true,
+                    Secure = false,
+                    SameSite = SameSiteMode.Strict
+                });
+                return Ok(created);
+            }
+            catch (InvalidOperationException ex)
+            {
                 return BadRequest(new { Message = ex.Message });
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewProfile() {
-            try {
+        [Route("viewprofile")]
+        public async Task<IActionResult> ViewProfile()
+        {
+            try
+            {
                 var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username)) {
+                if (string.IsNullOrEmpty(username))
+                {
                     return Unauthorized(); // Hoặc Redirect đến trang login
                 }
 
@@ -68,16 +103,23 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 if (dto == null)
                     return NotFound();
 
-                return View(dto);
-            } catch (Exception ex) {
+                // return View(dto);
+                return Ok(dto);
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto) {
-            try {
-                if (dto == null) {
+        [Route("updateprofile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
                     return BadRequest(new { Message = "Profile data is missing." });
                 }
 
@@ -89,48 +131,82 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
                 // Trả về kết quả thành công
                 return Ok(new { Message = "Profile updated successfully." });
-            } catch (InvalidOperationException ex) {
+            }
+            catch (InvalidOperationException ex)
+            {
                 return BadRequest(new { Message = ex.Message });
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, new { Message = $"Internal Server Error: {ex.Message}" });
             }
         }
 
+        [HttpPut]
+        [Route("verifyacc")]
+        public async Task<IActionResult> VerifyAccount()
+        {
+            var usn = User.Identity.Name;
+            var res = await _service.IsVerified(usn, usn);
+            if (res == true)
+            {
+                return Ok("verified");
+            }
+            else
+            {
+                return BadRequest("failed");
+            }
+        }
 
         [HttpPut]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePwdDTO dto) {
+        [Route("changepwd")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePwdDTO dto)
+        {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data received");
 
-            try {
+            try
+            {
                 var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username)) {
+                if (string.IsNullOrEmpty(username))
+                {
                     return Unauthorized(); // Hoặc Redirect đến trang login
                 }
 
                 await _service.ChangePwd(dto, username);
                 return Ok(new { Message = "Password changed successfully" });
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(new { Message = ex.Message });
             }
         }
 
         [Authorize(Roles = "Manager")]
-        public async Task<IResult> GetAllAccount() {
-            try {
+        [HttpGet]
+        [Route("getallacc")]
+        public async Task<IResult> GetAllAccount()
+        {
+            try
+            {
                 var accounts = await _service.GetALlAccountAsync();
                 if (!accounts.Any()) return TypedResults.NotFound();
                 return TypedResults.Ok(accounts);
 
-            } catch (InvalidOperationException ex) {
+            }
+            catch (InvalidOperationException ex)
+            {
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
-
-        public IActionResult Logout() {
+        [HttpPost]
+        [Route("logout")]
+        public IActionResult Logout()
+        {
             HttpContext.Session.Remove("username");
             Response.Cookies.Delete("username");
-            return RedirectToAction("Index", "Home");
+            // return RedirectToAction("Index", "Home");
+            return Ok("Log out done");
         }
     }
 }

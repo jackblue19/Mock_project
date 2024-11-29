@@ -1,0 +1,80 @@
+﻿/* navbar */
+.ftco-section {
+    padding: 0px !important;
+}
+
+/* comment-main */
+.comment-main {
+    /* background-color: rgb(255, 255, 255); */
+}
+
+.comment-list-container {
+    max-height: 500px;
+    /* Adjust height as needed to fit approximately 5 items */
+    overflow-y: auto;
+    scrollbar-width: none;
+    /* For Firefox */
+    -ms-overflow-style: none;
+    /* For Internet Explorer and Edge */
+}
+
+    .comment-list-container::-webkit-scrollbar {
+        display: none;
+        /* For Chrome, Safari, and Opera */
+    }
+
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.comment {
+    margin-bottom: 15px;
+}
+
+.comment-body {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.comment h3,
+/* Comment author name */
+.comment .meta,
+/* Comment date */
+.comment p,
+/* Comment text */
+.comment .feedback,
+/* Feedback text */
+.comment .reply {
+    /* Reply link */
+    color: #fff !important;
+}
+
+.feedback {
+    font-style: italic;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* reply style */
+.reply-box {
+    background: transparent;
+    color: #fff;
+    /* this sets the text color - adjust as needed */
+    padding: 5px;
+}
+
+    .reply-box input[type="text"] {
+        width: calc(100% - 50px);
+        margin-right: 5px;
+        background-color: rgba(0, 0, 0, 0);
+        color: #fff;
+    }
+
+/* Indent nested comments */
+.nested-comment {
+    margin-left: 15px;
+    /* Adjust indentation for each level */
+}

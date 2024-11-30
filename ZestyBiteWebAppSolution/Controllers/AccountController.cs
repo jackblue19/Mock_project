@@ -56,6 +56,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return RedirectToAction("Index", "Home");
                 // return Ok("Log in suceess");
             }
+            //  báo lỗi login vì sao fail
 
             return Unauthorized(new { message = "Invalid username or password" });
         }

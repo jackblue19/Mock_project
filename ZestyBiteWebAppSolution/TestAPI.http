@@ -13,7 +13,7 @@ POST  http://localhost:5024/api/account/VerifyCode
 Content-Type: application/json
 
 {
-  "code": "376299"
+  "code": "754163"
 }
 
 ###
@@ -21,14 +21,14 @@ POST  http://localhost:5024/api/account/signup
 Content-Type: application/json
 
 {
-  "username": "doraemon12345",
-    "password": "doraemon@12345",
+  "username": "dr1212z",
+    "password": "doraemon@123",
     "name": "Doraemon Nek",
     "gender": 1,
     "phoneNumber": "0912345678",
     "email": "git.jack1624@gmail.com",
     "address": "DN NHS",
-    "confirmPassword": "doraemon@12345",
+    "confirmPassword": "doraemon@123",
     "roleDescription": "null"
 }
 ###

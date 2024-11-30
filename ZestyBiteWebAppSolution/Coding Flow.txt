@@ -24,8 +24,9 @@ dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=zestybite;Uid=
 - Controller
 	+ Viết hàm 
 FeedbackDTO, IFeedbackRepository, FeedbackRepository, IFeedbackService, FeedbackService, FeedbackController
+
 //Code không chạy 
-Check DTO, repository interfaces, repository implementations, service interfaces, and service implementations.
+Remember all the class we have: Feedback [DTO, repository interfaces, repository implementations, service interfaces, service implementations, controller, MappingProfile and cshtml]
 
 //Data Flow
 - User Interface gửi yêu cầu đến Controller.

@@ -18,10 +18,10 @@
     /* For Internet Explorer and Edge */
 }
 
-    .comment-list-container::-webkit-scrollbar {
-        display: none;
-        /* For Chrome, Safari, and Opera */
-    }
+.comment-list-container::-webkit-scrollbar {
+    display: none;
+    /* For Chrome, Safari, and Opera */
+}
 
 
 .comment-list {
@@ -66,12 +66,12 @@
     padding: 5px;
 }
 
-    .reply-box input[type="text"] {
-        width: calc(100% - 50px);
-        margin-right: 5px;
-        background-color: rgba(0, 0, 0, 0);
-        color: #fff;
-    }
+.reply-box input[type="text"] {
+    width: calc(100% - 50px);
+    margin-right: 5px;
+    background-color: rgba(0, 0, 0, 0);
+    color: #fff;
+}
 
 /* Indent nested comments */
 .nested-comment {

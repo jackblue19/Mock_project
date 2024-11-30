@@ -1,55 +1,15 @@
-using System;
-using System.ComponentModel.DataAnnotations;
+Remember all the class we have: Feedback [DTO, repository interfaces, repository implementations, service interfaces, service implementations, controller, MappingProfile and cshtml] (if there is any class you might need information about than just ask).
 
-namespace ZestyBiteWebAppSolution.Models.DTOs
-{
-    public class FeedbackDTO
-    {
-        public int Id { get; set; }
+- Use class="comment-list-container" to show  up Feedback using api/feedback/feedbackpagination
+- Add 1 button to forward previous page, 1 text box to input the page that we want to go, if there is not, return "page not found" and the last is a button that forward next page
 
-        [Required(ErrorMessage = "Feedback content is required.")]
-        public string Content { get; set; } = null!;
-        public DateTime DateTime { get; set; }
-        public string Username { get; set; } = null!;
-        public string? ProfileImage { get; set; }
-        public int ItemId { get; set; }
-        public string ItemName { get; set; } = null!;
-        public int? ParentFb { get; set; } = null!;
-        //to include parent feedback if needed
-        public FeedbackDTO? ParentFeedback { get; set; }
-        public bool IsReply { get; set; }
-    }
-}
-using System;
-using System.ComponentModel.DataAnnotations;
+- - Fix this whole script to allow nested comment with ParentFb attribute null means the parent and the feedback that have parentfb=feedbackId of a feedback will appear as child of that parent feedback. Add thing like Foreach feedback,... That allow maximum nested = 3 (include parent). Bellow the Feedback or reply which not reach the maximum nested will appear a reply button. Enter it would create a div allow user to enter their reply (submit reply)
 
-namespace ZestyBiteWebAppSolution.Models.DTOs
-{
-    public class ReplyDTO
-    {
-        public int Id { get; set; }
+- I want you to use the ItemCategory in Item table to make the feedback assemble follow class="categories". We already have function get feedback by id and yes it worked.
 
-        [Required(ErrorMessage = "Reply content is required.")]
-        public string Content { get; set; } = null!;
-        public DateTime DateTime { get; set; }
-        public string Username { get; set; } = null!;
-        public string? ProfileImage { get; set; }
-        public int ItemId { get; set; }
-        public string ItemName { get; set; } = null!;
-        public int ParentFb { get; set; } 
-    }
-}
-namespace ZestyBiteWebAppSolution.Models.DTOs
-{
-    public class ItemDTO
-    {
-        public int ItemId { get; set; }
-        public string ItemName { get; set; } = string.Empty; // Initialized to avoid null reference
-        public string ItemCategory { get; set; } = string.Empty;
-        public int ItemStatus { get; set; }
-        public string ItemDescription { get; set; } = string.Empty;
-        public decimal SuggestedPrice { get; set; }
-        public string ItemImage { get; set; } = string.Empty;
-        public int IsServed { get; set; }
-    }
-}
+- And check the get all. I want the Feedback show in this format:
+
+[ Username  --------------------------------------------------------------------- Datetime]
+[ Itemname													      ]
+[ Content 	 													      ]
+

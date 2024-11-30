@@ -59,7 +59,7 @@ Content-Type: application/json
   "ParentFb": null
 }
 ###
-GET http://localhost:5024/api/feedback/pagination?pageNumber=1&pageSize=10
+GET http://localhost:5024/api/feedback/feedbackpagination?pageNumber=1&pageSize=10
 ###
 DELETE http://localhost:5024/api/feedback/31
 ###
@@ -73,7 +73,7 @@ Content-Type: application/json
   "Username": "john_doe",
   "ItemId": 1,
   "ItemName": "Pizza Margherita",
-  "ParentFb": 9
+  "ParentFb": 11
 }
 ###
 PUT http://localhost:5024/api/feedback/reply
@@ -88,7 +88,7 @@ Content-Type: application/json
   "ParentFb": 9
 }
 ###
-DELETE http://localhost:5024/api/feedback/reply/12
+DELETE http://localhost:5024/api/feedback/reply/32
 ###
 POST http://localhost:5024/api/account/login
 Content-Type: application/json

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Models.Entities;
-
-public partial class TableDetail
-{
+public partial class TableDetail {
     public int TableId { get; set; }
 
     public int ItemId { get; set; }

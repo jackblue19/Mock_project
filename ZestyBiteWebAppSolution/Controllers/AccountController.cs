@@ -30,6 +30,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             _logger = logger;
             _service = accountService;
             _mailService = verifyService;
+            _mailService = verifyService;
         }
 
         [HttpPost]
@@ -42,17 +43,17 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (await _service.IsTrueAccount(dto.Username, dto.Password))
-            {
+            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
                 HttpContext.Session.SetString("username", dto.Username);
-                Response.Cookies.Append("username", dto.Username, new CookieOptions
-                {
+                Response.Cookies.Append("username", dto.Username, new CookieOptions {
                     Expires = DateTimeOffset.Now.AddMinutes(30),
                     HttpOnly = true,
                     Secure = false,
                     SameSite = SameSiteMode.Strict
                 });
 
+                return RedirectToAction("Index", "Home");
+                // return Ok("Log in suceess");
                 return RedirectToAction("Index", "Home");
                 // return Ok("Log in suceess");
             }
@@ -183,9 +184,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
             }
         }
@@ -193,13 +192,10 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         [HttpGet]
         [Route("viewprofile")]
-        public async Task<IActionResult> ViewProfile()
-        {
-            try
-            {
+        public async Task<IActionResult> ViewProfile() {
+            try {
                 var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username))
-                {
+                if (string.IsNullOrEmpty(username)) {
                     return Unauthorized(); // Hoặc Redirect đến trang login
                 }
 
@@ -209,21 +205,16 @@ namespace ZestyBiteWebAppSolution.Controllers
 
                 // return View(dto);
                 return Ok(dto);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 
         [HttpPut]
         [Route("updateprofile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto)
-        {
-            try
-            {
-                if (dto == null)
-                {
+        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO dto) {
+            try {
+                if (dto == null) {
                     return BadRequest(new { Message = "Profile data is missing." });
                 }
 
@@ -235,37 +226,28 @@ namespace ZestyBiteWebAppSolution.Controllers
 
                 // Trả về kết quả thành công
                 return Ok(new { Message = "Profile updated successfully." });
-            }
-            catch (InvalidOperationException ex)
-            {
+            } catch (InvalidOperationException ex) {
                 return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 return StatusCode(500, new { Message = $"Internal Server Error: {ex.Message}" });
             }
         }
 
         [HttpPut]
         [Route("changepwd")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePwdDTO dto)
-        {
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePwdDTO dto) {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data received");
 
-            try
-            {
+            try {
                 var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username))
-                {
+                if (string.IsNullOrEmpty(username)) {
                     return Unauthorized(); // Hoặc Redirect đến trang login
                 }
 
                 await _service.ChangePwd(dto, username);
                 return Ok(new { Message = "Password changed successfully" });
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 return BadRequest(new { Message = ex.Message });
             }
         }
@@ -273,17 +255,13 @@ namespace ZestyBiteWebAppSolution.Controllers
         [Authorize(Roles = "Manager")]
         [HttpGet]
         [Route("getallacc")]
-        public async Task<IResult> GetAllAccount()
-        {
-            try
-            {
+        public async Task<IResult> GetAllAccount() {
+            try {
                 var accounts = await _service.GetALlAccountAsync();
                 if (!accounts.Any()) return TypedResults.NotFound();
                 return TypedResults.Ok(accounts);
 
-            }
-            catch (InvalidOperationException ex)
-            {
+            } catch (InvalidOperationException ex) {
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
@@ -294,8 +272,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         {
             HttpContext.Session.Remove("username");
             Response.Cookies.Delete("username");
-            // return RedirectToAction("Index", "Home");
-            return Ok("Log out done");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

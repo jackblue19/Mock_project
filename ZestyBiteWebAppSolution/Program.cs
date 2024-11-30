@@ -11,7 +11,6 @@ using AutoMapper;
 using System.Text;
 // using Microsoft.AspNetCore.Authentication;
 using ZestyBiteWebAppSolution.Middlewares;
-using Microsoft.Identity;
 using ZestyBiteWebAppSolution.Repositories;
 using ZestyBiteWebAppSolution.Mappings;
 using System.Net;
@@ -38,35 +37,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure Session
 builder.Services.AddDistributedMemoryCache(); // Store session in memory
-builder.Services.AddSession(options =>
-{
+builder.Services.AddSession(options => {
     options.Cookie.Name = ".Restaurant.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = false; // => maybe comment vì hình như nó chặn http chỉ cho https => from TRUE to FALSE
     options.Cookie.IsEssential = true;
 });
 
-/*
-Cấu hình Redirect khi chưa đăng nhập (Login Redirect):
-ASP.NET Core sẽ tự động chuyển hướng người dùng đến trang đăng nhập mặc định nếu họ không được xác thực (tức là không có session, không có token hợp lệ, v.v.). Nếu bạn muốn tùy chỉnh trang đăng nhập hoặc thông báo lỗi, bạn có thể cấu hình như sau:
-
-Ví dụ cấu hình Redirect:
-csharp
-Copy code
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/Account/Login"; // Đường dẫn đến trang đăng nhập
-                options.AccessDeniedPath = "/Account/AccessDenied"; // Đường dẫn khi người dùng không có quyền truy cập
-            });
-}
-*/
-
 // Thêm dịch vụ Authorization và tạo các policies phân quyền
-builder.Services.AddAuthorization(options =>
-{
+builder.Services.AddAuthorization(options => {
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("manager"));
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("order taker", "staff"));
     options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("manager"));
@@ -84,10 +63,8 @@ builder.Services.AddRazorPages();
 
 
 // Configure Swagger
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("v1", new OpenApiInfo {
         Title = "My API",
         Version = "v1",
         Description = "An API to demonstrate Swagger integration",
@@ -125,65 +102,35 @@ builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 
+builder.Services.AddScoped<IVerifyService, VerifySerivce>();
+
+
 builder.Services.AddEndpointsApiExplorer();
 
 // Add AutoMapper services
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", policy => {
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
 });
-//builder.Services.AddSwaggerGen(options =>
-//{
-//    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-//    {
-//        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-//        Name = "Authorization",
-//        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-//        BearerFormat = "JWT",
-//        Scheme = "Bearer"
-//    });
-
-//    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-//    {
-//        {
-//            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-//            {
-//                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-//                {
-//                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-//                    Id = "Bearer"
-//                }
-//            },
-//            new string[] {}
-//        }
-//    });
-//});
-
 
 // Build the app
 var app = builder.Build();
 
 // Middleware to handle errors
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger(); // Enable Swagger UI in development
-    app.UseSwaggerUI(c =>
-    {
+    app.UseSwaggerUI(c => {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
         c.RoutePrefix = "swagger"; // Route prefix for Swagger UI
     });
     app.UseDeveloperExceptionPage();
-}
-else
-{
+} else {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts(); // Enable HSTS for production
 }
@@ -192,6 +139,7 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Enable CORS  
 // Enable CORS  
 app.UseCors("AllowAll");
 
@@ -202,19 +150,9 @@ app.UseRouting();
 app.UseSession();
 app.UseMiddleware<AuthenticationMiddleware>();
 
-//app.MapControllers();
-
 // Middleware for Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-/*      applied for route("/private") in AuthZN
-app.MapWhen(context => context.Request.Path.StartsWithSegments("/private"), builder =>
-{
-    builder.UseAuthentication();
-    builder.UseAuthorization();
-});
-*/
 
 // Configure Routing for Areas => nên sử dụng username thay thế =Đ
 app.MapControllerRoute(
@@ -232,3 +170,4 @@ app.MapRazorPages();
 
 // Run the app
 app.Run();
+

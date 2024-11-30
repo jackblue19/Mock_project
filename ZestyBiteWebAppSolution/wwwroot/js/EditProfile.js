@@ -135,3 +135,22 @@ document.getElementById('file-input').addEventListener('change', function (event
         reader.readAsDataURL(file); // Đọc file ảnh
     }
 });
+
+function enableEdit() {
+    // Enable fields for editing
+    document.getElementById("phoneNumberField").removeAttribute("readonly");
+    document.getElementById("addressField").removeAttribute("readonly");
+
+    // Enable gender options
+    document.getElementById("male").removeAttribute("disabled");
+    document.getElementById("female").removeAttribute("disabled");
+
+    // Show Save and Cancel buttons, hide Edit button
+    document.getElementById("editBtn").style.display = "none";
+    document.getElementById("saveBtn").style.display = "inline-block";
+    document.getElementById("cancelBtn").style.display = "inline-block";
+}
+function cancelChanges() {
+    // Reset form (reload page for simplicity)
+    location.reload();
+}

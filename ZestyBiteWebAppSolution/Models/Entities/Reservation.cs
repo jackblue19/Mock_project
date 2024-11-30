@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Models.Entities;
-
-public partial class Reservation
-{
+public partial class Reservation {
     public int ReservationId { get; set; }
 
     public int BillId { get; set; }

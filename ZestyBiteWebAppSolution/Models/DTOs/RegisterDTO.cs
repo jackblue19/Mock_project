@@ -35,9 +35,9 @@ namespace ZestyBiteWebAppSolution.Models.DTOs {
         [Required(ErrorMessage = "Gender is required.")]
         public int Gender { get; set; }
 
-        public string? ProfileImg { get; set; } = "default null";
+        public string ProfileImg { get; set; } = "default null";
 
         public string RoleDescription { get; set; } = null!;
-        public string? VerificationCode { get; set; } = "default code";
+        public string VerificationCode { get; set; } = null!;
     }
 }

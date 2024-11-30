@@ -1,4 +1,5 @@
-﻿using ZestyBiteWebAppSolution.Models.DTOs;
+﻿using System.Runtime.CompilerServices;
+using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 
 namespace ZestyBiteWebAppSolution.Services.Interfaces {

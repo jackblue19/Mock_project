@@ -2,7 +2,6 @@
 using System.Net.Mail;
 using ZestyBiteWebAppSolution.Helpers;
 using Microsoft.Extensions.Options;
-using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Services.Implementations {
     public class VerifySerivce : IVerifyService {
@@ -38,8 +37,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
 
             smtpClient.Send(mailMessage);
             try {
+                // Send email asynchronously
                 await smtpClient.SendMailAsync(mailMessage);
             } catch (Exception ex) {
+                // Log error or handle exceptions appropriately
                 throw new InvalidOperationException("Failed to send email.", ex);
             }
         }

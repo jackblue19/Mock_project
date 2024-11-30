@@ -1,5 +1,5 @@
 ﻿namespace ZestyBiteWebAppSolution.Models.DTOs {
-    public class VerifyEmailDTO {
+    public class VerifyDTO {
         public string Code { get; set; } = null!;
     }
 }

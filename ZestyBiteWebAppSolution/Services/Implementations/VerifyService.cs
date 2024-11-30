@@ -50,6 +50,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             catch (Exception ex)
             {
                 // Log error or handle exceptions appropriately
+                Console.WriteLine($"[ERROR] Gửi email thất bại: {ex.Message}");
+                Console.WriteLine($"[ERROR DETAILS] {ex.InnerException?.Message}");
                 throw new InvalidOperationException("Failed to send email.", ex);
             }
         }

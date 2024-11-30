@@ -70,6 +70,25 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 throw new ArgumentNullException(nameof(dto), "Input account was null.");
             }
 
+            if (string.IsNullOrWhiteSpace(dto.Username)
+                                        || dto.Username.Length < 3
+                                        || dto.Username.Length > 255)
+            {
+                throw new ArgumentException("Username must be between 3 and 255 characters long.", nameof(dto.Username));
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.Password)
+                                        || dto.Password.Length < 6
+                                        || dto.Password.Length > 100)
+            {
+                throw new ArgumentException("Password must be between 6 and 100 characters long.", nameof(dto.Password));
+            }
+
+            if (dto.Password != dto.ConfirmPassword)
+            {
+                throw new ArgumentException("Confirm Password must match Password.", nameof(dto.ConfirmPassword));
+            }
+
             var existed = await _repository.GetAccountByUsnAsync(dto.Username);
             if (existed != null)
             {
@@ -163,6 +182,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         public async Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn)
         {
             var current = await _repository.GetAccountByUsnAsync(usn);
+            current.Name = dto.Name;
             current.PhoneNumber = dto.PhoneNumber;
             current.Address = dto.Address;
             current.Gender = dto.Gender;

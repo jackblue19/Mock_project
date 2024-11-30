@@ -3,65 +3,80 @@ using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
-
 namespace ZestyBiteWebAppSolution.Repositories.Implementations {
-    public class AccountRepository : IAccountRepository, IRepository<Account> {
+    public class FeedbackRepository : IRepository<Feedback>, IFeedbackRepository {
         private readonly ZestyBiteContext _context;
-        public AccountRepository(ZestyBiteContext context) {
+
+        public FeedbackRepository(ZestyBiteContext context) {
             _context = context;
         }
-        /* Interface */
-        public async Task<IEnumerable<Account?>> SearchAccountByNamesAsync(string name) {
-            return await _context.Accounts
-                                 .Where(acc => acc.Name == name)
-                                 .ToListAsync();
-        }
-        public async Task<Account> CreateAccountAsync(Account account, sbyte roleId) {
-            account.RoleId = roleId;
-            _context.Accounts.Add(account);
-            await _context.SaveChangesAsync();
-            return account;
-        }
-        public async Task<Account?> GetAccountByUsnAsync(string usn) {
-            return await _context.Accounts
-                                 .Include(acc => acc.Role)
-                                 .FirstOrDefaultAsync(acc => acc.Username == usn);
-        }
-        public async Task<Account?> GetAccountByEmailAsync(string email) {
-            return await _context.Accounts
-                                 .FirstOrDefaultAsync(acc => acc.Email == email);
+
+        public async Task<IEnumerable<Feedback>> GetFeedbacksByItemIdAsync(int itemId) {
+            return await _context.Feedbacks
+                .Where(f => f.ItemId == itemId) // Exclude replies
+                .Include(f => f.UsernameNavigation)
+                .Include(f => f.Item)
+                .OrderByDescending(f => f.FbDatetime)
+                .ToListAsync();
         }
 
-        /* Generic */
-        public async Task<IEnumerable<Account?>> GetAllAsync() {
-            return await _context.Accounts
-                                 .Include(acc => acc.Role)
-                                 .ToListAsync();
+        public async Task<Feedback?> GetByIdAsync(int id) => await _context.Feedbacks.FindAsync(id);
+
+        // Rely on the generic IRepository<T> methods for basic CRUD:
+        public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize) {
+            return await _context.Feedbacks
+                .OrderByDescending(f => f.FbDatetime)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
-        public async Task<Account?> GetByIdAsync(int id) {
-            // return await _context.Accounts
-            //                      .Where(acc => acc.AccountId == id)
-            //                      .SingleOrDefaultAsync();
-            return await _context.Accounts
-                                 .Include(acc => acc.Role)
-                                 .FirstOrDefaultAsync(acc => acc.AccountId == id);
+        public async Task<IEnumerable<Feedback?>> GetAllAsync() {
+            return await _context.Feedbacks
+                .Include(f => f.UsernameNavigation)
+                .Include(f => f.Item)
+                .Include(f => f.ParentFbFlagNavigation)
+                .ToListAsync();
         }
-        public async Task<Account> CreateAsync(Account acc) {
-            // await _context.Set<Account>().AddAsync(entity);  // => not sure to test
-            // await _context.Accounts.AddAsync(entity); // => not rcm to use
-            _context.Accounts.Add(acc);
+
+        public async Task<Feedback> CreateAsync(Feedback feedback) {
+            _context.Feedbacks.Add(feedback);
             await _context.SaveChangesAsync();
-            return acc;
+            return feedback;
         }
-        public async Task<Account> UpdateAsync(Account entity) {
-            _context.Accounts.Update(entity);
+        public async Task<Feedback> UpdateAsync(Feedback feedback) {
+            _context.Feedbacks.Update(feedback);
             await _context.SaveChangesAsync();
-            return entity;
+            return feedback;
         }
-        public async Task<Account> DeleteAsync(Account entity) {
-            _context.Accounts.Remove(entity);
+
+        public async Task<Feedback> DeleteAsync(Feedback feedback) {
+            _context.Feedbacks.Remove(feedback);
             await _context.SaveChangesAsync();
-            return entity;
+            return feedback;
+        }
+
+        // CRUD for reply
+        public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb) {
+            return await _context.Feedbacks
+                .Where(f => f.ParentFbFlag == ParentFb)
+                .Include(f => f.UsernameNavigation)
+                .OrderBy(f => f.FbDatetime) // Oldest first
+                .ToListAsync();
+        }
+        public async Task<Feedback> CreateReplyAsync(Feedback reply) {
+            _context.Feedbacks.Add(reply);
+            await _context.SaveChangesAsync();
+            return reply;
+        }
+        public async Task<Feedback> UpdateReplyAsync(Feedback reply) {
+            _context.Feedbacks.Update(reply);
+            await _context.SaveChangesAsync();
+            return reply;
+        }
+        public async Task<bool> DeleteReplyAsync(Feedback reply) {
+            _context.Feedbacks.Remove(reply);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

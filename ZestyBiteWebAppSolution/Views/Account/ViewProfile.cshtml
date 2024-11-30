@@ -5,9 +5,9 @@
 @model ZestyBiteWebAppSolution.Models.DTOs.ProfileDTO
 
 <link href="~/css/EditProfile.css" rel="stylesheet" />
- <style>
+<style>
     .modal-backdrop {
-    display: none !important;
+        display: none !important;
     }
 </style>
 <!-- Form to send data to the controller -->
@@ -28,20 +28,21 @@
             <div class="col-12 col-md-9 text-primary">
                 <div class="card-body">
                     @{
-                        if (!string.IsNullOrEmpty(ViewBag.SuccessMessage as string)) {
+                        if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string)) {
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                @ViewBag.SuccessMessage
+                                @TempData["SuccessMessage"]
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         }
 
-                        if (!string.IsNullOrEmpty(ViewBag.ErrorMessage as string)) {
+                        if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string)) {
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @ViewBag.ErrorMessage
+                                @TempData["ErrorMessage"]
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         }
                     }
+
                     <!-- Name -->
                     <div class="form-group">
                         <label class="form-label">Name</label>
@@ -71,11 +72,11 @@
                         <label class="form-label">Gender</label>
                         <div class="gender-options">
                             <div class="gender-option">
-                                <input type="radio" id="male" name="Gender" value="0" disabled />
+                                <input type="radio" id="male" asp-for="Gender" value="0" disabled />
                                 <label for="male">Male</label>
                             </div>
                             <div class="gender-option">
-                                <input type="radio" id="female" name="Gender" value="1" disabled />
+                                <input type="radio" id="female" asp-for="Gender" value="1" disabled />
                                 <label for="female">Female</label>
                             </div>
                         </div>
@@ -94,26 +95,6 @@
         </div>
     </div>
 }
-
-
-<!-- Modal for Saving Changes -->
-<div class="modal fade" id="saveChangesModal" tabindex="-1" aria-labelledby="saveChangesModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content" style="transform: translateY(150px)">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="saveChangesModalLabel">Save Changes</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Do you want to save the changes you made to your profile?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="confirmSaveChanges()">Confirm</button>
-            </div>
-        </div>
-    </div>
-</div>
 @section Scripts {
-   <script src="~/js/EditProfile.js"></script>
+    <script src="~/js/EditProfile.js"></script>
 }

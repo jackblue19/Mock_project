@@ -1,11 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using ZestyBiteWebAppSolution.Models.DTOs;
+﻿using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Services.Interfaces
-{
-    public interface IAccountService
-    {
+namespace ZestyBiteWebAppSolution.Services.Interfaces {
+    public interface IAccountService {
         Task<IEnumerable<RegisterDTO?>> GetALlAccountAsync();
         Task<Account> CreateStaffAsync(Account account, int roleId);
         Task<RegisterDTO?> GetAccountByIdAsync(int id);
@@ -19,5 +16,6 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
 
         Task<ProfileDTO> ViewProfileByUsnAsync(string usn);
         Task<bool> IsVerified(string usn, string code);
+        Task<bool> IsDeleteUnregistedAccount(string usn);
     }
 }

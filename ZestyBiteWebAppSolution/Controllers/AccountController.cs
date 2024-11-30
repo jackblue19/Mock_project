@@ -54,7 +54,8 @@ namespace ZestyBiteWebAppSolution.Controllers {
             return View();
         }
 
-        public async Task<IActionResult> VerìyCode(VerifyDTO verifyDto) {
+        [HttpPost]
+        public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto) {
             var usn = User.Identity.Name;
 
             if (verifyDto == null || string.IsNullOrEmpty(usn) || string.IsNullOrEmpty(verifyDto.Code))
@@ -81,6 +82,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     VerificationAttempts.TryRemove(usn, out _);
                     HttpContext.Session.Remove("username");
                     Response.Cookies.Delete("username");
+                    // return Ok(new { Message = "Verification successful." });
                     return RedirectToAction("Login", "Account");
                 }
 
@@ -96,7 +98,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDTO accountDto)
        {

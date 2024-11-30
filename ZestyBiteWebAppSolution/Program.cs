@@ -52,7 +52,7 @@ builder.Services.AddSwaggerGen(c => {
 //  Email sender
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
-var connectionString = "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=hung300403";
+var connectionString = builder.Configuration.GetConnectionString("ZestyBiteDb");
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
 builder.Services.AddDbContext<ZestyBiteContext>(dbContextOptions =>

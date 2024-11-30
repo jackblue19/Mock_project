@@ -278,6 +278,13 @@ appsettings.Development.json
 .fake
 
 ZestyBiteWebAppSolution/.vs
+ZestyBiteWebAppSolution/bin
+ZestyBiteWebAppSolution/obj
+
+
+ZestyBiteWebAppSolution/.vs/
+ZestyBiteWebAppSolution/bin/
+ZestyBiteWebAppSolution/obj/
 
 # Ignore .github directory
 .github/

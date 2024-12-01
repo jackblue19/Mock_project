@@ -69,7 +69,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try
             {
-                string username = User.Identity.Name;
+                var username = User.Identity.Name;
+                //string username = "john_doe";
                 var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
                 return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
             }

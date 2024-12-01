@@ -31,6 +31,10 @@ namespace ZestyBiteWebAppSolution.Controllers
             _service = accountService;
             _mailService = verifyService;
         }
+        public IActionResult Login()
+        {
+            return View("LogIn", "Account");
+        }
 
         [HttpPost]
         // [Route("login")]

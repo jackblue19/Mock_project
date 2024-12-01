@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ZestyBiteWebAppSolution.Models.ViewMoedel;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
 
@@ -12,10 +13,19 @@ namespace ZestyBiteSolution.Controllers {
 
         public async Task<IActionResult> Index() {
             var items = await _itemService.GetAllItemsAsync(); // Lấy tất cả các mục
-            var pizzaItems = items.Where(i => i.ItemCategory == "Pizza"); // Lọc chỉ món Pizza
 
-            return View(pizzaItems); // Trả về chỉ món Pizza cho View
+            var pizzaItems = items.Where(i => i.ItemCategory == "Pizza"); // Lọc các món Pizza
+            var drinkItems = items.Where(i => i.ItemCategory == "Drink"); // Lọc các món Drink
+
+            // Trả về View với hai danh sách: pizza và drink
+            var viewModel = new IndexViewModel {
+                PizzaItems = pizzaItems,
+                DrinkItems = drinkItems
+            };
+
+            return View(viewModel); // Trả về view với dữ liệu pizza và drink
         }
+
 
         public IActionResult About() {
             return View();

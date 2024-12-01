@@ -2,6 +2,7 @@
     ViewBag.Title = "Trang chủ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@model ZestyBiteWebAppSolution.Models.ViewMoedel.IndexViewModel
 
 <section class="home-slider owl-carousel img" style="background-image: url(/images/bg_1.jpg)">
     <div class="slider-item">
@@ -69,51 +70,6 @@
     </div>
 </section>
 
-<section class="ftco-section ftco-services">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row justify-content-center mb-5 pb-3">
-            <div class="col-md-7 heading-section ftco-animate text-center">
-                <h2 class="mb-4">Our Services</h2>
-                <p><p>At Zesty Bites, we offer a range of exceptional services, including dine-in, takeout, and catering for special events. Our commitment to quality ensures that every meal is prepared with care, using the freshest ingredients to deliver an authentic Italian experience.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 ftco-animate">
-                <div class="media d-block text-center block-6 services">
-                    <div class="icon d-flex justify-content-center align-items-center mb-5">
-                        <span class="flaticon-diet"></span>
-                    </div>
-                    <div class="media-body">
-                        <h3 class="heading">Healthy Foods</h3>
-                        <p>At Zesty Bites, we prioritize your well-being by offering a variety of healthy dishes that are both flavorful and nourishing. Our menu is designed to delight your taste buds while supporting a balanced lifestyle.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="media d-block text-center block-6 services">
-                    <div class="icon d-flex justify-content-center align-items-center mb-5">
-                        <span class="flaticon-bicycle"></span>
-                    </div>
-                    <div class="media-body">
-                        <h3 class="heading">Fastest Delivery</h3>
-                        <p>We understand the importance of prompt service. That's why we guarantee the fastest delivery, ensuring that your favorite meals arrive fresh and hot at your doorstep, ready to enjoy.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="media d-block text-center block-6 services">
-                    <div class="icon d-flex justify-content-center align-items-center mb-5"><span class="flaticon-pizza-1"></span></div>
-                    <div class="media-body">
-                        <h3 class="heading">Original Recipes</h3>
-                        <p>Our culinary team is dedicated to crafting original recipes that highlight the authentic flavors of Italy. Each dish is a unique creation, made with love and the finest ingredients, promising an unforgettable dining experience.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <section class="ftco-section">
     <div class="container">
         <div class="row justify-content-center mb-5 pb-3">
@@ -125,21 +81,25 @@
     </div>
     <div class="container-wrap">
         <div class="row no-gutters d-flex">
-            @foreach (var item in Model) {
-                <div class="col-md-4">
-                    <div class="services-wrap d-flex">
-                        <a href="#" class="img" style="background-image: url('@item.ItemImage');"></a>
-                        <div class="text p-4">
-                            <h3>@item.ItemName</h3>
-                            <p>@item.ItemDescription</p>
-                            <p class="price">
-                                <span>@item.SuggestedPrice.ToString("C")</span>
-                                <a href="@Url.Action("ProductDetail", "Home", new { itemId = item.ItemId })" class="ml-2 btn btn-white btn-outline-white">Order</a>
-                            </p>
+            <div class="row">
+                @foreach (var item in Model.PizzaItems) // Iterate over the Items property of the Model
+                {
+                    <div class="col-md-4">
+                        <div class="services-wrap d-flex">
+                            <a href="#" class="img" style="background-image: url('@item.ItemImage');"></a>
+                            <div class="text p-4">
+                                <h3>@item.ItemName</h3>
+                                <p>@item.ItemDescription</p>
+                                <p class="price">
+                                    <span>@item.SuggestedPrice.ToString("C")</span>
+                                    <a href="@Url.Action("ProductDetail", "Home", new { itemId = item.ItemId })" class="ml-2 btn btn-white btn-outline-white">Order</a>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
+
         </div>
     </div>
 </section>
@@ -215,15 +175,15 @@
                         <div class="tab-content ftco-animate" id="v-pills-tabContent">
                             <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
                                 <div class="row">
-                                    @foreach (var item in Model) {
+                                    @foreach (var item in Model.PizzaItems) {
                                         <div class="col-md-4 text-center">
                                             <div class="menu-wrap">
                                                 <a href="#" class="menu-img img mb-4" style="background-image: url('@item.ItemImage');"></a>
                                                 <div class="text">
-                                                    <h3><a href="#">@item.ItemName</a></h3>
+                                                    <h3>@item.ItemName</h3>
                                                     <p>@item.ItemDescription</p>
                                                     <p class="price"><span>@item.SuggestedPrice.ToString("C")</span></p>
-                                                    <p><a href="@Url.Action("ProductDetail", "Home", new { itemId = item.ItemId })" class="btn btn-white btn-outline-white">Add to cart</a></p>
+                                                    <p><a href="@Url.Action("ProductDetail", "Home", new { itemId = item.ItemId })" class="btn btn-white btn-outline-white">Order</a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -233,6 +193,19 @@
 
                             <div class="tab-pane fade" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-2-tab">
                                 <div class="row">
+                                    @foreach (var item in Model.DrinkItems) {
+                                        <div class="col-md-4 text-center">
+                                            <div class="menu-wrap">
+                                                <a href="#" class="menu-img img mb-4" style="background-image: url('@item.ItemImage');"></a>
+                                                <div class="text">
+                                                    <h3>@item.ItemName</h3>
+                                                    <p>@item.ItemDescription</p>
+                                                    <p class="price"><span>@item.SuggestedPrice.ToString("C")</span></p>
+                                                    <p><a href="@Url.Action("ProductDetail", "Home", new { itemId = item.ItemId })" class="btn btn-white btn-outline-white">Order</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
 
@@ -289,3 +262,5 @@
         </div>
     </div>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

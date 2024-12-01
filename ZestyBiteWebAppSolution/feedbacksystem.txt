@@ -1,769 +1,977 @@
-dotnet ef dbcontext scaffold "Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456" MySql.EntityFrameworkCore -o Models/Entities -c ZestyBiteContext
+using System;
+using System.Collections.Generic;
 
-Tình huống 1: Không có Repository (Tất cả logic trong Service Layer)
+namespace ZestyBiteWebAppSolution.Models.Entities;
 
-Trong tình huống này, bạn sẽ thấy rằng các chức năng như Authentication, Authorization, và Caching phải được tích hợp trực tiếp vào Service Layer, làm cho lớp này trở nên phức tạp hơn.
-
-1.1. TodoService (Không có Repository)
-
-Dưới đây là một TodoService có đầy đủ các tính năng như Authentication, Authorization, và Caching.
-
-public class TodoService : ITodoService
+public partial class Feedback
 {
-    private readonly TodoDbContext _context;
-    private readonly ICacheService _cacheService;
-    private readonly IUserService _userService;
-    private readonly ILogger<TodoService> _logger;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public TodoService(
-        TodoDbContext context,
-        ICacheService cacheService,
-        IUserService userService,
-        ILogger<TodoService> logger,
-        IHttpContextAccessor httpContextAccessor)
-    {
-        _context = context;
-        _cacheService = cacheService;
-        _userService = userService;
-        _logger = logger;
-        _httpContextAccessor = httpContextAccessor;
-    }
-
-    // Method để lấy tất cả Todo items
-    public async Task<IEnumerable<TodoItem>> GetTodoItemsAsync()
-    {
-        var userId = _httpContextAccessor.HttpContext.User.Identity.Name;
-        _logger.LogInformation($"User {userId} is fetching Todo items.");
-
-        // Kiểm tra cache trước
-        var cacheKey = $"todos_{userId}";
-        var cachedTodos = _cacheService.Get<IEnumerable<TodoItem>>(cacheKey);
-        if (cachedTodos != null)
-        {
-            _logger.LogInformation("Returning todos from cache.");
-            return cachedTodos;
-        }
-
-        // Kiểm tra quyền của người dùng
-        if (!_userService.HasPermission(userId, "ViewTodos"))
-        {
-            throw new UnauthorizedAccessException("User does not have permission to view todos.");
-        }
-
-        // Nếu không có trong cache, truy vấn cơ sở dữ liệu
-        var todos = await _context.TodoItems.ToListAsync();
-
-        // Lưu kết quả vào cache
-        _cacheService.Set(cacheKey, todos, TimeSpan.FromMinutes(5));
-        
-        return todos;
-    }
-
-    // Các phương thức CRUD khác
+    public int FbId { get; set; }
+    public string FbContent { get; set; } = null!;
+    public DateTime FbDatetime { get; set; }
+    public string Username { get; set; } = null!;
+    public int ItemId { get; set; }
+    public int? ParentFbFlag { get; set; }
+    // Navigation Properties
+    public virtual ICollection<Feedback> InverseParentFbFlagNavigation { get; set; } = new List<Feedback>();
+    public virtual Item Item { get; set; } = null!;
+    public virtual Feedback? ParentFbFlagNavigation { get; set; }
+    public virtual Account UsernameNavigation { get; set; } = null!;
 }
+using System;
+using System.ComponentModel.DataAnnotations;
 
-1.2. Các Service phụ trợ
-
-ICacheService: Giả sử bạn có một dịch vụ Cache đơn giản.
-
-public interface ICacheService
+namespace ZestyBiteWebAppSolution.Models.DTOs
 {
-    T Get<T>(string key);
-    void Set(string key, object value, TimeSpan expiry);
-}
-
-IUserService: Một service để kiểm tra quyền của người dùng.
-
-public interface IUserService
-{
-    bool HasPermission(string userId, string permission);
-}
-
-1.3. TodoController
-
-Controller vẫn rất đơn giản, chỉ gọi trực tiếp vào Service Layer để thực hiện nghiệp vụ.
-
-[Route("api/[controller]")]
-[ApiController]
-public class TodoController : ControllerBase
-{
-    private readonly ITodoService _todoService;
-
-    public TodoController(ITodoService todoService)
+    public class FeedbackDTO
     {
-        _todoService = todoService;
-    }
+        public int Id { get; set; }
 
-    [HttpGet]
-    public async Task<IActionResult> GetTodos()
-    {
-        try
-        {
-            var todos = await _todoService.GetTodoItemsAsync();
-            return Ok(todos);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        [Required(ErrorMessage = "Feedback content is required.")]
+        public string Content { get; set; } = null!;
+        public DateTime DateTime { get; set; }
+        public string Username { get; set; } = null!;
+        public string? ProfileImage { get; set; }
+        public int ItemId { get; set; }
+        public string ItemName { get; set; } = null!;
+        public int? ParentFb { get; set; } = null!;
+        //to include parent feedback if needed
+        public FeedbackDTO? ParentFeedback { get; set; }
+        public bool IsReply { get; set; }
     }
 }
+using System;
+using System.ComponentModel.DataAnnotations;
 
-
-=======================================================================================================================
-
-Tình huống 2: Có Repository Layer (Tách biệt Repository và Service)
-
-Khi sử dụng Repository Layer, việc tách biệt logic truy vấn dữ liệu khỏi nghiệp vụ và các tính năng như Authentication, Authorization, và Caching sẽ giúp bạn tổ chức code tốt hơn. 
-
-Trong tình huống này, các tính năng phụ trợ như Authentication và Caching sẽ được xử lý ở các lớp riêng biệt và không làm phức tạp logic nghiệp vụ trong Service Layer.
-
-2.1. TodoRepository
-
-Repository sẽ chỉ xử lý truy vấn cơ sở dữ liệu mà không liên quan đến các tính năng phụ trợ như caching hay authentication.
-
-public class TodoRepository : ITodoRepository
+namespace ZestyBiteWebAppSolution.Models.DTOs
 {
-    private readonly TodoDbContext _context;
-
-    public TodoRepository(TodoDbContext context)
+    public class ReplyDTO
     {
-        _context = context;
-    }
+        public int Id { get; set; }
 
-    public async Task<IEnumerable<TodoItem>> GetAllTodosAsync()
-    {
-        return await _context.TodoItems.ToListAsync();
+        [Required(ErrorMessage = "Reply content is required.")]
+        public string Content { get; set; } = null!;
+        public DateTime DateTime { get; set; }
+        public string Username { get; set; } = null!;
+        public string? ProfileImage { get; set; }
+        public int ItemId { get; set; }
+        public string ItemName { get; set; } = null!;
+        public int ParentFb { get; set; } 
     }
-
-    // Các phương thức CRUD khác
 }
+using AutoMapper;
+using ZestyBiteWebAppSolution.Models.DTOs;
+using ZestyBiteWebAppSolution.Models.Entities;
 
-2.2. TodoService
-
-Trong Service Layer, bạn chỉ xử lý các nghiệp vụ và gọi Repository để truy vấn dữ liệu. Các tính năng như Authentication, Authorization, và Caching sẽ được thực hiện thông qua các service khác, không làm phức tạp TodoService.
-
-public class TodoService : ITodoService
+namespace ZestyBiteWebAppSolution.Mappings
 {
-    private readonly ITodoRepository _todoRepository;
-    private readonly ICacheService _cacheService;
-    private readonly IUserService _userService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILogger<TodoService> _logger;
-
-    public TodoService(
-        ITodoRepository todoRepository,
-        ICacheService cacheService,
-        IUserService userService,
-        IHttpContextAccessor httpContextAccessor,
-        ILogger<TodoService> logger)
+    public class MappingProfile : Profile
     {
-        _todoRepository = todoRepository;
-        _cacheService = cacheService;
-        _userService = userService;
-        _httpContextAccessor = httpContextAccessor;
-        _logger = logger;
-    }
-
-    public async Task<IEnumerable<TodoItem>> GetTodoItemsAsync()
-    {
-        var userId = _httpContextAccessor.HttpContext.User.Identity.Name;
-        _logger.LogInformation($"User {userId} is fetching Todo items.");
-
-        // Kiểm tra quyền của người dùng
-        if (!_userService.HasPermission(userId, "ViewTodos"))
+        public MappingProfile()
         {
-            throw new UnauthorizedAccessException("User does not have permission to view todos.");
-        }
+            CreateMap<Feedback, FeedbackDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
+            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
+            .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UsernameNavigation.Username))
+            .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
+            .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
+            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
+            .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag))
+            .ForMember(dest => dest.ParentFeedback, opt => opt.MapFrom(src => src.ParentFbFlagNavigation))
+            .ForMember(dest => dest.IsReply, opt => opt.MapFrom(src => src.ParentFbFlag != null));
 
-        // Kiểm tra cache trước
-        var cacheKey = $"todos_{userId}";
-        var cachedTodos = _cacheService.Get<IEnumerable<TodoItem>>(cacheKey);
-        if (cachedTodos != null)
-        {
-            _logger.LogInformation("Returning todos from cache.");
-            return cachedTodos;
-        }
+            CreateMap<FeedbackDTO, Feedback>()
+                .ForMember(dest => dest.FbId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.FbContent, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.FbDatetime, opt => opt.MapFrom(src => src.DateTime))
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
+                .ForMember(dest => dest.ParentFbFlag, opt => opt.MapFrom(src => src.ParentFb));
+                // .ForMember(dest => dest.UsernameNavigation.Name, opt => opt.MapFrom(src => src.Username))
+                // .ForMember(dest => dest.Item.ItemName, opt => opt.MapFrom(src => src.ItemName));
 
-        // Nếu không có trong cache, truy vấn cơ sở dữ liệu
-        var todos = await _todoRepository.GetAllTodosAsync();
+            CreateMap<Feedback, ReplyDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
+                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UsernameNavigation.Username))
+                .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
+                .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
+                .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag));
 
-        // Lưu kết quả vào cache
-        _cacheService.Set(cacheKey, todos, TimeSpan.FromMinutes(5));
-        
-        return todos;
-    }
-
-    // Các phương thức CRUD khác
-}
-
-2.3. TodoController
-
-TodoController vẫn giữ nguyên như trước, chỉ cần gọi các phương thức trong TodoService để thực hiện nghiệp vụ. Controller chỉ cần tập trung vào xử lý HTTP request và response.
-
-[Route("api/[controller]")]
-[ApiController]
-public class TodoController : ControllerBase
-{
-    private readonly ITodoService _todoService;
-
-    public TodoController(ITodoService todoService)
-    {
-        _todoService = todoService;
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetTodos()
-    {
-        try
-        {
-            var todos = await _todoService.GetTodoItemsAsync();
-            return Ok(todos);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
+            // Map Item to ItemDTO
+            CreateMap<Item, ItemDTO>()
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
+                .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.ItemName))
+                .ForMember(dest => dest.ItemCategory, opt => opt.MapFrom(src => src.ItemCategory))
+                .ForMember(dest => dest.ItemStatus, opt => opt.MapFrom(src => src.ItemStatus))
+                .ForMember(dest => dest.ItemDescription, opt => opt.MapFrom(src => src.ItemDescription))
+                .ForMember(dest => dest.SuggestedPrice, opt => opt.MapFrom(src => src.SuggestedPrice))
+                .ForMember(dest => dest.ItemImage, opt => opt.MapFrom(src => src.ItemImage))
+                .ForMember(dest => dest.IsServed, opt => opt.MapFrom(src => src.IsServed));
         }
     }
 }
+using Microsoft.EntityFrameworkCore;
+using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Models.Entities;
+using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
-======================================================================
-
-public class TodoRepository : ITodoRepository
+namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
-    private readonly TodoDbContext _context;
-
-    public TodoRepository(TodoDbContext context)
+    public class FeedbackRepository : IRepository<Feedback>, IFeedbackRepository
     {
-        _context = context;
-    }
+        private readonly ZestyBiteContext _context;
 
-    // CREATE: Thêm một TodoItem mới
-    public async Task<TodoItem> AddAsync(TodoItem todoItem)
-    {
-        _context.TodoItems.Add(todoItem);  // Thêm vào DbSet TodoItems
-        await _context.SaveChangesAsync(); // Lưu thay đổi vào cơ sở dữ liệu
-        return todoItem;  // Trả về đối tượng TodoItem vừa thêm
-    }
-
-    // READ: Lấy tất cả Todo items chưa hoàn thành
-    public async Task<IEnumerable<TodoItem>> GetIncompleteAsync()
-    {
-        return await _context.TodoItems
-                             .Where(todo => !todo.IsCompleted)
-                             .OrderBy(todo => todo.CreatedDate)
-                             .ToListAsync();
-    }
-
-    // READ: Lấy tất cả Todo items đã hoàn thành
-    public async Task<IEnumerable<TodoItem>> GetCompletedAsync()
-    {
-        return await _context.TodoItems
-                             .Where(todo => todo.IsCompleted)
-                             .OrderByDescending(todo => todo.CompletedDate)
-                             .ToListAsync();
-    }
-
-    // READ: Lấy một TodoItem theo ID
-    public async Task<TodoItem> GetByIdAsync(int id)
-    {
-        return await _context.TodoItems
-                             .FirstOrDefaultAsync(todo => todo.Id == id); // Trả về null nếu không tìm thấy
-    }
-
-    // UPDATE: Cập nhật TodoItem
-    public async Task<TodoItem> UpdateAsync(TodoItem todoItem)
-    {
-        var existingTodo = await _context.TodoItems.FindAsync(todoItem.Id);
-        if (existingTodo == null) return null;
-
-        // Cập nhật các trường dữ liệu
-        existingTodo.Title = todoItem.Title;
-        existingTodo.Description = todoItem.Description;
-        existingTodo.IsCompleted = todoItem.IsCompleted;
-        existingTodo.CompletedDate = todoItem.CompletedDate;
-
-        await _context.SaveChangesAsync(); // Lưu thay đổi vào cơ sở dữ liệu
-        return existingTodo; // Trả về TodoItem đã cập nhật
-    }
-
-    // DELETE: Xóa TodoItem
-    public async Task<bool> DeleteAsync(int id)
-    {
-        var todoItem = await _context.TodoItems.FindAsync(id);
-        if (todoItem == null) return false;
-
-        _context.TodoItems.Remove(todoItem); // Xóa TodoItem khỏi DbSet
-        await _context.SaveChangesAsync(); // Lưu thay đổi vào cơ sở dữ liệu
-        return true; // Trả về true nếu xóa thành công
-    }
-
-    // Tìm TodoItem theo tiêu đề (Tìm kiếm)
-    public async Task<IEnumerable<TodoItem>> SearchByTitleAsync(string title)
-    {
-        return await _context.TodoItems
-                             .Where(todo => todo.Title.Contains(title))
-                             .OrderBy(todo => todo.CreatedDate)
-                             .ToListAsync();
-    }
-}
-
-
-====================================
-
-. tôi muốn biết trong mỗi một các interface trên gồm những gì
-2. Luôn luôn sử dụng TypedResult cho controllers
-3. Phải tận dụng DTO nếu khả thi để tôi có thể hiểu hơn về cách code kết hợp cùng với DTO
-4. Luôn đóng vai trò bạn là 1 chuyên gia với hơn 20 yoe về lĩnh vực dotnet này bạn là 1 pm devops nói chung là bạn rất giỏi về nhiều lĩnh vực và chuyên sâu có thể giải quyết và demo được các dự án phức tạo => dựa vào đó hãy demo cho tôi thêm cách để tận dụng thêm 2 folder mới đó là Filters và Middlewares
-
-public interface ITodoRepository
-{
-    Task<TodoItem> AddAsync(TodoItem todoItem);
-    Task<IEnumerable<TodoItem>> GetIncompleteAsync();
-    Task<IEnumerable<TodoItem>> GetCompletedAsync();
-    Task<TodoItem> GetByIdAsync(int id);
-    Task<TodoItem> UpdateAsync(TodoItem todoItem);
-    Task<bool> DeleteAsync(int id);
-    Task<IEnumerable<TodoItem>> SearchByTitleAsync(string title);
-}
-
-
-public interface ITodoService
-{
-    Task<TypedResult<IEnumerable<TodoItemDTO>>> GetTodoItemsAsync();
-    Task<TypedResult<TodoItemDTO>> GetTodoByIdAsync(int id);
-    Task<TypedResult<TodoItemDTO>> AddTodoAsync(TodoItemDTO todoItemDto);
-    Task<TypedResult<TodoItemDTO>> UpdateTodoAsync(TodoItemDTO todoItemDto);
-    Task<TypedResult<bool>> DeleteTodoAsync(int id);
-}
-
-
-[Route("api/[controller]")]
-[ApiController]
-public class TodoController : ControllerBase
-{
-    private readonly ITodoService _todoService;
-
-    public TodoController(ITodoService todoService)
-    {
-        _todoService = todoService;
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetTodos()
-    {
-        var result = await _todoService.GetTodoItemsAsync();
-        if (result.Success)
+        public FeedbackRepository(ZestyBiteContext context)
         {
-            return Ok(result.Data);  // Return list of TodoItemsDTO
+            _context = context;
         }
 
-        return BadRequest(result.Message);  // Return error message
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetTodoById(int id)
-    {
-        var result = await _todoService.GetTodoByIdAsync(id);
-        if (result.Success)
+        public async Task<IEnumerable<Feedback>> GetFeedbacksByItemIdAsync(int itemId)
         {
-            return Ok(result.Data);  // Return TodoItemDTO
+            return await _context.Feedbacks
+                .Where(f => f.ItemId == itemId) // Exclude replies
+                .Include(f => f.UsernameNavigation)
+                .Include(f => f.Item)
+                .OrderByDescending(f => f.FbDatetime)
+                .ToListAsync();
         }
 
-        return NotFound(result.Message);
-    }
+        public async Task<Feedback?> GetByIdAsync(int id) => await _context.Feedbacks.FindAsync(id);
 
-    [HttpPost]
-    public async Task<IActionResult> AddTodo([FromBody] TodoItemDTO todoItemDto)
-    {
-        var result = await _todoService.AddTodoAsync(todoItemDto);
-        if (result.Success)
+        // Rely on the generic IRepository<T> methods for basic CRUD:
+        public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
         {
-            return CreatedAtAction(nameof(GetTodoById), new { id = result.Data.Id }, result.Data);
+            return await _context.Feedbacks
+                .OrderByDescending(f => f.FbDatetime)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Feedback?>> GetAllAsync()
+        {
+            return await _context.Feedbacks
+                .Include(f => f.UsernameNavigation)
+                .Include(f => f.Item)
+                .Include(f => f.ParentFbFlagNavigation)
+                .ToListAsync();
         }
 
-        return BadRequest(result.Message);
-    }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodoItemDTO todoItemDto)
-    {
-        todoItemDto.Id = id;
-        var result = await _todoService.UpdateTodoAsync(todoItemDto);
-        if (result.Success)
+        public async Task<Feedback> CreateAsync(Feedback feedback)
         {
-            return Ok(result.Data);
+            _context.Feedbacks.Add(feedback);
+            await _context.SaveChangesAsync();
+            return feedback;
+        }
+        public async Task<Feedback> UpdateAsync(Feedback feedback)
+        {
+            _context.Feedbacks.Update(feedback);
+            await _context.SaveChangesAsync();
+            return feedback;
         }
 
-        return BadRequest(result.Message);
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTodo(int id)
-    {
-        var result = await _todoService.DeleteTodoAsync(id);
-        if (result.Success)
+        public async Task<Feedback> DeleteAsync(Feedback feedback)
         {
-            return NoContent();  // No content after successful delete
+            _context.Feedbacks.Remove(feedback);
+            await _context.SaveChangesAsync();
+            return feedback;
         }
 
-        return BadRequest(result.Message);
+        // CRUD for reply
+        public async Task<IEnumerable<Feedback>> GetFeedbackRepliesAsync(int ParentFb)
+        {
+            return await _context.Feedbacks
+                .Where(f => f.ParentFbFlag == ParentFb)
+                .Include(f => f.UsernameNavigation)
+                .OrderBy(f => f.FbDatetime) // Oldest first
+                .ToListAsync();
+        }
+        public async Task<Feedback> CreateReplyAsync(Feedback reply)
+        {
+            _context.Feedbacks.Add(reply);
+            await _context.SaveChangesAsync();
+            return reply;
+        }
+        public async Task<Feedback> UpdateReplyAsync(Feedback reply)
+        {
+            _context.Feedbacks.Update(reply);
+            await _context.SaveChangesAsync();
+            return reply;
+        }
+        public async Task<bool> DeleteReplyAsync(Feedback reply)
+        {
+            _context.Feedbacks.Remove(reply);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
+using AutoMapper; 
+using ZestyBiteWebAppSolution.Models.DTOs;
+using ZestyBiteWebAppSolution.Models.Entities;
+using ZestyBiteWebAppSolution.Repositories.Interfaces;
+using ZestyBiteWebAppSolution.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Operations;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
-A. Custom Authorization Filter
-
-Giả sử bạn muốn kiểm tra quyền truy cập của người dùng trước khi cho phép truy cập vào controller. Bạn có thể tạo một filter.
-
-
-
-public class AuthorizationFilter : IAsyncActionFilter
+namespace ZestyBiteWebAppSolution.Services.Implementations
 {
-    private readonly IUserService _userService;
-
-    public AuthorizationFilter(IUserService userService)
+    public class FeedbackService : IFeedbackService
     {
-        _userService = userService;
-    }
+        private readonly IFeedbackRepository _feedbackRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IItemRepository _itemRepository;
+        private readonly IMapper _mapper;
 
-    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-    {
-        var userId = context.HttpContext.User.Identity.Name;
-        if (!_userService.HasPermission(userId, "ViewTodos"))
+        public FeedbackService(IFeedbackRepository feedbackRepository, IAccountRepository accountRepository, IItemRepository itemRepository, IMapper mapper)
         {
-            context.Result = new UnauthorizedResult();
-            return;
+            _feedbackRepository = feedbackRepository ?? throw new ArgumentNullException(nameof(feedbackRepository));
+            _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
+            _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        await next();
-    }
-}
-
-[ServiceFilter(typeof(AuthorizationFilter))]
-[HttpGet]
-public async Task<IActionResult> GetTodos()
-{
-    var result = await _todoService.GetTodoItemsAsync();
-    return result.Success ? Ok(result.Data) : BadRequest(result.Message);
-}
-
-/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
-B. Custom Middleware (Logging)
-
-Giả sử bạn muốn log tất cả các request và response vào một file log. Bạn có thể tạo một middleware để làm điều này.
-
-
-
-public class RequestLoggingMiddleware
-{
-    private readonly RequestDelegate _next;
-    private readonly ILogger<RequestLoggingMiddleware> _logger;
-
-    public RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggingMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
-
-    public async Task InvokeAsync(HttpContext context)
-    {
-        _logger.LogInformation($"Incoming Request: {context.Request.Method} {context.Request.Path}");
-        await _next(context);
-        _logger.LogInformation($"Outgoing Response: {context.Response.StatusCode}");
-    }
-}
-
-public static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-        .ConfigureWebHostDefaults(webBuilder =>
+        // CRUD Feedback
+        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByPageAsync(int pageNumber, int pageSize)
         {
-            webBuilder.Configure(app =>
+            var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync(pageNumber, pageSize);
+            return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
+        }
+
+        public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync()
+        {
+                        // var usn = await _accountRepository.GetAllAsync();
+
+            var feedbacks = await _feedbackRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
+        }
+
+        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId)
+        {
+            var feedbacks = await _feedbackRepository.GetFeedbacksByItemIdAsync(itemId);
+            return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
+        }
+
+        //[AllowAnonymous]
+        public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto, string usn)
+        {
+            if (feedbackDto == null)
             {
-                app.UseMiddleware<RequestLoggingMiddleware>();
-                app.UseRouting();
-                app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+                throw new ArgumentNullException(nameof(feedbackDto));
+            }
+
+            var account = await _accountRepository.GetAccountByUsnAsync(usn);
+            //var username = User.Identity.Name;
+            var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
+            if (account == null) throw new InvalidOperationException("Invalid Account.");
+            if (item == null) throw new InvalidOperationException("Invalid Item.");
+
+            var feedback = _mapper.Map<Feedback>(feedbackDto);
+            feedback.Username = usn;
+            feedback.UsernameNavigation = account;
+            feedback.Item = item;
+
+            var createdFeedback = await _feedbackRepository.CreateAsync(feedback);
+            return _mapper.Map<FeedbackDTO>(createdFeedback);
+        }
+
+        public async Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto)
+        {
+            if (feedbackDto == null)
+            {
+                throw new ArgumentNullException(nameof(feedbackDto));
+            }
+
+            var feedback = await _feedbackRepository.GetByIdAsync(feedbackDto.Id);
+            if (feedback == null)
+            {
+                throw new InvalidOperationException("Feedback not found.");
+            }
+
+            var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
+            if (item == null)
+            {
+                throw new InvalidOperationException("Invalid Item.");
+            }
+
+            feedback = _mapper.Map<Feedback>(feedbackDto);
+            feedback.Item = item;
+
+            var updatedFeedback = await _feedbackRepository.UpdateAsync(feedback);
+            return _mapper.Map<FeedbackDTO>(updatedFeedback);
+        }
+
+        public async Task<bool> DeleteFeedbackAsync(int feedbackId)
+        {
+            var feedback = await _feedbackRepository.GetByIdAsync(feedbackId);
+            if (feedback == null) return false;
+
+            await _feedbackRepository.DeleteAsync(feedback);
+            return true;
+        }
+
+        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync()
+        {
+            var items = await _itemRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<ItemDTO>>(items);
+        }
+
+        // CRUD Reply
+        public async Task<IEnumerable<ReplyDTO>> GetRepliesByFeedbackAsync(int parentFbFlag)
+        {
+            var replies = await _feedbackRepository.GetFeedbackRepliesAsync(parentFbFlag);
+            return _mapper.Map<IEnumerable<ReplyDTO>>(replies);
+        }
+        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto)
+        {
+            if (replyDto == null)
+            {
+                throw new ArgumentNullException(nameof(replyDto));
+            }
+
+            // Retrieve account using username
+            var account = await _accountRepository.GetAccountByUsnAsync(replyDto.Username);
+            var item = await _itemRepository.GetByIdAsync(replyDto.ItemId);
+
+            if (account == null) throw new InvalidOperationException("Invalid Account.");
+            if (item == null) throw new InvalidOperationException("Invalid Item.");
+
+            var reply = new Feedback
+            {
+                FbContent = replyDto.Content,
+                FbDatetime = DateTime.UtcNow,
+                Username = replyDto.Username,
+                ItemId = replyDto.ItemId,
+                ParentFbFlag = parentFbFlag,
+                UsernameNavigation = account,
+                Item = item
+            };
+
+            var submittedReply = await _feedbackRepository.CreateReplyAsync(reply);
+            return _mapper.Map<FeedbackDTO>(submittedReply);
+        }
+
+        public async Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto)
+        {
+            if (replyDto == null)
+            {
+                throw new ArgumentNullException(nameof(replyDto));
+            }
+
+            var existingReply = await _feedbackRepository.GetByIdAsync(replyDto.Id);
+            if (existingReply == null)
+            {
+                throw new KeyNotFoundException("Reply not found.");
+            }
+
+            existingReply.FbContent = replyDto.Content;
+            existingReply.FbDatetime = DateTime.UtcNow;
+
+            var updatedReply = await _feedbackRepository.UpdateReplyAsync(existingReply);
+            return _mapper.Map<FeedbackDTO>(updatedReply);
+        }
+
+        public async Task<bool> DeleteReplyAsync(int replyId)
+        {
+            var existingReply = await _feedbackRepository.GetByIdAsync(replyId);
+            if (existingReply == null) return false;
+
+            await _feedbackRepository.DeleteReplyAsync(existingReply);
+            return true;
+        }
+    }
+}
+using Microsoft.AspNetCore.Mvc;
+using ZestyBiteWebAppSolution.Models.DTOs;
+using ZestyBiteWebAppSolution.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+
+namespace ZestyBiteWebAppSolution.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FeedbackController : ControllerBase
+    {
+        private readonly IFeedbackService _feedbackService;
+
+        public FeedbackController(IFeedbackService feedbackService)
+        {
+            _feedbackService = feedbackService;
+        }
+
+        // GET: api/feedback/items
+        [HttpGet("items")]
+        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetItems()
+        {
+            var items = await _feedbackService.GetAllItemsAsync();
+            return Ok(items);
+        }
+
+        // GET: api/feedback/allfeedbacks
+        [HttpGet("allfeedbacks")]
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacks()
+        {
+            try
+            {
+                var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
+                return Ok(feedbacks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // GET: api/feedback/item/{itemId}
+        [HttpGet("item/{itemId}")]
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacksByItemId(int itemId)
+        {
+            try
+            {
+                var feedbacks = await _feedbackService.GetFeedbacksByItemIdAsync(itemId);
+                return Ok(feedbacks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // POST: api/feedback/submitfeedback
+        [Authorize]
+        [HttpPost("submitfeedback")]
+        public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var username = User.Identity.Name;
+                var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
+                return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // PUT: api/feedback
+        [HttpPut]
+        public async Task<ActionResult<FeedbackDTO>> UpdateFeedback([FromBody] FeedbackDTO feedbackDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var updatedFeedback = await _feedbackService.UpdateFeedbackAsync(feedbackDto);
+                return Ok(updatedFeedback);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // GET: api/feedback/feedbackpagination
+        [HttpGet("feedbackpagination")]
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacks(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var feedbacks = await _feedbackService.GetFeedbacksByPageAsync(pageNumber, pageSize);
+                return Ok(feedbacks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // DELETE: api/feedback/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteFeedback(int id)
+        {
+            try
+            {
+                var result = await _feedbackService.DeleteFeedbackAsync(id);
+                if (result)
+                {
+                    return NoContent();
+                }
+                return NotFound(new { Message = "Feedback not found" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // CRUD Reply
+        // GET: api/feedback/replies/{parentFb}
+        [HttpGet("replies/{parentFb}")]
+        public async Task<ActionResult<IEnumerable<ReplyDTO>>> GetRepliesForFeedback(int parentFb)
+        {
+            try
+            {
+                var replies = await _feedbackService.GetRepliesByFeedbackAsync(parentFb);
+                return Ok(replies);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // POST: api/feedback/reply
+        [HttpPost("reply")]
+        public async Task<ActionResult<ReplyDTO>> SubmitReply([FromBody] ReplyDTO replyDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto);
+                return CreatedAtAction(nameof(GetRepliesForFeedback), new { parentFb = submittedReply.ParentFb }, submittedReply);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // PUT: api/feedback/reply
+        [HttpPut("reply")]
+        public async Task<ActionResult<ReplyDTO>> UpdateReply([FromBody] ReplyDTO replyDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var updatedReply = await _feedbackService.UpdateReplyAsync(replyDto);
+                return Ok(updatedReply);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // DELETE: api/feedback/reply/{id}
+        [HttpDelete("reply/{id}")]
+        public async Task<ActionResult> DeleteReply(int id)
+        {
+            try
+            {
+                var result = await _feedbackService.DeleteReplyAsync(id);
+                if (result)
+                {
+                    return NoContent();
+                }
+                return NotFound(new { Message = "Reply not found" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+    }
+}
+@{
+    ViewBag.Title = "Blog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <style>
+        /* navbar */
+        .ftco-section {
+            padding: 0px !important;
+        }
+
+        /* comment-main */
+        .comment-main {
+            /* background-color: rgb(255, 255, 255); */
+        }
+
+        .comment-list-container {
+            max-height: 500px;
+            /* Adjust height as needed to fit approximately 5 items */
+            overflow-y: auto;
+            scrollbar-width: none;
+            /* For Firefox */
+            -ms-overflow-style: none;
+            /* For Internet Explorer and Edge */
+        }
+
+        .comment-list-container::-webkit-scrollbar {
+            display: none;
+            /* For Chrome, Safari, and Opera */
+        }
+
+
+        .comment-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .comment {
+            margin-bottom: 15px;
+        }
+
+        .comment-body {
+            display: inline-block;
+            vertical-align: top;
+        }
+        .comment-head {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .comment h3,
+        /* Comment author name */
+        .comment .meta,
+        /* Comment date */
+        .comment p,
+        /* Comment text */
+        .comment .feedback,
+        /* Feedback text */
+        .comment .reply {
+            /* Reply link */
+            color: #fff !important;
+        }
+
+        .feedback {
+            font-style: italic;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        /* reply style */
+        .reply-box {
+            background: transparent;
+            color: #fff;
+            /* this sets the text color - adjust as needed */
+            padding: 5px;
+        }
+
+        .reply-box input[type="text"] {
+            width: calc(100% - 50px);
+            margin-right: 5px;
+            background-color: rgba(0, 0, 0, 0);
+            color: #fff;
+        }
+
+        /* Indent nested comments */
+        .nested-comment {
+            margin-left: 5px;
+            /* Adjust indentation for each level */
+        }
+
+        /* Pagination style */
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pagination-controls .btn {
+            padding: 5px 10px;
+        }
+
+        .pagination-controls input[type="number"] {
+            text-align: center;
+        }
+
+        .pagination-controls #pageStatus {
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="container">
+            <div class="row">
+                <!-- Main Comment Section -->
+                <div class="col-md-8 ftco-animate comment-main">
+                    <div class="pt-5 mt-5">
+                        <h3>Comments</h3>
+                        <div class="comment-list-container">
+                            <ul class="comment-list" id="commentList">
+                                <!-- Comments will be dynamically loaded here -->
+                            </ul>
+                        </div>
+                        <!-- Pagination Controls -->
+                        <div class="pagination-controls mt-3">
+                            <button id="prevPage" class="btn btn-secondary" disabled>Previous</button>
+                            <input type="number" id="pageInput" class="form-control d-inline-block" style="width: 60px;"
+                                min="1" placeholder="Page">
+                            <button id="goToPage" class="btn btn-primary">Go</button>
+                            <button id="nextPage" class="btn btn-secondary">Next</button>
+                            <span id="pageStatus" class="ml-2"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Section -->
+                <div class="col-md-4 sidebar ftco-animate">
+                    <div class="sidebar-box">
+                        <form class="search-form">
+                            <div class="form-group">
+                                <div class="icon">
+                                    <span class="icon-search"></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search..." id="searchInput">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-box ftco-animate">
+                        <div class="categories">
+                            <h3>Categories</h3>
+                            <ul>
+                                <li><a href="#">Main Course<span>(12)</span></a></li>
+                                <li><a href="#">Drink<span>(22)</span></a></li>
+                                <li><a href="#">Dessert<span>(37)</span></a></li>
+                                <li><a href="#">Fruit<span>(42)</span></a></li>
+                                <li><a href="#">Salad<span>(14)</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        const MAX_DEPTH = 2; // Maximum reply depth
+        let currentPage = 1; // Current page of comments
+
+        // Fetch comments for the current page
+        function loadComments(page = 1) {
+            $.ajax({
+                url: `/api/feedback/feedbackpagination?pageNumber=${page}&pageSize=10`,
+                method: 'GET',
+                success: function (data) {
+                    const commentList = document.getElementById("commentList");
+                    commentList.innerHTML = ""; // Clear existing comments
+                    displayComments(data, commentList); // Render comments
+                    updatePaginationControls(page);
+                },
+                error: function () {
+                    console.error("Error loading comments.");
+                }
+            });
+        }
+
+        // Update the state of pagination buttons
+        function updatePaginationControls(page) {
+            currentPage = page;
+
+            // Enable/disable previous and next buttons
+            document.getElementById("prevPage").disabled = currentPage === 1;
+
+            // Update the page status
+            document.getElementById("pageStatus").textContent = `Page ${currentPage}`;
+        }
+
+        // Event listeners for pagination controls
+        document.getElementById("prevPage").addEventListener("click", () => {
+            if (currentPage > 1) {
+                loadComments(currentPage - 1);
+            }
+        });
+
+        document.getElementById("nextPage").addEventListener("click", () => {
+            loadComments(currentPage + 1);
+        });
+
+        document.getElementById("goToPage").addEventListener("click", () => {
+            const pageInput = parseInt(document.getElementById("pageInput").value, 10);
+            if (!isNaN(pageInput) && pageInput > 0) {
+                loadComments(pageInput);
+            } else {
+                alert("Invalid page number.");
+            }
+        });
+
+        // Recursive function to display comments and replies
+        function displayComments(commentsToDisplay, container, level = 0) {
+    commentsToDisplay.forEach(comment => {
+        try {
+            console.log("Processing comment:", comment);
+
+            const profileImage = comment.profileImage || "default-profile.png"; // Fallback for profile image
+            const username = comment.username || "Anonymous"; // Fallback for username
+            const itemName = comment.itemName || "Unknown Item"; // Fallback for item name
+            const dateTime = comment.dateTime ? new Date(comment.dateTime).toLocaleString() : "Unknown Date";
+            const content = comment.content || "";
+
+            // Safely handle comment.id or generate a fallback ID
+            const commentId = comment.id || `temp-${Math.random().toString(36).substr(2, 9)}`;
+            const repliesContainerId = `nested-${commentId}`;
+
+            // Create the comment element
+            const commentItem = document.createElement("li");
+            commentItem.classList.add("comment", "nested-comment");
+            commentItem.style.marginLeft = `${level * 5}px`;
+
+            commentItem.innerHTML = `
+                    <div class="vcard bio">
+                            <img src="${comment.profileImage}" alt="Profile" class="profile-img">
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-head">
+                            <h3>${username}</h3>
+                            <div class="meta">${dateTime}</div>
+                        </div>
+                        <p><strong>Item:</strong> ${itemName}</p>
+                        <p>${content}</p>
+                        ${level < MAX_DEPTH ? `<button class="reply-btn" data-id="${comment.id}" data-level="${level}">Reply</button>` : ""}
+                        <div class="reply-form" id="replyBox-${commentId}" style="display: none;">
+                            <input type="text" placeholder="Write a reply..." class="reply-input">
+                            <button class="submit-reply" data-parent-id="${comment.parentFb}" data-level="${level}">Submit</button>
+                        </div>
+                        <ul class="nested-comments" id="${repliesContainerId}"></ul>
+                    </div>
+            `;
+
+            container.appendChild(commentItem);
+
+            // Handle nested replies
+            if (comment.parentFeedback) {
+                const repliesContainer = document.getElementById(repliesContainerId);
+                displayComments([comment.parentFeedback], repliesContainer, level + 1);
+            }
+        } catch (error) {
+            console.error("Error processing comment:", comment, error);
+        }
+    });
+
+    setupReplyHandlers();
+}
+
+        // Set up event listeners for reply buttons and forms
+        function setupReplyHandlers() {
+            document.querySelectorAll('.reply-btn').forEach(button => {
+                button.addEventListener('click', event => {
+                    const replyBox = document.getElementById(`replyBox-${event.target.dataset.id}`);
+                    replyBox.style.display = replyBox.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+
+            document.querySelectorAll('.submit-reply').forEach(button => {
+                button.addEventListener('click', event => {
+                    const parentId = event.target.dataset.id;
+                    const level = parseInt(event.target.dataset.level);
+                    const replyInput = event.target.previousElementSibling.value.trim();
+
+                    if (replyInput && level < MAX_DEPTH) {
+                        postReply(parentId, replyInput, level);
+                    } else {
+                        alert("Reply content cannot be empty or exceeds max depth.");
+                    }
+                });
+            });
+        }
+
+        // Post a reply to the back-end
+        function postReply(parentId, replyInput, level) {
+            $.ajax({
+                url: '/api/feedback/reply',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    Content: replyInput,
+                    ParentFb: parentId,
+                    Username: "Current User", // Replace dynamically
+                }),
+                success: function (newReply) {
+                    const repliesContainer = document.getElementById(`nested-${parentId}`);
+                    appendFeedback(newReply, repliesContainer, level + 1); // Append reply dynamically
+                },
+                error: function (error) {
+                    console.error("Error submitting reply:", error);
+                }
+            });
+        }
+
+
+        // Append new feedback to the comment list
+        function appendFeedback(feedback, container, level) {
+            const newComment = document.createElement("li");
+            newComment.classList.add("comment", "nested-comment");
+            newComment.style.marginLeft = `${level * 5}px`;
+
+            newComment.innerHTML = `
+            <div class="vcard bio">
+                <img src="${comment.profileImage}" alt="Profile" class="profile-img">
+            </div>
+            <div class="comment-body">
+                <div class="comment-head">
+                    <h3>${feedback.username}</h3>
+                    <div class="meta">${new Date(feedback.createdAt).toLocaleString()}</div>
+                </div>
+                <p>${feedback.content}</p>
+            </div>
+    `;
+
+            container.appendChild(newComment);
+        }
+
+        // Initialize comments on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComments(currentPage);
+
+            // Pagination controls
+            document.getElementById('nextPage').addEventListener('click', () => {
+                currentPage++;
+                loadComments(currentPage);
+            });
+
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadComments(currentPage);
+                }
             });
         });
 
-============>>>>>>>>> middleware co the del can
-
-=====================================================================================================================================================================
-
-Bước 4: Cấu hình Dependency Injection trong Program.cs (Hoặc Startup.cs)
-ASP.NET Core sử dụng Dependency Injection container để quản lý vòng đời của các đối tượng và inject chúng vào các lớp cần thiết.
-
-Ở đây, bạn sẽ cấu hình TodoRepository với vòng đời Scoped. Điều này có nghĩa là mỗi HTTP request sẽ có một thể hiện duy nhất của TodoRepository và TodoDbContext.
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.ConfigureServices((context, services) =>
-                {
-                    // Thêm DbContext với Connection String
-                    services.AddDbContext<TodoDbContext>(options =>
-                        options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
-
-                    // Thêm TodoRepository với vòng đời Scoped
-                    services.AddScoped<ITodoRepository, TodoRepository>();
-
-                    // Thêm các dịch vụ khác như controller, Swagger, v.v.
-                    services.AddControllers();
-                });
-
-                webBuilder.Configure(app =>
-                {
-                    app.UseRouting();
-                    app.UseEndpoints(endpoints =>
-                    {
-                        endpoints.MapControllers();
-                    });
-                });
-            });
-}
-
-
-/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
-
-OOP Standard
-
-Cải tiến: Để tuân thủ chặt chẽ nguyên lý Encapsulation, chúng ta có thể làm cho các thuộc tính trong model TodoItem là private hoặc protected, và chỉ cung cấp các phương thức getter/setter hoặc sử dụng Validation để kiểm tra dữ liệu trước khi gán vào thuộc tính.
-
-public class TodoItem
-{
-    public int Id { get; private set; }  // Không cho phép thay đổi ID sau khi đã tạo
-    public string Title { get; private set; }
-    public string Description { get; private set; }
-    public bool IsCompleted { get; set; }
-    public DateTime CreatedDate { get; private set; }
-
-    // Constructor để tạo mới TodoItem
-    public TodoItem(string title, string description)
-    {
-        Title = title;
-        Description = description;
-        CreatedDate = DateTime.UtcNow;
-    }
-
-    // Phương thức để cập nhật các thuộc tính này
-    public void UpdateTitle(string title)
-    {
-        if (string.IsNullOrEmpty(title)) throw new ArgumentException("Title cannot be empty");
-        Title = title;
-    }
-
-    public void UpdateDescription(string description)
-    {
-        if (string.IsNullOrEmpty(description)) throw new ArgumentException("Description cannot be empty");
-        Description = description;
-    }
-}
-
-public interface ITodoRepository
-{
-    Task<IEnumerable<TodoItem>> GetAllAsync();
-    Task<TodoItem> GetByIdAsync(int id);
-    Task<TodoItem> AddAsync(TodoItem todoItem);
-    Task<bool> UpdateAsync(TodoItem todoItem);
-    Task<bool> DeleteAsync(int id);
-}
-
-
-
-=============>>>>>>>>>>>
-
-APPLICATION FOR TYPEDRESULT
-
-public class TypedResult<T>
-{
-    public bool Success { get; set; }
-    public string Message { get; set; }
-    public T Data { get; set; }
-
-    public TypedResult(bool success, string message, T data = default)
-    {
-        Success = success;
-        Message = message;
-        Data = data;
-    }
-
-    // Static helpers for success and failure
-    public static TypedResult<T> SuccessResult(T data) =>
-        new TypedResult<T>(true, "Request was successful", data);
-
-    public static TypedResult<T> FailureResult(string message) =>
-        new TypedResult<T>(false, message);
-}
-
-
-[Route("api/[controller]")]
-[ApiController]
-public class TodoController : ControllerBase
-{
-    private readonly ITodoService _todoService;
-
-    public TodoController(ITodoService todoService)
-    {
-        _todoService = todoService;
-    }
-
-    // GET: api/todo
-    [HttpGet]
-    public async Task<TypedResult<IEnumerable<TodoItemDTO>>> GetTodos()
-    {
-        var result = await _todoService.GetTodoItemsAsync();
-        if (result.Success)
-        {
-            return TypedResult<IEnumerable<TodoItemDTO>>.SuccessResult(result.Data);  // Trả về danh sách TodoItemsDTO
-        }
-
-        return TypedResult<IEnumerable<TodoItemDTO>>.FailureResult(result.Message);  // Trả về lỗi nếu không thành công
-    }
-
-    // GET: api/todo/{id}
-    [HttpGet("{id}")]
-    public async Task<TypedResult<TodoItemDTO>> GetTodoById(int id)
-    {
-        var result = await _todoService.GetTodoByIdAsync(id);
-        if (result.Success)
-        {
-            return TypedResult<TodoItemDTO>.SuccessResult(result.Data);  // Trả về TodoItemDTO
-        }
-
-        return TypedResult<TodoItemDTO>.FailureResult(result.Message);  // Trả về lỗi nếu không tìm thấy
-    }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // POST: api/todo
-    [HttpPost]
-    public async Task<TypedResult<TodoItemDTO>> AddTodo([FromBody] TodoItemDTO todoItemDto)
-    {
-        var result = await _todoService.AddTodoAsync(todoItemDto);
-        if (result.Success)
-        {
-            return TypedResult<TodoItemDTO>.SuccessResult(result.Data);  // Trả về TodoItemDTO đã tạo
-        }
-
-        return TypedResult<TodoItemDTO>.FailureResult(result.Message);  // Trả về lỗi nếu không thành công
-    }
-/**************************************************************************************************************************
-   public async Task<TodoItem> AddAsync(TodoItem todoItem)
-    {
-        _context.TodoItems.Add(todoItem);  // Thêm vào DbSet TodoItems
-        await _context.SaveChangesAsync(); // Lưu thay đổi vào cơ sở dữ liệu
-        return todoItem;  // Trả về đối tượng TodoItem vừa thêm
-    }
-***************************************************************************************************************************/
-    // PUT: api/todo/{id}
-    [HttpPut("{id}")]
-    public async Task<TypedResult<TodoItemDTO>> UpdateTodo(int id, [FromBody] TodoItemDTO todoItemDto)
-    {
-        todoItemDto.Id = id;
-        var result = await _todoService.UpdateTodoAsync(todoItemDto);
-        if (result.Success)
-        {
-            return TypedResult<TodoItemDTO>.SuccessResult(result.Data);  // Trả về TodoItemDTO đã cập nhật
-        }
-
-        return TypedResult<TodoItemDTO>.FailureResult(result.Message);  // Trả về lỗi nếu không thành công
-    }
-
-    // DELETE: api/todo/{id}
-    [HttpDelete("{id}")]
-    public async Task<TypedResult<string>> DeleteTodo(int id) // nen find truoc xem ton tai hay khong 
-    {
-        var result = await _todoService.DeleteTodoAsync(id);
-        if (result.Success)
-        {
-            return TypedResult<string>.SuccessResult("Todo item deleted successfully");
-        }
-
-        return TypedResult<string>.FailureResult(result.Message);  // Trả về lỗi nếu không thành công
-    }
-}
-
-
-*******************************************************************************************************************************************************
-*******************************************************************************************************************************************************
-
-public class TodoItem
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public bool IsCompleted { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public DateTime? CompletedDate { get; set; }
-
-    [Timestamp] // Thuộc tính này sẽ giúp EF Core nhận diện trường phiên bản
-    public byte[] RowVersion { get; set; } // Trường theo dõi sự thay đổi dữ liệu
-}
-
-public async Task<TodoItem> UpdateAsync(TodoItem todoItem)
-{
-    var existingTodo = await _context.TodoItems.FindAsync(todoItem.Id);
-    if (existingTodo == null) return null;
-
-    // So sánh RowVersion để kiểm tra xem có sự thay đổi dữ liệu không
-    if (!existingTodo.RowVersion.SequenceEqual(todoItem.RowVersion))
-    {
-        // Nếu RowVersion không khớp, xảy ra xung đột
-        throw new DbUpdateConcurrencyException("Dữ liệu đã bị thay đổi bởi người dùng khác.");
-    }
-
-    // Cập nhật các trường dữ liệu
-    existingTodo.Title = todoItem.Title;
-    existingTodo.Description = todoItem.Description;
-    existingTodo.IsCompleted = todoItem.IsCompleted;
-    existingTodo.CompletedDate = todoItem.CompletedDate;
-
-    // Lưu thay đổi vào cơ sở dữ liệu
-    await _context.SaveChangesAsync();
-    return existingTodo;
-}
-
-[HttpPut("{id}")]
-public async Task<IActionResult> UpdateTodo(int id, TodoItem todoItem)
-{
-    if (id != todoItem.Id)
-    {
-        return BadRequest("ID không hợp lệ.");
-    }
-
-    try
-    {
-        var updatedTodo = await _todoService.UpdateAsync(todoItem);
-        return Ok(updatedTodo);
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        return Conflict("Dữ liệu đã thay đổi. Vui lòng thử lại.");
-    }
-}
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Các loại Filters trong ASP.NET Core
-	1. Authorization Filters: Xử lý xác thực (authentication) và phân quyền (authorization).
-	2. Action Filters: Can thiệp vào logic của action method trước và sau khi thực thi.
-	3. Result Filters: Xử lý kết quả trả về từ action method, có thể là nội dung của HTTP response.
-	4. Exception Filters: Xử lý ngoại lệ (exception) nếu action method xảy ra lỗi.
-	5. Resource Filters: Can thiệp vào các tài nguyên trước khi chúng được nạp vào.
-
-
+        // Initial load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadComments(currentPage);
+        });
+    </script>
+</body>

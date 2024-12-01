@@ -31,15 +31,16 @@ namespace ZestyBiteWebAppSolution.Controllers
             _service = accountService;
             _mailService = verifyService;
         }
+        [HttpGet]
         public IActionResult Login()
         {
-            return View("LogIn", "Account");
+            return View();
         }
 
         [HttpPost]
         // [Route("login")]
-        // public async Task<IActionResult> Login([FromForm] LoginDTO dto)
-        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        public async Task<IActionResult> Login([FromForm] LoginDTO dto)
+        // public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
             if (!ModelState.IsValid)
             {

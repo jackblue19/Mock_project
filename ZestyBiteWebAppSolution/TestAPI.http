@@ -10,7 +10,6 @@ Content-Type: application/json
 
 {
   "Content": "12/1/2024 4PM",
-  "Username": "jane_smith",
   "ItemId": 1,
   "ItemName": "Pizza Margherita",
   "ParentFb": null
@@ -20,14 +19,14 @@ PUT http://localhost:5024/api/feedback
 Content-Type: application/json
 
 {
-  "Id": 58,
+  "Id": 65,
   "Content": "halohalo",
   "ItemId": 1,
   "ItemName": "Pizza Margherita",
   "ParentFb": 16
 }
 ###
-GET http://localhost:5024/api/feedback/feedbackpagination?pageNumber=1&pageSize=10
+GET http://localhost:5024/api/feedback/feedbackpagination?pageNumber=4&pageSize=10
 ###
 DELETE http://localhost:5024/api/feedback/57
 ###
@@ -40,7 +39,7 @@ Content-Type: application/json
   "Content": "This is a reply message.",
   "ItemId": 1,
   "ItemName": "Pizza Margherita",
-  "ParentFb": 16
+  "ParentFb": 19
 }
 ###
 PUT http://localhost:5024/api/feedback/reply
@@ -58,8 +57,8 @@ POST http://localhost:5024/api/account/login
 Content-Type: application/json
 
 {
-    "username": "jane_smith",
-    "password": "password456"
+    "username": "customer1",
+    "password": "customerpass"
 }
 ###
 

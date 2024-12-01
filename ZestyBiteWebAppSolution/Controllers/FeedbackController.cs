@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
@@ -69,8 +69,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try
             {
-                var username = User.Identity.Name;
-                //string username = "john_doe";
+                string username = User.Identity.Name;
                 var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
                 return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
             }
@@ -156,7 +155,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try
             {
-                var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto);
+                string username = User.Identity.Name; // Get the username from the authenticated user
+                var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto, username);
                 return CreatedAtAction(nameof(GetRepliesForFeedback), new { parentFb = submittedReply.ParentFb }, submittedReply);
             }
             catch (Exception ex)

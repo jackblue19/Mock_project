@@ -17,6 +17,8 @@ public partial class Feedback
     public virtual Feedback? ParentFbFlagNavigation { get; set; }
     public virtual Account UsernameNavigation { get; set; } = null!;
 }
+
+
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,7 +31,6 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         [Required(ErrorMessage = "Feedback content is required.")]
         public string Content { get; set; } = null!;
         public DateTime DateTime { get; set; }
-        public string Username { get; set; } = null!;
         public string? ProfileImage { get; set; }
         public int ItemId { get; set; }
         public string ItemName { get; set; } = null!;
@@ -39,6 +40,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         public bool IsReply { get; set; }
     }
 }
+
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -58,61 +60,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         public int ParentFb { get; set; } 
     }
 }
-using AutoMapper;
-using ZestyBiteWebAppSolution.Models.DTOs;
-using ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Mappings
-{
-    public class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
-            CreateMap<Feedback, FeedbackDTO>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
-            .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
-            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UsernameNavigation.Username))
-            .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
-            .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
-            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
-            .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag))
-            .ForMember(dest => dest.ParentFeedback, opt => opt.MapFrom(src => src.ParentFbFlagNavigation))
-            .ForMember(dest => dest.IsReply, opt => opt.MapFrom(src => src.ParentFbFlag != null));
-
-            CreateMap<FeedbackDTO, Feedback>()
-                .ForMember(dest => dest.FbId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.FbContent, opt => opt.MapFrom(src => src.Content))
-                .ForMember(dest => dest.FbDatetime, opt => opt.MapFrom(src => src.DateTime))
-                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
-                .ForMember(dest => dest.ParentFbFlag, opt => opt.MapFrom(src => src.ParentFb));
-                // .ForMember(dest => dest.UsernameNavigation.Name, opt => opt.MapFrom(src => src.Username))
-                // .ForMember(dest => dest.Item.ItemName, opt => opt.MapFrom(src => src.ItemName));
-
-            CreateMap<Feedback, ReplyDTO>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
-                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
-                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UsernameNavigation.Username))
-                .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
-                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
-                .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
-                .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag));
-
-            // Map Item to ItemDTO
-            CreateMap<Item, ItemDTO>()
-                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
-                .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.ItemName))
-                .ForMember(dest => dest.ItemCategory, opt => opt.MapFrom(src => src.ItemCategory))
-                .ForMember(dest => dest.ItemStatus, opt => opt.MapFrom(src => src.ItemStatus))
-                .ForMember(dest => dest.ItemDescription, opt => opt.MapFrom(src => src.ItemDescription))
-                .ForMember(dest => dest.SuggestedPrice, opt => opt.MapFrom(src => src.SuggestedPrice))
-                .ForMember(dest => dest.ItemImage, opt => opt.MapFrom(src => src.ItemImage))
-                .ForMember(dest => dest.IsServed, opt => opt.MapFrom(src => src.IsServed));
-        }
-    }
-}
 using Microsoft.EntityFrameworkCore;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.Entities;
@@ -144,9 +92,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         // Rely on the generic IRepository<T> methods for basic CRUD:
         public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
         {
+            var offset = (pageNumber - 1) * pageSize;
             return await _context.Feedbacks
+                .Include(f => f.UsernameNavigation) // Include related entities
+                .Include(f => f.Item)
                 .OrderByDescending(f => f.FbDatetime)
-                .Skip((pageNumber - 1) * pageSize)
+                .Skip(offset)
                 .Take(pageSize)
                 .ToListAsync();
         }
@@ -208,7 +159,9 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         }
     }
 }
-using AutoMapper; 
+
+
+using AutoMapper;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
@@ -248,7 +201,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
 
         public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync()
         {
-                        // var usn = await _accountRepository.GetAllAsync();
+            var usn = await _accountRepository.GetAllAsync();
 
             var feedbacks = await _feedbackRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
@@ -261,6 +214,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         }
 
         //[AllowAnonymous]
+        [Authorize]
         public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto, string usn)
         {
             if (feedbackDto == null)
@@ -269,7 +223,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             }
 
             var account = await _accountRepository.GetAccountByUsnAsync(usn);
-            //var username = User.Identity.Name;
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
             if (account == null) throw new InvalidOperationException("Invalid Account.");
             if (item == null) throw new InvalidOperationException("Invalid Item.");
@@ -330,7 +283,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var replies = await _feedbackRepository.GetFeedbackRepliesAsync(parentFbFlag);
             return _mapper.Map<IEnumerable<ReplyDTO>>(replies);
         }
-        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto)
+        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto, string usn)
         {
             if (replyDto == null)
             {
@@ -338,7 +291,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             }
 
             // Retrieve account using username
-            var account = await _accountRepository.GetAccountByUsnAsync(replyDto.Username);
+            var account = await _accountRepository.GetAccountByUsnAsync(usn);
             var item = await _itemRepository.GetByIdAsync(replyDto.ItemId);
 
             if (account == null) throw new InvalidOperationException("Invalid Account.");
@@ -348,7 +301,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             {
                 FbContent = replyDto.Content,
                 FbDatetime = DateTime.UtcNow,
-                Username = replyDto.Username,
+                Username = usn,
                 ItemId = replyDto.ItemId,
                 ParentFbFlag = parentFbFlag,
                 UsernameNavigation = account,
@@ -389,6 +342,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         }
     }
 }
+
 using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Services.Interfaces;
@@ -396,9 +350,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
@@ -449,7 +405,6 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback/submitfeedback
-        [Authorize]
         [HttpPost("submitfeedback")]
         public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
         {
@@ -459,7 +414,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try
             {
-                var username = User.Identity.Name;
+                string username = User.Identity.Name;
                 var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
                 return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
             }
@@ -494,17 +449,10 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         // GET: api/feedback/feedbackpagination
         [HttpGet("feedbackpagination")]
-        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacks(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetFeedbacksByPage(int pageNumber, int pageSize)
         {
-            try
-            {
-                var feedbacks = await _feedbackService.GetFeedbacksByPageAsync(pageNumber, pageSize);
-                return Ok(feedbacks);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var feedbacks = await _feedbackService.GetFeedbacksByPageAsync(pageNumber, pageSize);
+            return Ok(feedbacks);
         }
 
         // DELETE: api/feedback/{id}
@@ -552,7 +500,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try
             {
-                var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto);
+                string username = User.Identity.Name;
+                var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto, username);
                 return CreatedAtAction(nameof(GetRepliesForFeedback), new { parentFb = submittedReply.ParentFb }, submittedReply);
             }
             catch (Exception ex)
@@ -604,374 +553,3 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
     }
 }
-@{
-    ViewBag.Title = "Blog";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<head>
-    <style>
-        /* navbar */
-        .ftco-section {
-            padding: 0px !important;
-        }
-
-        /* comment-main */
-        .comment-main {
-            /* background-color: rgb(255, 255, 255); */
-        }
-
-        .comment-list-container {
-            max-height: 500px;
-            /* Adjust height as needed to fit approximately 5 items */
-            overflow-y: auto;
-            scrollbar-width: none;
-            /* For Firefox */
-            -ms-overflow-style: none;
-            /* For Internet Explorer and Edge */
-        }
-
-        .comment-list-container::-webkit-scrollbar {
-            display: none;
-            /* For Chrome, Safari, and Opera */
-        }
-
-
-        .comment-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .comment {
-            margin-bottom: 15px;
-        }
-
-        .comment-body {
-            display: inline-block;
-            vertical-align: top;
-        }
-        .comment-head {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-        }
-
-        .comment h3,
-        /* Comment author name */
-        .comment .meta,
-        /* Comment date */
-        .comment p,
-        /* Comment text */
-        .comment .feedback,
-        /* Feedback text */
-        .comment .reply {
-            /* Reply link */
-            color: #fff !important;
-        }
-
-        .feedback {
-            font-style: italic;
-            color: #555;
-            margin-top: 5px;
-        }
-
-        /* reply style */
-        .reply-box {
-            background: transparent;
-            color: #fff;
-            /* this sets the text color - adjust as needed */
-            padding: 5px;
-        }
-
-        .reply-box input[type="text"] {
-            width: calc(100% - 50px);
-            margin-right: 5px;
-            background-color: rgba(0, 0, 0, 0);
-            color: #fff;
-        }
-
-        /* Indent nested comments */
-        .nested-comment {
-            margin-left: 5px;
-            /* Adjust indentation for each level */
-        }
-
-        /* Pagination style */
-        .pagination-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .pagination-controls .btn {
-            padding: 5px 10px;
-        }
-
-        .pagination-controls input[type="number"] {
-            text-align: center;
-        }
-
-        .pagination-controls #pageStatus {
-            font-size: 14px;
-            color: #555;
-        }
-    </style>
-</head>
-
-<body>
-    <section>
-        <div class="container">
-            <div class="row">
-                <!-- Main Comment Section -->
-                <div class="col-md-8 ftco-animate comment-main">
-                    <div class="pt-5 mt-5">
-                        <h3>Comments</h3>
-                        <div class="comment-list-container">
-                            <ul class="comment-list" id="commentList">
-                                <!-- Comments will be dynamically loaded here -->
-                            </ul>
-                        </div>
-                        <!-- Pagination Controls -->
-                        <div class="pagination-controls mt-3">
-                            <button id="prevPage" class="btn btn-secondary" disabled>Previous</button>
-                            <input type="number" id="pageInput" class="form-control d-inline-block" style="width: 60px;"
-                                min="1" placeholder="Page">
-                            <button id="goToPage" class="btn btn-primary">Go</button>
-                            <button id="nextPage" class="btn btn-secondary">Next</button>
-                            <span id="pageStatus" class="ml-2"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar Section -->
-                <div class="col-md-4 sidebar ftco-animate">
-                    <div class="sidebar-box">
-                        <form class="search-form">
-                            <div class="form-group">
-                                <div class="icon">
-                                    <span class="icon-search"></span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Search..." id="searchInput">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="sidebar-box ftco-animate">
-                        <div class="categories">
-                            <h3>Categories</h3>
-                            <ul>
-                                <li><a href="#">Main Course<span>(12)</span></a></li>
-                                <li><a href="#">Drink<span>(22)</span></a></li>
-                                <li><a href="#">Dessert<span>(37)</span></a></li>
-                                <li><a href="#">Fruit<span>(42)</span></a></li>
-                                <li><a href="#">Salad<span>(14)</span></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <script>
-        const MAX_DEPTH = 2; // Maximum reply depth
-        let currentPage = 1; // Current page of comments
-
-        // Fetch comments for the current page
-        function loadComments(page = 1) {
-            $.ajax({
-                url: `/api/feedback/feedbackpagination?pageNumber=${page}&pageSize=10`,
-                method: 'GET',
-                success: function (data) {
-                    const commentList = document.getElementById("commentList");
-                    commentList.innerHTML = ""; // Clear existing comments
-                    displayComments(data, commentList); // Render comments
-                    updatePaginationControls(page);
-                },
-                error: function () {
-                    console.error("Error loading comments.");
-                }
-            });
-        }
-
-        // Update the state of pagination buttons
-        function updatePaginationControls(page) {
-            currentPage = page;
-
-            // Enable/disable previous and next buttons
-            document.getElementById("prevPage").disabled = currentPage === 1;
-
-            // Update the page status
-            document.getElementById("pageStatus").textContent = `Page ${currentPage}`;
-        }
-
-        // Event listeners for pagination controls
-        document.getElementById("prevPage").addEventListener("click", () => {
-            if (currentPage > 1) {
-                loadComments(currentPage - 1);
-            }
-        });
-
-        document.getElementById("nextPage").addEventListener("click", () => {
-            loadComments(currentPage + 1);
-        });
-
-        document.getElementById("goToPage").addEventListener("click", () => {
-            const pageInput = parseInt(document.getElementById("pageInput").value, 10);
-            if (!isNaN(pageInput) && pageInput > 0) {
-                loadComments(pageInput);
-            } else {
-                alert("Invalid page number.");
-            }
-        });
-
-        // Recursive function to display comments and replies
-        function displayComments(commentsToDisplay, container, level = 0) {
-    commentsToDisplay.forEach(comment => {
-        try {
-            console.log("Processing comment:", comment);
-
-            const profileImage = comment.profileImage || "default-profile.png"; // Fallback for profile image
-            const username = comment.username || "Anonymous"; // Fallback for username
-            const itemName = comment.itemName || "Unknown Item"; // Fallback for item name
-            const dateTime = comment.dateTime ? new Date(comment.dateTime).toLocaleString() : "Unknown Date";
-            const content = comment.content || "";
-
-            // Safely handle comment.id or generate a fallback ID
-            const commentId = comment.id || `temp-${Math.random().toString(36).substr(2, 9)}`;
-            const repliesContainerId = `nested-${commentId}`;
-
-            // Create the comment element
-            const commentItem = document.createElement("li");
-            commentItem.classList.add("comment", "nested-comment");
-            commentItem.style.marginLeft = `${level * 5}px`;
-
-            commentItem.innerHTML = `
-                    <div class="vcard bio">
-                            <img src="${comment.profileImage}" alt="Profile" class="profile-img">
-                    </div>
-                    <div class="comment-body">
-                        <div class="comment-head">
-                            <h3>${username}</h3>
-                            <div class="meta">${dateTime}</div>
-                        </div>
-                        <p><strong>Item:</strong> ${itemName}</p>
-                        <p>${content}</p>
-                        ${level < MAX_DEPTH ? `<button class="reply-btn" data-id="${comment.id}" data-level="${level}">Reply</button>` : ""}
-                        <div class="reply-form" id="replyBox-${commentId}" style="display: none;">
-                            <input type="text" placeholder="Write a reply..." class="reply-input">
-                            <button class="submit-reply" data-parent-id="${comment.parentFb}" data-level="${level}">Submit</button>
-                        </div>
-                        <ul class="nested-comments" id="${repliesContainerId}"></ul>
-                    </div>
-            `;
-
-            container.appendChild(commentItem);
-
-            // Handle nested replies
-            if (comment.parentFeedback) {
-                const repliesContainer = document.getElementById(repliesContainerId);
-                displayComments([comment.parentFeedback], repliesContainer, level + 1);
-            }
-        } catch (error) {
-            console.error("Error processing comment:", comment, error);
-        }
-    });
-
-    setupReplyHandlers();
-}
-
-        // Set up event listeners for reply buttons and forms
-        function setupReplyHandlers() {
-            document.querySelectorAll('.reply-btn').forEach(button => {
-                button.addEventListener('click', event => {
-                    const replyBox = document.getElementById(`replyBox-${event.target.dataset.id}`);
-                    replyBox.style.display = replyBox.style.display === 'none' ? 'block' : 'none';
-                });
-            });
-
-            document.querySelectorAll('.submit-reply').forEach(button => {
-                button.addEventListener('click', event => {
-                    const parentId = event.target.dataset.id;
-                    const level = parseInt(event.target.dataset.level);
-                    const replyInput = event.target.previousElementSibling.value.trim();
-
-                    if (replyInput && level < MAX_DEPTH) {
-                        postReply(parentId, replyInput, level);
-                    } else {
-                        alert("Reply content cannot be empty or exceeds max depth.");
-                    }
-                });
-            });
-        }
-
-        // Post a reply to the back-end
-        function postReply(parentId, replyInput, level) {
-            $.ajax({
-                url: '/api/feedback/reply',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    Content: replyInput,
-                    ParentFb: parentId,
-                    Username: "Current User", // Replace dynamically
-                }),
-                success: function (newReply) {
-                    const repliesContainer = document.getElementById(`nested-${parentId}`);
-                    appendFeedback(newReply, repliesContainer, level + 1); // Append reply dynamically
-                },
-                error: function (error) {
-                    console.error("Error submitting reply:", error);
-                }
-            });
-        }
-
-
-        // Append new feedback to the comment list
-        function appendFeedback(feedback, container, level) {
-            const newComment = document.createElement("li");
-            newComment.classList.add("comment", "nested-comment");
-            newComment.style.marginLeft = `${level * 5}px`;
-
-            newComment.innerHTML = `
-            <div class="vcard bio">
-                <img src="${comment.profileImage}" alt="Profile" class="profile-img">
-            </div>
-            <div class="comment-body">
-                <div class="comment-head">
-                    <h3>${feedback.username}</h3>
-                    <div class="meta">${new Date(feedback.createdAt).toLocaleString()}</div>
-                </div>
-                <p>${feedback.content}</p>
-            </div>
-    `;
-
-            container.appendChild(newComment);
-        }
-
-        // Initialize comments on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadComments(currentPage);
-
-            // Pagination controls
-            document.getElementById('nextPage').addEventListener('click', () => {
-                currentPage++;
-                loadComments(currentPage);
-            });
-
-            document.getElementById('prevPage').addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    loadComments(currentPage);
-                }
-            });
-        });
-
-        // Initial load
-        document.addEventListener("DOMContentLoaded", () => {
-            loadComments(currentPage);
-        });
-    </script>
-</body>

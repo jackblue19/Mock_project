@@ -120,7 +120,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var replies = await _feedbackRepository.GetFeedbackRepliesAsync(parentFbFlag);
             return _mapper.Map<IEnumerable<ReplyDTO>>(replies);
         }
-        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto)
+        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto, string usn)
         {
             if (replyDto == null)
             {
@@ -128,7 +128,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             }
 
             // Retrieve account using username
-            var account = await _accountRepository.GetAccountByUsnAsync(replyDto.Username);
+            var account = await _accountRepository.GetAccountByUsnAsync(usn);
             var item = await _itemRepository.GetByIdAsync(replyDto.ItemId);
 
             if (account == null) throw new InvalidOperationException("Invalid Account.");
@@ -138,7 +138,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             {
                 FbContent = replyDto.Content,
                 FbDatetime = DateTime.UtcNow,
-                Username = replyDto.Username,
+                Username = usn,
                 ItemId = replyDto.ItemId,
                 ParentFbFlag = parentFbFlag,
                 UsernameNavigation = account,

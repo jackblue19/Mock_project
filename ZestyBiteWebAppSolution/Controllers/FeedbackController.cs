@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class FeedbackController : ControllerBase
     {
         private readonly IFeedbackService _feedbackService;
@@ -60,7 +60,6 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback/submitfeedback
-        [Authorize]
         [HttpPost("submitfeedback")]
         public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto)
         {
@@ -70,8 +69,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try
             {
-                var username = User.Identity.Name;
-                //string username = "john_doe";
+                string username = User.Identity.Name;
                 var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
                 return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
             }

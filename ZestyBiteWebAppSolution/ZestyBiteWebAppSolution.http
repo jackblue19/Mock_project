@@ -1,26 +1,71 @@
-﻿@ZestyBiteWebAppSolution_HostAddress = https://localhost:7131
-
+﻿########################################################################
+GET http://localhost:5024/api/feedback/items
 ###
-POST http://localhost:7131/api/feedback
+GET http://localhost:5024/api/feedback/allfeedbacks
+###
+GET http://localhost:5024/api/feedback/item/43
+###
+POST http://localhost:5024/api/feedback/submitfeedback
 Content-Type: application/json
 
 {
-    "content": "awd awd awd wad ",
-    "dateTime": "2024-11-21T15:14:00",
-    "accountId": 1,
-    "username": "john_doe",
-    "profileImage": null,
-    "itemId": 1,
-    "itemName": "Pizza Margherita"
+  "Content": "12/1/2024 4PM",
+  "Username": "john_doe",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": null
 }
 ###
-GET http://localhost:7131/api/feedback/all
+PUT http://localhost:5024/api/feedback
+Content-Type: application/json
+
+{
+  "Id": 35,
+  "Content": "halohalo",
+  "Username": "john_doe",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": null
+}
 ###
-GET http://localhost:7131/api/feedback/allpage?pageNumber=1&pageSize=10
+GET http://localhost:5024/api/feedback/feedbackpagination?pageNumber=1&pageSize=10
 ###
-GET http://localhost:7131/api/feedback/item/6
+DELETE http://localhost:5024/api/feedback/43
 ###
-DELETE http://localhost:7131/api/feedback/1
+GET http://localhost:5024/api/feedback/replies/9
+###
+POST http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
+{
+  "Content": "This is a reply message.",
+  "Username": "john_doe",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": 14
+}
+###
+PUT http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
+{
+  "Id": 38,
+  "Content": "Updated reply message.",
+  "Username": "john_doe",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": 3
+}
+###
+DELETE http://localhost:5024/api/feedback/reply/38
+###
+POST http://localhost:5024/api/account/login
+Content-Type: application/json
+
+{
+    "username": "john_doe",
+    "password": "password123"
+}
 ###
 
 ###
@@ -31,4 +76,5 @@ DELETE http://localhost:7131/api/feedback/1
 
 ###
 
-###
+
+########################################################################

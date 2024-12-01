@@ -2146,10 +2146,6 @@ h3 {
     text-align: center;
 }
 
-.ftco-menu .f-menu-img {
-    height: 300px;
-}
-
 .services-wrap {
     margin-bottom: 30px;
 }
@@ -10186,10 +10182,6 @@ body {
         width: 100%;
     }
 
-span {
-    color: #bfbfbf;
-}
-
 a {
     -webkit-transition: .3s all ease;
     -o-transition: .3s all ease;
@@ -10206,7 +10198,6 @@ a {
 h1, h2, h3, h4, h5,
 .h1, .h2, .h3, .h4, .h5 {
     line-height: 1.4;
-    color: #fff;
     font-weight: 400;
     font-family: "Josefin Sans", Arial, sans-serif;
 }

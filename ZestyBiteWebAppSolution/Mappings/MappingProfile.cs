@@ -1,13 +1,10 @@
-using AutoMapper;
+﻿using AutoMapper;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Mappings
-{
-    public class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
+namespace ZestyBiteWebAppSolution.Mappings {
+    public class MappingProfile : Profile {
+        public MappingProfile() {
             CreateMap<Feedback, FeedbackDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
             .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
@@ -26,6 +23,8 @@ namespace ZestyBiteWebAppSolution.Mappings
                 .ForMember(dest => dest.FbDatetime, opt => opt.MapFrom(src => src.DateTime))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
                 .ForMember(dest => dest.ParentFbFlag, opt => opt.MapFrom(src => src.ParentFb));
+                // .ForMember(dest => dest.UsernameNavigation.Name, opt => opt.MapFrom(src => src.Username))
+                // .ForMember(dest => dest.Item.ItemName, opt => opt.MapFrom(src => src.ItemName));
 
             CreateMap<Feedback, ReplyDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))

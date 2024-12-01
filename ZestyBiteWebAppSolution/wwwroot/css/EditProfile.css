@@ -1,7 +1,4 @@
 ﻿/* Base Styling */
-.bg-dark {
-    background-color: black;
-}
 
 .list-group {
     width: 80%;
@@ -12,7 +9,6 @@
 .form-config {
     background-color: rgba(22, 19, 19, 0.7);
     width: 80%;
-    max-width: 1000px;
     height: auto; /* Set height to auto for flexibility */
     margin: 0 auto;
     border-radius: 10px;
@@ -75,6 +71,7 @@
     color: #ffffff;
     outline: none;
     font-size: 16px;
+    box-sizing: border-box; /* Ensures padding/borders don't affect width */
 }
 
 /* Responsive Design */

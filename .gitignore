@@ -283,6 +283,7 @@ ZestyBiteWebAppSolution/obj
 
 
 ZestyBiteWebAppSolution/.vs/
+ZestyBiteWebAppSolution/.vscode/
 ZestyBiteWebAppSolution/bin/
 ZestyBiteWebAppSolution/obj/
 
@@ -291,6 +292,7 @@ ZestyBiteWebAppSolution/obj/
 
 # Ignore Visual Studio-related folders and files
 .vs/
+.vscode/
 
 # Ignore build output folders
 bin/

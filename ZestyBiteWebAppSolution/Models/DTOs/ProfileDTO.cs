@@ -2,7 +2,6 @@
 
 namespace ZestyBiteWebAppSolution.Models.DTOs {
     public class ProfileDTO {
-        // public string Username { get; set; } = null!;
         [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; } = null!;
 

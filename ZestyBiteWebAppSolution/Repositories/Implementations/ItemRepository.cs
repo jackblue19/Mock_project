@@ -48,19 +48,5 @@ namespace ZestyBiteWebAppSolution.Repositories
             await _context.SaveChangesAsync();
             return item; // Return the deleted entity
         }
-
-        //public async Task<IEnumerable<Item>> GetItemsByCategoryAsync(string category)
-        //{
-        //    return await _context.Items
-        //        .Where(item => item.ItemCategory == category)
-        //        .ToListAsync();
-        //}
-
-        //public async Task<IEnumerable<Item>> GetItemsByStatusAsync(int status)
-        //{
-        //    return await _context.Items
-        //        .Where(item => item.ItemStatus == status)
-        //        .ToListAsync();
-        //}
     }
 }

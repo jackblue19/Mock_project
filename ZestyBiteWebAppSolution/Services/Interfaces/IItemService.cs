@@ -5,12 +5,13 @@ using ZestyBiteWebAppSolution.Models.Entities;
 
 namespace ZestyBiteWebAppSolution.Services.Interfaces
 {
-    public interface IItemService
-    {
+    public interface IItemService {
         Task<IEnumerable<ItemDTO?>> GetAllItemsAsync();
-        Task<Item?> GetItemByIdAsync(int itemid);
+        Task<Item?> GetItemByIdAsync(int id);
         Task<Item> CreateItemAsync(Item item);
         Task<Item> UpdateItemAsync(Item item);
-        Task<bool> DeleteItemAsync(int itemid);
+        Task<bool> DeleteItemAsync(int itemId);
+        Task GetDrinkItemsAsync();
     }
+
 }

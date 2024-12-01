@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ZestyBiteWebAppSolution.Models.DTOs;
+﻿using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
@@ -33,11 +30,11 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             };
         }
 
-        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync()
-        {
+        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync() {
             var items = await _itemRepository.GetAllAsync();
             return items.Select(MapToItemDTO);
         }
+
         public async Task<Item?> GetItemByIdAsync(int id)
         {
             return await _itemRepository.GetByIdAsync(id);

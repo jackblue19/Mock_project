@@ -5,12 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FeedbackController : ControllerBase {
+    [AllowAnonymous]
+    public class FeedbackController : ControllerBase
+    {
         private readonly IFeedbackService _feedbackService;
 
         public FeedbackController(IFeedbackService feedbackService) {
@@ -55,6 +58,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try {
                 var username = User.Identity.Name;
+                //string username = "john_doe";
                 var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
                 return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
             } catch (Exception ex) {
@@ -80,15 +84,10 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         // GET: api/feedback/feedbackpagination
         [HttpGet("feedbackpagination")]
-        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacks(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetFeedbacksByPage(int pageNumber, int pageSize)
         {
-            try
-            {
-                var feedbacks = await _feedbackService.GetFeedbacksByPageAsync(pageNumber, pageSize);
-                return Ok(feedbacks);
-            } catch (Exception ex) {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var feedbacks = await _feedbackService.GetFeedbacksByPageAsync(pageNumber, pageSize);
+            return Ok(feedbacks);
         }
 
         // DELETE: api/feedback/{id}

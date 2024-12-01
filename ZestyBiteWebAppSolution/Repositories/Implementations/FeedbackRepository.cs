@@ -23,10 +23,14 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
         public async Task<Feedback?> GetByIdAsync(int id) => await _context.Feedbacks.FindAsync(id);
 
         // Rely on the generic IRepository<T> methods for basic CRUD:
-        public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize) {
+        public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync(int pageNumber, int pageSize)
+        {
+            var offset = (pageNumber - 1) * pageSize;
             return await _context.Feedbacks
+                .Include(f => f.UsernameNavigation) // Include related entities
+                .Include(f => f.Item)
                 .OrderByDescending(f => f.FbDatetime)
-                .Skip((pageNumber - 1) * pageSize)
+                .Skip(offset)
                 .Take(pageSize)
                 .ToListAsync();
         }

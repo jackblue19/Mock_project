@@ -26,7 +26,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
 
         public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync()
         {
-                        // var usn = await _accountRepository.GetAllAsync();
+            var usn = await _accountRepository.GetAllAsync();
 
             var feedbacks = await _feedbackRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);

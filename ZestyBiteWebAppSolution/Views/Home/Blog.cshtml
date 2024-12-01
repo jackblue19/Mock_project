@@ -33,17 +33,20 @@
 
         .comment-list {
             list-style: none;
-            padding: 0;
-            margin: 0;
         }
 
         .comment {
-            margin-bottom: 15px;
+            margin: 5px;
         }
 
         .comment-body {
             display: inline-block;
-            vertical-align: top;
+            vertical-align: top
+        }
+        .comment-head {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
 
         .comment h3,
@@ -62,7 +65,6 @@
         .feedback {
             font-style: italic;
             color: #555;
-            margin-top: 5px;
         }
 
         /* reply style */
@@ -82,8 +84,6 @@
 
         /* Indent nested comments */
         .nested-comment {
-            margin-left: 5px;
-            /* Adjust indentation for each level */
         }
 
         /* Pagination style */
@@ -238,10 +238,15 @@
             commentItem.style.marginLeft = `${level * 5}px`;
 
             commentItem.innerHTML = `
+                    <div class="vcard bio">
+                            <img src="${comment.profileImage}" alt="Profile" class="profile-img">
+                    </div>
                     <div class="comment-body">
-                        <h3>${username}</h3>
-                        <div class="meta">${dateTime}</div>
-                        <p><strong>Item:</strong> ${itemName}</p>
+                        <div class="comment-head">
+                            <h3>${username}</h3>
+                            <div class="meta">${dateTime}</div>
+                        </div>
+                        ${level < 1 ? `<p><strong>Item:</strong> ${comment.itemName || "Unknown Item"}</p>` : ""}
                         <p>${content}</p>
                         ${level < MAX_DEPTH ? `<button class="reply-btn" data-id="${comment.id}" data-level="${level}">Reply</button>` : ""}
                         <div class="reply-form" id="replyBox-${commentId}" style="display: none;">
@@ -323,10 +328,11 @@
             <div class="vcard bio">
                 <img src="${comment.profileImage}" alt="Profile" class="profile-img">
             </div>
-
             <div class="comment-body">
-                <h3>${feedback.username}</h3>
-                <div class="meta">${new Date(feedback.createdAt).toLocaleString()}</div>
+                <div class="comment-head">
+                    <h3>${feedback.username}</h3>
+                    <div class="meta">${new Date(feedback.createdAt).toLocaleString()}</div>
+                </div>
                 <p>${feedback.content}</p>
             </div>
     `;

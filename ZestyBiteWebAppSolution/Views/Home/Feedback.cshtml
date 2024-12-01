@@ -102,7 +102,7 @@
 
                 const feedbackMessage = document.getElementById('feedbackMessage').value;
                 const selectedDishId = dishSelect.value; // Get the selected dish ID
-
+                const pfb = null;
                 fetch('/api/feedback/submitfeedback', {
                     method: 'POST',
                     headers: {
@@ -111,8 +111,8 @@
                     body: JSON.stringify({
                         content: feedbackMessage,
                         dateTime: new Date().toISOString(),
-                        username: 'john_doe', // Replace with the actual username
-                        itemId: selectedDishId // Use the selected dish ID
+                        itemId: selectedDishId, // Use the selected dish ID
+                        parentFb: pfb
                     })
                 })
                     .then(response => {

@@ -38,13 +38,15 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         }
 
         //[AllowAnonymous]
-        public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto, string usn) {
-            if (feedbackDto == null) {
+        [Authorize]
+        public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto, string usn)
+        {
+            if (feedbackDto == null)
+            {
                 throw new ArgumentNullException(nameof(feedbackDto));
             }
 
             var account = await _accountRepository.GetAccountByUsnAsync(usn);
-            //var username = User.Identity.Name;
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
             if (account == null) throw new InvalidOperationException("Invalid Account.");
             if (item == null) throw new InvalidOperationException("Invalid Item.");

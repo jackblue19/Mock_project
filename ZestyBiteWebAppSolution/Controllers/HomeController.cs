@@ -3,31 +3,27 @@ using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Models.ViewMoedel;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-
 namespace ZestyBiteSolution.Controllers
 {
-    [AllowAnonymous]
     public class HomeController : Controller
     {
-        private readonly IAccountService _accountService;
-        public HomeController(IAccountService accountService)
-        {
-            _accountService = accountService;
-namespace ZestyBiteSolution.Controllers {
-    public class HomeController : Controller {
         private readonly IItemService _itemService;
-        public HomeController( IItemService itemService) {
+        public HomeController(IItemService itemService)
+        {
             _itemService = itemService;
         }
 
-        public async Task<IActionResult> Index() {
+        [AllowAnonymous]
+        public async Task<IActionResult> Index()
+        {
             var items = await _itemService.GetAllItemsAsync(); // Lấy tất cả các mục
 
             var pizzaItems = items.Where(i => i.ItemCategory == "Pizza"); // Lọc các món Pizza
             var drinkItems = items.Where(i => i.ItemCategory == "Drink"); // Lọc các món Drink
 
             // Trả về View với hai danh sách: pizza và drink
-            var viewModel = new IndexViewModel {
+            var viewModel = new IndexViewModel
+            {
                 PizzaItems = pizzaItems,
                 DrinkItems = drinkItems
             };
@@ -36,7 +32,8 @@ namespace ZestyBiteSolution.Controllers {
         }
 
 
-        public IActionResult About() {
+        public IActionResult About()
+        {
             return View();
         }
         [Authorize]     // => force to login but dont care role
@@ -56,7 +53,8 @@ namespace ZestyBiteSolution.Controllers {
             return View();
         }
 
-        public IActionResult Contact() {
+        public IActionResult Contact()
+        {
             return View();
         }
 

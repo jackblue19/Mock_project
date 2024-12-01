@@ -55,14 +55,15 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                 throw new ArgumentNullException(nameof(dto), "Input account was null.");
             }
 
-            var existed = await _repository.GetAccountByUsnAsync(dto.Username);
-            if (existed != null) {
-                throw new InvalidOperationException($"Username '{dto.Username}' is already in use.");
-            }
-
             var defaultRole = await _roleRepository.GetByIdAsync(7);
             if (defaultRole == null || defaultRole.RoleId <= 0) {
                 throw new InvalidOperationException("Invalid role assignment.");
+            }
+
+            var existed = await _repository.GetAccountByUsnAsync(dto.Username);
+            if (existed != null) {
+                throw new InvalidOperationException($"Username '{dto.Username}' is already in use.");
+                throw new ArgumentException("Please choose another username!", nameof(dto.Username));
             }
 
             var acc = new Account() {
@@ -127,6 +128,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         }
         public async Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto, string usn) {
             var current = await _repository.GetAccountByUsnAsync(usn);
+            if (current == null)
+                throw new InvalidOperationException("Account not found.");
             current.Password = dto.NewPassword;
             await _repository.UpdateAsync(current);
             return dto;
@@ -134,6 +137,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
 
         public async Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn) {
             var current = await _repository.GetAccountByUsnAsync(usn);
+            if (current == null) {
+                throw new InvalidOperationException("User not found.");
+            }
+            current.Name = dto.Name;
             current.PhoneNumber = dto.PhoneNumber;
             current.Address = dto.Address;
             current.Gender = dto.Gender;
@@ -171,11 +178,20 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         public async Task<bool> IsTrueAccount(string usn, string pwd) {
             var acc = await _repository.GetAccountByUsnAsync(usn);
             if (acc == null) return false;
-            // if (acc.Password != HashPassword(pwd)) return false;
             if (acc.Password != pwd) return false;
             if (acc.AccountStatus == 0) return false;
             return true;
         }
+
+        public async Task<bool> VerifyOldPasswordAsync(string username, string oldPassword) {
+            var account = await _repository.GetAccountByUsnAsync(username);
+            if (account == null)
+                throw new InvalidOperationException("Account not found.");
+
+            return account.Password == oldPassword;
+        }
+
+
 
         /* Other method */
         private string HashPassword(string password) {

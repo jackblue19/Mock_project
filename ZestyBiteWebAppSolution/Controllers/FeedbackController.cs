@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class FeedbackController : ControllerBase
     {
         private readonly IFeedbackService _feedbackService;
@@ -50,7 +50,6 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback/submitfeedback
-        [Authorize]
         [HttpPost("submitfeedback")]
         public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto) {
             if (!ModelState.IsValid) {

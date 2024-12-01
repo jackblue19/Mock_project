@@ -99,6 +99,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             if (defaultRole == null || defaultRole.RoleId <= 0)
             {
                 throw new InvalidOperationException("Invalid role assignment.");
+                throw new ArgumentException("Please choose another username!", nameof(dto.Username));
             }
             //      -- bổ sung phân biệt email nữa =Đ
             var acc = new Account()
@@ -174,6 +175,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         public async Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto, string usn)
         {
             var current = await _repository.GetAccountByUsnAsync(usn);
+            if (current == null)
+                throw new InvalidOperationException("Account not found.");
             current.Password = dto.NewPassword;
             await _repository.UpdateAsync(current);
             return dto;
@@ -182,6 +185,9 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         public async Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn)
         {
             var current = await _repository.GetAccountByUsnAsync(usn);
+            if (current == null) {
+                throw new InvalidOperationException("User not found.");
+            }
             current.Name = dto.Name;
             current.PhoneNumber = dto.PhoneNumber;
             current.Address = dto.Address;
@@ -225,11 +231,21 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         {
             var acc = await _repository.GetAccountByUsnAsync(usn);
             if (acc == null) return false;
-            // if (acc.Password != HashPassword(pwd)) return false;
             if (acc.Password != pwd) return false;
             if (acc.AccountStatus == 0) return false;
             return true;
         }
+
+        public async Task<bool> VerifyOldPasswordAsync(string username, string oldPassword)
+        {
+            var account = await _repository.GetAccountByUsnAsync(username);
+            if (account == null)
+                throw new InvalidOperationException("Account not found.");
+
+            return account.Password == oldPassword;
+        }
+
+
 
         /* Other method */
         private string HashPassword(string password)

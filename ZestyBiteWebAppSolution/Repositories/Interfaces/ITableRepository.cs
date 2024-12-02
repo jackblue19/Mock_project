@@ -4,5 +4,6 @@ namespace ZestyBiteWebAppSolution.Repositories.Interfaces
 {
     public interface ITableRepository : IRepository<Table>
     {
+        Task<IEnumerable<Table?>> GetTablesByTypeAsync(int tableType);
     }
 }

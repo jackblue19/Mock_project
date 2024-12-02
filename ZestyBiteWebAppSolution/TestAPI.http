@@ -118,6 +118,21 @@ GET http://localhost:5024/api/table
 ###
 GET http://localhost:5024/api/tabledetail
 ###
+GET http://localhost:5024/api/table/reality
+###
+GET http://localhost:5024/api/table/virtual
+###
 
+###
+
+###
+
+###
+
+###
+
+###
+
+###
 
 ########################################################################

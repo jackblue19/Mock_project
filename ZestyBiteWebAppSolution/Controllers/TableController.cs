@@ -18,6 +18,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             _tableService = tableService;
         }
 
+        //Default
+
         // GET: api/table
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TableDTO>>> GetAllTables()
@@ -106,6 +108,40 @@ namespace ZestyBiteWebAppSolution.Controllers
                     return NoContent();
                 }
                 return NotFound(new { Message = "Table not found" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // Existing methods...
+
+        // GET: api/table/reality
+        [HttpGet("reality")]
+        public async Task<ActionResult<IEnumerable<TableDTO>>> GetAllRealTables()
+        {
+            try
+            {
+                var tables = await _tableService.GetAllRealTablesAsync();
+                return Ok(tables);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        //Addition
+
+        // GET: api/table/virtual
+        [HttpGet("virtual")]
+        public async Task<ActionResult<IEnumerable<TableDTO>>> GetAllVirtualTables()
+        {
+            try
+            {
+                var tables = await _tableService.GetAllVirtualTablesAsync();
+                return Ok(tables);
             }
             catch (Exception ex)
             {

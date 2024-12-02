@@ -19,6 +19,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             _mapper = mapper;
         }
 
+        //Default CRUD by IRepo
         public async Task<TableDTO?> CreateTableAsync(TableDTO tableDto)
         {
             var table = _mapper.Map<Table>(tableDto); // Map DTO to entity
@@ -61,6 +62,19 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             _mapper.Map(tableDto, existingTable);
             var updatedTable = await _tableRepository.UpdateAsync(existingTable); // Update entity in repository
             return _mapper.Map<TableDTO?>(updatedTable); // Map updated entity back to DTO
+        }
+
+        //Addition CRUD
+        public async Task<IEnumerable<TableDTO?>> GetAllRealTablesAsync()
+        {
+            var realTables = await _tableRepository.GetTablesByTypeAsync(0); // Get tables of type 0
+            return _mapper.Map<IEnumerable<TableDTO?>>(realTables); // Map to DTOs
+        }
+
+        public async Task<IEnumerable<TableDTO?>> GetAllVirtualTablesAsync()
+        {
+            var virtualTables = await _tableRepository.GetTablesByTypeAsync(1); // Get tables of type 1
+            return _mapper.Map<IEnumerable<TableDTO?>>(virtualTables); // Map to DTOs
         }
     }
 }

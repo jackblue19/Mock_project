@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ZestyBiteWebAppSolution.Data;
+//using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
@@ -14,6 +14,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             _context = context ?? throw new ArgumentNullException(nameof(context), "ZestyBiteContext cannot be null");
         }
 
+        //DEfault CRUD by IRepo
         public async Task<IEnumerable<Table?>> GetAllAsync()
         {
             return await _context.Tables.ToListAsync();
@@ -58,6 +59,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             _context.Tables.Remove(table);
             await _context.SaveChangesAsync();
             return table; // Return the deleted entity
+        }
+
+        //Addition CRUD
+        public async Task<IEnumerable<Table?>> GetTablesByTypeAsync(int tableType)
+        {
+            return await _context.Tables.Where(t => t.TableType == tableType).ToListAsync();
         }
     }
 }

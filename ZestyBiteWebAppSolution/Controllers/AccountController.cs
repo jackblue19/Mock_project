@@ -10,8 +10,6 @@ using System.Collections.Concurrent;
 namespace ZestyBiteWebAppSolution.Controllers
 {
     [AllowAnonymous]
-    // [ApiController]
-    // [Route("api/[Controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -47,20 +45,14 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         [HttpPost]
-        // [Route("login")]
-        public async Task<IActionResult> Login([FromForm] LoginDTO dto)
-        // public async Task<IActionResult> Login([FromBody] LoginDTO dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
+        public async Task<IActionResult> Login(LoginDTO dto) {
+            if (!ModelState.IsValid) {
+                return View(dto);
             }
 
-            if (await _service.IsTrueAccount(dto.Username, dto.Password))
-            {
+            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
                 HttpContext.Session.SetString("username", dto.Username);
-                Response.Cookies.Append("username", dto.Username, new CookieOptions
-                {
+                Response.Cookies.Append("username", dto.Username, new CookieOptions {
                     Expires = DateTimeOffset.Now.AddMinutes(30),
                     HttpOnly = true,
                     Secure = false,
@@ -70,13 +62,15 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return Unauthorized(new { message = "Invalid username or password" });
+            // Thêm thông báo lỗi vào ModelState nếu thông tin đăng nhập không hợp lệ
+            ModelState.AddModelError(string.Empty, "Invalid username or password.");
+
+            return View(dto);
         }
 
+
         [HttpPost]
-        // [Route("VerifyCode")]
-        // public async Task<IActionResult> VerifyCode([FromForm] VerifyDTO verifyDto)
-        public async Task<IActionResult> VerifyEmail( /*[FromBody]*/ VerifyDTO verifyDto)
+        public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto)
         {
             var usn = User.Identity.Name;
 
@@ -85,8 +79,6 @@ namespace ZestyBiteWebAppSolution.Controllers
 
             try
             {
-                // if (!VerificationTasks.TryGetValue(usn, out var tcs))
-                //     return BadRequest(new { Message = "Verification session expired or not found." });
                 if (!VerificationTasks.ContainsKey(usn))
                 {
                     await _service.IsDeleteUnregistedAccount(usn);
@@ -110,7 +102,6 @@ namespace ZestyBiteWebAppSolution.Controllers
                     VerificationAttempts.TryRemove(usn, out _);
                     HttpContext.Session.Remove("username");
                     Response.Cookies.Delete("username");
-                    // return Ok(new { Message = "Verification successful." });
                     return RedirectToAction("Login", "Account");
                 }
 
@@ -120,11 +111,9 @@ namespace ZestyBiteWebAppSolution.Controllers
                     VerificationTasks.TryRemove(usn, out _);
                     VerificationAttempts.TryRemove(usn, out _);
                     if (await _service.IsDeleteUnregistedAccount(usn))
-                        // return BadRequest(new { Message = "Account deleted due to too many failed attempts." });
                         return RedirectToAction("Index", "Home");
                 }
                 return RedirectToAction("Index", "Home");
-                // return BadRequest(new { Message = "Invalid verification code. Try again." });
             }
             catch (Exception ex)
             {
@@ -134,8 +123,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         [HttpPost]
         // [Route("signup")]
-        public async Task<IActionResult> Register([FromForm] RegisterDTO accountDto)
-        // public async Task<IActionResult> Register([FromBody] RegisterDTO accountDto)
+        public async Task<IActionResult> Register(RegisterDTO accountDto)
         {
             if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
             string token = VerificationCodeGenerator.GetSixDigitCode();
@@ -143,7 +131,6 @@ namespace ZestyBiteWebAppSolution.Controllers
             try
             {
                 var created = await _service.SignUpAsync(accountDto);
-                // return RedirectToAction("Login", "Account");
                 HttpContext.Session.SetString("username", created.Username);
                 Response.Cookies.Append("username", created.Username, new CookieOptions
                 {
@@ -182,7 +169,6 @@ namespace ZestyBiteWebAppSolution.Controllers
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
                 await _mailService.SendVerificationCodeAsync(accountDto.Email, token);
                 return RedirectToAction("VerifyEmail", "Account");
-                // return Ok(token);
             }
             catch (InvalidOperationException ex)
             {
@@ -249,10 +235,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePwdDTO dto) {
-            if (!ModelState.IsValid) {
-                TempData["ErrorMessage"] = "Invalid data received.";
-                return View(dto); // Trả lại view và hiển thị lỗi
-            }
+            
 
             try {
                 var username = User.Identity?.Name;

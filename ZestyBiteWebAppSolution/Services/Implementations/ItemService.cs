@@ -11,9 +11,9 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             _itemRepository = itemRepository;
         }
 
-        private ItemDTO? MapToItemDTO(Item? item) {
-            if (item == null) return null;
-
+        private ItemDTO? MapToItemDTO(Item item) {
+            if (item == null)
+                return null;
             return new ItemDTO {
                 ItemId = item.ItemId,
                 ItemName = item.ItemName,
@@ -30,7 +30,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             var items = await _itemRepository.GetAllAsync(); // Lấy tất cả các món ăn
             var drinkItems = items.Where(i => i.ItemCategory == "Drink"); // Lọc chỉ món Drink
 
-            // Chuyển đổi các mục Drink sang ItemDTO và trả về
             return drinkItems.Select(item => new ItemDTO {
                 ItemId = item.ItemId,
                 ItemName = item.ItemName,
@@ -43,6 +42,37 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             }).ToList();
         }
 
+        public async Task<IEnumerable<ItemDTO>> GetBurgersItemsAsync() {
+            var items = await _itemRepository.GetAllAsync(); // Lấy tất cả các món ăn
+            var drinkItems = items.Where(i => i.ItemCategory == "Drink"); // Lọc chỉ món Drink
+
+            return drinkItems.Select(item => new ItemDTO {
+                ItemId = item.ItemId,
+                ItemName = item.ItemName,
+                ItemDescription = item.ItemDescription,
+                SuggestedPrice = item.SuggestedPrice,
+                ItemCategory = item.ItemCategory,
+                ItemStatus = item.ItemStatus,
+                ItemImage = item.ItemImage,
+                IsServed = item.IsServed
+            }).ToList();
+        }
+
+        public async Task<IEnumerable<ItemDTO>> GetPastaItemsAsync() {
+            var items = await _itemRepository.GetAllAsync(); // Lấy tất cả các món ăn
+            var drinkItems = items.Where(i => i.ItemCategory == "Pasta"); // Lọc chỉ món Drink
+
+            return drinkItems.Select(item => new ItemDTO {
+                ItemId = item.ItemId,
+                ItemName = item.ItemName,
+                ItemDescription = item.ItemDescription,
+                SuggestedPrice = item.SuggestedPrice,
+                ItemCategory = item.ItemCategory,
+                ItemStatus = item.ItemStatus,
+                ItemImage = item.ItemImage,
+                IsServed = item.IsServed
+            }).ToList();
+        }
 
         public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync() {
             var items = await _itemRepository.GetAllAsync();

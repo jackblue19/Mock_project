@@ -306,15 +306,15 @@
             const parentCommentElement = document.querySelector(`[data-id="${parentId}"]`);
 
             if (!parentCommentElement) {
-                showNotification("Parent comment not found!"); // Show notification instead of alert
+                showNotification("Parent comment not found!"); 
                 return;
             }
 
-            // Extract attributes from the parent comment
+       
             const itemId = parentCommentElement.getAttribute("data-item-id");
             const itemName = parentCommentElement.getAttribute("data-item-name") || "Unknown Item";
 
-            // Construct the payload for the API
+            
             const replyPayload = {
                 Content: content,    // User's input
                 ItemId: itemId,      // Extracted from parent comment
@@ -322,7 +322,7 @@
                 ParentFb: parentId   // The parent comment's ID
             };
 
-            console.log("Submitting reply payload:", replyPayload); // Debugging the payload
+            console.log("Submitting reply payload:", replyPayload); 
 
             // Send the reply to the back-end
             $.ajax({

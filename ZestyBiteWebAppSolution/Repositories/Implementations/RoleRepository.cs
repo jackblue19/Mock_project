@@ -1,5 +1,4 @@
-﻿using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Models.Entities;
+﻿using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

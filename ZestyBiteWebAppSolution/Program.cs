@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
@@ -16,6 +15,7 @@ using ZestyBiteWebAppSolution.Mappings;
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
+using ZestyBiteWebAppSolution.Models.Entities;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session

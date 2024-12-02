@@ -1,10 +1,10 @@
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ZestyBiteWebAppSolution.Models.Entities;
 
-public partial class Account {
+public partial class Account
+{
     public int AccountId { get; set; }
 
     public string Username { get; set; } = null!;

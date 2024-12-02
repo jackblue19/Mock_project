@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace ZestyBiteWebAppSolution.Models.Entities;
 
-public partial class TableDetail
+public partial class SupplyItem
 {
-    public int TableId { get; set; }
+    public int SupplyId { get; set; }
 
     public int ItemId { get; set; }
 
-    public int Quantity { get; set; }
+    public decimal SupplyItemProfit { get; set; }
 
     public virtual Item Item { get; set; } = null!;
 
-    public virtual Table Table { get; set; } = null!;
+    public virtual Supply Supply { get; set; } = null!;
 }

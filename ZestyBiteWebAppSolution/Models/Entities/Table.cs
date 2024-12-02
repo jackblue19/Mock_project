@@ -1,6 +1,10 @@
-﻿namespace ZestyBiteWebAppSolution.Models.Entities;
+﻿using System;
+using System.Collections.Generic;
 
-public partial class Table {
+namespace ZestyBiteWebAppSolution.Models.Entities;
+
+public partial class Table
+{
     public int TableId { get; set; }
 
     public int TableCapacity { get; set; }
@@ -8,8 +12,6 @@ public partial class Table {
     public int TableMaintenance { get; set; }
 
     public int ReservationId { get; set; }
-
-    public int ItemId { get; set; }
 
     public int TableType { get; set; }
 
@@ -22,8 +24,6 @@ public partial class Table {
     public virtual Account Account { get; set; } = null!;
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
-
-    public virtual Item Item { get; set; } = null!;
 
     public virtual Reservation Reservation { get; set; } = null!;
 

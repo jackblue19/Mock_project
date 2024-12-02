@@ -128,7 +128,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
             try
             {
-                string username = User.Identity.Name; // Get the username from the authenticated user
+                string username = User.Identity.Name;
                 var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto, username);
                 return CreatedAtAction(nameof(GetRepliesForFeedback), new { parentFb = submittedReply.ParentFb }, submittedReply);
             } catch (Exception ex) {

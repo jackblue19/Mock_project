@@ -1,6 +1,10 @@
-﻿namespace ZestyBiteWebAppSolution.Models.Entities;
+﻿using System;
+using System.Collections.Generic;
 
-public partial class Supply {
+namespace ZestyBiteWebAppSolution.Models.Entities;
+
+public partial class Supply
+{
     public int SupplyId { get; set; }
 
     public string ProductName { get; set; } = null!;
@@ -31,7 +35,7 @@ public partial class Supply {
 
     public virtual ICollection<Profit> Profits { get; set; } = new List<Profit>();
 
-    public virtual Table Table { get; set; } = null!;
+    public virtual ICollection<SupplyItem> SupplyItems { get; set; } = new List<SupplyItem>();
 
-    public virtual ICollection<Item> Items { get; set; } = new List<Item>();
+    public virtual Table Table { get; set; } = null!;
 }

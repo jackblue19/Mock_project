@@ -1,20 +1,572 @@
-public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto, string usn)
+POST http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
 {
-    if (feedbackDto == null)
-    {
-        throw new ArgumentNullException(nameof(feedbackDto));
-    }
-
-    var account = await _accountRepository.GetAccountByUsnAsync(usn);
-    var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-    if (account == null) throw new InvalidOperationException("Invalid Account.");
-    if (item == null) throw new InvalidOperationException("Invalid Item.");
-
-    var feedback = _mapper.Map<Feedback>(feedbackDto);
-    feedback.Username = usn;
-    feedback.UsernameNavigation = account;
-    feedback.Item = item;
-
-    var createdFeedback = await _feedbackRepository.CreateAsync(feedback);
-    return _mapper.Map<FeedbackDTO>(createdFeedback);
+  "Content": "This is a reply message.",
+  "ItemId": 1,
+  "ItemName": "Pizza Margherita",
+  "ParentFb": 19
 }
+
+using Microsoft.AspNetCore.Mvc;
+using ZestyBiteWebAppSolution.Models.DTOs;
+using ZestyBiteWebAppSolution.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
+namespace ZestyBiteWebAppSolution.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FeedbackController : ControllerBase
+    {
+        private readonly IFeedbackService _feedbackService;
+
+        public FeedbackController(IFeedbackService feedbackService) {
+            _feedbackService = feedbackService;
+        }
+
+        // GET: api/feedback/items
+        [AllowAnonymous]
+        [HttpGet("items")]
+        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetItems() {
+            var items = await _feedbackService.GetAllItemsAsync();
+            return Ok(items);
+        }
+
+        // GET: api/feedback/allfeedbacks
+        [AllowAnonymous]
+        [HttpGet("allfeedbacks")]
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacks() {
+            try {
+                var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
+                return Ok(feedbacks);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // GET: api/feedback/item/{itemId}
+        [AllowAnonymous]
+        [HttpGet("item/{itemId}")]
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacksByItemId(int itemId) {
+            try {
+                var feedbacks = await _feedbackService.GetFeedbacksByItemIdAsync(itemId);
+                return Ok(feedbacks);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // POST: api/feedback/submitfeedback
+        [Authorize]
+        [HttpPost("submitfeedback")]
+        public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto) {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                string username = User.Identity.Name;
+                var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
+                return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // PUT: api/feedback
+        [HttpPut]
+        public async Task<ActionResult<FeedbackDTO>> UpdateFeedback([FromBody] FeedbackDTO feedbackDto) {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+            try {
+                var updatedFeedback = await _feedbackService.UpdateFeedbackAsync(feedbackDto);
+                return Ok(updatedFeedback);
+            } catch (InvalidOperationException ex) {
+                return NotFound(new { Message = ex.Message });
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // GET: api/feedback/feedbackpagination
+        [AllowAnonymous]
+        [HttpGet("feedbackpagination")]
+        public async Task<IActionResult> GetFeedbacksByPage(int pageNumber, int pageSize)
+        {
+            var feedbacks = await _feedbackService.GetFeedbacksByPageAsync(pageNumber, pageSize);
+            return Ok(feedbacks);
+        }
+
+        // DELETE: api/feedback/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteFeedback(int id) {
+            try {
+                var result = await _feedbackService.DeleteFeedbackAsync(id);
+                if (result) {
+                    return NoContent();
+                }
+                return NotFound(new { Message = "Feedback not found" });
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // CRUD Reply
+        // GET: api/feedback/replies/{parentFb}
+        [HttpGet("replies/{parentFb}")]
+        public async Task<ActionResult<IEnumerable<ReplyDTO>>> GetRepliesForFeedback(int parentFb) {
+            try {
+                var replies = await _feedbackService.GetRepliesByFeedbackAsync(parentFb);
+                return Ok(replies);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // POST: api/feedback/reply
+        [Authorize]
+        [HttpPost("reply")]
+        public async Task<ActionResult<ReplyDTO>> SubmitReply([FromBody] ReplyDTO replyDto) {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                string username = User.Identity.Name;
+                var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto, username);
+                return CreatedAtAction(nameof(GetRepliesForFeedback), new { parentFb = submittedReply.ParentFb }, submittedReply);
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // PUT: api/feedback/reply
+        [HttpPut("reply")]
+        public async Task<ActionResult<ReplyDTO>> UpdateReply([FromBody] ReplyDTO replyDto) {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+            try {
+                var updatedReply = await _feedbackService.UpdateReplyAsync(replyDto);
+                return Ok(updatedReply);
+            } catch (InvalidOperationException ex) {
+                return NotFound(new { Message = ex.Message });
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // DELETE: api/feedback/reply/{id}
+        [HttpDelete("reply/{id}")]
+        public async Task<ActionResult> DeleteReply(int id) {
+            try {
+                var result = await _feedbackService.DeleteReplyAsync(id);
+                if (result) {
+                    return NoContent();
+                }
+                return NotFound(new { Message = "Reply not found" });
+            } catch (Exception ex) {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+    }
+}
+
+@{
+    ViewBag.Title = "Blog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <style>
+        /* navbar */
+        .ftco-section {
+            padding: 0px !important;
+        }
+
+        /* comment-main */
+        .comment-main {
+            /* background-color: rgb(255, 255, 255); */
+        }
+
+        .comment-list-container {
+            max-height: 500px;
+            /* Adjust height as needed to fit approximately 5 items */
+            overflow-y: auto;
+            scrollbar-width: none;
+            /* For Firefox */
+            -ms-overflow-style: none;
+            /* For Internet Explorer and Edge */
+        }
+
+        .comment-list-container::-webkit-scrollbar {
+            display: none;
+            /* For Chrome, Safari, and Opera */
+        }
+
+
+        .comment-list {
+            list-style: none;
+        }
+
+        .comment {
+            margin: 5px;
+        }
+
+        .comment-body {
+            display: inline-block;
+            vertical-align: top
+        }
+
+        .comment-head {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .comment h3,
+        /* Comment author name */
+        .comment .meta,
+        /* Comment date */
+        .comment p,
+        /* Comment text */
+        .comment .feedback,
+        /* Feedback text */
+        .comment .reply {
+            /* Reply link */
+            color: #fff !important;
+        }
+
+        .feedback {
+            font-style: italic;
+            color: #555;
+        }
+
+        /* reply style */
+        .reply-box {
+            background: transparent;
+            color: #fff;
+            /* this sets the text color - adjust as needed */
+            padding: 5px;
+        }
+
+        .reply-box input[type="text"] {
+            width: calc(100% - 50px);
+            margin-right: 5px;
+            background-color: rgba(0, 0, 0, 0);
+            color: #fff;
+        }
+
+        /* Indent nested comments */
+        .nested-comment {}
+
+        /* Pagination style */
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pagination-controls .btn {
+            padding: 5px 10px;
+        }
+
+        .pagination-controls input[type="number"] {
+            text-align: center;
+        }
+
+        .pagination-controls #pageStatus {
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="container">
+            <div class="row">
+                <!-- Main Comment Section -->
+                <div class="col-md-8 ftco-animate comment-main">
+                    <div class="pt-5 mt-5">
+                        <h3>Comments</h3>
+                        <div class="comment-list-container">
+                            <ul class="comment-list" id="commentList">
+                                <!-- Comments will be dynamically loaded here -->
+                            </ul>
+                        </div>
+                        <!-- Pagination Controls -->
+                        <div class="pagination-controls mt-3">
+                            <button id="prevPage" class="btn btn-secondary" disabled>Previous</button>
+                            <input type="number" id="pageInput" class="form-control d-inline-block" style="width: 60px;"
+                                min="1" placeholder="Page">
+                            <button id="goToPage" class="btn btn-primary">Go</button>
+                            <button id="nextPage" class="btn btn-secondary">Next</button>
+                            <span id="pageStatus" class="ml-2"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Section -->
+                <div class="col-md-4 sidebar ftco-animate">
+                    <div class="sidebar-box">
+                        <form class="search-form">
+                            <div class="form-group">
+                                <div class="icon">
+                                    <span class="icon-search"></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search..." id="searchInput">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-box ftco-animate">
+                        <div class="categories">
+                            <h3>Categories</h3>
+                            <ul>
+                                <li><a href="#">Main Course<span>(12)</span></a></li>
+                                <li><a href="#">Drink<span>(22)</span></a></li>
+                                <li><a href="#">Dessert<span>(37)</span></a></li>
+                                <li><a href="#">Fruit<span>(42)</span></a></li>
+                                <li><a href="#">Salad<span>(14)</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        const MAX_DEPTH = 2; // Maximum reply depth
+        let currentPage = 1; // Current page of comments
+
+        // Fetch comments for the current page
+        function loadComments(page = 1) {
+            $.ajax({
+                url: `/api/feedback/feedbackpagination?pageNumber=${page}&pageSize=10`,
+                method: 'GET',
+                success: function (data) {
+                    const commentList = document.getElementById("commentList");
+                    commentList.innerHTML = ""; // Clear existing comments
+                    displayComments(data, commentList); // Render comments
+                    updatePaginationControls(page);
+                },
+                error: function () {
+                    console.error("Error loading comments.");
+                }
+            });
+        }
+
+        // Update the state of pagination buttons
+        function updatePaginationControls(page) {
+            currentPage = page;
+
+            // Enable/disable previous and next buttons
+            document.getElementById("prevPage").disabled = currentPage === 1;
+
+            // Update the page status
+            document.getElementById("pageStatus").textContent = `Page ${currentPage}`;
+        }
+
+        // Event listeners for pagination controls
+        document.getElementById("prevPage").addEventListener("click", () => {
+            if (currentPage > 1) {
+                loadComments(currentPage - 1);
+            }
+        });
+
+        document.getElementById("nextPage").addEventListener("click", () => {
+            loadComments(currentPage + 1);
+        });
+
+        document.getElementById("goToPage").addEventListener("click", () => {
+            const pageInput = parseInt(document.getElementById("pageInput").value, 10);
+            if (!isNaN(pageInput) && pageInput > 0) {
+                loadComments(pageInput);
+            } else {
+                alert("Invalid page number.");
+            }
+        });
+
+        // Recursive function to display comments and replies
+        function displayComments(commentsToDisplay, container, level = 0) {
+            commentsToDisplay.forEach(comment => {
+                try {
+                    console.log("Processing comment:", comment);
+
+                    const profileImage = comment.profileImage || "default-profile.png"; // Fallback for profile image
+                    const username = comment.username || "Anonymous"; // Fallback for username
+                    const itemName = comment.itemName || "Unknown Item"; // Fallback for item name
+                    const dateTime = comment.dateTime ? new Date(comment.dateTime).toLocaleString() : "Unknown Date";
+                    const content = comment.content || "";
+
+                    // Safely handle comment.id or generate a fallback ID
+                    const commentId = comment.id || `temp-${Math.random().toString(36).substr(2, 9)}`;
+                    const repliesContainerId = `nested-${commentId}`;
+
+                    // Create the comment element
+                    const commentItem = document.createElement("li");
+                    commentItem.classList.add("comment", "nested-comment");
+                    commentItem.style.marginLeft = `${level * 5}px`;
+
+                    commentItem.innerHTML = `
+                    <div class="vcard bio">
+                            <img src="${comment.profileImage}" alt="Profile" class="profile-img">
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-head">
+                            <h3>${username}</h3>
+                            <div class="meta">${dateTime}</div>
+                        </div>
+                        ${level < 1 ? `<p><strong>Item:</strong> ${comment.itemName || "Unknown Item"}</p>` : ""}
+                        <p>${content}</p>
+                        ${level < MAX_DEPTH ? `<button class="reply-btn" data-id="${comment.id}" data-level="${level}">Reply</button>` : ""}
+                        <div class="reply-form" id="replyBox-${commentId}" style="display: none;">
+                            <input type="text" placeholder="Write a reply..." class="reply-input">
+                            <button class="submit-reply" data-parent-id="${comment.parentFb}" data-level="${level}">Submit</button>
+                        </div>
+                        <ul class="nested-comments" id="${repliesContainerId}"></ul>
+                    </div>
+            `;
+
+                    container.appendChild(commentItem);
+
+                    // Handle nested replies
+                    if (comment.parentFeedback) {
+                        const repliesContainer = document.getElementById(repliesContainerId);
+                        displayComments([comment.parentFeedback], repliesContainer, level + 1);
+                    }
+                } catch (error) {
+                    console.error("Error processing comment:", comment, error);
+                }
+            });
+
+            setupReplyHandlers();
+        }
+
+        // Set up event listeners for reply buttons and forms
+        function setupReplyHandlers() {
+            document.querySelectorAll('.reply-btn').forEach(button => {
+                button.addEventListener('click', event => {
+                    const replyBox = document.getElementById(`replyBox-${event.target.dataset.id}`);
+                    replyBox.style.display = replyBox.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+
+            document.querySelectorAll('.submit-reply').forEach(button => {
+                button.addEventListener('click', event => {
+                    const parentId = event.target.dataset.parentFb; // Use parentId from data attribute
+                    const level = parseInt(event.target.dataset.level);
+                    const replyInput = event.target.previousElementSibling.value.trim();
+
+                    if (replyInput && level < MAX_DEPTH) {
+                        postReply(parentId, replyInput, level);
+                    } else {
+                        alert("Reply content cannot be empty or exceeds max depth.");
+                    }
+                });
+            });
+        }
+
+        // Post a reply to the back-end
+        function postReply(parentId, replyInput, level) {
+            // Construct the payload for the reply
+            const payload = {
+                Content: replyInput,
+                ParentFb: parentId,
+                // Include any other necessary fields, such as Username
+            };
+
+            // Make the AJAX request to submit the reply
+            fetch('http://localhost:5024/api/feedback/reply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(newReply => {
+                    // Append the new reply to the correct container
+                    const repliesContainer = document.getElementById(`nested-${parentId}`);
+                    appendFeedback(newReply, repliesContainer, level + 1); // Append reply dynamically
+                })
+                .catch(error => {
+                    console.error("Error submitting reply:", error);
+                    const errorNotification = document.createElement('div');
+                    errorNotification.textContent = 'Error submitting reply. Please try again.';
+                    errorNotification.style.position = 'fixed';
+                    errorNotification.style.top = '10px';
+                    errorNotification.style.right = '10px';
+                    errorNotification.style.padding = '10px';
+                    errorNotification.style.backgroundColor = '#FFCCCC';
+                    errorNotification.style.color = '#000';
+                    errorNotification.style.zIndex = '1000';
+                    document.body.appendChild(errorNotification);
+
+                    setTimeout(() => {
+                        document.body.removeChild(errorNotification);
+                    }, 3000);
+                });
+        }
+
+        // Append new feedback to the comment list
+        function appendFeedback(feedback, container, level) {
+            const newComment = document.createElement("li");
+            newComment.classList.add("comment", "nested-comment");
+            newComment.style.marginLeft = `${level * 5}px`;
+
+            newComment.innerHTML = `
+            <div class="vcard bio">
+                <img src="${comment.profileImage}" alt="Profile" class="profile-img">
+            </div>
+            <div class="comment-body">
+                <div class="comment-head">
+                    <h3>${feedback.username}</h3>
+                    <div class="meta">${new Date(feedback.createdAt).toLocaleString()}</div>
+                </div>
+                <p>${feedback.content}</p>
+            </div>
+        `   ;
+
+            container.appendChild(newComment);
+        }
+
+        // Initialize comments on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComments(currentPage);
+
+            // Pagination controls
+            document.getElementById('nextPage').addEventListener('click', () => {
+                currentPage++;
+                loadComments(currentPage);
+            });
+
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadComments(currentPage);
+                }
+            });
+        });
+
+        // Initial load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadComments(currentPage);
+        });
+    </script>
+</body>
+

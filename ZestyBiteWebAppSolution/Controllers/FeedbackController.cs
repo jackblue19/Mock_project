@@ -5,15 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace ZestyBiteWebAppSolution.Controllers
-{
+namespace ZestyBiteWebAppSolution.Controllers {
     [ApiController]
     [Route("api/[controller]")]
     [AllowAnonymous]
-    public class FeedbackController : ControllerBase
-    {
+    public class FeedbackController : ControllerBase {
         private readonly IFeedbackService _feedbackService;
 
         public FeedbackController(IFeedbackService feedbackService) {
@@ -84,8 +81,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         // GET: api/feedback/feedbackpagination
         [HttpGet("feedbackpagination")]
-        public async Task<IActionResult> GetFeedbacksByPage(int pageNumber, int pageSize)
-        {
+        public async Task<IActionResult> GetFeedbacksByPage(int pageNumber, int pageSize) {
             var feedbacks = await _feedbackService.GetFeedbacksByPageAsync(pageNumber, pageSize);
             return Ok(feedbacks);
         }

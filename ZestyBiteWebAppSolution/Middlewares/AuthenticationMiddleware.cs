@@ -1,60 +1,42 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-
-namespace ZestyBiteWebAppSolution.Middlewares
-{
-
-    public class AuthenticationMiddleware
-    {
+namespace ZestyBiteWebAppSolution.Middlewares {
+    public class AuthenticationMiddleware {
         private readonly RequestDelegate _next;
-        // private readonly IAccountService accountService;
 
-        public AuthenticationMiddleware(RequestDelegate next /*, IAccountService accountService*/)
-        {
+        public AuthenticationMiddleware(RequestDelegate next) {
             _next = next;
-            // accountService = accountService;
         }
 
-        public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider)
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
+        public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider) {
+            using (var scope = serviceProvider.CreateScope()) {
                 var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
+
                 // Lấy thông tin người dùng từ Session
-                var username = context.Session.GetString("username");
+                var username = context.Session.GetString("username") ?? context.Request.Cookies["username"];
 
-                if (string.IsNullOrEmpty(username))
-                {
-                    // Nếu không có trong Session, kiểm tra Cookie
-                    username = context.Request.Cookies["username"];
+                string userRole = "Customer"; // Mặc định là Customer
+
+                if (!string.IsNullOrEmpty(username)) {
+                    // Lấy vai trò người dùng từ dịch vụ
+                    userRole = await accountService.GetRoleDescByUsn(username) ?? "Customer";
                 }
 
-                string userrole = "Customer";
-                if (!string.IsNullOrEmpty(username))
-                {
-                    userrole = await accountService.GetRoleDescByUsn(username) ?? "Customer";
-                }
-
-                if (!string.IsNullOrEmpty(username))
-                {
+                if (!string.IsNullOrEmpty(username)) {
                     // Tạo ClaimsPrincipal từ thông tin người dùng
                     var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, userrole)
-            };
+                    {
+                        new Claim(ClaimTypes.Name, username),
+                        new Claim(ClaimTypes.Role, userRole)
+                    };
 
                     var identity = new ClaimsIdentity(claims, "Cookies");
                     context.User = new ClaimsPrincipal(identity); // Gán ClaimsPrincipal vào HttpContext.User
                 }
             }
 
-            await _next(context); // Tiến hành các middleware tiếp theo
+            await _next(context);
         }
     }
-
 }
-
-

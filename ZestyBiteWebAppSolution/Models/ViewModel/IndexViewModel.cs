@@ -1,17 +1,14 @@
 ﻿using ZestyBiteWebAppSolution.Models.DTOs;
-using ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Models.ViewMoedel
-{
+namespace ZestyBiteWebAppSolution.Models.ViewMoedel {
     public class IndexViewModel {
-        public IEnumerable<ItemDTO> PizzaItems { get; set; }
-        public IEnumerable<ItemDTO> DrinkItems { get; set; }
-        public IEnumerable<ItemDTO> PastaItems { get; set; }
-        public IEnumerable<ItemDTO> BurgersItems { get; set; }
-        public IEnumerable<ItemDTO> Items { get; set; }
+        public IEnumerable<ItemDTO> PizzaItems { get; set; } = new List<ItemDTO>();
+        public IEnumerable<ItemDTO> DrinkItems { get; set; } = new List<ItemDTO>();
+        public IEnumerable<ItemDTO> PastaItems { get; set; } = new List<ItemDTO>();
+        public IEnumerable<ItemDTO> BurgersItems { get; set; } = new List<ItemDTO>();
+        public IEnumerable<ItemDTO> Items { get; set; } = new List<ItemDTO>();
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+        public int TotalItems { get; set; }
     }
-
-
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models;
+using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Models;
 
 namespace ZestyBiteWebAppSolution.Controllers {
     public class CartController : Controller {
@@ -59,6 +61,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
             ViewBag.TotalAmount = totalAmount;
 
             return View(cart);
+            
         }
 
 

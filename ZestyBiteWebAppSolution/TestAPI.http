@@ -112,7 +112,7 @@ Content-Type: application/json
     "password": "password456"
 }
 ###
-
+POST http://localhost:5024/api/account/logout
 ###
 
 ###

@@ -3,6 +3,7 @@ using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZestyBiteWebAppSolution.Services.Implementations {
     public class FeedbackService : IFeedbackService {
@@ -37,8 +38,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }
 
-        //[AllowAnonymous]
-        [Authorize]
+ 
         public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto, string usn)
         {
             if (feedbackDto == null)

@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
@@ -21,6 +20,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // GET: api/feedback/items
+        [AllowAnonymous]
         [HttpGet("items")]
         public async Task<ActionResult<IEnumerable<ItemDTO>>> GetItems() {
             var items = await _feedbackService.GetAllItemsAsync();
@@ -28,6 +28,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // GET: api/feedback/allfeedbacks
+        [AllowAnonymous]
         [HttpGet("allfeedbacks")]
         public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacks() {
             try {
@@ -39,6 +40,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // GET: api/feedback/item/{itemId}
+        [AllowAnonymous]
         [HttpGet("item/{itemId}")]
         public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacksByItemId(int itemId) {
             try {
@@ -50,6 +52,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback/submitfeedback
+        [Authorize]
         [HttpPost("submitfeedback")]
         public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto) {
             if (!ModelState.IsValid) {
@@ -82,6 +85,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // GET: api/feedback/feedbackpagination
+        [AllowAnonymous]
         [HttpGet("feedbackpagination")]
         public async Task<IActionResult> GetFeedbacksByPage(int pageNumber, int pageSize)
         {
@@ -116,6 +120,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback/reply
+        [Authorize]
         [HttpPost("reply")]
         public async Task<ActionResult<ReplyDTO>> SubmitReply([FromBody] ReplyDTO replyDto) {
             if (!ModelState.IsValid) {

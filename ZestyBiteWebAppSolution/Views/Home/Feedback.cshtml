@@ -100,23 +100,22 @@
             document.getElementById('submitFeedback').addEventListener('click', function (event) {
                 event.preventDefault(); // Prevent default form submission
 
-                const feedbackMessage = document.getElementById('feedbackMessage').value; // This should be the content
+                const feedbackMessage = document.getElementById('feedbackMessage').value; // Get the feedback message
                 const selectedDishId = dishSelect.value; // Get the selected dish ID
-                const pfb = null;
-
                 const selectedItem = items.find(item => item.itemId == selectedDishId);
                 const itemName = selectedItem ? selectedItem.itemName : "Unknown Item"; // Fallback if not found
+                const parentFeedbackId = null; // Set ParentFb to null as per your requirement
 
-                fetch('/api/feedback/submitfeedback', {
+                fetch('http://localhost:5024/api/feedback/submitfeedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        Content: feedbackMessage, // Use "Content" as the key
-                        ItemId: selectedDishId, // Use "ItemId" as the key
-                        ItemName: itemName, // You may want to dynamically set this based on the selected item
-                        ParentFb: pfb // Use "ParentFb" as the key
+                        Content: feedbackMessage, // Use the feedback message
+                        ItemId: selectedDishId, // Use the selected dish ID
+                        ItemName: itemName, // Use the dynamically fetched item name
+                        ParentFb: parentFeedbackId // Set ParentFb to null
                     })
                 })
                     .then(response => {
@@ -127,7 +126,7 @@
                     })
                     .then(data => {
                         const notification = document.createElement('div');
-                        notification.textContent = 'Feedback success! Redirecting to Blog...';
+                        notification.textContent = 'Feedback submitted successfully! Redirecting to Blog...';
                         notification.style.position = 'fixed';
                         notification.style.top = '10px';
                         notification.style.right = '10px';

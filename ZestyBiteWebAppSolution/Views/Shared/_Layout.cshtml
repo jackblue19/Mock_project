@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           rel="stylesheet" />
@@ -29,52 +29,58 @@
     <link rel="stylesheet" href="~/css/jquery.timepicker.css">
     <link rel="stylesheet" href="~/css/flaticon.css">
     <link rel="stylesheet" href="~/css/icomoon.css">
-      <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/style.css">
     <link href="~/css/layout.css" rel="stylesheet" />
 </head>
 
 <body id="body-config">
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container d-flex justify-content-center">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="margin-left: 20px">
                 <span class="flaticon-pizza-1 mr-1"></span>Pizza<br><small>Delicious</small>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>Menu
             </button>
-            <div class="collapse navbar-collapse" id="ftco-nav">
+            <div class="collapse navbar-collapse" id="ftco-nav" style="margin-left: 20px">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active"><a href="@Url.Action("Index", "Home")" class="nav-link">Home</a></li>
                     <li class="nav-item"><a href="@Url.Action("Menu", "Home")" class="nav-link">Menu</a></li>
-                    <li class="nav-item"><a href="@Url.Action("Services", "Home")" class="nav-link">Services</a></li>
                     <li class="nav-item"><a href="@Url.Action("About", "Home")" class="nav-link">About</a></li>
                     <li class="nav-item"><a href="@Url.Action("Feedback", "Home")" class="nav-link">Feedback</a></li>
                     <li class="nav-item"><a href="@Url.Action("Blog", "Home")" class="nav-link">Blog</a></li>
                     <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link">Contact</a></li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item d-none d-lg-block"> 
-                        <form action="" id="search-box" class="d-flex">
-                            <input type="text" placeholder="Search..." id="search-text" class="form-control" />
-                                <button id="search-btn" class="btn btn-primary">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
+                    <li class="nav-item d-none d-lg-block">
+                        <form action="/Home/Search" method="get" id="search-box" class="d-flex">
+                            <input type="text" name="query" placeholder="Search..." id="search-text" class="form-control" />
+                            <button id="search-btn" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </form>
                     </li>
 
-                    @await Html.PartialAsync("~/Views/Account/AccountPartial.cshtml")
-                    @await Html.PartialAsync("~/Views/Cart/CartPartial.cshtml")
-
-                    <li class="nav-item">
-                        <div class="btn-container">
-                            <a href="@Url.Action("BookTable", "Home")" class="nav-link btn-book-table">Book a table</a>
-                        </div>
+                    <li class="nav-item" id="cart-container">
+                        <a href="@Url.Action("ShoppingCart", "Cart")" style="margin: 20px;
+                                                        display: flex;
+                                                        justify-content: space-between;
+                                                        align-content: flex-end;
+                                                        flex-direction: row; align-items: baseline">
+                            <i class="fa-solid fa-cart-shopping" style="margin-right:10px"></i>
+                            <span class="badge badge-pill badge-primary">
+                                @Model.TotalItems
+                            </span>
+                        </a>
                     </li>
+
+
+                    @await Html.PartialAsync("~/Views/Account/AccountPartial.cshtml")
+
                 </ul>
             </div>
         </div>
     </nav>
-
     <!-- END nav -->
     @RenderBody()
 

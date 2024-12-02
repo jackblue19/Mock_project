@@ -2090,10 +2090,6 @@ pre {
         display: none; /* Ẩn phần tìm kiếm trong chế độ responsive */
     }
 
-    #cart-container {
-        display: none
-    }
-
     .table-responsive-md > .table-bordered {
         border: 0;
     }
@@ -2181,11 +2177,6 @@ h3 {
 #search-container {
     display: none; /* Ẩn phần tìm kiếm trong chế độ responsive */
 }
-
-#cart-container {
-    display: none
-}
-
 .table-responsive-lg > .table-bordered {
     border: 0;
 }
@@ -11328,7 +11319,6 @@ h1, h2, h3, h4, h5,
 .form-control {
     height: 58px !important;
     background: transparent !important;
-    color: rgba(255, 255, 255, 0.9) !important;
     font-size: 18px;
     border-radius: 0px;
     -webkit-box-shadow: none !important;

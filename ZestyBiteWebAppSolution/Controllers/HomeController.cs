@@ -1,76 +1,73 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Helpers;
+using ZestyBiteWebAppSolution.Models;
 using ZestyBiteWebAppSolution.Models.ViewMoedel;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteSolution.Controllers
-{
-    public class HomeController : Controller
-    {
+namespace ZestyBiteSolution.Controllers {
+    public class HomeController : Controller {
         private readonly IItemService _itemService;
         private readonly ZestyBiteContext _context;
 
-        public HomeController(IItemService itemService, ZestyBiteContext context)
-        {
+        public HomeController(IItemService itemService, ZestyBiteContext context) {
             _itemService = itemService;
             _context = context;
         }
 
+        private ShoppingCartDTO GetShoppingCart() {
+            var cart = HttpContext.Session.GetObjectFromJson<ShoppingCartDTO>("ShoppingCart");
+            if (cart == null) {
+                cart = new ShoppingCartDTO();
+            }
+            return cart;
+        }
+
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
-        {
-            var items = await _itemService.GetAllItemsAsync(); // Lấy tất cả các mục
+        public async Task<IActionResult> Index() {
+            var items = await _itemService.GetAllItemsAsync();
 
-            var pizzaItems = items.Where(i => i.ItemCategory == "Pizza"); // Lọc các món Pizza
-            var drinkItems = items.Where(i => i.ItemCategory == "Drink"); // Lọc các món Drink
-            var pastaItems = items.Where(i => i.ItemCategory == "Pasta");
-            var burgersItems = items.Where(i => i.ItemCategory == "Burgers");
+            var pizzaItems = items.Where(i => i.ItemCategory == "Pizza").ToList();
+            var drinkItems = items.Where(i => i.ItemCategory == "Drink").ToList();
+            var pastaItems = items.Where(i => i.ItemCategory == "Pasta").ToList();
+            var burgersItems = items.Where(i => i.ItemCategory == "Burgers").ToList();
 
-            // Trả về View với hai danh sách: pizza và drink
-            var viewModel = new IndexViewModel
-            {
+            var viewModel = new IndexViewModel {
                 PizzaItems = pizzaItems,
                 DrinkItems = drinkItems,
                 PastaItems = pastaItems,
                 BurgersItems = burgersItems,
             };
-            return View(viewModel); // Trả về view với dữ liệu pizza và drink
+
+            var cart = GetShoppingCart();
+            viewModel.TotalItems = cart.Items?.Sum(i => i.Quantity) ?? 0;
+
+            return View(viewModel);
         }
 
-        public IActionResult About()
-        {
+
+        public IActionResult About() {
             return View();
         }
-        [Authorize]     // => force to login but dont care role
-        public IActionResult Contacto()
-        {
+        [Authorize]
+        public IActionResult Contacto() {
             return View();
         }
-        [Authorize(Policy = "UserPolicy")] // => sử dụng policy từ program.cs để cho gọn =)))
-        public IActionResult Feeder()
-        {
+        [Authorize(Policy = "UserPolicy")]
+        public IActionResult Feeder() {
             return View();
         }
 
         [AllowAnonymous]
-        public IActionResult Feedback()
-        {
+        public IActionResult Feedback() {
             return View();
         }
 
-        public IActionResult Contact()
-        {
+        public IActionResult Contact() {
             return View();
         }
-
-        public IActionResult Services()
-        {
-            return View();
-        }
-
-        public IActionResult Blog()
-        {
+        public IActionResult Blog() {
             return View();
         }
 
@@ -109,16 +106,20 @@ namespace ZestyBiteSolution.Controllers
             return View(model);
         }
 
-        public IActionResult Search()
-        {
-            return PartialView();
-        }
+        [HttpGet]
+        public async Task<IActionResult> Search(string query) {
+            if (string.IsNullOrWhiteSpace(query)) {
+                var itemDTO = await _itemService.GetAllItemsAsync();
+                return View("SearchResults", itemDTO);
+            }
 
-        public IActionResult BookTable()
-        {
-            TempData["ShowPopup"] = true;
-            return View();
-        }
+            var itemsDTO = await _itemService.GetAllItemsAsync();
 
+            var filteredItems = itemsDTO
+                .Where(i => i.ItemName.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            return View("SearchResults", filteredItems);
+        }
     }
 }

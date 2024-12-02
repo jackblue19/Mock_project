@@ -104,8 +104,8 @@ builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
-builder.Services.AddScoped<TableRepository>();  
-builder.Services.AddScoped<TableService>();     
+builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITableService, TableService>();
 
 builder.Services.AddEndpointsApiExplorer();
 

@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Repositories
+namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
-    public class TableRepository
+    public class TableRepository : ITableRepository
     {
         private readonly ZestyBiteContext _context;
 
@@ -17,34 +18,28 @@ namespace ZestyBiteWebAppSolution.Repositories
         }
 
         // Create
-        public async Task<Table> CreateTableAsync(Table table)
+        public async Task<Table> CreateAsync(Table table)
         {
-            _context.Tables.Add(table);
+            await _context.Tables.AddAsync(table);
             await _context.SaveChangesAsync();
             return table;
         }
 
         // Read
-        public async Task<Table> GetTableByIdAsync(int tableId)
+        public async Task<Table?> GetByIdAsync(int tableId)
         {
             return await _context.Tables
-                .Include(t => t.Account)
-                .Include(t => t.Item)
-                .Include(t => t.Reservation)
-                .FirstOrDefaultAsync(t => t.TableId == tableId);
+                                 .Where(t => t.TableId == tableId)
+                                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Table>> GetAllTablesAsync()
+        public async Task<IEnumerable<Table>> GetAllAsync()
         {
-            return await _context.Tables
-                .Include(t => t.Account)
-                .Include(t => t.Item)
-                .Include(t => t.Reservation)
-                .ToListAsync();
+            return await _context.Tables.ToListAsync();
         }
 
         // Update
-        public async Task<Table> UpdateTableAsync(Table table)
+        public async Task<Table> UpdateAsync(Table table)
         {
             _context.Tables.Update(table);
             await _context.SaveChangesAsync();
@@ -52,10 +47,11 @@ namespace ZestyBiteWebAppSolution.Repositories
         }
 
         // Delete
-        public async Task<bool> DeleteTableAsync(int tableId)
+        public async Task<bool> DeleteAsync(int tableId)
         {
-            var table = await _context.Tables.FindAsync(tableId);
-            if (table == null) return false;
+            var table = await GetByIdAsync(tableId);
+            if (table == null)
+                return false;
 
             _context.Tables.Remove(table);
             await _context.SaveChangesAsync();

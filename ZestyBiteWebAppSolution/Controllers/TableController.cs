@@ -3,54 +3,63 @@ using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ZestyBiteWebAppSolution.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [AllowAnonymous]
     public class TableController : ControllerBase
     {
-        private readonly TableService _tableService;
+        private readonly ITableService _tableService;
 
-        public TableController(TableService tableService)
+        public TableController(ITableService tableService)
         {
             _tableService = tableService;
         }
 
         // Create
         [HttpPost]
-        public async Task<ActionResult<Table>> CreateTable([FromBody] Table table)
+        public async Task<ActionResult<Table>> CreateTableAsync([FromBody] Table table)
         {
+            if (table == null)
+            {
+                return BadRequest("Table data is required.");
+            }
+
             var createdTable = await _tableService.CreateTableAsync(table);
-            return CreatedAtAction(nameof(GetTableById), new { id = createdTable.TableId }, createdTable);
+            return CreatedAtAction(nameof(GetTableByIdAsync), new { tableId = createdTable.TableId }, createdTable);
         }
 
         // Read
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Table>> GetTableById(int id)
+        [HttpGet("{tableId}")]
+        public async Task<ActionResult<Table>> GetTableByIdAsync(int tableId)
         {
-            var table = await _tableService.GetTableByIdAsync(id);
+            var table = await _tableService.GetTableByIdAsync(tableId);
             if (table == null)
             {
-                return NotFound();
+                return NotFound($"Table with ID {tableId} not found.");
             }
+
             return Ok(table);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Table>>> GetAllTables()
+        public async Task<ActionResult<IEnumerable<Table>>> GetAllTablesAsync()
         {
             var tables = await _tableService.GetAllTablesAsync();
             return Ok(tables);
         }
 
         // Update
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Table>> UpdateTable(int id, [FromBody] Table table)
+        [HttpPut("{tableId}")]
+        public async Task<ActionResult<Table>> UpdateTableAsync(int tableId, [FromBody] Table table)
         {
-            if (id != table.TableId)
+            if (tableId != table.TableId)
             {
-                return BadRequest();
+                return BadRequest("Table ID mismatch.");
             }
 
             var updatedTable = await _tableService.UpdateTableAsync(table);
@@ -58,15 +67,16 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // Delete
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteTable(int id)
+        [HttpDelete("{tableId}")]
+        public async Task<ActionResult> DeleteTableAsync(int tableId)
         {
-            var success = await _tableService.DeleteTableAsync(id);
-            if (!success)
+            var isDeleted = await _tableService.DeleteTableAsync(tableId);
+            if (!isDeleted)
             {
-                return NotFound();
+                return NotFound($"Table with ID {tableId} not found.");
             }
-            return NoContent();
+
+            return NoContent(); // Successfully deleted
         }
     }
 }

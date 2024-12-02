@@ -6,7 +6,7 @@ using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
-    public class AccountRepository : IAccountRepository, IRepository<Account>
+    public class AccountRepository :IAccountRepository, IRepository<Account>
     {
         private readonly ZestyBiteContext _context;
         public AccountRepository(ZestyBiteContext context)
@@ -48,17 +48,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         }
         public async Task<Account?> GetByIdAsync(int id)
         {
-            // return await _context.Accounts
-            //                      .Where(acc => acc.AccountId == id)
-            //                      .SingleOrDefaultAsync();
             return await _context.Accounts
                                  .Include(acc => acc.Role)
                                  .FirstOrDefaultAsync(acc => acc.AccountId == id);
         }
         public async Task<Account> CreateAsync(Account acc)
         {
-            // await _context.Set<Account>().AddAsync(entity);  // => not sure to test
-            // await _context.Accounts.AddAsync(entity); // => not rcm to use
             _context.Accounts.Add(acc);
             await _context.SaveChangesAsync();
             return acc;

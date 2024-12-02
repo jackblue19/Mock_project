@@ -23,14 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\css\.DS_Store" />
     <None Include="wwwroot\css\bootstrap\.DS_Store" />
     <None Include="wwwroot\css\css\.DS_Store" />
     <None Include="wwwroot\fonts\.DS_Store" />
     <None Include="wwwroot\fonts\flaticon\.DS_Store" />
     <None Include="wwwroot\fonts\icomoon\.DS_Store" />
     <None Include="wwwroot\fonts\ionicons\fonts\.DS_Store" />
-    <None Include="wwwroot\images\.DS_Store" />
     <None Include="wwwroot\js\.DS_Store" />
     <None Include="wwwroot\scss\.DS_Store" />
   </ItemGroup>
@@ -61,6 +59,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />

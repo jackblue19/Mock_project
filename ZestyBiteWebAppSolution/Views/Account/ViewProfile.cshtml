@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "General Information";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model ZestyBiteWebAppSolution.Models.DTOs.ProfileDTO
+
+<link href="~/css/EditProfile.css" rel="stylesheet" />
+<style>
+    .modal-backdrop {
+        display: none !important;
+    }
+</style>
+<!-- Form to send data to the controller -->
+@using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post, new { @class = "form-horizontal" })) {
+    <div class="container form-config" style="padding: 100px">
+        <div class="row no-gutters row-bordered row-border-light">
+            <div class="col-12 col-md-3 pt-0">
+                <div class="list-group list-group-flush account-settings-links">
+                    <label class="btn btn-outline" for="file-input">
+                        <img id="icon-placeholder" style="width: 100%; max-width: 150px; height: auto; border-radius: 50%; object-fit: cover;" src="" alt="Default Icon" class="responsive">
+                        <input type="file" class="account-settings-fileinput" style="display:none" id="file-input">
+                        <span class="mt-2 text-white d-flex flex-column align-items-center">Select photo</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-9 text-primary">
+                <div class="card-body">
+                    @{
+                        if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string)) {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                @TempData["SuccessMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string)) {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                @TempData["ErrorMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                    }
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" asp-for="Name" class="form-control" readonly />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label class="form-label">E-mail</label>
+                        <input type="text" asp-for="Email" class="form-control" readonly />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <!-- Phone -->
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" asp-for="PhoneNumber" class="form-control" readonly id="phoneNumberField" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <!-- Address -->
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <input type="text" asp-for="Address" class="form-control" readonly id="addressField" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <!-- Gender -->
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <div class="gender-options">
+                            <div class="gender-option">
+                                <input type="radio" id="male" asp-for="Gender" value="0" disabled />
+                                <label for="male">Male</label>
+                            </div>
+                            <div class="gender-option">
+                                <input type="radio" id="female" asp-for="Gender" value="1" disabled />
+                                <label for="female">Female</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit, Save, Cancel buttons -->
+                    <div class="text-right mt-3">
+                        <button type="button" class="btn btn-primary" id="editBtn" onclick="enableEdit()">Edit</button>
+                        <button type="submit" class="btn btn-success" id="saveBtn" style="display:none;">
+                            Save changes
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;" onclick="cancelChanges()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    <script src="~/js/EditProfile.js"></script>
+}

@@ -3,26 +3,15 @@ using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Operations;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace ZestyBiteWebAppSolution.Services.Implementations
-{
-    public class FeedbackService : IFeedbackService
-    {
+namespace ZestyBiteWebAppSolution.Services.Implementations {
+    public class FeedbackService : IFeedbackService {
         private readonly IFeedbackRepository _feedbackRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IItemRepository _itemRepository;
         private readonly IMapper _mapper;
 
-        public FeedbackService(IFeedbackRepository feedbackRepository, IAccountRepository accountRepository, IItemRepository itemRepository, IMapper mapper)
-        {
+        public FeedbackService(IFeedbackRepository feedbackRepository, IAccountRepository accountRepository, IItemRepository itemRepository, IMapper mapper) {
             _feedbackRepository = feedbackRepository ?? throw new ArgumentNullException(nameof(feedbackRepository));
             _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
             _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
@@ -30,8 +19,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         }
 
         // CRUD Feedback
-        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByPageAsync(int pageNumber, int pageSize)
-        {
+        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByPageAsync(int pageNumber, int pageSize) {
             var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync(pageNumber, pageSize);
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }
@@ -44,8 +32,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }
 
-        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId)
-        {
+        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByItemIdAsync(int itemId) {
             var feedbacks = await _feedbackRepository.GetFeedbacksByItemIdAsync(itemId);
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }
@@ -73,22 +60,18 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return _mapper.Map<FeedbackDTO>(createdFeedback);
         }
 
-        public async Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto)
-        {
-            if (feedbackDto == null)
-            {
+        public async Task<FeedbackDTO> UpdateFeedbackAsync(FeedbackDTO feedbackDto) {
+            if (feedbackDto == null) {
                 throw new ArgumentNullException(nameof(feedbackDto));
             }
 
             var feedback = await _feedbackRepository.GetByIdAsync(feedbackDto.Id);
-            if (feedback == null)
-            {
+            if (feedback == null) {
                 throw new InvalidOperationException("Feedback not found.");
             }
 
             var item = await _itemRepository.GetByIdAsync(feedbackDto.ItemId);
-            if (item == null)
-            {
+            if (item == null) {
                 throw new InvalidOperationException("Invalid Item.");
             }
 
@@ -99,8 +82,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return _mapper.Map<FeedbackDTO>(updatedFeedback);
         }
 
-        public async Task<bool> DeleteFeedbackAsync(int feedbackId)
-        {
+        public async Task<bool> DeleteFeedbackAsync(int feedbackId) {
             var feedback = await _feedbackRepository.GetByIdAsync(feedbackId);
             if (feedback == null) return false;
 
@@ -108,15 +90,13 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return true;
         }
 
-        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync()
-        {
+        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync() {
             var items = await _itemRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ItemDTO>>(items);
         }
 
         // CRUD Reply
-        public async Task<IEnumerable<ReplyDTO>> GetRepliesByFeedbackAsync(int parentFbFlag)
-        {
+        public async Task<IEnumerable<ReplyDTO>> GetRepliesByFeedbackAsync(int parentFbFlag) {
             var replies = await _feedbackRepository.GetFeedbackRepliesAsync(parentFbFlag);
             return _mapper.Map<IEnumerable<ReplyDTO>>(replies);
         }
@@ -134,8 +114,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             if (account == null) throw new InvalidOperationException("Invalid Account.");
             if (item == null) throw new InvalidOperationException("Invalid Item.");
 
-            var reply = new Feedback
-            {
+            var reply = new Feedback {
                 FbContent = replyDto.Content,
                 FbDatetime = DateTime.UtcNow,
                 Username = usn,
@@ -149,16 +128,13 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return _mapper.Map<FeedbackDTO>(submittedReply);
         }
 
-        public async Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto)
-        {
-            if (replyDto == null)
-            {
+        public async Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto) {
+            if (replyDto == null) {
                 throw new ArgumentNullException(nameof(replyDto));
             }
 
             var existingReply = await _feedbackRepository.GetByIdAsync(replyDto.Id);
-            if (existingReply == null)
-            {
+            if (existingReply == null) {
                 throw new KeyNotFoundException("Reply not found.");
             }
 
@@ -169,8 +145,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return _mapper.Map<FeedbackDTO>(updatedReply);
         }
 
-        public async Task<bool> DeleteReplyAsync(int replyId)
-        {
+        public async Task<bool> DeleteReplyAsync(int replyId) {
             var existingReply = await _feedbackRepository.GetByIdAsync(replyId);
             if (existingReply == null) return false;
 

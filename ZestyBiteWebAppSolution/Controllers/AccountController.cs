@@ -1,44 +1,61 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ZestyBiteWebAppSolution.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Services.Implementations;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Humanizer;
-using NuGet.Common;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using Microsoft.AspNetCore.Authorization;
-using ZestyBiteWebAppSolution.Models.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [AllowAnonymous]
+    // [ApiController]
+    // [Route("api/[Controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
         private readonly ILogger<AccountController> _logger;
+        private readonly IVerifyService _mailService;
 
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService)
+        private static readonly
+        ConcurrentDictionary<string, TaskCompletionSource<string>> VerificationTasks
+                = new ConcurrentDictionary<string, TaskCompletionSource<string>>();
+        private static readonly
+        ConcurrentDictionary<string, int> VerificationAttempts
+                = new ConcurrentDictionary<string, int>();
+
+        public AccountController(IVerifyService verifyService, ILogger<AccountController> logger, IAccountService accountService)
         {
             _logger = logger;
             _service = accountService;
+            _mailService = verifyService;
         }
 
-        /* Login */
-        // [HttpGet]
-        // public IActionResult Login()
-        //     return View(); // Hiển thị trang đăng nhập
-        [AllowAnonymous]
+        public IActionResult Login() {
+            return View();
+        }
+
+        public IActionResult Register() {
+            return View();
+        }
+        public IActionResult VerifyEmail() {
+            return View();
+        }
+        public IActionResult ChangePassword() {
+            return View();
+        }
+
         [HttpPost]
-        [Route("LogIn")]
-        public async Task<IActionResult> LogIn([FromBody] LoginDTO dto)
+        // [Route("login")]
+        public async Task<IActionResult> Login([FromForm] LoginDTO dto)
+        // public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
-            // ModelState.AddModelError("UserName", "Tên đăng nhập không hợp lệ");
-            HttpContext.Session.Remove("username");
-            Response.Cookies.Delete("username");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (await _service.IsTrueAccount(dto.Username, dto.Password))
             {
                 HttpContext.Session.SetString("username", dto.Username);
@@ -49,51 +66,123 @@ namespace ZestyBiteWebAppSolution.Controllers
                     Secure = false,
                     SameSite = SameSiteMode.Strict
                 });
-                return Ok("Login sucessfully");
-                // return RedirectToAction("Index", "Home");
+
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.ErrorMessage = "Invalid username or password";
-            return Unauthorized();
-            // return View();
-            /*
-                if (ModelState.IsValid)
-                    if (user != null)
-                    else
-                        ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);  // Trả lại trang đăng nhập nếu đăng nhập thất bại
-            */
+
+            return Unauthorized(new { message = "Invalid username or password" });
         }
 
-        [HttpPost("logout")]
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Remove("username");
-            Response.Cookies.Delete("username");
-            // RedirectToAction("Login", "Account");
-            return Ok("Log out sucessfully");
-            //  return RedirectToAction("Index", "Home");
-            //  thêm case tắt trình duyệt thì auto log out
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("Register")]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
         [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromForm] AccountDTO accountDto)
+        // [Route("VerifyCode")]
+        // public async Task<IActionResult> VerifyCode([FromForm] VerifyDTO verifyDto)
+        public async Task<IActionResult> VerifyEmail( /*[FromBody]*/ VerifyDTO verifyDto)
         {
-            if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
+            var usn = User.Identity.Name;
+
+            if (verifyDto == null || string.IsNullOrEmpty(usn) || string.IsNullOrEmpty(verifyDto.Code))
+                return BadRequest(new { Message = "Invalid verification data" });
 
             try
             {
+                // if (!VerificationTasks.TryGetValue(usn, out var tcs))
+                //     return BadRequest(new { Message = "Verification session expired or not found." });
+                if (!VerificationTasks.ContainsKey(usn))
+                {
+                    await _service.IsDeleteUnregistedAccount(usn);
+                    return BadRequest(new { Message = "Verification session expired or not found." });
+                }
+                var tcs = VerificationTasks[usn];
+
+                if (!VerificationAttempts.ContainsKey(usn))
+                    VerificationAttempts[usn] = 0;
+
+                if (VerificationAttempts[usn] >= 5)
+                {
+                    await _service.IsDeleteUnregistedAccount(usn);
+                    return BadRequest(new { Message = "Too many failed attempts." });
+                }
+
+                if (await _service.IsVerified(usn, verifyDto.Code))
+                {
+                    tcs.TrySetResult("Verified");
+                    VerificationTasks.TryRemove(usn, out _);
+                    VerificationAttempts.TryRemove(usn, out _);
+                    HttpContext.Session.Remove("username");
+                    Response.Cookies.Delete("username");
+                    // return Ok(new { Message = "Verification successful." });
+                    return RedirectToAction("Login", "Account");
+                }
+
+                VerificationAttempts[usn]++;
+                if (VerificationAttempts[usn] >= 5)
+                {
+                    VerificationTasks.TryRemove(usn, out _);
+                    VerificationAttempts.TryRemove(usn, out _);
+                    if (await _service.IsDeleteUnregistedAccount(usn))
+                        // return BadRequest(new { Message = "Account deleted due to too many failed attempts." });
+                        return RedirectToAction("Index", "Home");
+                }
+                return RedirectToAction("Index", "Home");
+                // return BadRequest(new { Message = "Invalid verification code. Try again." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        // [Route("signup")]
+        public async Task<IActionResult> Register([FromForm] RegisterDTO accountDto)
+        // public async Task<IActionResult> Register([FromBody] RegisterDTO accountDto)
+        {
+            if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
+            string token = VerificationCodeGenerator.GetSixDigitCode();
+            accountDto.VerificationCode = token;
+            try
+            {
                 var created = await _service.SignUpAsync(accountDto);
-                return Created($"/api/account/{created.Id}", created);
+                // return RedirectToAction("Login", "Account");
+                HttpContext.Session.SetString("username", created.Username);
+                Response.Cookies.Append("username", created.Username, new CookieOptions
+                {
+                    Expires = DateTimeOffset.Now.AddMinutes(3),
+                    HttpOnly = true,
+                    Secure = false,
+                    SameSite = SameSiteMode.Strict
+                });
+
+                // Tạo CancellationTokenSource và TaskCompletionSource
+                var tcs = new TaskCompletionSource<string>();
+                var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3)); // gioi han thgian = 3 min
+
+                VerificationTasks[created.Username] = tcs;
+                VerificationAttempts[created.Username] = 0;
+
+                // không dùng await vì muốn thực hiện song song với hàm VerifyCode
+                _ = Task.Delay(TimeSpan.FromMinutes(3), cts.Token).ContinueWith(async t =>
+                {
+                    if (t.IsCanceled || t.IsFaulted)
+                    {
+                        await _service.IsDeleteUnregistedAccount(created.Username);
+                        ViewBag.Error = "Verification failed! Out of time =DD";
+                        return;
+                    }
+
+                    if (!tcs.Task.IsCompleted)
+                    {
+                        VerificationTasks.TryRemove(created.Username, out _);
+                        VerificationAttempts.TryRemove(created.Username, out _);
+                        if (await _service.IsDeleteUnregistedAccount(created.Username))
+                            ViewBag.Error = "Verification failed! Out of time =DD";
+                        else
+                            ViewBag.Error = "Created?";
+                    }
+                }, TaskContinuationOptions.OnlyOnRanToCompletion);
+                await _mailService.SendVerificationCodeAsync(accountDto.Email, token);
+                return RedirectToAction("VerifyEmail", "Account");
+                // return Ok(token);
             }
             catch (InvalidOperationException ex)
             {
@@ -105,59 +194,100 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost("signup2")]
-        public async Task<IResult> SignUpSecond([FromBody] AccountDTO acc)
-        {
-            try
-            {
-                var created = await _service.SignUpAsync(acc);
-                // return RedirectToAction("Profile", "User");return RedirectToAction("Profile", "User");
-                return TypedResults.Created($"/api/account/{created.Id}", created);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
-        }
 
-        [Authorize]
-        [HttpGet("profile")]
-        public async Task<IResult> ViewProfile()
+        [HttpGet]
+        [Route("viewprofile")]
+        public async Task<IActionResult> ViewProfile()
         {
             try
             {
                 var username = User.Identity.Name;
-
-                if (string.IsNullOrEmpty(username))
-                {
-                    // return RedirectToAction("Login", "Account");
-                    return (IResult)Unauthorized();
+                if (string.IsNullOrEmpty(username)) {
+                    return RedirectToAction("Login", "Account"); // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
                 }
-                var dto = await _service.GetAccountByUsnAsync(username);
 
-                if (dto == null)
-                    return TypedResults.NotFound();
-                // return TypedResults.Ok($"/api/account/{account.UserName}", account); // => usage for page redirect
-                return TypedResults.Ok(dto); // => api in json only =)))
-                // return RedirectToAction("Profile", "User", new { username = dto.Username }); // Chuyển hướng đến action Profile của UserController
+                var dto = await _service.ViewProfileByUsnAsync(username);
+                if (dto == null) {
+                    return NotFound(); // Hiển thị trang "Not Found" nếu không tìm thấy người dùng
+                }
+
+                return View(dto);
+                // return Ok(dto);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                return TypedResults.BadRequest(new { Message = ex.Message });
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
-            catch (ArgumentException ex) // Xử lý lỗi từ service
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(ProfileDTO dto) {
+            try {
+                if (!ModelState.IsValid) {
+                    TempData["ErrorMessage"] = "Invalid data. Please check your inputs.";
+                    return RedirectToAction("ViewProfile");
+                }
+
+                var username = User.Identity?.Name;
+                if (string.IsNullOrEmpty(username)) {
+                    TempData["ErrorMessage"] = "You must be logged in to update your profile.";
+                    return RedirectToAction("LogIn", "Account");
+                }
+
+                await _service.UpdateProfile(dto, username); 
+
+                TempData["SuccessMessage"] = "Profile updated successfully!";
+                return RedirectToAction("ViewProfile"); 
+            } catch (InvalidOperationException ex) {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("ViewProfile");
+            } catch (Exception ex) {
+                TempData["ErrorMessage"] = "An unexpected error occurred.";
+                return RedirectToAction("ViewProfile");
             }
-            catch (Exception ex) // Bắt lỗi bất kỳ khác
-            {
-                return TypedResults.Problem($"Internal Server Error: {ex.Message}");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePwdDTO dto) {
+            if (!ModelState.IsValid) {
+                TempData["ErrorMessage"] = "Invalid data received.";
+                return View(dto); // Trả lại view và hiển thị lỗi
+            }
+
+            try {
+                var username = User.Identity?.Name;
+                if (string.IsNullOrEmpty(username)) {
+                    TempData["ErrorMessage"] = "You must be logged in to change your password.";
+                    return RedirectToAction("Login", "Account"); // Nếu chưa đăng nhập, chuyển đến trang login
+                }
+
+                // Kiểm tra mật khẩu xác nhận
+                if (dto.NewPassword != dto.ConfirmNewPassword) {
+                    TempData["ErrorMessage"] = "New password and confirmation password do not match.";
+                    return View(dto); 
+                }
+
+                // Kiểm tra mật khẩu cũ
+                var isOldPasswordCorrect = await _service.VerifyOldPasswordAsync(username, dto.OldPassword);
+                if (!isOldPasswordCorrect) {
+                    TempData["ErrorMessage"] = "Old password is incorrect.";
+                    return View(dto); 
+                }
+
+                // Cập nhật mật khẩu mới
+                await _service.ChangePwd(dto, username);
+                TempData["SuccessMessage"] = "Password changed successfully!";
+                return View(dto); 
+
+            } catch (Exception ex) {
+                TempData["ErrorMessage"] = ex.Message;
+                return View(dto); 
             }
         }
 
         [Authorize(Roles = "Manager")]
-        [HttpGet("all")]
+        [HttpGet]
+        [Route("getallacc")]
         public async Task<IResult> GetAllAccount()
         {
             try
@@ -173,66 +303,13 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPut("changepassword")]
-        public async Task<IResult> ChangePassword([FromBody] ChangePwdDTO dto)
+        [HttpPost]
+        // [Route("logout")]
+        public IActionResult Logout()
         {
-            if (ModelState.IsValid)
-            {
-                var username = User.Identity.Name;
-
-                if (string.IsNullOrEmpty(username))
-                    // return RedirectToAction("Login", "Account");
-                    return (IResult)Unauthorized();
-                try
-                {
-                    await _service.ChangePwd(dto, username);
-                    return TypedResults.Ok(dto);    // dùng tạm thời để check ngay trên response
-                                                    // return TypedResults.NoContent(); //  => nếu hoành thành rồi thì nên trả về NoContent cho chuẩn
-                }
-                catch (InvalidOperationException ex)
-                {
-                    return TypedResults.BadRequest(new { Message = ex.Message });
-                }
-            }
-            return TypedResults.BadRequest();
+            HttpContext.Session.Remove("username");
+            Response.Cookies.Delete("username");
+            return RedirectToAction("Index", "Home");
         }
-
-        [Authorize]
-        [HttpPut("modify")]
-        public async Task<IResult> UpdateProfile([FromBody] UpdateProfileDTO dto)
-        {
-            try
-            {
-                var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username)) return (IResult)Unauthorized();
-                await _service.UpdateProfile(dto, username);
-                return TypedResults.Ok(dto);    // dùng tạm thời để check ngay trên response
-                // return TypedResults.NoContent(); //  => nếu hoành thành rồi thì nên trả về NoContent cho chuẩn
-            }
-            catch (InvalidOperationException ex)
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
-        }
-
-        public IActionResult EditProfile()
-        {
-            return View();
-        }
-
-        public IActionResult VerifyEmail()
-        {
-            return View();
-        }
-
-        public IActionResult ChangePassword()
-        {
-            return View();
-        }
-
-
-
     }
 }
-

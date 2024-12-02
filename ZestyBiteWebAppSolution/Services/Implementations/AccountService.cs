@@ -3,6 +3,7 @@ using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using ZestyBiteWebAppSolution.Helpers;
 
 namespace ZestyBiteWebAppSolution.Services.Implementations
 {
@@ -16,11 +17,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             _repository = accountRepository;
             _roleRepository = roleRepository;
         }
-
-        //  async Task<Account> IAccountService.CreateAccountAsync(Account account)
-        // -> still work <=> no 'public' keyword
-
-        //  Fix the logic inside => no verification code needed and might use and return DTO instead
         public async Task<Account> CreateStaffAsync(Account account, int roleId)
         {
             if (account == null)
@@ -38,8 +34,36 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return created;
         }
 
-        // cần thêm verification code cho cái hàm SignUpAsync này =Đ
-        public async Task<AccountDTO> SignUpAsync(AccountDTO dto)
+        public async Task<bool> IsVerified(string usn, string code)
+        {
+            var acc = await _repository.GetAccountByUsnAsync(usn);
+            if (acc.VerificationCode != code) return false;
+            acc.AccountStatus = 1;
+            await _repository.UpdateAsync(acc);
+            return true;
+        }
+
+        public async Task<bool> IsDeleteUnregistedAccount(string usn)
+        {
+            try
+            {
+                Account? acc = await _repository.GetAccountByUsnAsync(usn);
+                if (acc == null) return true;
+                if (acc.AccountStatus == 0)
+                {
+                    await _repository.DeleteAsync(acc);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw new InvalidOperationException($"Sth went wrong: {ex.Message}");
+            }
+        }
+
+        public async Task<RegisterDTO> SignUpAsync(RegisterDTO dto)
         {
             if (dto == null)
             {
@@ -69,21 +93,18 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             if (existed != null)
             {
                 throw new InvalidOperationException($"Username '{dto.Username}' is already in use.");
-                throw new ArgumentException("Please choose another username!", nameof(dto.Username));
-            }
-
-            existed = await _repository.GetAccountByEmailAsync(dto.Email);
-            if (existed != null)
-            {
-                throw new InvalidOperationException($"Email '{dto.Email}' is already in use.");
-                throw new ArgumentException("Please choose another E-mail!", nameof(dto.Email));
             }
 
             var defaultRole = await _roleRepository.GetByIdAsync(7);
+            if (defaultRole == null || defaultRole.RoleId <= 0)
+            {
+                throw new InvalidOperationException("Invalid role assignment.");
+                throw new ArgumentException("Please choose another username!", nameof(dto.Username));
+            }
+            //      -- bổ sung phân biệt email nữa =Đ
             var acc = new Account()
             {
                 Username = dto.Username,
-                // Password = HashPassword(dto.Password),
                 Password = dto.Password,
                 Name = dto.Name,
                 PhoneNumber = dto.PhoneNumber,
@@ -91,20 +112,24 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 Gender = dto.Gender,
                 Email = dto.Email,
                 ProfileImage = dto.ProfileImg,
-                VerificationCode = dto.VerificationCode
+                VerificationCode = dto.VerificationCode,
+                AccountStatus = 0
             };
-            //acc.Role = defaultRole;
             acc.RoleId = defaultRole.RoleId;
 
             var created = await _repository.CreateAsync(acc);
+            dto.VerificationCode = "ai cho ma` xem =D";
             dto.RoleDescription = created.Role.RoleDescription;
-            dto.Id = acc.AccountId;
+            dto.Id = acc.AccountId;     //      cos theer xoas + xoas ben dto
             return dto;
         }
-        public async Task<IEnumerable<AccountDTO?>> GetALlAccountAsync()
+
+
+        public async Task<IEnumerable<RegisterDTO?>> GetALlAccountAsync()
         {
             var accounts = await _repository.GetAllAsync();
-            return accounts.Select(acc => new AccountDTO{
+            return accounts.Select(acc => new RegisterDTO
+            {
                 Id = acc.AccountId,
                 Username = acc.Username,
                 Password = acc.Password,
@@ -118,7 +143,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 RoleDescription = acc.Role.RoleDescription
             });
         }
-        public async Task<AccountDTO?> GetAccountByIdAsync(int id)
+        public async Task<RegisterDTO?> GetAccountByIdAsync(int id)
         {
             try
             {
@@ -127,7 +152,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 {
                     throw new ArgumentNullException(nameof(account), "Cannot find by id");
                 }
-                var dto = new AccountDTO()
+                var dto = new RegisterDTO()
                 {
                     Id = account.AccountId, // có thể dòng này del cần vì tính bảo mật =)))) nhưng mà em nghĩ có thể lơ được
                     Username = account.Username,
@@ -147,14 +172,22 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 throw new ArgumentException(ex.Message);
             }
         }
-        public async Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto, string usn){
+        public async Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto, string usn)
+        {
             var current = await _repository.GetAccountByUsnAsync(usn);
+            if (current == null)
+                throw new InvalidOperationException("Account not found.");
             current.Password = dto.NewPassword;
             await _repository.UpdateAsync(current);
             return dto;
         }
-        public async Task<UpdateProfileDTO> UpdateProfile(UpdateProfileDTO dto, string usn){
+
+        public async Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn)
+        {
             var current = await _repository.GetAccountByUsnAsync(usn);
+            if (current == null) {
+                throw new InvalidOperationException("User not found.");
+            }
             current.Name = dto.Name;
             current.PhoneNumber = dto.PhoneNumber;
             current.Address = dto.Address;
@@ -163,40 +196,56 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             await _repository.UpdateAsync(current);
             return dto;
         }
-        public async Task<AccountDTO?> GetAccountByUsnAsync(string username){
+
+        public async Task<RegisterDTO?> GetAccountByUsnAsync(string username)
+        {
             var current = await _repository.GetAccountByUsnAsync(username);
-            var dto = new AccountDTO()
-                {
-                    Id = current.AccountId,
-                    Username = current.Username,
-                    Password = current.Password,
-                    Name = current.Name,
-                    PhoneNumber = current.PhoneNumber,
-                    Address = current.Address,
-                    Email = current.Email,
-                    Gender = current.Gender,
-                    ProfileImg = current.ProfileImage,
-                    RoleDescription = current.Role.RoleDescription,
-                };
-                return dto;
+            var dto = new RegisterDTO()
+            {
+                Id = current.AccountId,
+                Username = current.Username,
+                Password = current.Password,
+                Name = current.Name,
+                PhoneNumber = current.PhoneNumber,
+                Address = current.Address,
+                Email = current.Email,
+                Gender = current.Gender,
+                ProfileImg = current.ProfileImage,
+                RoleDescription = current.Role.RoleDescription,
+            };
+            return dto;
         }
 
-        public async Task<int> GetRoleIdByUsn(string usn){
+        public async Task<int> GetRoleIdByUsn(string usn)
+        {
             var acc = await _repository.GetAccountByUsnAsync(usn);
             return acc.RoleId;
         }
-        public async Task<string?> GetRoleDescByUsn(string usn){
+        public async Task<string?> GetRoleDescByUsn(string usn)
+        {
             var acc = await _repository.GetAccountByUsnAsync(usn);
-            if(acc == null) return null;
+            if (acc == null) return null;
             return acc.Role.RoleDescription;
         }
-        public async Task<bool> IsTrueAccount(string usn, string pwd){
-            var acc =  await _repository.GetAccountByUsnAsync(usn);
+        public async Task<bool> IsTrueAccount(string usn, string pwd)
+        {
+            var acc = await _repository.GetAccountByUsnAsync(usn);
             if (acc == null) return false;
-            // if (acc.Password != HashPassword(pwd)) return false;
             if (acc.Password != pwd) return false;
+            if (acc.AccountStatus == 0) return false;
             return true;
         }
+
+        public async Task<bool> VerifyOldPasswordAsync(string username, string oldPassword)
+        {
+            var account = await _repository.GetAccountByUsnAsync(username);
+            if (account == null)
+                throw new InvalidOperationException("Account not found.");
+
+            return account.Password == oldPassword;
+        }
+
+
 
         /* Other method */
         private string HashPassword(string password)
@@ -205,5 +254,20 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return passwordHasher.HashPassword("", password); // Pass null for the user parameter
         }
 
+        public async Task<ProfileDTO> ViewProfileByUsnAsync(string usn)
+        {
+            var acc = await _repository.GetAccountByUsnAsync(usn);
+            var dto = new ProfileDTO()
+            {
+                Name = acc.Name,
+                PhoneNumber = acc.PhoneNumber,
+                Email = acc.Email,
+                Gender = acc.Gender,
+                Address = acc.Address,
+                ProfileImg = acc.ProfileImage
+            };
+
+            return dto;
+        }
     }
 }

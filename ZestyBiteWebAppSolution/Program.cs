@@ -16,6 +16,7 @@ using ZestyBiteWebAppSolution.Mappings;
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
+using ZestyBiteWebAppSolution.Services;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session
@@ -103,7 +104,8 @@ builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
-
+builder.Services.AddScoped<TableRepository>();  
+builder.Services.AddScoped<TableService>();     
 
 builder.Services.AddEndpointsApiExplorer();
 

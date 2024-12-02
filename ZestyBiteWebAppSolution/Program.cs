@@ -15,7 +15,7 @@ using ZestyBiteWebAppSolution.Mappings;
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
-using ZestyBiteWebAppSolution.Models.Entities;
+using ZestyBiteWebAppSolution.Data;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session

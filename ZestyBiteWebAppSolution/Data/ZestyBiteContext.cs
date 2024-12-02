@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Models.Entities;
+namespace ZestyBiteWebAppSolution.Data;
 
 public partial class ZestyBiteContext : DbContext
 {
@@ -38,6 +39,10 @@ public partial class ZestyBiteContext : DbContext
     public virtual DbSet<Table> Tables { get; set; }
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
+
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseMySQL("Server=localhost;Port=3306;Database=zestybite;Uid=root;Pwd=123456");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -269,8 +274,6 @@ public partial class ZestyBiteContext : DbContext
 
             entity.ToTable("supply");
 
-            entity.HasIndex(e => e.ItemId, "Item_ID");
-
             entity.HasIndex(e => e.TableId, "Table_ID");
 
             entity.HasIndex(e => e.VendorPhone, "Vendor_Phone").IsUnique();
@@ -282,7 +285,6 @@ public partial class ZestyBiteContext : DbContext
             entity.Property(e => e.DateImport)
                 .HasColumnType("datetime")
                 .HasColumnName("Date_Import");
-            entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.ProductName)
                 .HasMaxLength(255)
                 .HasColumnName("Product_Name");
@@ -304,11 +306,6 @@ public partial class ZestyBiteContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("Vendor_Name");
             entity.Property(e => e.VendorPhone).HasColumnName("Vendor_Phone");
-
-            entity.HasOne(d => d.Item).WithMany(p => p.Supplies)
-                .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("supply_ibfk_2");
 
             entity.HasOne(d => d.Table).WithMany(p => p.Supplies)
                 .HasForeignKey(d => d.TableId)

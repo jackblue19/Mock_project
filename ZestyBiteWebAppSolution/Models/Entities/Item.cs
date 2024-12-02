@@ -23,8 +23,6 @@ public partial class Item
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
-    public virtual ICollection<Supply> Supplies { get; set; } = new List<Supply>();
-
     public virtual ICollection<SupplyItem> SupplyItems { get; set; } = new List<SupplyItem>();
 
     public virtual ICollection<TableDetail> TableDetails { get; set; } = new List<TableDetail>();

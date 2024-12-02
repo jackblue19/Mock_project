@@ -1,8 +1,10 @@
 ﻿using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using ZestyBiteWebAppSolution.Data;
 
-namespace ZestyBiteWebAppSolution.Repositories.Implementations {
+namespace ZestyBiteWebAppSolution.Repositories.Implementations
+{
     public class RoleRepository : IRoleRepository, IRepository<Role>
     {
         private readonly ZestyBiteContext _context;

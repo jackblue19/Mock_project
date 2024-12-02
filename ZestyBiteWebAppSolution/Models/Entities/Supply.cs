@@ -21,8 +21,6 @@ public partial class Supply
 
     public int TableId { get; set; }
 
-    public int ItemId { get; set; }
-
     public string VendorName { get; set; } = null!;
 
     public string VendorPhone { get; set; } = null!;
@@ -30,8 +28,6 @@ public partial class Supply
     public string VendorAddress { get; set; } = null!;
 
     public string SupplyCategory { get; set; } = null!;
-
-    public virtual Item Item { get; set; } = null!;
 
     public virtual ICollection<Profit> Profits { get; set; } = new List<Profit>();
 

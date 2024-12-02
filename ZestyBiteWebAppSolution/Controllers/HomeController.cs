@@ -22,6 +22,7 @@ namespace ZestyBiteSolution.Controllers {
         }
 
         public async Task<IActionResult> Index() {
+
             var items = await _itemService.GetAllItemsAsync();
 
             var pizzaItems = items.Where(i => i.ItemCategory == "Pizza").ToList();
@@ -61,10 +62,8 @@ namespace ZestyBiteSolution.Controllers {
         public async Task<IActionResult> Menu(int page = 1) {
             int pageSize = 6;
 
-            // Lấy tất cả các mục từ dịch vụ
             var itemsDTO = await _itemService.GetAllItemsAsync();
 
-            // Phân trang
             int totalItems = itemsDTO.Count();
             int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
@@ -74,7 +73,6 @@ namespace ZestyBiteSolution.Controllers {
                 .Take(pageSize)
                 .ToList();
 
-            // Lấy các mục theo danh mục (không phân trang cho các mục này)
             var pizzaItems = itemsDTO.Where(i => i.ItemCategory == "Pizza").ToList();
             var drinkItems = itemsDTO.Where(i => i.ItemCategory == "Drink").ToList();
             var pastaItems = itemsDTO.Where(i => i.ItemCategory == "Pasta").ToList();
@@ -85,7 +83,7 @@ namespace ZestyBiteSolution.Controllers {
                 DrinkItems = drinkItems,
                 PastaItems = pastaItems,
                 BurgersItems = burgersItems,
-                Items = paginatedItems, // Mục phân trang cho phần ftco-section
+                Items = paginatedItems, 
                 CurrentPage = page,
                 TotalPages = totalPages
             };
@@ -105,7 +103,6 @@ namespace ZestyBiteSolution.Controllers {
                 .Where(i => i.ItemName.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            // Thêm phân trang (optional)
             int pageSize = 6;
             int totalItems = filteredItems.Count();
             int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);

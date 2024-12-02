@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models;
-using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Models;
-
 namespace ZestyBiteWebAppSolution.Controllers {
     public class CartController : Controller {
         private const string CartSessionKey = "ShoppingCart";
@@ -21,6 +18,9 @@ namespace ZestyBiteWebAppSolution.Controllers {
         }
 
         public IActionResult AddToCart(int itemId) {
+            if (!User.Identity.IsAuthenticated) {
+                return RedirectToAction("Register", "Account"); // Chuyển hướng đến trang đăng ký
+            }
             var cart = HttpContext.Session.GetObjectFromJson<ShoppingCartDTO>("ShoppingCart") ?? new ShoppingCartDTO();
 
             var item = _context.Items
@@ -45,7 +45,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 cart.Items.Add(item);
             }
 
-            // Cập nhật lại giỏ hàng vào Session
             HttpContext.Session.SetObjectAsJson("ShoppingCart", cart);
 
             return RedirectToAction("Index", "Home");
@@ -88,13 +87,15 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 item.Quantity = quantity;
                 HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
 
-                // Cập nhật lại tổng số lượng và tổng giá trị
                 var totalItems = cart.Items.Sum(i => i.Quantity);
                 var totalAmount = cart.Items.Sum(i => i.Quantity * i.Price);
                 ViewBag.TotalItems = totalItems;
                 ViewBag.TotalAmount = totalAmount;
             }
             return RedirectToAction("ShoppingCart");
+        }
+        public IActionResult Bill() {
+            return View();
         }
     }
 }

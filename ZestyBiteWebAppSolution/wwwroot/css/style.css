@@ -10198,7 +10198,6 @@ h1, h2, h3, h4, h5,
 }
 
 .ftco-navbar-light {
-    background: #121618 !important;
     position: fixed; /* Stays at the top while scrolling */
     top: 0;
     width: 100%;
@@ -11916,7 +11915,6 @@ textarea.form-control {
     .ftco-menu .nav-pills .nav-link {
         border-radius: 0;
         margin-bottom: 0;
-        color: #fac564;
         font-size: 18px;
         font-weight: 400;
         position: relative;

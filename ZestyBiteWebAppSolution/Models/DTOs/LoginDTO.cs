@@ -3,7 +3,7 @@
 namespace ZestyBiteWebAppSolution.Models.DTOs {
     public class LoginDTO {
         [Required(ErrorMessage = "Username is required.")]
-        [StringLength(255, ErrorMessage = "Username cannot exceed 255 characters.")]
+        [StringLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
         public string Username { get; set; } = null!;
 
         [Required(ErrorMessage = "Password is required.")]

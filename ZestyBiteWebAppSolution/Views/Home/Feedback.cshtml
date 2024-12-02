@@ -100,19 +100,23 @@
             document.getElementById('submitFeedback').addEventListener('click', function (event) {
                 event.preventDefault(); // Prevent default form submission
 
-                const feedbackMessage = document.getElementById('feedbackMessage').value;
+                const feedbackMessage = document.getElementById('feedbackMessage').value; // This should be the content
                 const selectedDishId = dishSelect.value; // Get the selected dish ID
                 const pfb = null;
+
+                const selectedItem = items.find(item => item.itemId == selectedDishId);
+                const itemName = selectedItem ? selectedItem.itemName : "Unknown Item"; // Fallback if not found
+
                 fetch('/api/feedback/submitfeedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        content: feedbackMessage,
-                        dateTime: new Date().toISOString(),
-                        itemId: selectedDishId, // Use the selected dish ID
-                        parentFb: pfb
+                        Content: feedbackMessage, // Use "Content" as the key
+                        ItemId: selectedDishId, // Use "ItemId" as the key
+                        ItemName: itemName, // You may want to dynamically set this based on the selected item
+                        ParentFb: pfb // Use "ParentFb" as the key
                     })
                 })
                     .then(response => {
@@ -159,6 +163,7 @@
                         }, 3000);
                     });
             });
+            //end submit
         });
     </script>
 </body>

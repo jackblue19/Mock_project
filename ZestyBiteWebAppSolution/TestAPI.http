@@ -114,9 +114,9 @@ Content-Type: application/json
 ###
 POST http://localhost:5024/api/account/logout
 ###
-
+GET http://localhost:5024/api/table
 ###
-
+GET http://localhost:5024/api/tabledetail
 ###
 
 

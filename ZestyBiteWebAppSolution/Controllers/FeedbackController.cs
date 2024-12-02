@@ -15,14 +15,16 @@ namespace ZestyBiteWebAppSolution.Controllers
     {
         private readonly IFeedbackService _feedbackService;
 
-        public FeedbackController(IFeedbackService feedbackService) {
+        public FeedbackController(IFeedbackService feedbackService) 
+        {
             _feedbackService = feedbackService;
         }
 
         // GET: api/feedback/items
         [AllowAnonymous]
         [HttpGet("items")]
-        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetItems() {
+        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetItems() 
+        {
             var items = await _feedbackService.GetAllItemsAsync();
             return Ok(items);
         }
@@ -70,16 +72,23 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         // PUT: api/feedback
         [HttpPut]
-        public async Task<ActionResult<FeedbackDTO>> UpdateFeedback([FromBody] FeedbackDTO feedbackDto) {
-            if (!ModelState.IsValid) {
+        public async Task<ActionResult<FeedbackDTO>> UpdateFeedback([FromBody] FeedbackDTO feedbackDto) 
+        {
+            if (!ModelState.IsValid) 
+            {
                 return BadRequest(ModelState);
             }
-            try {
+            try 
+            {
                 var updatedFeedback = await _feedbackService.UpdateFeedbackAsync(feedbackDto);
                 return Ok(updatedFeedback);
-            } catch (InvalidOperationException ex) {
+            } 
+            catch (InvalidOperationException ex) 
+            {
                 return NotFound(new { Message = ex.Message });
-            } catch (Exception ex) {
+            } 
+            catch (Exception ex) 
+            {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

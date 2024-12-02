@@ -99,6 +99,13 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
 
+builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITableService, TableService>();
+
+builder.Services.AddScoped<ITableDetailRepository, TableDetailRepository>();
+builder.Services.AddScoped<ITableDetailService, TableDetailService>();
+
+
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 
@@ -109,6 +116,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Add AutoMapper services
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 // Configure CORS
 builder.Services.AddCors(options => {

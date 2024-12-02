@@ -112,10 +112,10 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        Content: feedbackMessage, // Use the feedback message
-                        ItemId: selectedDishId, // Use the selected dish ID
-                        ItemName: itemName, // Use the dynamically fetched item name
-                        ParentFb: parentFeedbackId // Set ParentFb to null
+                        Content: feedbackMessage, 
+                        ItemId: selectedDishId, 
+                        ItemName: itemName, 
+                        ParentFb: null,
                     })
                 })
                     .then(response => {

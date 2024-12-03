@@ -29,17 +29,13 @@ POST  http://localhost:5024/api/account/signup
 Content-Type: application/json
 
 {
-  "username": "dr1212z",
-    "password": "doraemon@123",
-  "username": "dr1212z",
+  "username": "dr1212z1",
     "password": "doraemon@123",
     "name": "Doraemon Nek",
     "gender": 1,
     "phoneNumber": "0912345678",
     "email": "git.jack1624@gmail.com",
-    "email": "git.jack1624@gmail.com",
     "address": "DN NHS",
-    "confirmPassword": "doraemon@123",
     "confirmPassword": "doraemon@123",
     "roleDescription": "null"
 }

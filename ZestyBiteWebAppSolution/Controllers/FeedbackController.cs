@@ -9,25 +9,28 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
     {
         private readonly IFeedbackService _feedbackService;
 
-        public FeedbackController(IFeedbackService feedbackService) {
+        public FeedbackController(IFeedbackService feedbackService) 
+        {
             _feedbackService = feedbackService;
         }
 
         // GET: api/feedback/items
+        [AllowAnonymous]
         [HttpGet("items")]
-        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetItems() {
+        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetItems() 
+        {
             var items = await _feedbackService.GetAllItemsAsync();
             return Ok(items);
         }
 
         // GET: api/feedback/allfeedbacks
+        [AllowAnonymous]
         [HttpGet("allfeedbacks")]
         public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacks() {
             try {
@@ -39,6 +42,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // GET: api/feedback/item/{itemId}
+        [AllowAnonymous]
         [HttpGet("item/{itemId}")]
         public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbacksByItemId(int itemId) {
             try {
@@ -50,14 +54,15 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback/submitfeedback
+        [Authorize]
         [HttpPost("submitfeedback")]
         public async Task<ActionResult<FeedbackDTO>> SubmitFeedback([FromBody] FeedbackDTO feedbackDto) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-            try {
-                var username = User.Identity.Name;
-                //string username = "john_doe";
+            try
+            {
+                string username = User.Identity.Name;
                 var submittedFeedback = await _feedbackService.SubmitFeedbackAsync(feedbackDto, username);
                 return CreatedAtAction(nameof(GetFeedbacksByItemId), new { itemId = submittedFeedback.ItemId }, submittedFeedback);
             } catch (Exception ex) {
@@ -67,21 +72,29 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         // PUT: api/feedback
         [HttpPut]
-        public async Task<ActionResult<FeedbackDTO>> UpdateFeedback([FromBody] FeedbackDTO feedbackDto) {
-            if (!ModelState.IsValid) {
+        public async Task<ActionResult<FeedbackDTO>> UpdateFeedback([FromBody] FeedbackDTO feedbackDto) 
+        {
+            if (!ModelState.IsValid) 
+            {
                 return BadRequest(ModelState);
             }
-            try {
+            try 
+            {
                 var updatedFeedback = await _feedbackService.UpdateFeedbackAsync(feedbackDto);
                 return Ok(updatedFeedback);
-            } catch (InvalidOperationException ex) {
+            } 
+            catch (InvalidOperationException ex) 
+            {
                 return NotFound(new { Message = ex.Message });
-            } catch (Exception ex) {
+            } 
+            catch (Exception ex) 
+            {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         // GET: api/feedback/feedbackpagination
+        [AllowAnonymous]
         [HttpGet("feedbackpagination")]
         public async Task<IActionResult> GetFeedbacksByPage(int pageNumber, int pageSize)
         {
@@ -116,13 +129,16 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // POST: api/feedback/reply
+        [Authorize]
         [HttpPost("reply")]
         public async Task<ActionResult<ReplyDTO>> SubmitReply([FromBody] ReplyDTO replyDto) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-            try {
-                var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto);
+            try
+            {
+                string username = User.Identity.Name;
+                var submittedReply = await _feedbackService.SubmitReplyAsync(replyDto.ParentFb, replyDto, username);
                 return CreatedAtAction(nameof(GetRepliesForFeedback), new { parentFb = submittedReply.ParentFb }, submittedReply);
             } catch (Exception ex) {
                 return StatusCode(500, $"Internal server error: {ex.Message}");

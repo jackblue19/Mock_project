@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    [AllowAnonymous]
-    // [ApiController]
-    // [Route("api/[Controller]")]
+    //[AllowAnonymous]
+    [ApiController]
+    [Route("api/[Controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -61,9 +61,9 @@ namespace ZestyBiteWebAppSolution.Controllers
 
 
         [HttpPost]
-        // [Route("login")]
-        public async Task<IActionResult> Login([FromForm] LoginDTO dto)
-        // public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        [Route("login")]
+        //public async Task<IActionResult> Login([FromForm] LoginDTO dto)
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
             if (!ModelState.IsValid)
             {

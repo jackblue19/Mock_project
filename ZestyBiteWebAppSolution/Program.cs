@@ -1,37 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Helpers;
+using ZestyBiteWebAppSolution.Mappings;
+using ZestyBiteWebAppSolution.Middlewares;
+using ZestyBiteWebAppSolution.Repositories;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
-using ZestyBiteWebAppSolution.Helpers;
-using Microsoft.IdentityModel.Tokens;
-using AutoMapper;
-using System.Text;
-// using Microsoft.AspNetCore.Authentication;
-using ZestyBiteWebAppSolution.Middlewares;
-using ZestyBiteWebAppSolution.Repositories;
-using ZestyBiteWebAppSolution.Mappings;
-using System.Net;
-using System.Net.Mail;
-using Microsoft.Extensions.Options;
-
-/*dotnet add package Microsoft.IdentityModel.Tokens
-Install-Package Microsoft.AspNetCore.Session
-
-Install-Package Microsoft.AspNetCore.Authentication.Cookies
-
-Install-Package Microsoft.AspNetCore.Authorization
-
-Install-Package Microsoft.AspNetCore.Mvc
-
-Install-Package Microsoft.Extensions.DependencyInjection
-
-Install-Package Microsoft.AspNetCore.Http
-
-Install-Package Microsoft.AspNetCore.Http.Abstractions
-*/
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +17,7 @@ builder.Services.AddDistributedMemoryCache(); // Store session in memory
 builder.Services.AddSession(options => {
     options.Cookie.Name = ".Restaurant.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = false; // => maybe comment vì hình như nó chặn http chỉ cho https => from TRUE to FALSE
+    options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
 
@@ -71,6 +48,9 @@ builder.Services.AddSwaggerGen(c => {
     });
 });
 
+//VNPay
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
+
 //  Email sender
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
@@ -100,8 +80,7 @@ builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
 
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
-
-
+builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 
@@ -139,7 +118,6 @@ if (app.Environment.IsDevelopment()) {
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// Enable CORS  
 // Enable CORS  
 app.UseCors("AllowAll");
 

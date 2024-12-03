@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ZestyBiteWebAppSolution.Models.DTOs {
     public class RegisterDTO {
-        public int Id { get; set; }
 
         [Required(ErrorMessage = "Username is required.")]
         [StringLength(255, ErrorMessage = "Username cannot exceed 255 characters.")]

@@ -1,19 +1,16 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Models;
 using ZestyBiteWebAppSolution.Models.ViewMoedel;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteSolution.Controllers {
+    [AllowAnonymous]
     public class HomeController : Controller {
         private readonly IItemService _itemService;
-        private readonly ZestyBiteContext _context;
 
-        public HomeController(IItemService itemService, ZestyBiteContext context) {
+        public HomeController(IItemService itemService) {
             _itemService = itemService;
-            _context = context;
         }
 
         private ShoppingCartDTO GetShoppingCart() {
@@ -24,8 +21,8 @@ namespace ZestyBiteSolution.Controllers {
             return cart;
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> Index() {
+
             var items = await _itemService.GetAllItemsAsync();
 
             var pizzaItems = items.Where(i => i.ItemCategory == "Pizza").ToList();
@@ -50,16 +47,7 @@ namespace ZestyBiteSolution.Controllers {
         public IActionResult About() {
             return View();
         }
-        [Authorize]
-        public IActionResult Contacto() {
-            return View();
-        }
-        [Authorize(Policy = "UserPolicy")]
-        public IActionResult Feeder() {
-            return View();
-        }
 
-        [AllowAnonymous]
         public IActionResult Feedback() {
             return View();
         }
@@ -74,20 +62,17 @@ namespace ZestyBiteSolution.Controllers {
         public async Task<IActionResult> Menu(int page = 1) {
             int pageSize = 6;
 
-            // Get all items from the service
-            var itemsDTO = await _itemService.GetAllItemsAsync(); // Lấy tất cả các mục
+            var itemsDTO = await _itemService.GetAllItemsAsync();
 
-            // Paginate all items for ftco-section
-            int totalItems = itemsDTO.Count();  // Total items across all categories
+            int totalItems = itemsDTO.Count();
             int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
             var paginatedItems = itemsDTO
-                .OrderBy(i => i.ItemId)  // Adjust this sorting logic if needed
+                .OrderBy(i => i.ItemId)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            // Get categorized items (without pagination for ftco-menu)
             var pizzaItems = itemsDTO.Where(i => i.ItemCategory == "Pizza").ToList();
             var drinkItems = itemsDTO.Where(i => i.ItemCategory == "Drink").ToList();
             var pastaItems = itemsDTO.Where(i => i.ItemCategory == "Pasta").ToList();
@@ -98,7 +83,7 @@ namespace ZestyBiteSolution.Controllers {
                 DrinkItems = drinkItems,
                 PastaItems = pastaItems,
                 BurgersItems = burgersItems,
-                Items = paginatedItems,  // The paginated list of items for ftco-section
+                Items = paginatedItems, 
                 CurrentPage = page,
                 TotalPages = totalPages
             };
@@ -107,19 +92,32 @@ namespace ZestyBiteSolution.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Search(string query) {
+        public async Task<IActionResult> Search(string query, int page = 1) {
             if (string.IsNullOrWhiteSpace(query)) {
                 var itemDTO = await _itemService.GetAllItemsAsync();
                 return View("SearchResults", itemDTO);
             }
 
             var itemsDTO = await _itemService.GetAllItemsAsync();
-
             var filteredItems = itemsDTO
                 .Where(i => i.ItemName.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            return View("SearchResults", filteredItems);
+            int pageSize = 6;
+            int totalItems = filteredItems.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            var paginatedItems = filteredItems
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var model = new IndexViewModel {
+                Items = paginatedItems,
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+            return View("SearchResults", model);
         }
     }
 }

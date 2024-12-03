@@ -8,21 +8,42 @@
     align-items: center;
     font-weight: bold;
 }
+.input-quantity{
+    width: 50px;
+    margin: 0 20px
+}
+/* Tăng kích thước cho checkbox */
+#selectAll, .item-checkbox {
+    width: 30px; 
+    height: 30px; 
+    cursor: pointer; 
+}
+
+    #selectAll:checked, .item-checkbox:checked {
+        accent-color: #007BFF; 
+        transform: scale(1.1); 
+    }
+
+.table-cart td:first-child,
+.table-cart th:first-child {
+    text-align: center; 
+    vertical-align: middle;
+}
 
 .slider section {
-    background-image: url('../images/burger-1.jpg');
+    background-image: url('/images/burger-1.jpg');
 }
 
 .food1 {
-    background-image: url('../images/bg_1.png');
+    background-image: url('/images/bg_1.png');
 }
 
 .food2 {
-    background-image: url('../images/bg_2.png');
+    background-image: url('/images/bg_2.png');
 }
 
 .food3 {
-    background-image: url('../images/bg_3.jpg');
+    background-image: url('/images/bg_3.jpg');
 }
 
 .middle-bottom {

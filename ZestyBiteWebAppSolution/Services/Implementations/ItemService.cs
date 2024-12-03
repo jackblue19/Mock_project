@@ -26,11 +26,11 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             };
         }
 
-        public async Task<IEnumerable<ItemDTO>> GetDrinkItemsAsync() {
+        private async Task<IEnumerable<ItemDTO>> GetItemsByCategoryAsync(string category) {
             var items = await _itemRepository.GetAllAsync(); // Lấy tất cả các món ăn
-            var drinkItems = items.Where(i => i.ItemCategory == "Drink"); // Lọc chỉ món Drink
+            var categoryItems = items.Where(i => i.ItemCategory == category); // Lọc theo danh mục
 
-            return drinkItems.Select(item => new ItemDTO {
+            return categoryItems.Select(item => new ItemDTO {
                 ItemId = item.ItemId,
                 ItemName = item.ItemName,
                 ItemDescription = item.ItemDescription,
@@ -40,44 +40,27 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                 ItemImage = item.ItemImage,
                 IsServed = item.IsServed
             }).ToList();
+        }
+
+
+        public async Task<IEnumerable<ItemDTO>> GetDrinkItemsAsync() {
+            return await GetItemsByCategoryAsync("Drink");
         }
 
         public async Task<IEnumerable<ItemDTO>> GetBurgersItemsAsync() {
-            var items = await _itemRepository.GetAllAsync(); // Lấy tất cả các món ăn
-            var drinkItems = items.Where(i => i.ItemCategory == "Drink"); // Lọc chỉ món Drink
-
-            return drinkItems.Select(item => new ItemDTO {
-                ItemId = item.ItemId,
-                ItemName = item.ItemName,
-                ItemDescription = item.ItemDescription,
-                SuggestedPrice = item.SuggestedPrice,
-                ItemCategory = item.ItemCategory,
-                ItemStatus = item.ItemStatus,
-                ItemImage = item.ItemImage,
-                IsServed = item.IsServed
-            }).ToList();
+            return await GetItemsByCategoryAsync("Burgers");
         }
 
         public async Task<IEnumerable<ItemDTO>> GetPastaItemsAsync() {
-            var items = await _itemRepository.GetAllAsync(); // Lấy tất cả các món ăn
-            var drinkItems = items.Where(i => i.ItemCategory == "Pasta"); // Lọc chỉ món Drink
-
-            return drinkItems.Select(item => new ItemDTO {
-                ItemId = item.ItemId,
-                ItemName = item.ItemName,
-                ItemDescription = item.ItemDescription,
-                SuggestedPrice = item.SuggestedPrice,
-                ItemCategory = item.ItemCategory,
-                ItemStatus = item.ItemStatus,
-                ItemImage = item.ItemImage,
-                IsServed = item.IsServed
-            }).ToList();
+            return await GetItemsByCategoryAsync("Pasta");
         }
 
-        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync() {
+
+        public async Task<IEnumerable<ItemDTO>> GetAllItemsAsync() {
             var items = await _itemRepository.GetAllAsync();
-            return items.Select(MapToItemDTO);
+            return items.Select(MapToItemDTO).Where(item => item != null).ToList();
         }
+
 
         public async Task<Item?> GetItemByIdAsync(int id) {
             return await _itemRepository.GetByIdAsync(id);
@@ -98,10 +81,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                 return true; // Return true if the item was found and deleted
             }
             return false; // Return false if the item was not found
-        }
-
-        Task IItemService.GetDrinkItemsAsync() {
-            throw new NotImplementedException();
         }
     }
 }

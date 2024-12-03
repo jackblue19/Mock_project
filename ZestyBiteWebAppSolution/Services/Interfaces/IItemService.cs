@@ -11,7 +11,10 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
         Task<Item> CreateItemAsync(Item item);
         Task<Item> UpdateItemAsync(Item item);
         Task<bool> DeleteItemAsync(int itemId);
-        Task GetDrinkItemsAsync();
+
+        Task<IEnumerable<ItemDTO>> GetDrinkItemsAsync();
+        Task<IEnumerable<ItemDTO>> GetBurgersItemsAsync();
+        Task<IEnumerable<ItemDTO>> GetPastaItemsAsync();
     }
 
 }

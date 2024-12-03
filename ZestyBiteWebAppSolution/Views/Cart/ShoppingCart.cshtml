@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "ShoppingCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/ShoppingCart.css" rel="stylesheet" />
+<link href="~/css/ShoppingCart.css" rel="stylesheet" />
+
+<body id="body-config">
+    <div class="middle-part">
+        <div class="middle-top">
+            <div class="heading-text">
+                <b>On going DISCOUNT!!!</b>
+            </div>
+        </div>
+        <div class="middle-bottom">
+            <div class="table-top">
+                <table class="table-cart">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" />
+                            </th>
+                            <th>Index</th>
+                            <th>Items</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        @for (int i = 0; i < Model.Items.Count; i++) {
+                            var item = Model.Items[i];
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="item-checkbox" onchange="updateSelectedItems()"
+                                           data-amount="@((item.Price * item.Quantity).ToString("F2"))" />
+                                </td>
+                                <td>@(i + 1)</td>
+                                <td id="itemPic">
+                                    <div class="itemName">@item.Name</div>
+                                </td>
+                                <td id="itemPrice">@item.Price.ToString("C")</td>
+                                <td>
+                                    <div class="styleQuantity">
+                                        <form action="@Url.Action("UpdateCart", "Cart")" method="post" style="display: inline;">
+                                            <input type="hidden" name="itemId" value="@item.ItemId" />
+                                            <input type="number" name="quantity" value="@item.Quantity" class="input-quantity" onchange="updateItemAmount(this)" />
+                                        </form>
+                                    </div>
+                                </td>
+                                <td class="sumAmount" data-price="@item.Price" data-quantity="@item.Quantity">
+                                    @((item.Price * item.Quantity).ToString("C"))
+                                </td>
+                                <td>
+                                    <form action="@Url.Action("RemoveFromCart", "Cart")" method="post">
+                                        <input type="hidden" name="itemId" value="@item.ItemId" />
+                                        <button type="submit" class="btn-remove" style="color: red;">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="under-table">
+            <table class="calculate">
+                <thead>
+                    <tr>
+                        <th>
+                            <div id="itemNumbers">
+                                Total items: <span id="selectedItemsCount">0</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div id="totalMoney">
+                                Total Amount: <span id="selectedTotalAmount">$0.00</span>
+                            </div>
+                        </th>
+                        <th class="confirmPay">
+                            <div>
+                                Payment
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</body>
+
+<script>
+    function toggleSelectAll(checkbox) {
+        var checkboxes = document.querySelectorAll('.item-checkbox');
+        checkboxes.forEach(function (cb) {
+            cb.checked = checkbox.checked;
+        });
+        updateSelectedItems();
+    }
+
+    function updateSelectedItems() {
+        var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        var totalAmount = 0;
+        var itemCount = checkboxes.length;
+
+        checkboxes.forEach(function (cb) {
+            totalAmount += parseFloat(cb.dataset.amount);
+        });
+
+        document.getElementById('selectedItemsCount').textContent = itemCount;
+        document.getElementById('selectedTotalAmount').textContent = `$${totalAmount.toFixed(2)}`;
+    }
+
+    function updateItemAmount(input) {
+        var row = input.closest('tr');
+        var price = parseFloat(row.querySelector('.sumAmount').dataset.price);
+        var quantity = parseInt(input.value, 10);
+        var amount = price * quantity;
+
+        // Update the amount for this item
+        row.querySelector('.sumAmount').textContent = amount.toFixed(2);
+        row.querySelector('.sumAmount').dataset.quantity = quantity;
+
+        // Update the selected total amount
+        var itemCheckbox = row.querySelector('.item-checkbox');
+        itemCheckbox.dataset.amount = amount.toString();
+
+        updateSelectedItems();  // Update the overall total
+    }
+</script>

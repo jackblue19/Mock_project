@@ -117,8 +117,14 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 var totalAmount = cart.Items.Sum(i => i.Quantity * i.Price);
                 ViewBag.TotalItems = totalItems;
                 ViewBag.TotalAmount = totalAmount;
+
+                var totalItems = cart.Items.Sum(i => i.Quantity);
+                var totalAmount = cart.Items.Sum(i => i.Quantity * i.Price);
+                ViewBag.TotalItems = totalItems;
+                ViewBag.TotalAmount = totalAmount;
             }
 
+            return RedirectToAction("ShoppingCart");
             return RedirectToAction("ShoppingCart");
         }
 

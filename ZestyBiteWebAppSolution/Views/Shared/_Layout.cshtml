@@ -54,10 +54,6 @@
                     <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link">Contact</a></li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-
-
-
-
                     <li class="nav-item d-none d-lg-block">
                         <form action="/Home/Search" method="get" id="search-box" class="d-flex">
                             <input type="text" name="query" placeholder="Search..." id="search-text" class="form-control" />
@@ -68,13 +64,14 @@
                     </li>
 
                     <li class="nav-item" id="cart-container">
-                        <a href="@Url.Action("Checkout", "Cart")" style="margin: 20px; display: flex; justify-content: space-between; flex-direction: row; align-items: baseline">
+                        <a href="@Url.Action("Cart", "Cart")" style="margin: 20px; display: flex; justify-content: space-between; flex-direction: row; align-items: baseline">
                             <i class="fa-solid fa-cart-shopping" style="margin-right:10px; font-size: 1.5em"></i>
                             <span class="badge badge-pill badge-primary" id="cart-badge">
                                 @Model?.TotalItems
                                 </span>
                         </a>
                     </li>
+
                     @await Html.PartialAsync("~/Views/Account/AccountPartial.cshtml")
                 </ul>
             </div>

@@ -21,6 +21,8 @@ namespace ZestyBiteWebAppSolution.Models {
         public int TotalItems => Items.Sum(i => i.Quantity);
 
         public decimal TotalPrice => Items.Sum(i => i.Price * i.Quantity);
+
+        public decimal TotalAmount { get; internal set; }
     }
     public class CheckoutItemDTO {
         public int ItemId { get; set; }

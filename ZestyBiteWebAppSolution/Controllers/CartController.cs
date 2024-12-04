@@ -35,7 +35,6 @@ public class CartController : Controller {
             return View("Error", new { message = "Failed to load the cart." });
         }
     }
-
     public IActionResult Checkout() {
         var cart = GetCheckout(); // Assume GetCheckout() retrieves cart from session
         if (cart == null || !cart.Items.Any()) {
@@ -50,7 +49,6 @@ public class CartController : Controller {
         return View("Checkout", checkoutDTO);
     }
 
-    [HttpPost]
     [HttpPost]
     public async Task<IActionResult> VNPayment(VnPaymentRequestModel paymentRequest) {
         var username = HttpContext.Request.Cookies["username"];
@@ -118,13 +116,14 @@ public class CartController : Controller {
 
         if (item == null) {
             return NotFound(new { message = "Item not found." });
-        }
 
+        }
         // Add or update item quantity in cart
         var existingItem = cart.Items.FirstOrDefault(i => i.ItemId == item.ItemId);
         if (existingItem != null) {
             existingItem.Quantity++;
         } else {
+
             cart.Items.Add(item);
         }
 
@@ -178,6 +177,7 @@ public class CartController : Controller {
         }
 
         TempData["Message"] = "Payment successful.";
+
         return RedirectToAction("PaymentSuccess");
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Models;
+using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.ViewMoedel;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
@@ -13,10 +14,11 @@ namespace ZestyBiteSolution.Controllers {
             _itemService = itemService;
         }
 
-        private ShoppingCartDTO GetShoppingCart() {
-            var cart = HttpContext.Session.GetObjectFromJson<ShoppingCartDTO>("ShoppingCart");
+        private CheckoutDTO GetShoppingCart() {
+            var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>("Checkout");
             if (cart == null) {
-                cart = new ShoppingCartDTO();
+                cart = new CheckoutDTO();
+                const string CartSessionKey = "Checkout";
             }
             return cart;
         }

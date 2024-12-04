@@ -44,23 +44,19 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO dto)
-        {
+        public async Task<IActionResult> Login(LoginDTO dto) {
             if (!ModelState.IsValid) {
                 return View(dto);
             }
 
-            if (await _service.IsTrueAccount(dto.Username, dto.Password))
-            {
+            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
                 HttpContext.Session.SetString("username", dto.Username);
-                Response.Cookies.Append("username", dto.Username, new CookieOptions
-                {
+                Response.Cookies.Append("username", dto.Username, new CookieOptions {
                     Expires = DateTimeOffset.Now.AddMinutes(30),
                     HttpOnly = true,
                     Secure = false,
                     SameSite = SameSiteMode.Strict
                 });
-
                 return RedirectToAction("Index", "Home");
             }
 

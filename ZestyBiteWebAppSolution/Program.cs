@@ -1,24 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Helpers;
+using ZestyBiteWebAppSolution.Mappings;
+using ZestyBiteWebAppSolution.Middlewares;
+using ZestyBiteWebAppSolution.Repositories;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
-using ZestyBiteWebAppSolution.Helpers;
-using ZestyBiteWebAppSolution.Middlewares;
-using ZestyBiteWebAppSolution.Repositories;
-using ZestyBiteWebAppSolution.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Session
 builder.Services.AddDistributedMemoryCache(); // Store session in memory
 builder.Services.AddSession(options => {
-    options.Cookie.Name = ".Restaurant.Session";
+    options.Cookie.Name = ".ZestyBite.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true; 
-    options.Cookie.IsEssential = true;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = false;
 });
 
 // Thêm dịch vụ Authorization và tạo các policies phân quyền
@@ -47,6 +47,10 @@ builder.Services.AddSwaggerGen(c => {
         Description = "An API to demonstrate Swagger integration",
     });
 });
+builder.Services.AddAuthorization();
+
+//VNPay
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
 //  Email sender
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -77,8 +81,7 @@ builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
 
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
-
-
+builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 

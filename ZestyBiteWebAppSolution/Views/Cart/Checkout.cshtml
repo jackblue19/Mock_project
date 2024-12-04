@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "ShoppingCart";
+    ViewBag.Title = "Checkout";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<link href="~/css/ShoppingCart.css" rel="stylesheet" />
+@model ZestyBiteWebAppSolution.Models.DTOs.CheckoutDTO
 <link href="~/css/ShoppingCart.css" rel="stylesheet" />
 
 <body id="body-config">
@@ -29,39 +29,47 @@
                         </tr>
                     </thead>
                     <tbody class="table-body">
-                        @for (int i = 0; i < Model.Items.Count; i++) {
-                            var item = Model.Items[i];
-                            <tr>
-                                <td>
-                                    <input type="checkbox" class="item-checkbox" onchange="updateSelectedItems()"
-                                           data-amount="@((item.Price * item.Quantity).ToString("F2"))" />
-                                </td>
-                                <td>@(i + 1)</td>
-                                <td id="itemPic">
-                                    <div class="itemName">@item.Name</div>
-                                </td>
-                                <td id="itemPrice">@item.Price.ToString("C")</td>
-                                <td>
-                                    <div class="styleQuantity">
-                                        <form action="@Url.Action("UpdateCart", "Cart")" method="post" style="display: inline;">
+                        @if (Model != null && Model.Items != null && Model.Items.Count > 0) {
+                            for (int i = 0; i < Model.Items.Count; i++) {
+                                var item = Model.Items[i];
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="item-checkbox" onchange="updateSelectedItems()"
+                                               data-amount="@((item.Price * item.Quantity).ToString("F2"))" />
+                                    </td>
+                                    <td>@(i + 1)</td>
+                                    <td id="itemPic">
+                                        <div class="itemName">@item.Name</div>
+                                    </td>
+                                    <td id="itemPrice">@item.Price.ToString("C")</td>
+                                    <td>
+                                        <div class="styleQuantity">
+                                            <form action="@Url.Action("UpdateCart", "Cart")" method="post" style="display: inline;">
+                                                <input type="hidden" name="itemId" value="@item.ItemId" />
+                                                <input type="number" name="quantity" value="@item.Quantity" class="input-quantity" onchange="updateItemAmount(this)" />
+                                            </form>
+                                        </div>
+                                    </td>
+                                    <td class="sumAmount" data-price="@item.Price" data-quantity="@item.Quantity">
+                                        @((item.Price * item.Quantity).ToString("C"))
+                                    </td>
+                                    <td>
+                                        <form action="@Url.Action("RemoveFromCart", "Cart")" method="post">
                                             <input type="hidden" name="itemId" value="@item.ItemId" />
-                                            <input type="number" name="quantity" value="@item.Quantity" class="input-quantity" onchange="updateItemAmount(this)" />
+                                            <button type="submit" class="btn-remove" style="color: red;">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
                                         </form>
-                                    </div>
-                                </td>
-                                <td class="sumAmount" data-price="@item.Price" data-quantity="@item.Quantity">
-                                    @((item.Price * item.Quantity).ToString("C"))
-                                </td>
-                                <td>
-                                    <form action="@Url.Action("RemoveFromCart", "Cart")" method="post">
-                                        <input type="hidden" name="itemId" value="@item.ItemId" />
-                                        <button type="submit" class="btn-remove" style="color: red;">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </form>
-                                </td>
+                                    </td>
+                                </tr>
+                            }
+                        } else {
+                            <tr>
+                                <td colspan="7">Giỏ hàng của bạn trống.</td>
                             </tr>
                         }
+
+
                     </tbody>
                 </table>
             </div>
@@ -80,10 +88,11 @@
                                 Total Amount: <span id="selectedTotalAmount">$0.00</span>
                             </div>
                         </th>
-                        <th class="confirmPay">
-                            <div>
-                                Payment
-                            </div>
+                        <th>
+                            <form asp-action="Payment" asp-controller="Cart" method="post">
+                                <input type="hidden" name="payment" value="Payment" />
+                                <input type="submit" class="confirmPay mt-2 w-100" value="Payment">
+                            </form>
                         </th>
                     </tr>
                 </thead>
@@ -128,6 +137,6 @@
         var itemCheckbox = row.querySelector('.item-checkbox');
         itemCheckbox.dataset.amount = amount.toString();
 
-        updateSelectedItems();  // Update the overall total
+        updateSelectedItems();  // Cập nhật lại tổng số tiền
     }
 </script>

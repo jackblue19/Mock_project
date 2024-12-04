@@ -12,13 +12,19 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
         }
         public async Task<Bill?> GetBillAsync(int id) {
             return await _context.Bills
-                                  .FirstOrDefaultAsync(acc => acc.BillId == id);
+                                  .FirstOrDefaultAsync(acc => acc.AccountId == id);
         }
         public async Task<Account?> GetNameById(int id) {
             var bill = await _context.Bills.FirstOrDefaultAsync(p => p.BillId == id);
-            var acc = bill.Account;
+            var acc = bill?.Account;
             return acc;
         }
+        public async Task<Account?> GetAccountByUsername(string username) {
+            return await _context.Accounts
+                                 .FirstOrDefaultAsync(a => a.Username == username);
+        }
+
+
     }
 
 }

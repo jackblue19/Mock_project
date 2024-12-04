@@ -28,7 +28,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
 
         private async Task<IEnumerable<ItemDTO>> GetItemsByCategoryAsync(string category) {
             var items = await _itemRepository.GetAllAsync(); // Lấy tất cả các món ăn
-            var categoryItems = items.Where(i => i.ItemCategory == category); // Lọc theo danh mục
+            var categoryItems = items.Where(i => i?.ItemCategory == category); // Lọc theo danh mục
 
             return categoryItems.Select(item => new ItemDTO {
                 ItemId = item.ItemId,

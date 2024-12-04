@@ -5,34 +5,10 @@ using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 using ZestyBiteWebAppSolution.Helpers;
-using Microsoft.IdentityModel.Tokens;
-using AutoMapper;
-using System.Text;
-// using Microsoft.AspNetCore.Authentication;
 using ZestyBiteWebAppSolution.Middlewares;
 using ZestyBiteWebAppSolution.Repositories;
 using ZestyBiteWebAppSolution.Mappings;
-using System.Net;
-using System.Net.Mail;
-using Microsoft.Extensions.Options;
-using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Data;
-
-/*dotnet add package Microsoft.IdentityModel.Tokens
-Install-Package Microsoft.AspNetCore.Session
-
-Install-Package Microsoft.AspNetCore.Authentication.Cookies
-
-Install-Package Microsoft.AspNetCore.Authorization
-
-Install-Package Microsoft.AspNetCore.Mvc
-
-Install-Package Microsoft.Extensions.DependencyInjection
-
-Install-Package Microsoft.AspNetCore.Http
-
-Install-Package Microsoft.AspNetCore.Http.Abstractions
-*/
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +19,7 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".ZestyBite.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = false;
+    options.Cookie.IsEssential = true;
 });
 
 // Thêm dịch vụ Authorization và tạo các policies phân quyền

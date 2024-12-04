@@ -1,111 +1,112 @@
-﻿@{
+﻿﻿@{
     ViewBag.Title = "Blog";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <head>
     <style>
-        /* navbar */
-        .ftco-section {
-            padding: 0px !important;
-        }
-
-        /* comment-main */
-        .comment-main {
-            /* background-color: rgb(255, 255, 255); */
-        }
-
+        /* General comment container styling */
         .comment-list-container {
             max-height: 500px;
-            /* Adjust height as needed to fit approximately 5 items */
             overflow-y: auto;
-            scrollbar-width: none;
-            /* For Firefox */
-            -ms-overflow-style: none;
-            /* For Internet Explorer and Edge */
+            padding: 10px;
         }
-
-        .comment-list-container::-webkit-scrollbar {
-            display: none;
-            /* For Chrome, Safari, and Opera */
-        }
-
 
         .comment-list {
             list-style: none;
+            padding: 0;
         }
 
         .comment {
-            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            position: relative;
         }
 
         .comment-body {
-            display: inline-block;
-            vertical-align: top
-        }
-        .comment-head {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            margin-left: 50px;
         }
 
-        .comment h3,
-        /* Comment author name */
-        .comment .meta,
-        /* Comment date */
-        .comment p,
-        /* Comment text */
-        .comment .feedback,
-        /* Feedback text */
-        .comment .reply {
-            /* Reply link */
-            color: #fff !important;
+        .comment img.profile-img {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
         }
 
-        .feedback {
-            font-style: italic;
-            color: #555;
+        .comment h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
-        /* reply style */
-        .reply-box {
-            background: transparent;
-            color: #fff;
-            /* this sets the text color - adjust as needed */
-            padding: 5px;
+        .comment .meta {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
         }
 
-        .reply-box input[type="text"] {
-            width: calc(100% - 50px);
-            margin-right: 5px;
-            background-color: rgba(0, 0, 0, 0);
-            color: #fff;
-        }
-
-        /* Indent nested comments */
         .nested-comment {
+            margin-left: 30px;
+            border-left: 2px solid #ddd;
+            padding-left: 10px;
+            background-color: #fff;
         }
 
-        /* Pagination style */
-        .pagination-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* Style for reply form */
+        .reply-form {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f7f7f7;
         }
 
-        .pagination-controls .btn {
-            padding: 5px 10px;
+            .reply-form input.reply-input {
+                width: calc(100% - 60px);
+                padding: 5px;
+                margin-right: 5px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+            }
+
+            .reply-form button {
+                padding: 5px 10px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .reply-form button:hover {
+                    background-color: #0056b3;
+                }
+
+        /* Style for deeply nested comments */
+        .nested-comments:last-child {
+            border-bottom: none;
         }
 
-        .pagination-controls input[type="number"] {
-            text-align: center;
-        }
-
-        .pagination-controls #pageStatus {
-            font-size: 14px;
-            color: #555;
+        .notification {
+            position: fixed;
+            top: 20px; /* Adjust as needed */
+            right: 20px; /* Adjust as needed */
+            background-color: #f44336; /* Red background for error */
+            color: white; /* White text */
+            padding: 15px; /* Some padding */
+            border-radius: 5px; /* Rounded corners */
+            z-index: 1000; /* Ensure it appears above other content */
+            transition: opacity 0.5s ease; /* Smooth fade out */
         }
     </style>
+
 </head>
 
 <body>
@@ -218,7 +219,7 @@
 
         // Recursive function to display comments and replies
         function displayComments(commentsToDisplay, container, level = 0) {
-    commentsToDisplay.forEach(comment => {
+        commentsToDisplay.forEach(comment => {
         try {
             console.log("Processing comment:", comment);
 
@@ -270,52 +271,92 @@
     });
 
     setupReplyHandlers();
-}
+    }
 
         // Set up event listeners for reply buttons and forms
         function setupReplyHandlers() {
             document.querySelectorAll('.reply-btn').forEach(button => {
                 button.addEventListener('click', event => {
-                    const replyBox = document.getElementById(`replyBox-${event.target.dataset.id}`);
+                    const commentId = button.getAttribute('data-id');
+                    const replyBox = document.getElementById(`replyBox-${commentId}`);
                     replyBox.style.display = replyBox.style.display === 'none' ? 'block' : 'none';
                 });
             });
 
             document.querySelectorAll('.submit-reply').forEach(button => {
                 button.addEventListener('click', event => {
-                    const parentId = event.target.dataset.id;
-                    const level = parseInt(event.target.dataset.level);
-                    const replyInput = event.target.previousElementSibling.value.trim();
+                    const parentId = button.getAttribute('data-parent-id');
+                    const itemId = button.getAttribute('data-item-id');
+                    const level = button.getAttribute('data-level');
+                    const replyInput = button.previousElementSibling.value.trim();
 
-                    if (replyInput && level < MAX_DEPTH) {
-                        postReply(parentId, replyInput, level);
-                    } else {
-                        alert("Reply content cannot be empty or exceeds max depth.");
+                    if (!replyInput) {
+                        alert("Reply content cannot be empty.");
+                        return;
                     }
+
+                    postReply(parentId, itemId, replyInput, parseInt(level, 10));
                 });
             });
         }
 
         // Post a reply to the back-end
-        function postReply(parentId, replyInput, level) {
+        function postReply(parentId, content, level) {
+            // Locate the parent comment element by its ID
+            const parentCommentElement = document.querySelector(`[data-id="${parentId}"]`);
+
+            if (!parentCommentElement) {
+                showNotification("Parent comment not found!"); 
+                return;
+            }
+
+       
+            const itemId = parentCommentElement.getAttribute("data-item-id");
+            const itemName = parentCommentElement.getAttribute("data-item-name") || "Unknown Item";
+
+            
+            const replyPayload = {
+                Content: content,    // User's input
+                ItemId: itemId,      // Extracted from parent comment
+                ItemName: itemName,  // Extracted from parent comment
+                ParentFb: parentId   // The parent comment's ID
+            };
+
+            console.log("Submitting reply payload:", replyPayload); 
+
+            // Send the reply to the back-end
             $.ajax({
                 url: '/api/feedback/reply',
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({
-                    Content: replyInput,
-                    ParentFb: parentId,
-                    Username: "Current User", // Replace dynamically
-                }),
+                data: JSON.stringify(replyPayload),
                 success: function (newReply) {
+                    console.log("Reply submitted successfully:", newReply);
                     const repliesContainer = document.getElementById(`nested-${parentId}`);
-                    appendFeedback(newReply, repliesContainer, level + 1); // Append reply dynamically
+                    displayComments([newReply], repliesContainer, level + 1); // Append the new reply
+
+                    // Show success notification
+                    showNotification("Reply submitted successfully!");
                 },
-                error: function (error) {
-                    console.error("Error submitting reply:", error);
+                error: function (xhr, status, error) {
+                    console.error("Error submitting reply:", xhr.responseText || error);
+                    showNotification("Failed to submit reply. Please try again."); // Show error notification
                 }
             });
         }
+
+        function showNotification(message) {
+            const notification = document.createElement("div");
+            notification.className = "notification"; 
+            notification.innerText = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+
 
 
         // Append new feedback to the comment list

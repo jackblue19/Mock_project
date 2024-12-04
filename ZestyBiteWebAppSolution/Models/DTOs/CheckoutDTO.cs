@@ -1,4 +1,4 @@
-﻿namespace ZestyBiteWebAppSolution.Models {
+namespace ZestyBiteWebAppSolution.Models {
     internal class CheckoutDTO {
         public List<CheckoutItemDTO> Items { get; set; } = new List<CheckoutItemDTO>();
 

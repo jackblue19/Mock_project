@@ -100,19 +100,22 @@
             document.getElementById('submitFeedback').addEventListener('click', function (event) {
                 event.preventDefault(); // Prevent default form submission
 
-                const feedbackMessage = document.getElementById('feedbackMessage').value;
+                const feedbackMessage = document.getElementById('feedbackMessage').value; // Get the feedback message
                 const selectedDishId = dishSelect.value; // Get the selected dish ID
+                const selectedItem = items.find(item => item.itemId == selectedDishId);
+                const itemName = selectedItem ? selectedItem.itemName : "Unknown Item"; // Fallback if not found
+                const parentFeedbackId = null; // Set ParentFb to null as per your requirement
 
-                fetch('/api/feedback/submitfeedback', {
+                fetch('http://localhost:5024/api/feedback/submitfeedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        content: feedbackMessage,
-                        dateTime: new Date().toISOString(),
-                        username: 'john_doe', // Replace with the actual username
-                        itemId: selectedDishId // Use the selected dish ID
+                        Content: feedbackMessage, 
+                        ItemId: selectedDishId, 
+                        ItemName: itemName, 
+                        ParentFb: null,
                     })
                 })
                     .then(response => {
@@ -123,7 +126,7 @@
                     })
                     .then(data => {
                         const notification = document.createElement('div');
-                        notification.textContent = 'Feedback success! Redirecting to Blog...';
+                        notification.textContent = 'Feedback submitted successfully! Redirecting to Blog...';
                         notification.style.position = 'fixed';
                         notification.style.top = '10px';
                         notification.style.right = '10px';
@@ -159,6 +162,7 @@
                         }, 3000);
                     });
             });
+            //end submit
         });
     </script>
 </body>

@@ -13,7 +13,7 @@ namespace ZestyBiteWebAppSolution.Middlewares {
             using (var scope = serviceProvider.CreateScope()) {
                 var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
 
-                // Lấy thông tin người dùng từ Session
+                // Lấy thông tin người dùng từ Session hoặc Cookies
                 var username = context.Session.GetString("username") ?? context.Request.Cookies["username"];
 
                 string userRole = "Customer"; // Mặc định là Customer
@@ -36,7 +36,7 @@ namespace ZestyBiteWebAppSolution.Middlewares {
                 }
             }
 
-            await _next(context);
+            await _next(context); // Tiếp tục chuyển tiếp yêu cầu tới middleware tiếp theo
         }
     }
 }

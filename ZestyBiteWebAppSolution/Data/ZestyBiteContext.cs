@@ -1,13 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ZestyBiteWebAppSolution.Models.Entities;
+
 namespace ZestyBiteWebAppSolution.Data;
 
-public partial class ZestyBiteContext : DbContext {
-    public ZestyBiteContext() {
+public partial class ZestyBiteContext : DbContext
+{
+    public ZestyBiteContext()
+    {
     }
 
     public ZestyBiteContext(DbContextOptions<ZestyBiteContext> options)
-        : base(options) {
+        : base(options)
+    {
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
@@ -28,12 +34,16 @@ public partial class ZestyBiteContext : DbContext {
 
     public virtual DbSet<Supply> Supplies { get; set; }
 
+    public virtual DbSet<SupplyItem> SupplyItems { get; set; }
+
     public virtual DbSet<Table> Tables { get; set; }
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<Account>(entity => {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Account>(entity =>
+        {
             entity.HasKey(e => e.AccountId).HasName("PRIMARY");
 
             entity.ToTable("account");
@@ -43,9 +53,7 @@ public partial class ZestyBiteContext : DbContext {
             entity.HasIndex(e => e.Username, "Username").IsUnique();
 
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
-            entity.Property(e => e.AccountStatus)
-                .HasDefaultValueSql("'1'")
-                .HasColumnName("Account_Status");
+            entity.Property(e => e.AccountStatus).HasColumnName("Account_Status");
             entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.Name).HasMaxLength(255);
@@ -67,7 +75,8 @@ public partial class ZestyBiteContext : DbContext {
                 .HasConstraintName("account_ibfk_1");
         });
 
-        modelBuilder.Entity<Bill>(entity => {
+        modelBuilder.Entity<Bill>(entity =>
+        {
             entity.HasKey(e => e.BillId).HasName("PRIMARY");
 
             entity.ToTable("bill");
@@ -107,7 +116,8 @@ public partial class ZestyBiteContext : DbContext {
                 .HasConstraintName("bill_ibfk_3");
         });
 
-        modelBuilder.Entity<Feedback>(entity => {
+        modelBuilder.Entity<Feedback>(entity =>
+        {
             entity.HasKey(e => e.FbId).HasName("PRIMARY");
 
             entity.ToTable("feedback");
@@ -144,7 +154,8 @@ public partial class ZestyBiteContext : DbContext {
                 .HasConstraintName("feedback_ibfk_1");
         });
 
-        modelBuilder.Entity<Item>(entity => {
+        modelBuilder.Entity<Item>(entity =>
+        {
             entity.HasKey(e => e.ItemId).HasName("PRIMARY");
 
             entity.ToTable("item");
@@ -169,7 +180,8 @@ public partial class ZestyBiteContext : DbContext {
                 .HasColumnName("Suggested_Price");
         });
 
-        modelBuilder.Entity<Payment>(entity => {
+        modelBuilder.Entity<Payment>(entity =>
+        {
             entity.HasKey(e => e.PaymentId).HasName("PRIMARY");
 
             entity.ToTable("payment");
@@ -178,7 +190,8 @@ public partial class ZestyBiteContext : DbContext {
             entity.Property(e => e.PaymentMethod).HasColumnName("Payment_Method");
         });
 
-        modelBuilder.Entity<Profit>(entity => {
+        modelBuilder.Entity<Profit>(entity =>
+        {
             entity.HasKey(e => e.Date).HasName("PRIMARY");
 
             entity.ToTable("profit");
@@ -205,7 +218,8 @@ public partial class ZestyBiteContext : DbContext {
                 .HasConstraintName("profit_ibfk_1");
         });
 
-        modelBuilder.Entity<Reservation>(entity => {
+        modelBuilder.Entity<Reservation>(entity =>
+        {
             entity.HasKey(e => e.ReservationId).HasName("PRIMARY");
 
             entity.ToTable("reservation");
@@ -238,7 +252,8 @@ public partial class ZestyBiteContext : DbContext {
                 .HasConstraintName("reservation_ibfk_1");
         });
 
-        modelBuilder.Entity<Role>(entity => {
+        modelBuilder.Entity<Role>(entity =>
+        {
             entity.HasKey(e => e.RoleId).HasName("PRIMARY");
 
             entity.ToTable("role");
@@ -249,12 +264,11 @@ public partial class ZestyBiteContext : DbContext {
                 .HasColumnName("Role_Description");
         });
 
-        modelBuilder.Entity<Supply>(entity => {
+        modelBuilder.Entity<Supply>(entity =>
+        {
             entity.HasKey(e => e.SupplyId).HasName("PRIMARY");
 
             entity.ToTable("supply");
-
-            entity.HasIndex(e => e.ItemId, "Item_ID");
 
             entity.HasIndex(e => e.TableId, "Table_ID");
 
@@ -267,7 +281,6 @@ public partial class ZestyBiteContext : DbContext {
             entity.Property(e => e.DateImport)
                 .HasColumnType("datetime")
                 .HasColumnName("Date_Import");
-            entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.ProductName)
                 .HasMaxLength(255)
                 .HasColumnName("Product_Name");
@@ -290,51 +303,49 @@ public partial class ZestyBiteContext : DbContext {
                 .HasColumnName("Vendor_Name");
             entity.Property(e => e.VendorPhone).HasColumnName("Vendor_Phone");
 
-            entity.HasOne(d => d.Item).WithMany(p => p.Supplies)
-                .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("supply_ibfk_2");
-
             entity.HasOne(d => d.Table).WithMany(p => p.Supplies)
                 .HasForeignKey(d => d.TableId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("supply_ibfk_1");
-
-            entity.HasMany(d => d.Items).WithMany(p => p.SuppliesNavigation)
-                .UsingEntity<Dictionary<string, object>>(
-                    "SupplyItem",
-                    r => r.HasOne<Item>().WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("supply_item_ibfk_2"),
-                    l => l.HasOne<Supply>().WithMany()
-                        .HasForeignKey("SupplyId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("supply_item_ibfk_1"),
-                    j =>
-                    {
-                        j.HasKey("SupplyId", "ItemId").HasName("PRIMARY");
-                        j.ToTable("supply_item");
-                        j.HasIndex(new[] { "ItemId" }, "Item_ID");
-                        j.IndexerProperty<int>("SupplyId").HasColumnName("Supply_ID");
-                        j.IndexerProperty<int>("ItemId").HasColumnName("Item_ID");
-                    });
         });
 
-        modelBuilder.Entity<Table>(entity => {
+        modelBuilder.Entity<SupplyItem>(entity =>
+        {
+            entity.HasKey(e => new { e.SupplyId, e.ItemId }).HasName("PRIMARY");
+
+            entity.ToTable("supply_item");
+
+            entity.HasIndex(e => e.ItemId, "Item_ID");
+
+            entity.Property(e => e.SupplyId).HasColumnName("Supply_ID");
+            entity.Property(e => e.ItemId).HasColumnName("Item_ID");
+            entity.Property(e => e.SupplyItemProfit)
+                .HasPrecision(12)
+                .HasColumnName("Supply_Item_Profit");
+
+            entity.HasOne(d => d.Item).WithMany(p => p.SupplyItems)
+                .HasForeignKey(d => d.ItemId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("supply_item_ibfk_2");
+
+            entity.HasOne(d => d.Supply).WithMany(p => p.SupplyItems)
+                .HasForeignKey(d => d.SupplyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("supply_item_ibfk_1");
+        });
+
+        modelBuilder.Entity<Table>(entity =>
+        {
             entity.HasKey(e => e.TableId).HasName("PRIMARY");
 
             entity.ToTable("table");
 
             entity.HasIndex(e => e.AccountId, "Account_ID");
 
-            entity.HasIndex(e => e.ItemId, "Item_ID");
-
             entity.HasIndex(e => e.ReservationId, "Reservation_ID");
 
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.AccountId).HasColumnName("Account_ID");
-            entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.ReservationId).HasColumnName("Reservation_ID");
             entity.Property(e => e.TableCapacity).HasColumnName("Table_Capacity");
             entity.Property(e => e.TableMaintenance).HasColumnName("Table_Maintenance");
@@ -349,17 +360,11 @@ public partial class ZestyBiteContext : DbContext {
             entity.HasOne(d => d.Account).WithMany(p => p.Tables)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("table_ibfk_2");
-
-            entity.HasOne(d => d.Item).WithMany(p => p.Tables)
-                .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("table_ibfk_1");
 
             entity.HasOne(d => d.Reservation).WithMany(p => p.Tables)
                 .HasForeignKey(d => d.ReservationId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("table_ibfk_3");
+                .HasConstraintName("table_ibfk_2");
         });
 
         modelBuilder.Entity<TableDetail>(entity =>

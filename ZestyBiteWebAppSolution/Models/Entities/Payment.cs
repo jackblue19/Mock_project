@@ -1,6 +1,7 @@
-﻿namespace ZestyBiteWebAppSolution.Models.Entities;
+namespace ZestyBiteWebAppSolution.Models.Entities;
 
-public partial class Payment {
+public partial class Payment
+{
     public int PaymentId { get; set; }
 
     public int PaymentMethod { get; set; }

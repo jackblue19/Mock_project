@@ -3,7 +3,6 @@ using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
-using ZestyBiteWebAppSolution.Helpers;
 
 namespace ZestyBiteWebAppSolution.Services.Implementations
 {
@@ -65,35 +64,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
 
         public async Task<RegisterDTO> SignUpAsync(RegisterDTO dto)
         {
-            if (dto == null)
-            {
-                throw new ArgumentNullException(nameof(dto), "Input account was null.");
-            }
-
-            if (string.IsNullOrWhiteSpace(dto.Username)
-                                        || dto.Username.Length < 3
-                                        || dto.Username.Length > 255)
-            {
-                throw new ArgumentException("Username must be between 3 and 255 characters long.", nameof(dto.Username));
-            }
-
-            if (string.IsNullOrWhiteSpace(dto.Password)
-                                        || dto.Password.Length < 6
-                                        || dto.Password.Length > 100)
-            {
-                throw new ArgumentException("Password must be between 6 and 100 characters long.", nameof(dto.Password));
-            }
-
-            if (dto.Password != dto.ConfirmPassword)
-            {
-                throw new ArgumentException("Confirm Password must match Password.", nameof(dto.ConfirmPassword));
-            }
-
             var existed = await _repository.GetAccountByUsnAsync(dto.Username);
-            if (existed != null)
-            {
-                throw new InvalidOperationException($"Username '{dto.Username}' is already in use.");
-            }
 
             var defaultRole = await _roleRepository.GetByIdAsync(7);
             if (defaultRole == null || defaultRole.RoleId <= 0)
@@ -101,7 +72,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 throw new InvalidOperationException("Invalid role assignment.");
                 throw new ArgumentException("Please choose another username!", nameof(dto.Username));
             }
-            //      -- bổ sung phân biệt email nữa =Đ
             var acc = new Account()
             {
                 Username = dto.Username,
@@ -120,7 +90,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var created = await _repository.CreateAsync(acc);
             dto.VerificationCode = "ai cho ma` xem =D";
             dto.RoleDescription = created.Role.RoleDescription;
-            dto.Id = acc.AccountId;     //      cos theer xoas + xoas ben dto
             return dto;
         }
 
@@ -130,7 +99,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var accounts = await _repository.GetAllAsync();
             return accounts.Select(acc => new RegisterDTO
             {
-                Id = acc.AccountId,
                 Username = acc.Username,
                 Password = acc.Password,
                 Email = acc.Email,
@@ -154,7 +122,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 }
                 var dto = new RegisterDTO()
                 {
-                    Id = account.AccountId, // có thể dòng này del cần vì tính bảo mật =)))) nhưng mà em nghĩ có thể lơ được
                     Username = account.Username,
                     Password = account.Password,
                     Name = account.Name,
@@ -212,7 +179,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var current = await _repository.GetAccountByUsnAsync(username);
             var dto = new RegisterDTO()
             {
-                Id = current.AccountId,
                 Username = current.Username,
                 Password = current.Password,
                 Name = current.Name,

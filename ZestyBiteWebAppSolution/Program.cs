@@ -38,15 +38,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure Session
 builder.Services.AddDistributedMemoryCache(); // Store session in memory
-builder.Services.AddSession(options => {
-    options.Cookie.Name = ".Restaurant.Session";
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".ZestyBite.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = false; // => maybe comment vì hình như nó chặn http chỉ cho https => from TRUE to FALSE
-    options.Cookie.IsEssential = true;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = false;
 });
 
 // Thêm dịch vụ Authorization và tạo các policies phân quyền
-builder.Services.AddAuthorization(options => {
+builder.Services.AddAuthorization(options =>
+{
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("manager"));
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("order taker", "staff"));
     options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("manager"));
@@ -64,13 +66,19 @@ builder.Services.AddRazorPages();
 
 
 // Configure Swagger
-builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v1", new OpenApiInfo {
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
         Title = "My API",
         Version = "v1",
         Description = "An API to demonstrate Swagger integration",
     });
 });
+builder.Services.AddAuthorization();
+
+//VNPay
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
 //  Email sender
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -108,8 +116,8 @@ builder.Services.AddScoped<ITableDetailService, TableDetailService>();
 
 
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
-
-
+builder.Services.AddScoped<IBillRepository, BillRepository>();
+builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 
@@ -120,8 +128,10 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 // Configure CORS
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", policy => {
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
@@ -132,14 +142,18 @@ builder.Services.AddCors(options => {
 var app = builder.Build();
 
 // Middleware to handle errors
-if (app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger(); // Enable Swagger UI in development
-    app.UseSwaggerUI(c => {
+    app.UseSwaggerUI(c =>
+    {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
         c.RoutePrefix = "swagger"; // Route prefix for Swagger UI
     });
     app.UseDeveloperExceptionPage();
-} else {
+}
+else
+{
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts(); // Enable HSTS for production
 }
@@ -148,7 +162,6 @@ if (app.Environment.IsDevelopment()) {
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// Enable CORS  
 // Enable CORS  
 app.UseCors("AllowAll");
 

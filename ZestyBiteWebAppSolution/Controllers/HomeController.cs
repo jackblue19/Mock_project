@@ -1,88 +1,128 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ZestyBiteWebAppSolution.Models;
+using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.ViewMoedel;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteSolution.Controllers
-{
-    public class HomeController : Controller
-    {
+namespace ZestyBiteSolution.Controllers {
+    [AllowAnonymous]
+    public class HomeController : Controller {
         private readonly IItemService _itemService;
-        public HomeController(IItemService itemService)
-        {
+
+        public HomeController(IItemService itemService) {
             _itemService = itemService;
         }
 
-        [AllowAnonymous]
-        public async Task<IActionResult> Index()
-        {
-            var items = await _itemService.GetAllItemsAsync(); // Lấy tất cả các mục
+        private CheckoutDTO GetShoppingCart() {
+            var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>("ShoppingCart");
+            if (cart == null) {
+                cart = new CheckoutDTO();
+            }
+            return cart;
+        }
 
-            var pizzaItems = items.Where(i => i.ItemCategory == "Pizza"); // Lọc các món Pizza
-            var drinkItems = items.Where(i => i.ItemCategory == "Drink"); // Lọc các món Drink
+        public async Task<IActionResult> Index(int? cartTotalItems) {
+            var items = await _itemService.GetAllItemsAsync();
 
-            // Trả về View với hai danh sách: pizza và drink
-            var viewModel = new IndexViewModel
-            {
+            var pizzaItems = items.Where(i => i.ItemCategory == "Pizza").ToList();
+            var drinkItems = items.Where(i => i.ItemCategory == "Drink").ToList();
+            var pastaItems = items.Where(i => i.ItemCategory == "Pasta").ToList();
+            var burgersItems = items.Where(i => i.ItemCategory == "Burgers").ToList();
+
+            var viewModel = new IndexViewModel {
                 PizzaItems = pizzaItems,
-                DrinkItems = drinkItems
+                DrinkItems = drinkItems,
+                PastaItems = pastaItems,
+                BurgersItems = burgersItems,
             };
 
-            return View(viewModel); // Trả về view với dữ liệu pizza và drink
+            // Get shopping cart details
+            var cart = GetShoppingCart();
+            viewModel.TotalItems = cart.Items?.Sum(i => i.Quantity) ?? 0;
+
+            // If cartTotalItems is passed as a query parameter, update the badge count
+            if (cartTotalItems.HasValue) {
+                viewModel.TotalItems = cartTotalItems.Value;
+            }
+
+            return View(viewModel);
         }
 
-
-        public IActionResult About()
-        {
-            return View();
-        }
-        [Authorize]     // => force to login but dont care role
-        public IActionResult Contacto()
-        {
-            return View();
-        }
-        [Authorize(Policy = "UserPolicy")] // => sử dụng policy từ program.cs để cho gọn =)))
-        public IActionResult Feeder()
-        {
+        public IActionResult About() {
             return View();
         }
 
-        [AllowAnonymous]
-        public IActionResult Feedback()
-        {
+        public IActionResult Feedback() {
             return View();
         }
 
-        public IActionResult Contact()
-        {
+        public IActionResult Contact() {
+            return View();
+        }
+        public IActionResult Blog() {
             return View();
         }
 
-        public IActionResult Services()
-        {
-            return View();
+        public async Task<IActionResult> Menu(int page = 1) {
+            int pageSize = 6;
+
+            var itemsDTO = await _itemService.GetAllItemsAsync();
+
+            int totalItems = itemsDTO.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var paginatedItems = itemsDTO
+                .OrderBy(i => i.ItemId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var pizzaItems = itemsDTO.Where(i => i.ItemCategory == "Pizza").ToList();
+            var drinkItems = itemsDTO.Where(i => i.ItemCategory == "Drink").ToList();
+            var pastaItems = itemsDTO.Where(i => i.ItemCategory == "Pasta").ToList();
+            var burgersItems = itemsDTO.Where(i => i.ItemCategory == "Burgers").ToList();
+
+            var model = new IndexViewModel {
+                PizzaItems = pizzaItems,
+                DrinkItems = drinkItems,
+                PastaItems = pastaItems,
+                BurgersItems = burgersItems,
+                Items = paginatedItems,
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+            return View(model);
         }
 
-        public IActionResult Blog()
-        {
-            return View();
-        }
+        [HttpGet]
+        public async Task<IActionResult> Search(string query, int page = 1) {
+            if (string.IsNullOrWhiteSpace(query)) {
+                var itemDTO = await _itemService.GetAllItemsAsync();
+                return View("SearchResults", itemDTO);
+            }
 
-        public IActionResult Menu()
-        {
-            return View();
-        }
+            var itemsDTO = await _itemService.GetAllItemsAsync();
+            var filteredItems = itemsDTO
+                .Where(i => i.ItemName.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
-        public IActionResult Search()
-        {
-            return PartialView();
-        }
+            int pageSize = 6;
+            int totalItems = filteredItems.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            var paginatedItems = filteredItems
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-        public IActionResult BookTable()
-        {
-            TempData["ShowPopup"] = true;
-            return View();
-        }
+            var model = new IndexViewModel {
+                Items = paginatedItems,
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
 
+            return View("SearchResults", model);
+        }
     }
 }

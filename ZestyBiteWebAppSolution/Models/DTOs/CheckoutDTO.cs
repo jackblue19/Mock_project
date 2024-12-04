@@ -1,5 +1,5 @@
-﻿namespace ZestyBiteWebAppSolution.Models.DTOs {
-    public class CheckoutDTO {
+namespace ZestyBiteWebAppSolution.Models {
+    internal class CheckoutDTO {
         public List<CheckoutItemDTO> Items { get; set; } = new List<CheckoutItemDTO>();
 
         public void AddItem(CheckoutItemDTO item) {
@@ -22,12 +22,12 @@
 
         public decimal TotalPrice => Items.Sum(i => i.Price * i.Quantity);
     }
-
     public class CheckoutItemDTO {
         public int ItemId { get; set; }
-        public string Name { get; set; } = string.Empty; // Sử dụng string.Empty thay vì null!
+        public string Name { get; set; } = null!;
         public decimal Price { get; set; }
-        public string ImageUrl { get; set; } = string.Empty; // Sử dụng string.Empty thay vì null!
+        public string ImageUrl { get; set; } = null!;
         public int Quantity { get; set; }
     }
+
 }

@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-
-namespace ZestyBiteWebAppSolution.Models.Entities;
+﻿namespace ZestyBiteWebAppSolution.Models.Entities;
 
 public partial class Payment {
     public int PaymentId { get; set; }

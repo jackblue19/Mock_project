@@ -1,5 +1,7 @@
-﻿namespace ZestyBiteWebAppSolution.Models.ViewModel {
-    public class VnPaymentResponseModel {
+﻿namespace ZestyBiteWebAppSolution.Models.ViewModel
+{
+    public class VnPaymentResponseModel
+    {
         public bool Success { get; set; }
         public string PaymentMethod { get; set; }
         public string OrderDescription { get; set; }
@@ -9,12 +11,13 @@
         public string Token { get; set; }
         public string VnPayResponseCode { get; set; }
     }
-    public class VnPaymentRequestModel {
+    public class VnPaymentRequestModel
+    {
         public int OrderId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Amount { get; set; }
         public DateTime CreatedDate { get; set; }
-        public int PaymentMethod { get; set; }
+        public string PaymentMethod { get; set; } // int?
     }
 }

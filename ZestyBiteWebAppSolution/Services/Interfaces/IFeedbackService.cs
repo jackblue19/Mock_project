@@ -14,7 +14,7 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces {
         Task<IEnumerable<ItemDTO?>> GetAllItemsAsync();
 
         // CRUD for replies
-        Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto);
+        Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto, string usn);
         Task<FeedbackDTO> UpdateReplyAsync(ReplyDTO replyDto);
         Task<bool> DeleteReplyAsync(int replyId);
         Task<IEnumerable<ReplyDTO>> GetRepliesByFeedbackAsync(int parentFbFlag);

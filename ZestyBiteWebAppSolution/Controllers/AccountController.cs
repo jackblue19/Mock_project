@@ -5,6 +5,7 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using System.Collections.Concurrent;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
@@ -29,19 +30,32 @@ namespace ZestyBiteWebAppSolution.Controllers
             _mailService = verifyService;
         }
 
-        public IActionResult Login() {
+        public IActionResult Login()
+        {
             return View();
         }
 
-        public IActionResult Register() {
+        public IActionResult Register()
+        {
             return View();
         }
-        public IActionResult VerifyEmail() {
+        public IActionResult VerifyEmail()
+        {
             return View();
         }
-        public IActionResult ChangePassword() {
+        public IActionResult ChangePassword()
+        {
             return View();
         }
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        public IActionResult NewPassword()
+        {
+            return View();
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO dto) {
@@ -49,20 +63,43 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return View(dto);
             }
 
-            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
-                HttpContext.Session.SetString("username", dto.Username);
-                Response.Cookies.Append("username", dto.Username, new CookieOptions {
-                    Expires = DateTimeOffset.Now.AddMinutes(30),
-                    HttpOnly = true,
-                    Secure = false,
-                    SameSite = SameSiteMode.Strict
-                });
-                return RedirectToAction("Index", "Home");
+            if (await _service.IsTrueAccount(dto.Username, dto.Password))
+            {
+                try
+                {
+                    HttpContext.Session.SetString("username", dto.Username);
+                    Response.Cookies.Append("username", dto.Username, new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddMinutes(30),
+                        HttpOnly = true,
+                        Secure = false,
+                        SameSite = SameSiteMode.Strict
+                    });
+                    // return Ok("Login done");
+                    return RedirectToAction("Index", "Home");
+                }
+                catch
+                {
+                    throw new Exception("dunno error");
+                }
             }
 
-            ModelState.AddModelError(string.Empty, "Invalid username or password.");
-            return View(dto);
+            return Unauthorized(new { message = "Invalid username or password" });
         }
+
+        // [HttpPost]
+        // public async Task<IActionResult> ForgotPassword(string email)
+        // {
+        //     string verificationCode = VerificationCodeGenerator.GetSixDigitCode();
+        //     HttpContext.Session.SetString("username", email);
+        // }
+
+        // [HttpPost]
+        // public async Task<IActionResult> NewPassword([FromBody] ForgotPwdDTO dto)
+        // {
+
+        // }
+
 
         [HttpPost]
         public async Task<IActionResult> VerifyEmail( VerifyDTO verifyDto)
@@ -180,13 +217,15 @@ namespace ZestyBiteWebAppSolution.Controllers
             try
             {
                 var username = User.Identity.Name;
-                if (string.IsNullOrEmpty(username)) {
-                    return RedirectToAction("Login", "Account"); 
+                if (string.IsNullOrEmpty(username))
+                {
+                    return RedirectToAction("Login", "Account"); // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
                 }
 
                 var dto = await _service.ViewProfileByUsnAsync(username);
-                if (dto == null) {
-                    return NotFound();
+                if (dto == null)
+                {
+                    return NotFound(); // Hiển thị trang "Not Found" nếu không tìm thấy người dùng
                 }
                 return View(dto);
             }
@@ -197,64 +236,81 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(ProfileDTO dto) {
-            try {
-                if (!ModelState.IsValid) {
+        public async Task<IActionResult> UpdateProfile(ProfileDTO dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
                     TempData["ErrorMessage"] = "Invalid data. Please check your inputs.";
                     return RedirectToAction("ViewProfile");
                 }
 
                 var username = User.Identity?.Name;
-                if (string.IsNullOrEmpty(username)) {
+                if (string.IsNullOrEmpty(username))
+                {
                     TempData["ErrorMessage"] = "You must be logged in to update your profile.";
                     return RedirectToAction("LogIn", "Account");
                 }
 
-                await _service.UpdateProfile(dto, username); 
+                await _service.UpdateProfile(dto, username);
 
                 TempData["SuccessMessage"] = "Profile updated successfully!";
-                return RedirectToAction("ViewProfile"); 
-            } catch (InvalidOperationException ex) {
+                return RedirectToAction("ViewProfile");
+            }
+            catch (InvalidOperationException ex)
+            {
                 TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction("ViewProfile");
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 TempData["ErrorMessage"] = "An unexpected error occurred.";
                 return RedirectToAction("ViewProfile");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(ChangePwdDTO dto) {
-            if (!ModelState.IsValid) {
+        public async Task<IActionResult> ChangePassword(ChangePwdDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
                 TempData["ErrorMessage"] = "Invalid data received.";
                 return View(dto);
             }
 
-            try {
+            try
+            {
                 var username = User.Identity?.Name;
-                if (string.IsNullOrEmpty(username)) {
+                if (string.IsNullOrEmpty(username))
+                {
                     TempData["ErrorMessage"] = "You must be logged in to change your password.";
                     return RedirectToAction("Login", "Account"); 
                 }
 
-                if (dto.NewPassword != dto.ConfirmNewPassword) {
+                // Kiểm tra mật khẩu xác nhận
+                if (dto.NewPassword != dto.ConfirmNewPassword)
+                {
                     TempData["ErrorMessage"] = "New password and confirmation password do not match.";
-                    return View(dto); 
+                    return View(dto);
                 }
 
                 var isOldPasswordCorrect = await _service.VerifyOldPasswordAsync(username, dto.OldPassword);
-                if (!isOldPasswordCorrect) {
+                if (!isOldPasswordCorrect)
+                {
                     TempData["ErrorMessage"] = "Old password is incorrect.";
-                    return View(dto); 
+                    return View(dto);
                 }
 
                 await _service.ChangePwd(dto, username);
                 TempData["SuccessMessage"] = "Password changed successfully!";
-                return View(dto); 
+                return View(dto);
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 TempData["ErrorMessage"] = ex.Message;
-                return View(dto); 
+                return View(dto);
             }
         }
 

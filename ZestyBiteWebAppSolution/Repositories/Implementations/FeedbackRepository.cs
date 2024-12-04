@@ -3,7 +3,8 @@ using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Repositories.Implementations {
+namespace ZestyBiteWebAppSolution.Repositories.Implementations
+{
     public class FeedbackRepository : IRepository<Feedback>, IFeedbackRepository {
         private readonly ZestyBiteContext _context;
 

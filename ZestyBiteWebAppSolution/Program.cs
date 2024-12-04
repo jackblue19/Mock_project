@@ -1,24 +1,45 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Helpers;
-using ZestyBiteWebAppSolution.Mappings;
-using ZestyBiteWebAppSolution.Middlewares;
-using ZestyBiteWebAppSolution.Repositories;
-using ZestyBiteWebAppSolution.Helpers;
-using ZestyBiteWebAppSolution.Mappings;
-using ZestyBiteWebAppSolution.Middlewares;
-using ZestyBiteWebAppSolution.Repositories;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using ZestyBiteWebAppSolution.Helpers;
+using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
+using System.Text;
+// using Microsoft.AspNetCore.Authentication;
+using ZestyBiteWebAppSolution.Middlewares;
+using ZestyBiteWebAppSolution.Repositories;
+using ZestyBiteWebAppSolution.Mappings;
+using System.Net;
+using System.Net.Mail;
+using Microsoft.Extensions.Options;
+using ZestyBiteWebAppSolution.Models.Entities;
+using ZestyBiteWebAppSolution.Data;
+
+/*dotnet add package Microsoft.IdentityModel.Tokens
+Install-Package Microsoft.AspNetCore.Session
+
+Install-Package Microsoft.AspNetCore.Authentication.Cookies
+
+Install-Package Microsoft.AspNetCore.Authorization
+
+Install-Package Microsoft.AspNetCore.Mvc
+
+Install-Package Microsoft.Extensions.DependencyInjection
+
+Install-Package Microsoft.AspNetCore.Http
+
+Install-Package Microsoft.AspNetCore.Http.Abstractions
+*/
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Session
 builder.Services.AddDistributedMemoryCache(); // Store session in memory
-builder.Services.AddSession(options => {
+builder.Services.AddSession(options =>
+{
     options.Cookie.Name = ".ZestyBite.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
@@ -26,7 +47,8 @@ builder.Services.AddSession(options => {
 });
 
 // Thêm dịch vụ Authorization và tạo các policies phân quyền
-builder.Services.AddAuthorization(options => {
+builder.Services.AddAuthorization(options =>
+{
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("manager"));
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("order taker", "staff"));
     options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("manager"));
@@ -44,8 +66,10 @@ builder.Services.AddRazorPages();
 
 
 // Configure Swagger
-builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v1", new OpenApiInfo {
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
         Title = "My API",
         Version = "v1",
         Description = "An API to demonstrate Swagger integration",
@@ -84,6 +108,13 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
 
+builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITableService, TableService>();
+
+builder.Services.AddScoped<ITableDetailRepository, TableDetailRepository>();
+builder.Services.AddScoped<ITableDetailService, TableDetailService>();
+
+
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
@@ -95,9 +126,12 @@ builder.Services.AddEndpointsApiExplorer();
 // Add AutoMapper services
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+
 // Configure CORS
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", policy => {
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
@@ -108,14 +142,18 @@ builder.Services.AddCors(options => {
 var app = builder.Build();
 
 // Middleware to handle errors
-if (app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger(); // Enable Swagger UI in development
-    app.UseSwaggerUI(c => {
+    app.UseSwaggerUI(c =>
+    {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
         c.RoutePrefix = "swagger"; // Route prefix for Swagger UI
     });
     app.UseDeveloperExceptionPage();
-} else {
+}
+else
+{
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts(); // Enable HSTS for production
 }

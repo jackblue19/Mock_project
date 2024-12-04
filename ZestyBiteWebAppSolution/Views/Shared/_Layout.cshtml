@@ -62,15 +62,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container d-flex justify-content-center">
             <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="margin-left: 20px">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="margin-left: 20px">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="margin-left: 20px">
                 <span class="flaticon-pizza-1 mr-1"></span>Pizza<br><small>Delicious</small>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>Menu
             </button>
-            <div class="collapse navbar-collapse" id="ftco-nav" style="margin-left: 20px">
-            <div class="collapse navbar-collapse" id="ftco-nav" style="margin-left: 20px">
             <div class="collapse navbar-collapse" id="ftco-nav" style="margin-left: 20px">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active"><a href="@Url.Action("Index", "Home")" class="nav-link">Home</a></li>
@@ -93,13 +89,13 @@
                     </li>
 
                     <li class="nav-item" id="cart-container">
-                                <a href="@Url.Action("Checkout", "Cart")" style="margin: 20px; display: flex; justify-content: space-between; flex-direction: row; align-items: baseline">
+                        <a href="@Url.Action("Checkout", "Cart")" style="margin: 20px; display: flex; justify-content: space-between; flex-direction: row; align-items: baseline">
                             <i class="fa-solid fa-cart-shopping" style="margin-right:10px; font-size: 1.5em"></i>
                             <span class="badge badge-pill badge-primary" id="cart-badge">
-                                @Model?.TotalItems  
-                            </span>
+                                @Model.TotalItems  
                         </a>
                     </li>
+
 
                     @await Html.PartialAsync("~/Views/Account/AccountPartial.cshtml")
                 </ul>

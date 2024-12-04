@@ -1,8 +1,8 @@
 ﻿namespace ZestyBiteWebAppSolution.Models {
-    internal class ShoppingCartDTO {
-        public List<ShoppingCartItemDTO> Items { get; set; } = new List<ShoppingCartItemDTO>();
+    internal class CheckoutDTO {
+        public List<CheckoutItemDTO> Items { get; set; } = new List<CheckoutItemDTO>();
 
-        public void AddItem(ShoppingCartItemDTO item) {
+        public void AddItem(CheckoutItemDTO item) {
             var existingItem = Items.FirstOrDefault(i => i.ItemId == item.ItemId);
             if (existingItem != null) {
                 existingItem.Quantity += item.Quantity;
@@ -22,7 +22,7 @@
 
         public decimal TotalPrice => Items.Sum(i => i.Price * i.Quantity);
     }
-    public class ShoppingCartItemDTO {
+    public class CheckoutItemDTO {
         public int ItemId { get; set; }
         public string Name { get; set; } = null!;
         public decimal Price { get; set; }

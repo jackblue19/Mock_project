@@ -65,29 +65,29 @@
                 </table>
             </div>
         </div>
-        <div class="under-table">
-            <table class="calculate">
-                <thead>
-                    <tr>
-                        <th>
-                            <div id="itemNumbers">
-                                Total items: <span id="selectedItemsCount">0</span>
-                            </div>
-                        </th>
-                        <th>
-                            <div id="totalMoney">
-                                Total Amount: <span id="selectedTotalAmount">$0.00</span>
-                            </div>
-                        </th>
-                        <th>
-                            <input type="submit" class="confirmPay mt-2 w-100" value="VnPay">
-                                Payment
-                            <input/>
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+        <form method="post" action="@Url.Action("Payment", "Cart")" id="payment-form">
+            <div class="under-table">
+                <table class="calculate">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div id="itemNumbers">
+                                    Total items: <span id="selectedItemsCount">0</span>
+                                </div>
+                            </th>
+                            <th>
+                                <div id="totalMoney">
+                                    Total Amount: <span id="selectedTotalAmount">$0.00</span>
+                                </div>
+                            </th>
+                            <th>
+                                <input type="submit" class="confirmPay mt-2 w-100" value="Payment" />
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </form>
     </div>
 </body>
 

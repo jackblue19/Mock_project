@@ -13,16 +13,15 @@ namespace ZestyBiteSolution.Controllers {
             _itemService = itemService;
         }
 
-        private ShoppingCartDTO GetShoppingCart() {
-            var cart = HttpContext.Session.GetObjectFromJson<ShoppingCartDTO>("ShoppingCart");
+        private CheckoutDTO GetShoppingCart() {
+            var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>("ShoppingCart");
             if (cart == null) {
-                cart = new ShoppingCartDTO();
+                cart = new CheckoutDTO();
             }
             return cart;
         }
 
-        public async Task<IActionResult> Index() {
-
+        public async Task<IActionResult> Index(int? cartTotalItems) {
             var items = await _itemService.GetAllItemsAsync();
 
             var pizzaItems = items.Where(i => i.ItemCategory == "Pizza").ToList();
@@ -37,12 +36,17 @@ namespace ZestyBiteSolution.Controllers {
                 BurgersItems = burgersItems,
             };
 
+            // Get shopping cart details
             var cart = GetShoppingCart();
             viewModel.TotalItems = cart.Items?.Sum(i => i.Quantity) ?? 0;
 
+            // If cartTotalItems is passed as a query parameter, update the badge count
+            if (cartTotalItems.HasValue) {
+                viewModel.TotalItems = cartTotalItems.Value;
+            }
+
             return View(viewModel);
         }
-
 
         public IActionResult About() {
             return View();
@@ -83,7 +87,7 @@ namespace ZestyBiteSolution.Controllers {
                 DrinkItems = drinkItems,
                 PastaItems = pastaItems,
                 BurgersItems = burgersItems,
-                Items = paginatedItems, 
+                Items = paginatedItems,
                 CurrentPage = page,
                 TotalPages = totalPages
             };

@@ -8,7 +8,7 @@ namespace ZestyBiteWebAppSolution.Data;
 public partial class ZestyBiteContext : DbContext
 {
     public ZestyBiteContext()
-    {
+    {   
     }
 
     public ZestyBiteContext(DbContextOptions<ZestyBiteContext> options)

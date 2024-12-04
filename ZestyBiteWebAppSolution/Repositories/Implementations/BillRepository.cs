@@ -21,6 +21,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
         }
         public async Task<Account?> GetAccountByUsername(string username) {
             return await _context.Accounts
+                                 .Include(acc => acc.Role)
                                  .FirstOrDefaultAsync(a => a.Username == username);
         }
 

@@ -30,6 +30,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return await _context.Feedbacks
                 .Include(f => f.UsernameNavigation) // Include related entities
                 .Include(f => f.Item)
+                .Include(f => f.ParentFbFlagNavigation)
                 .OrderByDescending(f => f.FbDatetime)
                 .Skip(offset)
                 .Take(pageSize)

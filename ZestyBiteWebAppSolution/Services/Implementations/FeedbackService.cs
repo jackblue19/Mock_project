@@ -20,7 +20,9 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         }
 
         // CRUD Feedback
-        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByPageAsync(int pageNumber, int pageSize) {
+        public async Task<IEnumerable<FeedbackDTO>> GetFeedbacksByPageAsync(int pageNumber, int pageSize) 
+        {
+            var usn = await _accountRepository.GetAllAsync();
             var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync(pageNumber, pageSize);
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }
@@ -28,7 +30,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         public async Task<IEnumerable<FeedbackDTO?>> GetAllFeedbacksAsync()
         {
             var usn = await _accountRepository.GetAllAsync();
-
+            
             var feedbacks = await _feedbackRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }

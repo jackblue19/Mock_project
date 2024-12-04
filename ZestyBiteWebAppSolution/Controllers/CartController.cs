@@ -10,14 +10,17 @@ public class CartController : Controller
 {
     private const string CartSessionKey = "Checkout";
     private readonly ZestyBiteContext _context;
+    private readonly IAccountRepository _accountRepository;
     private readonly IVnPayService _vnPayService;
     private readonly IBillRepository _billRepository;
 
-    public CartController(ZestyBiteContext context, IVnPayService vnPayService, IBillRepository billRepository)
+    public CartController(ZestyBiteContext context, IVnPayService vnPayService, IBillRepository billRepository, IAccountRepository xyz)
     {
         _context = context;
         _vnPayService = vnPayService;
         _billRepository = billRepository;
+        _accountRepository = xyz;
+
     }
 
     // Hiển thị giỏ hàng
@@ -31,14 +34,13 @@ public class CartController : Controller
     [Route("api/Cart/Payment")]
     public async Task<IActionResult> Payment(VnPaymentRequestModel paymentRequest)
     {
-        var username = HttpContext.Request.Cookies["username"];
+        //var username = HttpContext.Request.Cookies["username"];
 
-        if (string.IsNullOrEmpty(username))
-        {
-            return Unauthorized(new { message = "Người dùng chưa đăng nhập." });
-        }
+        var username = User.Identity.Name;
+        var accz = _accountRepository.GetAccountByUsnAsync(username);
+        int accId = accz.Id;
 
-        var cart = await _billRepository.GetBillAsync(int.Parse(username));
+        var cart = await _billRepository.GetBillAsync(accId);
         if (cart == null)
         {
             return NotFound(new { message = "Không tìm thấy giỏ hàng." });
@@ -46,18 +48,22 @@ public class CartController : Controller
 
         if (ModelState.IsValid)
         {
-            if (paymentRequest.PaymentMethod == "Payment")
+            if (paymentRequest.PaymentMethod == 1)
             {
-                var acc = await _billRepository.GetNameById(int.Parse(username));
+                var acc = await _billRepository.GetNameById(accId);
                 var vnPayModel = new VnPaymentRequestModel
                 {
                     Amount = cart.TotalCost,
                     CreatedDate = DateTime.Now,
-                    Description = $"{acc.Name} {acc.PhoneNumber}",
+                    Description = $"{acc?.Name} {acc?.PhoneNumber}",
                 };
 
                 var paymentUrl = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel);
                 return Ok(new { message = "Thanh toán thành công.", paymentUrl });
+            }
+            else
+            {
+                return RedirectToAction("index" , "Home");
             }
         }
 
@@ -78,6 +84,12 @@ public class CartController : Controller
 
     public IActionResult AddToCart(int itemId)
     {
+        var username = User.Identity.Name;
+
+        if (string.IsNullOrEmpty(username))
+        {
+            return Unauthorized(new { message = "Người dùng chưa đăng nhập." });
+        }
         var cart = GetCheckout();
 
         // Fetch the item from the database

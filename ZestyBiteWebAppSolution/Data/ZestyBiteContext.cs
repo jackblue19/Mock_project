@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Models.Entities;
+namespace ZestyBiteWebAppSolution.Data;
 
 public partial class ZestyBiteContext : DbContext
 {
     public ZestyBiteContext()
-    {
+    {   
     }
 
     public ZestyBiteContext(DbContextOptions<ZestyBiteContext> options)

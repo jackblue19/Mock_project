@@ -18,11 +18,11 @@
         }
 
         .comment {
-            border: 1px solid #ddd;
+            border: 1px solid #dddddd50;
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 10px;
-            background-color: #f9f9f9;
+            background-color: #f9f9f905;
             position: relative;
         }
 
@@ -37,7 +37,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border: 2px solid #ccc;
+            border: 2px solid #cccccc50;
         }
 
         .comment h3 {
@@ -54,39 +54,40 @@
 
         .nested-comment {
             margin-left: 30px;
-            border-left: 2px solid #ddd;
+            border-left: 2px solid #dddddd80;
             padding-left: 10px;
-            background-color: #fff;
+            background-color: #ffffff05;
         }
 
         /* Style for reply form */
         .reply-form {
             margin-top: 10px;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #dddddd50;
             border-radius: 5px;
-            background-color: #f7f7f7;
+            background-color: #f7f7f705;
         }
 
             .reply-form input.reply-input {
                 width: calc(100% - 60px);
                 padding: 5px;
                 margin-right: 5px;
-                border: 1px solid #ccc;
+                border: 1px solid #cccccc50;
                 border-radius: 3px;
             }
 
             .reply-form button {
                 padding: 5px 10px;
-                background-color: #007bff;
-                color: #fff;
+                background-color: #e8c94050;
+                color: #ffffff50;
                 border: none;
                 border-radius: 3px;
                 cursor: pointer;
+                margin:  8px;
             }
 
                 .reply-form button:hover {
-                    background-color: #0056b3;
+                    background-color: #e8c94080;
                 }
 
         /* Style for deeply nested comments */
@@ -98,8 +99,8 @@
             position: fixed;
             top: 20px; /* Adjust as needed */
             right: 20px; /* Adjust as needed */
-            background-color: #f44336; /* Red background for error */
-            color: white; /* White text */
+            background-color: #f4433680; /* Red background for error */
+            color: #ffffff80; /* White text */
             padding: 15px; /* Some padding */
             border-radius: 5px; /* Rounded corners */
             z-index: 1000; /* Ensure it appears above other content */
@@ -219,59 +220,59 @@
 
         // Recursive function to display comments and replies
         function displayComments(commentsToDisplay, container, level = 0) {
-        commentsToDisplay.forEach(comment => {
-        try {
-            console.log("Processing comment:", comment);
+            commentsToDisplay.forEach(comment => {
+                try {
+                    console.log("Processing comment:", comment);
 
-            const profileImage = comment.profileImage || "default-profile.png"; // Fallback for profile image
-            const username = comment.username || "Anonymous"; // Fallback for username
-            const itemName = comment.itemName || "Unknown Item"; // Fallback for item name
-            const dateTime = comment.dateTime ? new Date(comment.dateTime).toLocaleString() : "Unknown Date";
-            const content = comment.content || "";
+                    const profileImage = comment.profileImage || "default-profile.png"; // Fallback for profile image
+                    const fullname = comment.fullname || "Anonymous"; // Fallback for fullname
+                    const itemName = comment.itemName || "Unknown Item"; // Fallback for item name
+                    const dateTime = comment.dateTime ? new Date(comment.dateTime).toLocaleString() : "Unknown Date";
+                    const content = comment.content || "";
 
-            // Safely handle comment.id or generate a fallback ID
-            const commentId = comment.id || `temp-${Math.random().toString(36).substr(2, 9)}`;
-            const repliesContainerId = `nested-${commentId}`;
+                    // Safely handle comment.id or generate a fallback ID
+                    const commentId = comment.id || `temp-${Math.random().toString(36).substr(2, 9)}`;
+                    const repliesContainerId = `nested-${commentId}`;
 
-            // Create the comment element
-            const commentItem = document.createElement("li");
-            commentItem.classList.add("comment", "nested-comment");
-            commentItem.style.marginLeft = `${level * 5}px`;
+                    // Create the comment element
+                    const commentItem = document.createElement("li");
+                    commentItem.classList.add("comment", "nested-comment");
+                    commentItem.style.marginLeft = `${level * 5}px`;
 
-            commentItem.innerHTML = `
-                    <div class="vcard bio">
-                            <img src="${comment.profileImage}" alt="Profile" class="profile-img">
-                    </div>
-                    <div class="comment-body">
-                        <div class="comment-head">
-                            <h3>${username}</h3>
-                            <div class="meta">${dateTime}</div>
+                    commentItem.innerHTML = `
+                        <div class="vcard bio">
+                            <img src="${profileImage}" alt="Profile" class="profile-img">
                         </div>
-                        ${level < 1 ? `<p><strong>Item:</strong> ${comment.itemName || "Unknown Item"}</p>` : ""}
-                        <p>${content}</p>
-                        ${level < MAX_DEPTH ? `<button class="reply-btn" data-id="${comment.id}" data-level="${level}">Reply</button>` : ""}
-                        <div class="reply-form" id="replyBox-${commentId}" style="display: none;">
-                            <input type="text" placeholder="Write a reply..." class="reply-input">
-                            <button class="submit-reply" data-parent-id="${comment.parentFb}" data-level="${level}">Submit</button>
+                        <div class="comment-body">
+                            <div class="comment-head">
+                                <h3>${fullname}</h3> <!-- Ensure 'fullname' is used here -->
+                                <div class="meta">${dateTime}</div>
+                            </div>
+                            ${level < 1 ? `<p><strong>Item:</strong> ${itemName}</p>` : ""}
+                            <p>${content}</p>
+                            ${level < MAX_DEPTH ? `<button class="reply-btn" data-id="${comment.id}" data-level="${level}">Reply</button>` : ""}
+                            <div class="reply-form" id="replyBox-${commentId}" style="display: none;">
+                                <input type="text" placeholder="Write a reply..." class="reply-input">
+                                <button class="submit-reply" data-parent-id="${comment.parentFb}" data-level="${level}">Submit</button>
+                            </div>
+                            <ul class="nested-comments" id="${repliesContainerId}"></ul>
                         </div>
-                        <ul class="nested-comments" id="${repliesContainerId}"></ul>
-                    </div>
-            `;
+                    `;
 
-            container.appendChild(commentItem);
+                    container.appendChild(commentItem);
 
-            // Handle nested replies
-            if (comment.parentFeedback) {
-                const repliesContainer = document.getElementById(repliesContainerId);
-                displayComments([comment.parentFeedback], repliesContainer, level + 1);
-            }
-        } catch (error) {
-            console.error("Error processing comment:", comment, error);
+                    // Handle nested replies
+                    if (comment.parentFeedback) {
+                        const repliesContainer = document.getElementById(repliesContainerId);
+                        displayComments([comment.parentFeedback], repliesContainer, level + 1);
+                    }
+                } catch (error) {
+                    console.error("Error processing comment:", comment, error);
+                }
+            });
+            setupReplyHandlers();
         }
-    });
 
-    setupReplyHandlers();
-    }
 
         // Set up event listeners for reply buttons and forms
         function setupReplyHandlers() {

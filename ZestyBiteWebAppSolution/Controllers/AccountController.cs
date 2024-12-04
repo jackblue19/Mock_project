@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    //[AllowAnonymous]
-    [ApiController]
-    [Route("api/[Controller]")]
+    [AllowAnonymous]
+    // [ApiController]
+    // [Route("api/[Controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -61,9 +61,9 @@ namespace ZestyBiteWebAppSolution.Controllers
 
 
         [HttpPost]
-        [Route("login")]
-        //public async Task<IActionResult> Login([FromForm] LoginDTO dto)
-        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        // [Route("login")]
+        public async Task<IActionResult> Login([FromForm] LoginDTO dto)
+        // public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
             if (!ModelState.IsValid)
             {
@@ -72,16 +72,23 @@ namespace ZestyBiteWebAppSolution.Controllers
 
             if (await _service.IsTrueAccount(dto.Username, dto.Password))
             {
-                HttpContext.Session.SetString("username", dto.Username);
-                Response.Cookies.Append("username", dto.Username, new CookieOptions
+                try
                 {
-                    Expires = DateTimeOffset.Now.AddMinutes(30),
-                    HttpOnly = true,
-                    Secure = false,
-                    SameSite = SameSiteMode.Strict
-                });
-
-                return RedirectToAction("Index", "Home");
+                    HttpContext.Session.SetString("username", dto.Username);
+                    Response.Cookies.Append("username", dto.Username, new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddMinutes(30),
+                        HttpOnly = true,
+                        Secure = false,
+                        SameSite = SameSiteMode.Strict
+                    });
+                    // return Ok("Login done");
+                    return RedirectToAction("Index", "Home");
+                }
+                catch
+                {
+                    throw new Exception("dunno error");
+                }
             }
 
             return Unauthorized(new { message = "Invalid username or password" });

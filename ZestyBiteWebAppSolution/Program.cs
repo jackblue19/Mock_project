@@ -5,6 +5,10 @@ using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Mappings;
 using ZestyBiteWebAppSolution.Middlewares;
 using ZestyBiteWebAppSolution.Repositories;
+using ZestyBiteWebAppSolution.Helpers;
+using ZestyBiteWebAppSolution.Mappings;
+using ZestyBiteWebAppSolution.Middlewares;
+using ZestyBiteWebAppSolution.Repositories;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
@@ -81,6 +85,7 @@ builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
 
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
+builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 

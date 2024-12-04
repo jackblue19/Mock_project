@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.DTOs;
@@ -6,7 +7,13 @@ using ZestyBiteWebAppSolution.Models.ViewModel;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
+using ZestyBiteWebAppSolution.Models;
+using ZestyBiteWebAppSolution.Models.ViewModel;
+using ZestyBiteWebAppSolution.Repositories.Interfaces;
+using ZestyBiteWebAppSolution.Services.Interfaces;
+
 namespace ZestyBiteWebAppSolution.Controllers {
+    [AllowAnonymous]
     [AllowAnonymous]
     public class CartController : Controller {
         private const string CartSessionKey = "Checkout";
@@ -14,6 +21,9 @@ namespace ZestyBiteWebAppSolution.Controllers {
         private readonly IVnPayService _vnPayService;
         private readonly IBillRepository _billRepository;
 
+        public CartController(ZestyBiteContext context, IVnPayService vnPayService, IBillRepository billRepository) {
+        private readonly IVnPayService _vpnPayService;
+        private readonly IBillRepository _billRepository;
         public CartController(ZestyBiteContext context, IVnPayService vnPayService, IBillRepository billRepository) {
             _context = context;
             _vnPayService = vnPayService;
@@ -60,6 +70,44 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         private CheckoutDTO GetCheckout() {
             var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>(CartSessionKey);
+            _vpnPayService = vnPayService;
+            _billRepository = billRepository;
+        }
+        public IActionResult Checkout() {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Checkout(string payment = "VnPay", int usn) {
+            // Retrieve the cart
+            var cart = await _billRepository.GetBillAsync(usn);
+            var table = cart.Table;
+
+
+            // Ensure Items is initialized
+            table.TableDetails
+
+            if (ModelState.IsValid) {
+                if (payment == "VnPay") {
+                    var acc = await _billRepository.GetNameById(usn);
+                    var vnPayModel = new VnPaymentRequestModel {
+                        Amount = cart.TotalCost,
+                        CreatedDate = DateTime.Now,
+                        Description = $"{acc.Name} {acc.PhoneNumber}",
+                    };
+                    return Redirect(_vpnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
+                }
+            }
+
+            // Return the model to the view
+            return View(cart);
+        }
+
+
+
+        private ShoppingCartDTO GetShoppingCart() {
+            var cart = HttpContext.Session.GetObjectFromJson<ShoppingCartDTO>("ShoppingCart");
             if (cart == null) {
                 cart = new CheckoutDTO();
                 HttpContext.Session.SetObjectAsJson(CartSessionKey, cart); // Save the new cart to the session
@@ -69,6 +117,10 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         public IActionResult AddToCart(int itemId) {
             var cart = GetCheckout();
+            if (!User.Identity.IsAuthenticated) {
+                return RedirectToAction("Register", "Account");
+            }
+            var cart = HttpContext.Session.GetObjectFromJson<ShoppingCartDTO>("ShoppingCart") ?? new ShoppingCartDTO();
 
             var item = _context.Items
                                .Where(i => i.ItemId == itemId)
@@ -103,6 +155,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
             ViewBag.TotalAmount = cart.Items.Sum(i => i.Quantity * i.Price);
 
             return View(cart);
+
         }
 
         public IActionResult RemoveFromCart(int itemId) {
@@ -111,9 +164,22 @@ namespace ZestyBiteWebAppSolution.Controllers {
             if (item != null) {
                 cart.Items.Remove(item);
                 HttpContext.Session.SetObjectAsJson(CartSessionKey, cart); // Save updated cart to session
+                HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
+
+                var totalItems = cart.Items.Sum(i => i.Quantity);
+                var totalAmount = cart.Items.Sum(i => i.Quantity * i.Price);
+                ViewBag.TotalItems = totalItems;
+                ViewBag.TotalAmount = totalAmount;
+
+                var totalItems = cart.Items.Sum(i => i.Quantity);
+                var totalAmount = cart.Items.Sum(i => i.Quantity * i.Price);
+                ViewBag.TotalItems = totalItems;
+                ViewBag.TotalAmount = totalAmount;
             }
 
             return RedirectToAction("Checkout");
+            return RedirectToAction("ShoppingCart");
+            return RedirectToAction("ShoppingCart");
         }
 
         public IActionResult UpdateCart(int itemId, int quantity) {
@@ -148,6 +214,11 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
             TempData["Message"] = "Success ";
             return RedirectToAction("PaymentSuccess");
+        }
+
+        [Authorize]
+        public IActionResult PaymentCallBack() {
+            return View();
         }
     }
 }

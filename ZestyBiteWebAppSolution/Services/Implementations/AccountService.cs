@@ -181,11 +181,21 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             await _repository.UpdateAsync(current);
             return dto;
         }
+        public async Task<ForgotPwdDTO> NewPwd(ForgotPwdDTO dto, string email)
+        {
+            var updated = await _repository.GetAccountByEmailAsync(email);
+            if (updated == null)
+                throw new InvalidOperationException("Email address was not true");
+            updated.Password = dto.NewPassword;
+            await _repository.UpdateAsync(updated);
+            return dto;
+        }
 
         public async Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn)
         {
             var current = await _repository.GetAccountByUsnAsync(usn);
-            if (current == null) {
+            if (current == null)
+            {
                 throw new InvalidOperationException("User not found.");
             }
             current.Name = dto.Name;

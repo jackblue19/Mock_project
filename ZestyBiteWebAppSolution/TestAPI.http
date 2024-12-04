@@ -29,17 +29,13 @@ POST  http://localhost:5024/api/account/signup
 Content-Type: application/json
 
 {
-  "username": "dr1212z",
-    "password": "doraemon@123",
-  "username": "dr1212z",
+  "username": "dr1212z1",
     "password": "doraemon@123",
     "name": "Doraemon Nek",
     "gender": 1,
     "phoneNumber": "0912345678",
     "email": "git.jack1624@gmail.com",
-    "email": "git.jack1624@gmail.com",
     "address": "DN NHS",
-    "confirmPassword": "doraemon@123",
     "confirmPassword": "doraemon@123",
     "roleDescription": "null"
 }
@@ -53,7 +49,6 @@ Content-Type: application/json
 
 {
   "Content": "12/1/2024 4PM",
-  "Username": "jane_smith",
   "ItemId": 1,
   "ItemName": "Pizza Margherita",
   "ParentFb": null
@@ -63,7 +58,7 @@ PUT http://localhost:5024/api/feedback
 Content-Type: application/json
 
 {
-  "Id": 58,
+  "Id": 76,
   "Content": "halohalo",
   "ItemId": 1,
   "ItemName": "Pizza Margherita",
@@ -71,9 +66,8 @@ Content-Type: application/json
 }
 ###
 GET http://localhost:5024/api/feedback/feedbackpagination?pageNumber=1&pageSize=10
-GET http://localhost:5024/api/feedback/feedbackpagination?pageNumber=1&pageSize=10
 ###
-DELETE http://localhost:5024/api/feedback/57
+DELETE http://localhost:5024/api/feedback/10
 ###
 GET http://localhost:5024/api/feedback/replies/11
 ###
@@ -84,7 +78,7 @@ Content-Type: application/json
   "Content": "This is a reply message.",
   "ItemId": 1,
   "ItemName": "Pizza Margherita",
-  "ParentFb": 16
+  "ParentFb": 19
 }
 ###
 PUT http://localhost:5024/api/feedback/reply
@@ -102,11 +96,27 @@ POST http://localhost:5024/api/account/login
 Content-Type: application/json
 
 {
+    "username": "customer1",
+    "password": "customerpass"
+}
+###
+POST http://localhost:5024/api/account/login
+Content-Type: application/json
+
+{
     "username": "jane_smith",
     "password": "password456"
 }
 ###
-
+POST http://localhost:5024/api/account/logout
+###
+GET http://localhost:5024/api/table
+###
+GET http://localhost:5024/api/tabledetail
+###
+GET http://localhost:5024/api/table/reality
+###
+GET http://localhost:5024/api/table/virtual
 ###
 
 ###
@@ -115,5 +125,10 @@ Content-Type: application/json
 
 ###
 
+###
+
+###
+
+###
 
 ########################################################################

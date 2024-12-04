@@ -1,8 +1,9 @@
-using AutoMapper;
+﻿using AutoMapper;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZestyBiteWebAppSolution.Services.Implementations {
     public class FeedbackService : IFeedbackService {
@@ -37,8 +38,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
         }
 
-        //[AllowAnonymous]
-        [Authorize]
+ 
         public async Task<FeedbackDTO> SubmitFeedbackAsync(FeedbackDTO feedbackDto, string usn)
         {
             if (feedbackDto == null)
@@ -100,13 +100,15 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             var replies = await _feedbackRepository.GetFeedbackRepliesAsync(parentFbFlag);
             return _mapper.Map<IEnumerable<ReplyDTO>>(replies);
         }
-        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto) {
-            if (replyDto == null) {
+        public async Task<FeedbackDTO> SubmitReplyAsync(int parentFbFlag, ReplyDTO replyDto, string usn)
+        {
+            if (replyDto == null)
+            {
                 throw new ArgumentNullException(nameof(replyDto));
             }
 
             // Retrieve account using username
-            var account = await _accountRepository.GetAccountByUsnAsync(replyDto.Username);
+            var account = await _accountRepository.GetAccountByUsnAsync(usn);
             var item = await _itemRepository.GetByIdAsync(replyDto.ItemId);
 
             if (account == null) throw new InvalidOperationException("Invalid Account.");
@@ -115,7 +117,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             var reply = new Feedback {
                 FbContent = replyDto.Content,
                 FbDatetime = DateTime.UtcNow,
-                Username = replyDto.Username,
+                Username = usn,
                 ItemId = replyDto.ItemId,
                 ParentFbFlag = parentFbFlag,
                 UsernameNavigation = account,

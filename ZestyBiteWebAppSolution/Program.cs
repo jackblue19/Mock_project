@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
@@ -16,6 +15,8 @@ using ZestyBiteWebAppSolution.Mappings;
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
+using ZestyBiteWebAppSolution.Models.Entities;
+//using ZestyBiteWebAppSolution.Data;
 
 /*dotnet add package Microsoft.IdentityModel.Tokens
 Install-Package Microsoft.AspNetCore.Session
@@ -99,6 +100,13 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
 
+builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITableService, TableService>();
+
+builder.Services.AddScoped<ITableDetailRepository, TableDetailRepository>();
+builder.Services.AddScoped<ITableDetailService, TableDetailService>();
+
+
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 
@@ -109,6 +117,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Add AutoMapper services
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 // Configure CORS
 builder.Services.AddCors(options => {

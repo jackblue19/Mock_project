@@ -10,7 +10,11 @@
             max-height: 500px;
             overflow-y: auto;
             padding: 10px;
+            scrollbar-width: none;
         }
+            .comment-list-container::-webkit-scrollbar {
+                display: none;
+            }
 
         .comment-list {
             list-style: none;
@@ -19,6 +23,7 @@
 
         .comment {
             border: 1px solid #dddddd50;
+            color: azure;
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 10px;
@@ -27,7 +32,9 @@
         }
 
         .comment-body {
-            margin-left: 50px;
+            margin-left: 25px;
+            margin-top: 25px;
+            margin-right: 10px
         }
 
         .comment img.profile-img {
@@ -53,10 +60,10 @@
         }
 
         .nested-comment {
-            margin-left: 30px;
+            margin-left: 0px;
             border-left: 2px solid #dddddd80;
             padding-left: 10px;
-            background-color: #ffffff05;
+            background-color: #f6852f05;
         }
 
         /* Style for reply form */
@@ -65,30 +72,36 @@
             padding: 10px;
             border: 1px solid #dddddd50;
             border-radius: 5px;
-            background-color: #f7f7f705;
         }
 
             .reply-form input.reply-input {
                 width: calc(100% - 60px);
                 padding: 5px;
                 margin-right: 5px;
-                border: 1px solid #cccccc50;
+                border: 1px solid #cccccc;
                 border-radius: 3px;
+                background-color: #ffffff;
             }
 
             .reply-form button {
                 padding: 5px 10px;
-                background-color: #e8c94050;
-                color: #ffffff50;
+                background-color: #e8c940;
+                color: #000000;
                 border: none;
-                border-radius: 3px;
+                border-radius: 15px;
                 cursor: pointer;
-                margin:  8px;
+                margin:  10px;
             }
 
                 .reply-form button:hover {
-                    background-color: #e8c94080;
+                    background-color: #f6852f;
                 }
+
+         .reply-btn {
+             background-color: #e8c940;
+             border-radius: 15px;
+             margin-bottom: 10px;
+         }
 
         /* Style for deeply nested comments */
         .nested-comments:last-child {
@@ -97,14 +110,14 @@
 
         .notification {
             position: fixed;
-            top: 20px; /* Adjust as needed */
-            right: 20px; /* Adjust as needed */
-            background-color: #f4433680; /* Red background for error */
-            color: #ffffff80; /* White text */
-            padding: 15px; /* Some padding */
-            border-radius: 5px; /* Rounded corners */
-            z-index: 1000; /* Ensure it appears above other content */
-            transition: opacity 0.5s ease; /* Smooth fade out */
+            top: 20px; 
+            right: 20px; 
+            background-color: #f4433680; 
+            color: #ffffff; 
+            padding: 15px; 
+            border-radius: 5px; 
+            z-index: 1000; 
+            transition: opacity 0.5s ease; 
         }
     </style>
 
@@ -307,43 +320,51 @@
             const parentCommentElement = document.querySelector(`[data-id="${parentId}"]`);
 
             if (!parentCommentElement) {
-                showNotification("Parent comment not found!"); 
+                showNotification("Parent comment not found!");
                 return;
             }
 
-       
             const itemId = parentCommentElement.getAttribute("data-item-id");
             const itemName = parentCommentElement.getAttribute("data-item-name") || "Unknown Item";
+            const ParentFb = parentId; // Use parentId as ParentFb
 
-            
+            // Prepare the payload for the reply
             const replyPayload = {
-                Content: content,    // User's input
-                ItemId: itemId,      // Extracted from parent comment
-                ItemName: itemName,  // Extracted from parent comment
-                ParentFb: parentId   // The parent comment's ID
+                Content: content,
+                ItemId: itemId,
+                ItemName: itemName,
+                ParentFb: ParentFb, // Set ParentFb to the parentId
+                Fullname: "" // Add Fullname if needed
             };
 
-            console.log("Submitting reply payload:", replyPayload); 
+            console.log("Submitting reply payload:", replyPayload);
 
-            // Send the reply to the back-end
-            $.ajax({
-                url: '/api/feedback/reply',
+            // Send the reply to the back-end using fetch
+            fetch('http://localhost:5024/api/feedback/submitfeedback', {
                 method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(replyPayload),
-                success: function (newReply) {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(replyPayload)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(newReply => {
                     console.log("Reply submitted successfully:", newReply);
                     const repliesContainer = document.getElementById(`nested-${parentId}`);
                     displayComments([newReply], repliesContainer, level + 1); // Append the new reply
 
                     // Show success notification
                     showNotification("Reply submitted successfully!");
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error submitting reply:", xhr.responseText || error);
+                })
+                .catch(error => {
+                    console.error("Error submitting reply:", error);
                     showNotification("Failed to submit reply. Please try again."); // Show error notification
-                }
-            });
+                });
         }
 
         function showNotification(message) {

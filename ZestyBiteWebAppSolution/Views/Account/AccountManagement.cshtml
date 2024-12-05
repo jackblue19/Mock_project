@@ -1,0 +1,481 @@
+@{
+    ViewBag.Title = "Account Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <style>
+        #ftco-navbar {
+            height: 60px !important;
+        }
+
+        body {
+            color: black;
+        }
+
+        .AccountFunction {
+            width: 100%;
+            display: flex;
+            background-color: #D0CECA;
+            color: #000;
+        }
+
+        .AccountFunction * {
+            font-size: 24px;
+        }
+
+        .AccountSearch, .AccountCreate {
+            width: 50%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .AccountSearch {
+            margin-left: 15px;
+            margin-top: 50px;
+        }
+
+        .AccountCreate {
+            margin-right: 15px;
+            margin-top: 50px;
+            justify-content: flex-end;
+        }
+
+        .AccountView {
+            background-color: #D0CECA;
+            width: 100%;
+            height: 555px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .AccountList {
+            overflow-y: scroll;
+            margin: 0 15px;
+            background-color: #FDFCE5;
+            width: 100%;
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .AccountList::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.List th, table.List td {
+            text-align: center;
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #cba570;
+            color: rgb(0, 0, 0);
+            padding: 10px;
+            border-bottom: 2px solid #ddd;
+            border-top: 2px solid #ddd;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            word-wrap: break-word;
+        }
+
+        th:nth-child(1), td:nth-child(1) {
+            width: 30px;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            background-color: #FDFCE5;
+            border: 1px solid #333;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        . .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .popup-header h3 {
+            color: #000;
+        }
+
+        .popup-close {
+            cursor: pointer;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .popup input[type="text"],
+        .popup input[type="password"],
+        .popup select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+
+        .footer {
+            height: 15px;
+            background-color: #D0CECA;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="popup-overlay ftco-animate" id="popupOverlay" onclick="closePopup()"></div>
+    <div class="popup" id="infoPopup">
+        <div class="popup-header ftco-animate">
+            <h3 id="popupTitle">Account Details</h3>
+            <span class="popup-close" onclick="closePopup()">×</span>
+        </div>
+        <form id="accountForm ftco-animate">
+            <table class="Info ftco-animate">
+                <tbody id="infoTableBody"></tbody>
+            </table>
+            <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                <button type="button" onclick="submitForm()" id="updateButton">Update</button>
+                <button type="button" onclick="manageStatus()" id="blockButton">Block</button>
+                <button type="button" onclick="deleteAccount()" id="deleteButton">Delete</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="AccountBody ftco-animate">
+        <div class="AccountFunction">
+            <div class="AccountSearch ftco-animate ">
+                <input id="search" type="search" placeholder="Search..." autofocus required oninput="searchAccounts()" />
+            </div>
+            <div class="AccountCreate ftco-animate">
+                <button onclick="showCreatePopup()">Create</button>
+            </div>
+        </div>
+
+        <div class="AccountView ftco-animate">
+            <div class="AccountList">
+                <table class="List">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>User's Name</th>
+                            <th>Phone Number</th>
+                            <th>Address</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Verification Code</th>
+                            <th>Role ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accountTableBody">
+                        <!-- Account rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+        let accounts = [];
+        // const sampleAccounts = [
+        //     {
+        //         id: 1,
+        //         status: 1, Active
+        //         username: 'john_doe',
+        //         password: 'password123',
+        //         name: 'John Doe',
+        //         phoneNumber: '123-456-7890',
+        //         address: '123 Main St, Anytown, USA',
+        //         gender: 1,
+        //         email: 'john.doe@example.com',
+        //         verificationCode: 'ABC123',
+        //         roleId: 1, Manager
+        //         createdAt: '2023-01-01T12:00:00Z'
+        //     },
+        //     {
+        //         id: 2,
+        //         status: 1, Active
+        //         username: 'jane_smith',
+        //         password: 'password456',
+        //         name: 'Jane Smith',
+        //         phoneNumber: '987-654-3210',
+        //         address: '456 Elm St, Othertown, USA',
+        //         gender: 0,
+        //         email: 'jane.smith@example.com',
+        //         verificationCode: 'XYZ789',
+        //         roleId: 2, Order Taker
+        //         createdAt: '2023-02-01T12:00:00Z'
+        //     },
+        //     {
+        //         id: 3,
+        //         status: 0, Blocked
+        //         username: 'bob_brown',
+        //         password: 'password789',
+        //         name: 'Bob Brown',
+        //         phoneNumber: '555-555-5555',
+        //         address: '789 Oak St, Sometown, USA',
+        //         gender: 1,
+        //         email: 'bob.brown@example.com',
+        //         verificationCode: 'LMN456',
+        //         roleId: 3, Procurement Manager
+        //         createdAt: '2023-03-01T12:00:00Z'
+        //     },
+        //     {
+        //         id: 4,
+        //         status: 1, Active
+        //         username: 'alice_jones',
+        //         password: 'password101',
+        //         name: 'Alice Jones',
+        //         phoneNumber: '444-444-4444',
+        //         address: '321 Pine St, Yourtown, USA',
+        //         gender: 0,
+        //         email: 'alice.jones@example.com',
+        //         verificationCode: 'QRS123',
+        //         roleId: 4, Server Staff
+        //         createdAt: '2023-04-01T12:00:00Z'
+        //     },
+        //     {
+        //         id: 5,
+        //         status: 1, Active
+        //         username: 'charlie_black',
+        //         password: 'password202',
+        //         name: 'Charlie Black',
+        //         phoneNumber: '222-222-2222',
+        //         address: '654 Maple St, Hometown, USA',
+        //         gender: 1,
+        //         email: 'charlie.black@example.com',
+        //         verificationCode: 'TUV456',
+        //         roleId: 5, Customer Service Staff
+        //         createdAt: '2023-05-01T12:00:00Z'
+        //     }
+        // ];
+        // accounts = sampleAccounts; 
+        // renderAccountTable(); 
+
+        function renderAccountTable(accounts) {
+            const tbody = document.getElementById('accountTableBody');
+            tbody.innerHTML = ''; // Xóa nội dung cũ
+
+            accounts.forEach(account => {
+                const row = document.createElement('tr');
+                row.onclick = () => showPopup(account.id);
+
+                row.innerHTML = `
+                    <td>${account.status === 1 ? 'Unlock' : 'Lock'}</td>
+                    <td>${account.username}</td>
+                    <td>${account.password}</td>
+                    <td>${account.name}</td>
+                    <td>${account.phone}</td>
+                    <td>${account.address}</td>
+                    <td>${account.gender === 1 ? 'Male' : 'Female'}</td>
+                    <td>${account.email}</td>
+                    <td>${account.verificationCode}</td>
+                    <td>${account.roleId}</td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+
+
+        async function loadAccounts() {
+            try {
+                const response = await fetch('/api/account/getallacc');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const accounts = await response.json();
+                renderAccountTable(accounts); 
+            } catch (error) {
+                console.error('Error fetching accounts:', error);
+            }
+        }
+
+
+        async function createNewStaffAccount(accountData) {
+            const response = await fetch('api/account/addstaff', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(accountData)
+            });
+            if (response.ok) {
+                await loadAccounts();
+            } else {
+                console.error('Error creating account:', await response.text());
+            }
+        }
+
+        async function manageStatus(username) {
+            const response = await fetch(`/api/account/status/${username}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status })
+            });
+            if (response.ok) {
+                await loadAccounts();
+            } else {
+                console.error('Error managing status:', await response.text());
+            }
+        }
+
+        async function deleteAccount(username) {
+            const response = await fetch(`/api/account/delete/${username}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                await loadAccounts();
+            } else {
+                console.error('Error deleting account:', await response.text());
+            }
+        }
+
+        function showPopup(id) {
+            const account = id ? accounts.find(a => a.id === id) : {};
+            const isNewAccount = !id;
+
+            document.getElementById('popupTitle').textContent = isNewAccount ? 'Create New Account' : 'Edit Account';
+
+            const fields = [
+                {
+                    name: 'status', label: 'Status', type: 'select', options: [
+                        { value: 1, text: 'Unlock' },
+                        { value: 2, text: 'Lock' }
+                    ]
+                },
+                { name: 'username', label: 'Username', type: 'text' },
+                { name: 'password', label: 'Password', type: 'password' },
+                { name: 'name', label: "User's Name", type: 'text' },
+                { name: 'phone', label: 'Phone Number', type: 'text' },
+                { name: 'address', label: 'Address', type: 'text' },
+                {
+                    name: 'gender', label: 'Gender', type: 'select', options: [
+                        { value: 1, text: 'Male' },
+                        { value: 0, text: 'Female' }
+                    ]
+                },
+                { name: 'email', label: 'Email', type: 'text' },
+                { name: 'verificationCode', label: 'Verification Code', type: 'text' },
+                {
+                    name: 'roleId', label: 'Role ID', type: 'select', options: [
+                        { value: 1, text: 'Manager' },
+                        { value: 2, text: 'Order Taker' },
+                        { value: 3, text: 'Procurement Manager' },
+                        { value: 4, text: 'Server Staff' },
+                        { value: 5, text: 'Customer Service Staff' },
+                        { value: 6, text: 'Food Runner' },
+                        { value: 7, text: 'Customer' }
+                    ]
+                }
+            ];
+
+            const infoTableBody = document.getElementById('infoTableBody');
+            infoTableBody.innerHTML = fields.map(field => `
+                        <tr>
+                            <td><strong>${field.label}</strong></td>
+                            <td>
+                                ${field.type === 'select'
+                    ? `<select id="${field.name}" ${field.readonly ? 'readonly' : ''}>
+                                        ${field.options.map(option => `<option value="${option.value}" ${account[field.name] === option.value ? 'selected' : ''}>${option.text}</option>`).join('')}
+                                       </select>`
+                    : `<input type="${field.type}" id="${field.name}" value="${account[field.name] || ''}" ${field.readonly ? 'readonly' : ''}>`
+                }
+                            </td>
+                        </tr>
+                    `).join('');
+
+            document.getElementById('updateButton').textContent = isNewAccount ? 'Create' : 'Update';
+            document.getElementById('deleteButton').style.display = isNewAccount ? 'none' : 'block';
+
+            document.getElementById('popupOverlay').style.display = 'block';
+            document.getElementById('infoPopup').style.display = 'block';
+        }
+
+        function showCreatePopup() {
+            showPopup();
+        }
+
+        function closePopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+            document.getElementById('infoPopup').style.display = 'none';
+        }
+
+        function submitForm() {
+            const formData = {};
+            document.querySelectorAll('#infoTableBody input, #infoTableBody select').forEach(input => {
+                formData[input.id] = input.value;
+            });
+
+            if (formData.id) {
+                const index = accounts.findIndex(a => a.id === parseInt(formData.id));
+                if (index !== -1) {
+                    accounts[index] = { ...accounts[index], ...formData };
+                }
+            } else {
+                formData.id = accounts.length + 1;
+                accounts.push(formData);
+            }
+
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            renderAccountTable();
+            closePopup();
+        }
+
+        function deleteAccount() {
+            const id = parseInt(document.getElementById('id').value);
+            accounts = accounts.filter(account => account.id !== id);
+
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            renderAccountTable();
+            closePopup();
+        }
+
+        function searchAccounts() {
+            const searchValue = document.getElementById('search').value.toLowerCase();
+            const rows = document.querySelectorAll('#accountTableBody tr');
+
+            rows.forEach(row => {
+                const rowText = Array.from(row.cells).map(cell => cell.innerText.toLowerCase()).join(' ');
+                row.style.display = rowText.includes(searchValue) ? '' : 'none';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAccounts);
+    </script>
+</body>

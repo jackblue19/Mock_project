@@ -8,9 +8,9 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    // [AllowAnonymous]
-    // [ApiController]
-    // [Route("api/[controller]")]
+    [AllowAnonymous]
+    //[ApiController]
+    //[Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -64,8 +64,15 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         [AllowAnonymous]
+        public IActionResult AccountManagement()
+        {
+            return View();
+        }
+
+
+        // [AllowAnonymous]
         [HttpPost]
-        // [Route("login")]
+        [Route("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
             if (!ModelState.IsValid)
@@ -96,6 +103,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
             return Unauthorized(new { message = "Invalid username or password" });
         }
+        
 
         // [HttpPost]
         // public async Task<IActionResult> ForgotPassword(string email)

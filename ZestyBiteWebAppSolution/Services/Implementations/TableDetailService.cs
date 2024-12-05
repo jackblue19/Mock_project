@@ -38,24 +38,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return _mapper.Map<TableDetailDTO?>(tableDetail);
         }
 
-        public async Task<IEnumerable<TableDetailDTO?>> GetAllTableDetailsAsync()
-        {
-            var tableDetails = await _tableDetailRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<TableDetailDTO?>>(tableDetails);
-        }
-
-        public async Task<IEnumerable<TableDetailDTO>> GetTableItemsByTableIdAsync(int tableId)
-        {
-            var tableDetails = await _tableDetailRepository.GetByTableIdAsync(tableId);
-            return _mapper.Map<IEnumerable<TableDetailDTO>>(tableDetails);
-        }
-
-        public async Task<TableDetailDTO?> GetTableDetailByIdAsync(int tableDetailId)
-        {
-            var tableDetail = await _tableDetailRepository.GetByIdAsync(tableDetailId);
-            return _mapper.Map<TableDetailDTO?>(tableDetail);
-        }
-
         public async Task<TableDetailDTO?> CreateTableDetailAsync(TableDetailDTO tableDetailDto) {
             var tableDetail = _mapper.Map<TableDetail>(tableDetailDto);
             var createdTableDetail = await _tableDetailRepository.CreateAsync(tableDetail);
@@ -69,16 +51,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                 return true;
             }
             return false; // Return false if the table detail was not found
-        }
-
-        public async Task<IEnumerable<TableDetailDTO?>> GetAllTableDetailsAsync() {
-            var tableDetails = await _tableDetailRepository.GetAllAsync(); // Get all table details from repository
-            return _mapper.Map<IEnumerable<TableDetailDTO?>>(tableDetails); // Map entities to DTOs
-        }
-
-        public async Task<TableDetailDTO?> GetTableDetailByIdAsync(int tableDetailId) {
-            var tableDetail = await _tableDetailRepository.GetByIdAsync(tableDetailId); // Get table detail by ID
-            return _mapper.Map<TableDetailDTO?>(tableDetail); // Map entity to DTO
         }
 
         public async Task<TableDetailDTO?> UpdateTableDetailAsync(TableDetailDTO tableDetailDto) {

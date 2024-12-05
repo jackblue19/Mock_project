@@ -9,8 +9,8 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 namespace ZestyBiteWebAppSolution.Controllers
 {
     // [AllowAnonymous]
-    [ApiController]
-    [Route("api/[controller]")]
+    // [ApiController]
+    // [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -63,13 +63,9 @@ namespace ZestyBiteWebAppSolution.Controllers
             return View();
         }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> main
         [AllowAnonymous]
         [HttpPost]
-        [Route("login")]
+        // [Route("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
             if (!ModelState.IsValid)
@@ -89,8 +85,8 @@ namespace ZestyBiteWebAppSolution.Controllers
                         Secure = false,
                         SameSite = SameSiteMode.Strict
                     });
-                    return Ok("Login done");
-                    // return RedirectToAction("Index", "Home");
+                    // return Ok("Login done");
+                    return RedirectToAction("Index", "Home");
                 }
                 catch
                 {

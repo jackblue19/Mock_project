@@ -6,23 +6,24 @@ using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
-    public class AccountRepository :IAccountRepository, IRepository<Account>
+    public class AccountRepository : IAccountRepository, IRepository<Account>
     {
         private readonly ZestyBiteContext _context;
         public AccountRepository(ZestyBiteContext context)
         {
             _context = context;
         }
-                                    /* Interface */
+        /* Interface */
         public async Task<IEnumerable<Account?>> SearchAccountByNamesAsync(string name)
         {
             return await _context.Accounts
                                  .Where(acc => acc.Name == name)
                                  .ToListAsync();
         }
-        public async Task<Account> CreateAccountAsync(Account account , sbyte roleId)
+        public async Task<Account> CreateAccountAsync(Account account, int roleId)
         {
-            account.RoleId = roleId;
+            // account.RoleId = roleId;
+            account.RoleId = Convert.ToSByte(roleId);
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
             return account;
@@ -39,7 +40,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
                                  .FirstOrDefaultAsync(acc => acc.Email == email);
         }
 
-                                    /* Generic */
+        /* Generic */
         public async Task<IEnumerable<Account?>> GetAllAsync()
         {
             return await _context.Accounts
@@ -66,6 +67,8 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         }
         public async Task<Account> DeleteAsync(Account entity)
         {
+            // await _context.Database
+            // .ExecuteSqlRawAsync("DELETE FROM `zestybite`.`feedback`WHERE `Username` = '{entity.username}';");
             _context.Accounts.Remove(entity);
             await _context.SaveChangesAsync();
             return entity;

@@ -16,18 +16,14 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             _repository = accountRepository;
             _roleRepository = roleRepository;
         }
-        public async Task<Account> CreateStaffAsync(Account account, int roleId)
+        public async Task<Account> CreateStaffAsync(Account account)
         {
             if (account == null)
-            {
-                throw new ArgumentNullException(nameof(account), "Account cannot be null");
-            }
+                throw new ArgumentNullException(nameof(account), "Account was null");
 
             var existed = await _repository.GetAccountByUsnAsync(account.Username);
             if (existed != null)
-            {
                 throw new InvalidOperationException($"Username '{account.Username}' is already in use.");
-            }
 
             var created = await _repository.CreateAsync(account);
             return created;
@@ -222,7 +218,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
         }
 
 
-
         /* Other method */
         private string HashPassword(string password)
         {
@@ -244,6 +239,72 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             };
 
             return dto;
+        }
+        //  manager staff
+        public async Task<Account> MapFromDTO(StaffDTO dto)
+        {
+            var role = await _roleRepository.GetRoleIdbyDescription(dto.RoleDescription);
+            var acc = new Account()
+            {
+                Username = dto.Username,
+                Password = dto.Password,
+                Name = dto.Fullname,
+                PhoneNumber = dto.PhoneNumber,
+                Address = dto.Address,
+                Gender = dto.Gender,
+                Email = dto.Email,
+                ProfileImage = dto.ProfileImg,
+                VerificationCode = "CreatedByManager",
+                AccountStatus = 1,
+            };
+            acc.RoleId = role.RoleId;
+            return acc;
+        }
+        public async Task<StaffDTO> MapFromEntity(Account acc)
+        {
+            var dto = new StaffDTO()
+            {
+                Username = acc.Username,
+                Password = acc.Password,
+                Fullname = acc.Name,
+                PhoneNumber = acc.PhoneNumber,
+                Address = acc.Address,
+                Gender = acc.Gender,
+                Email = acc.Email,
+                ProfileImg = acc.ProfileImage,
+                RoleDescription = acc.Role.RoleDescription
+            };
+            return dto;
+        }
+        public async Task<bool> DeleteAcc(string usn)
+        {
+            try
+            {
+                var del = await _repository.GetAccountByUsnAsync(usn);
+                if (del == null) throw new InvalidOperationException("Account 404");
+                await _repository.DeleteAsync(del);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public async Task<bool> ChangeAccStatus(string usn)
+        {
+            try
+            {
+                var up = await _repository.GetAccountByUsnAsync(usn);
+                if (up == null) throw new InvalidOperationException("Account 404");
+                if (up.AccountStatus == 1) up.AccountStatus = 0;
+                else if (up.AccountStatus == 0) up.AccountStatus = 1;
+                await _repository.UpdateAsync(up);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ZestyBiteWebAppSolution.Models.Entities;
 
 namespace ZestyBiteWebAppSolution.Models.DTOs
 {
@@ -14,7 +15,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         public string Password { get; set; } = null!;
 
         [Required(ErrorMessage = "Name is required.")]
-        public string Name { get; set; } = null!;
+        public string Fullname { get; set; } = null!;
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]
@@ -30,7 +31,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         [Required(ErrorMessage = "Gender is required.")]
         public int Gender { get; set; }
 
-        public string ProfileImg { get; set; } = "default null";
+        public string? ProfileImg { get; set; } = "default null";
 
         public string RoleDescription { get; set; } = null!;
     }

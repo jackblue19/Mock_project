@@ -8,7 +8,7 @@ namespace ZestyBiteWebAppSolution.Data;
 public partial class ZestyBiteContext : DbContext
 {
     public ZestyBiteContext()
-    {   
+    {
     }
 
     public ZestyBiteContext(DbContextOptions<ZestyBiteContext> options)
@@ -69,9 +69,9 @@ public partial class ZestyBiteContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("Verification_Code");
 
-            entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
+            entity.HasOne(d => d.Role).WithMany()
                 .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("account_ibfk_1");
         });
 
@@ -145,12 +145,13 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasOne(d => d.ParentFbFlagNavigation).WithMany(p => p.InverseParentFbFlagNavigation)
                 .HasForeignKey(d => d.ParentFbFlag)
+                .OnDelete(DeleteBehavior.Cascade) 
                 .HasConstraintName("feedback_ibfk_3");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Feedbacks)
                 .HasPrincipalKey(p => p.Username)
                 .HasForeignKey(d => d.Username)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("feedback_ibfk_1");
         });
 

@@ -8,9 +8,7 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    // [AllowAnonymous]
-    [ApiController]
-    [Route("api/[controller]")]
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -31,45 +29,34 @@ namespace ZestyBiteWebAppSolution.Controllers
             _mailService = verifyService;
         }
 
-        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
-        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
-        [AllowAnonymous]
         public IActionResult VerifyEmail()
         {
             return View();
         }
-        [AllowAnonymous]
         public IActionResult ChangePassword()
         {
             return View();
         }
-        [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
             return View();
         }
-        [AllowAnonymous]
         public IActionResult NewPassword()
         {
             return View();
         }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> main
         [AllowAnonymous]
         [HttpPost]
-        [Route("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
             if (!ModelState.IsValid)
@@ -89,8 +76,8 @@ namespace ZestyBiteWebAppSolution.Controllers
                         Secure = false,
                         SameSite = SameSiteMode.Strict
                     });
-                    return Ok("Login done");
-                    // return RedirectToAction("Index", "Home");
+                    // return Ok("Login done");
+                    return RedirectToAction("Index", "Home");
                 }
                 catch
                 {
@@ -115,7 +102,6 @@ namespace ZestyBiteWebAppSolution.Controllers
         // }
 
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto)
         {
@@ -168,9 +154,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost]
-        [Route("signup")]
         public async Task<IActionResult> Register(RegisterDTO accountDto)
         {
             if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
@@ -213,10 +197,8 @@ namespace ZestyBiteWebAppSolution.Controllers
                             ViewBag.Error = "Created?";
                     }
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
-                // await _mailService.SendVerificationCodeAsync(accountDto.Email, token);
-                _mailService.SendVerificationCodeAsync(accountDto.Email, token);
-                // return RedirectToAction("VerifyEmail", "Account");
-                return Ok(token);
+                await _mailService.SendVerificationCodeAsync(accountDto.Email, token);
+                return RedirectToAction("VerifyEmail", "Account");
             }
             catch (InvalidOperationException ex)
             {
@@ -255,7 +237,6 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         [HttpPost]
-        [Route("updateprofile")]
         public async Task<IActionResult> UpdateProfile(ProfileDTO dto)
         {
             try
@@ -351,74 +332,11 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
-
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("logout")]
         public IActionResult Logout()
         {
-            try
-            {
-                HttpContext.Session.Remove("username");
-                Response.Cookies.Delete("username");
-                // return RedirectToAction("Index", "Home");
-                return Ok("log out sucees");
-            }
-            catch
-            {
-                return BadRequest("cant log out!!!");
-            }
+            HttpContext.Session.Remove("username");
+            Response.Cookies.Delete("username");
+            return RedirectToAction("Index", "Home");
         }
-
-        [Authorize(Roles = "Manager")]
-        [HttpPost]
-        [Route("addstaff")]
-        public async Task<IResult> CreateNewStaffAccount([FromBody] StaffDTO dto)
-        {
-            try
-            {
-                var staffAccount = await _service.MapFromDTO(dto);
-                await _service.CreateStaffAsync(staffAccount);
-                return TypedResults.Ok(staffAccount);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
-        }
-
-        [Authorize(Roles = "Manager")]
-        [HttpDelete]
-        [Route("deleteacc")]
-        public async Task<IResult> DeleteAnAccount([FromBody] StatusDTO dto)
-        {
-            try
-            {
-                if (await _service.DeleteAcc(dto.Username))
-                    return TypedResults.Ok("delete done");
-                return TypedResults.Ok("fail to delete");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
-        }
-
-        [Authorize(Roles = "Manager")]
-        [HttpPut]
-        [Route("status")]
-        public async Task<IResult> ManageStatus([FromBody] StatusDTO dto)
-        {
-            try
-            {
-                if (await _service.ChangeAccStatus(dto.Username)) return TypedResults.Ok("Changed the status");
-                else return TypedResults.Ok("Fail to change status");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
-        }
-
     }
 }

@@ -1,0 +1,137 @@
+###
+POST http://localhost:5024/api/feedback
+Content-Type: application/json
+
+{
+    "content": "awd awd awd wad ",
+    "dateTime": "2024-11-21T15:14:00",
+    "accountId": 1,
+    "username": "john_doe",
+    "profileImage": null,
+    "itemId": 1,
+    "itemName": "Pizza Margherita"
+}
+
+###
+GET http://localhost:5024/api/feedback/GetFeedbacks
+###
+GET http://localhost:5024/api/feedback/GetItems
+###
+GET http://localhost:5024/api/feedback/pagination?pageNumber=1&pageSize=10
+###
+GET http://localhost:5024/api/feedback/item/1
+###
+DELETE http://localhost:5024/api/feedback/30
+###
+PUT http://localhost:5024/api/feedback
+Content-Type: application/json
+
+  {
+    "id": 10,
+    "content": "Con lậy bố mdf ",
+    "dateTime": "2024-11-26T09:42:38",
+    "username": "customer1",
+    "profileImage": null,
+    "itemId": 1,
+    "itemName": "Pizza Margherita",
+    "parentFb": null,
+    "parentFeedback": null,
+    "isReply": false
+  }
+
+########################################################################
+POST http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
+{
+    "content": "Agreeeeeeeeeeeeeeeeeeeeeeeeeeeeee!",
+    "dateTime": "2024-09-18T14:30:00",
+    "accountId": 3, 
+    "username": "admin_user",  
+    "profileImage": null,  
+    "itemId": 7,  
+    "itemName": "awd awd",  
+    "parentFb": 11  
+}
+
+###
+PUT http://localhost:5024/api/feedback/reply
+Content-Type: application/json
+
+{
+    "content": "The fruit salad was indeed a great healthy option!",
+    "dateTime": "2024-09-18T14:45:00",
+    "accountId": 3,  
+    "username": "admin_user",  
+    "profileImage": null,  
+    "itemId": 7,  
+    "itemName": "Fruit Salad",  
+    "parentFb": 10  
+}
+
+###
+DELETE http://localhost:5024/api/feedback/reply/23
+
+###
+### Get all supplies
+GET http://localhost:5024/api/Supply
+Content-Type: application/json
+
+### Get all supplies
+GET http://localhost:5024/api/Supply/1
+Content-Type: application/json
+
+###
+GET http://localhost:5024/api/Supply/item/1
+Content-Type: application/json
+
+###
+GET http://localhost:5024/api/Supply/table/1
+Content-Type: application/json
+
+### Get all supplies
+
+POST http://localhost:5024/api/Supply
+Content-Type: application/json
+
+{
+  "productName": "Test Product",
+  "supplyQuantity": 100,
+  "supplyPrice": 15000.50,
+  "supplyStatus": 1,
+  "dateImport": "2024-11-01T00:00:00",
+  "dateExpiration": "2025-11-01T00:00:00",
+  "tableId": 1,
+  "itemId": 1,
+  "vendorName": "Vendor Test",
+  "vendorPhone": "0123456789",
+  "vendorAddress": "Test Vendor Address",
+  "supplyCategory": "Food"
+}
+
+### PUT
+PUT http://localhost:5024/api/Supply/update/1
+Content-Type: application/json
+
+{
+  "productName": "khanh",
+  "supplyQuantity": 100.00,
+  "supplyPrice": 50000,
+  "supplyStatus": 1,
+  "dateImport": "2024-11-01T00:00:00",
+  "dateExpiration": "2025-11-01T00:00:00",
+  "tableId": 1,
+  "itemId": 1,
+  "vendorName": "Vendor A",
+  "vendorPhone": "0123456789",
+  "vendorAddress": "Vendor Address A",
+  "supplyCategory": "Food"
+}
+
+###
+GET http://localhost:5024/Account/viewprofile
+Content-Type: application/json
+
+
+
+

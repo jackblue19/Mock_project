@@ -106,11 +106,18 @@ builder.Services.AddScoped<ITableService, TableService>();
 builder.Services.AddScoped<ITableDetailRepository, TableDetailRepository>();
 builder.Services.AddScoped<ITableDetailService, TableDetailService>();
 
+builder.Services.AddScoped<ISupplyRepository, SupplyRepository>();
+builder.Services.AddScoped<ISupplyService, SupplyService>();
+
+builder.Services.AddScoped<ISupplyItemService, SupplyItemService>();
+builder.Services.AddScoped<ISupplyItemRepository, SupplyItemRepository>();
+
 
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 
 
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
+
 
 
 builder.Services.AddEndpointsApiExplorer();

@@ -9,5 +9,6 @@ public partial class Role
 
     public string RoleDescription { get; set; } = null!;
 
-    public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
+    // [JsonIgnore]
+    // public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
 }

@@ -16,10 +16,6 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         {
             return await _context.Roles.ToListAsync();
         }
-        public async Task<Role?> GetByIdAsync(Role entity)
-        {
-            return await _context.Roles.FindAsync(entity.RoleId);
-        }
         public async Task<Role> CreateAsync(Role entity)
         {
             _context.Roles.Add(entity);
@@ -41,6 +37,10 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         public async Task<Role?> GetByIdAsync(int id)
         {
             return await _context.Roles.SingleOrDefaultAsync(r => r.RoleId == id);
+        }
+        public async Task<Role?> GetRoleIdbyDescription(string desc)
+        {
+            return await _context.Roles.SingleOrDefaultAsync(r => r.RoleDescription == desc);
         }
     }
 }

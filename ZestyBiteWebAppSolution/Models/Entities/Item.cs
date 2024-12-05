@@ -11,6 +11,8 @@ public partial class Item
 
     public string ItemCategory { get; set; } = null!;
 
+    public decimal? OriginalPrice { get; set; }
+
     public int ItemStatus { get; set; }
 
     public string ItemDescription { get; set; } = null!;

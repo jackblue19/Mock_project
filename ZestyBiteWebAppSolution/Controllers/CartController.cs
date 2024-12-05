@@ -1,86 +1,155 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Models;
+using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.ViewModel;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
 public class CartController : Controller
 {
-    private const string CartSessionKey = "Checkout";
+    private const string CartSessionKey = "Cart";
     private readonly ZestyBiteContext _context;
     private readonly IVnPayService _vnPayService;
     private readonly IBillRepository _billRepository;
-
-    public CartController(ZestyBiteContext context, IVnPayService vnPayService, IBillRepository billRepository)
-    {
+    private readonly IAccountRepository _accountRepository;
+    private readonly ITableRepository _tableRepository;
+    private readonly ITableDetailRepository _tableDetailRepository;
+    private readonly ITableDetailService _tableDetailService;
+    public CartController(ZestyBiteContext context,
+                            IVnPayService vnPayService,
+                            IBillRepository billRepository,
+                            IAccountRepository acc,
+                            ITableRepository tb,
+                            ITableDetailRepository tbd,
+                            ITableDetailService tableDetailService) {
         _context = context;
         _vnPayService = vnPayService;
         _billRepository = billRepository;
+        _accountRepository = acc;
+        _tableRepository = tb;
+        _tableDetailRepository = tbd;
+        _tableDetailService = tableDetailService;
     }
 
-    // Hiển thị giỏ hàng
-    public IActionResult Checkout()
-    {
-        var cart = GetCheckout();
-        return View(cart);
-    }
-
-    [HttpPost]
-    [Route("api/Cart/Payment")]
-    public async Task<IActionResult> Payment(VnPaymentRequestModel paymentRequest)
-    {
-        var username = HttpContext.Request.Cookies["username"];
-
-        if (string.IsNullOrEmpty(username))
-        {
-            return Unauthorized(new { message = "Người dùng chưa đăng nhập." });
+    // Display Cart
+    public async Task<IActionResult> Cart() {
+        var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
+        if (string.IsNullOrEmpty(usn)) {
+            return RedirectToAction("Login", "Account");
         }
 
-        var cart = await _billRepository.GetBillAsync(int.Parse(username));
-        if (cart == null)
-        {
-            return NotFound(new { message = "Không tìm thấy giỏ hàng." });
+        var acc = await _accountRepository.GetAccountByUsnAsync(usn);
+        if (acc == null) {
+            return View("Error", new { message = "Account not found." });
         }
 
-        if (ModelState.IsValid)
-        {
-            if (paymentRequest.PaymentMethod == "Payment")
-            {
-                var acc = await _billRepository.GetNameById(int.Parse(username));
-                var vnPayModel = new VnPaymentRequestModel
-                {
-                    Amount = cart.TotalCost,
-                    CreatedDate = DateTime.Now,
-                    Description = $"{acc.Name} {acc.PhoneNumber}",
-                };
-
-                var paymentUrl = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel);
-                return Ok(new { message = "Thanh toán thành công.", paymentUrl });
+        try {
+            var cart = GetCheckout();
+            if (cart == null || !cart.Items.Any()) {
+                ViewBag.ErrorMessage = "Your cart is empty!";
+                TempData["totalItems"] = 0;
+                return View(cart);
             }
-        }
 
-        return BadRequest(new { message = "Dữ liệu không hợp lệ." });
+            ViewBag.TotalItems = cart.TotalItems;
+            ViewBag.TotalAmount = cart.TotalPrice;
+            TempData["totalItems"] = cart.TotalItems;
+            Console.WriteLine("beforeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            // Prepare the itemQuantityMap for payment service
+            var itemQuantityMap = cart.Items.ToDictionary(i => i.ItemId, i => i.Quantity);
+            Console.WriteLine("midddddddddddddddddddddddddd");
+            // Call ToPayment service method
+            var result = await _tableDetailService.ToPayment(itemQuantityMap, acc, CartSessionKey, HttpContext);
+            Console.WriteLine("afterrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+            if (result is OkResult) {
+                Console.WriteLine("beginnnnnnnnnnnnnnnnnnnnn");
+                // You can return a success view or redirect after the payment process
+                return RedirectToAction("PaymentSuccess");
+            } else {
+                Console.WriteLine("enddddddddddddddddddd");
+                // Handle error case
+                ViewBag.ErrorMessage = "An error occurred during payment processing.";
+                return View("Error");
+            }
+        } catch (Exception ex) {
+            return View("Error", new { message = "An error occurred while loading the cart.", details = ex.Message });
+        }
     }
 
-
-    private CheckoutDTO GetCheckout()
-    {
+    private CheckoutDTO GetCheckout() {
+        // Retrieve cart from session
         var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>(CartSessionKey);
-        if (cart == null)
-        {
-            cart = new CheckoutDTO();
-            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart); // Initialize empty cart
+
+        if (cart == null) {
+            // Check for a cookie-based cart as a fallback
+            if (Request.Cookies.TryGetValue(CartSessionKey, out var cookieCart)) {
+                cart = JsonSerializer.Deserialize<CheckoutDTO>(cookieCart) ?? new CheckoutDTO();
+            } else {
+                cart = new CheckoutDTO {
+                    Items = new List<CheckoutItemDTO>() // Initialize empty list
+                };
+            }
+
+            // Save cart back to session
+            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
         }
+
         return cart;
     }
 
-    public IActionResult AddToCart(int itemId)
+    [HttpPost]
+    public async Task<IActionResult> VNPayment(VnPaymentRequestModel paymentRequest)
     {
+        // var username = HttpContext.Request.Cookies["username"];
+        var username = User.Identity.Name;
+        if (string.IsNullOrEmpty(username))
+        {
+            return Unauthorized(new { message = "User is not logged in." });
+        }
+
+        // Lấy tài khoản từ username
+        var acc = await _billRepository.GetAccountByUsername(username);
+        if (acc == null)
+        {
+            return NotFound(new { message = "Account not found." });
+        }
+
+        // Truy xuất thông tin giỏ hàng dựa trên AccountId
+        var cart = await _billRepository.GetBillAsync(acc.AccountId);
+        if (cart == null)
+        {
+            return NotFound(new { message = "Cart not found." });
+        }
+
+        // Kiểm tra phương thức thanh toán
+        if (paymentRequest.PaymentMethod != "Credit")
+        {
+            return BadRequest(new { message = "Invalid payment method." });
+        }
+
+        // Tạo mô hình yêu cầu thanh toán VNPAY
+        var vnPayModel = new VnPaymentRequestModel
+        {
+            Amount = cart.TotalCost,
+            CreatedDate = DateTime.Now,
+            Description = $"{acc?.Username} {acc?.Username}", // Ví dụ thay bằng thông tin từ tài khoản
+            PaymentMethod = paymentRequest.PaymentMethod
+        };
+
+        // Tạo URL thanh toán VNPAY
+        var paymentUrl = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel);
+
+        // Chuyển hướng người dùng đến trang thanh toán VNPAY
+        return Redirect(paymentUrl);
+    }
+
+
+
+    public IActionResult AddToCart(int itemId) {
         var cart = GetCheckout();
 
-        // Fetch the item from the database
         var item = _context.Items
                            .Where(i => i.ItemId == itemId)
                            .Select(i => new CheckoutItemDTO
@@ -95,42 +164,28 @@ public class CartController : Controller
 
         if (item == null)
         {
-            return NotFound(); // Handle item not found
+            return NotFound(new { message = "Item not found." });
         }
 
-        // Check if item already exists in the cart
+        // Add or update item quantity in cart
         var existingItem = cart.Items.FirstOrDefault(i => i.ItemId == item.ItemId);
         if (existingItem != null)
         {
             existingItem.Quantity++;
-        }
-        else
-        {
+        } else {
             cart.Items.Add(item);
         }
 
-        // Save the updated cart back into the session
+        // Save cart to session
         HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
 
-        // Update the cart badge (total items)
-        var totalItems = cart.Items.Sum(i => i.Quantity);
+        // Update the total items in TempData
+        TempData["totalItems"] = cart.Items.Sum(i => i.Quantity);
 
-        // Return to the "Home" page with the updated total items in the query string
-        return RedirectToAction("Index", "Home", new { cartTotalItems = totalItems });
+        // Redirect to Home page
+        return RedirectToAction("Index", "Home");
     }
 
-    // Hiển thị giỏ hàng
-    public IActionResult ShoppingCart()
-    {
-        var cart = GetCheckout();
-
-        ViewBag.TotalItems = cart.Items.Sum(i => i.Quantity);
-        ViewBag.TotalAmount = cart.Items.Sum(i => i.Quantity * i.Price);
-
-        return View(cart);
-    }
-
-    // Xóa sản phẩm khỏi giỏ hàng
     public IActionResult RemoveFromCart(int itemId)
     {
         var cart = GetCheckout();
@@ -138,49 +193,53 @@ public class CartController : Controller
         if (item != null)
         {
             cart.Items.Remove(item);
-            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart); // Save updated cart to session
+            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
         }
-        return RedirectToAction("Checkout");
+        return RedirectToAction("Cart");
     }
 
-    // Cập nhật giỏ hàng
+    [HttpPost]
     public IActionResult UpdateCart(int itemId, int quantity)
     {
         var cart = GetCheckout();
         var item = cart.Items.FirstOrDefault(i => i.ItemId == itemId);
-        if (item != null)
+        if (item != null && quantity > 0)
         {
             item.Quantity = quantity;
-            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart); // Save updated cart to session
+            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
         }
-        return RedirectToAction("Checkout");
+        else if (quantity <= 0)
+        {
+            cart.Items.Remove(item);
+            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
+        }
+        return RedirectToAction("Cart");
     }
 
-    // Thông báo thanh toán thất bại
     [Authorize]
     public IActionResult PaymentFail()
     {
-        return View();
+        return View("PaymentFail");
     }
 
-    // Thông báo thanh toán thành công
     [Authorize]
     public IActionResult PaymentSuccess()
     {
-        return View("Success");
+        return View("PaymentSuccess");
     }
 
-    // Callback từ VNPay sau thanh toán
     [Authorize]
     public IActionResult PaymentCallBack()
     {
         var response = _vnPayService.PaymentExecute(Request.Query);
-        if (response == null || response.VnPayResponseCode != "00")
-        {
-            TempData["Message"] = $"Fail Payment VnPay : {response.VnPayResponseCode}";
+
+        if (response == null || response.VnPayResponseCode != "00") {
+            TempData["Message"] = $"Payment failed: {response?.VnPayResponseCode}";
             return RedirectToAction("PaymentFail");
         }
-        TempData["Message"] = "Success ";
+
+        TempData["Message"] = "Payment successful.";
+
         return RedirectToAction("PaymentSuccess");
     }
 }

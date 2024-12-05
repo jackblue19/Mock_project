@@ -7,7 +7,7 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
     public interface IAccountService
     {
         Task<IEnumerable<RegisterDTO?>> GetALlAccountAsync();
-        Task<Account> CreateStaffAsync(Account account, int roleId);
+        Task<Account> CreateStaffAsync(Account account);
         Task<RegisterDTO?> GetAccountByIdAsync(int id);
         Task<RegisterDTO?> GetAccountByUsnAsync(string usn);
         Task<RegisterDTO> SignUpAsync(RegisterDTO dto);
@@ -22,5 +22,9 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
         Task<bool> IsVerified(string usn, string code);
         Task<bool> IsDeleteUnregistedAccount(string usn);
         Task<bool> VerifyOldPasswordAsync(string username, string oldPassword);
+        Task<Account> MapFromDTO(StaffDTO dto);
+        Task<StaffDTO> MapFromEntity(Account acc);
+        Task<bool> DeleteAcc(string usn);
+        Task<bool> ChangeAccStatus(string usn);
     }
 }

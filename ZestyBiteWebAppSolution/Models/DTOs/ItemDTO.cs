@@ -10,5 +10,6 @@
         public decimal SuggestedPrice { get; set; }
         public string ItemImage { get; set; } = string.Empty;
         public int IsServed { get; set; }
+        public ICollection<TableDetailDTO> TableDetails { get; set; } = new List<TableDetailDTO>();
     }
 }

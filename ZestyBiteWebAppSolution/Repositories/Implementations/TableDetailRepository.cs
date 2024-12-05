@@ -16,7 +16,17 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
 
         public async Task<IEnumerable<TableDetail?>> GetAllAsync()
         {
-            return await _context.TableDetails.ToListAsync();
+            return await _context.TableDetails
+                .Include(td => td.Item)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TableDetail>> GetByTableIdAsync(int tableId)
+        {
+            return await _context.TableDetails
+                .Include(td => td.Item)
+                .Where(td => td.TableId == tableId)
+                .ToListAsync();
         }
 
         public async Task<TableDetail?> GetByIdAsync(int id)

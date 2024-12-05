@@ -18,7 +18,7 @@ builder.Services.AddSession(options => {
     options.Cookie.Name = ".ZestyBite.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
+    options.Cookie.IsEssential = false;
 });
 
 // Thêm dịch vụ Authorization và tạo các policies phân quyền

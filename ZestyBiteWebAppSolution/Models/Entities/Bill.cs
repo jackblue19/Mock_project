@@ -27,7 +27,5 @@ public partial class Bill
 
     public virtual ICollection<Profit> Profits { get; set; } = new List<Profit>();
 
-    public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
-
     public virtual Table Table { get; set; } = null!;
 }

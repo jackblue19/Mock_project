@@ -3,7 +3,8 @@ using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Repositories {
+namespace ZestyBiteWebAppSolution.Repositories
+{
     public class ItemRepository : IItemRepository, IRepository<Item> {
         private readonly ZestyBiteContext _context;
 

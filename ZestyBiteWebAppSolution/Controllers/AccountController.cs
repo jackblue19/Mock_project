@@ -46,7 +46,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
             return View();
         }
 
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO dto) {
             if (!ModelState.IsValid) {

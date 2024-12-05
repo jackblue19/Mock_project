@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ZestyBiteWebAppSolution.Models;
 using ZestyBiteWebAppSolution.Models.DTOs;
-using ZestyBiteWebAppSolution.Models.ViewMoedel;
+using ZestyBiteWebAppSolution.Models.ViewModel;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteSolution.Controllers {

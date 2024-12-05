@@ -118,7 +118,7 @@ GET http://localhost:5024/api/table/reality
 ###
 GET http://localhost:5024/api/table/virtual
 ###
-
+GET http://localhost:5024/api/table/1/items
 ###
 
 ###

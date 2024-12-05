@@ -14,7 +14,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             _context = context ?? throw new ArgumentNullException(nameof(context), "ZestyBiteContext cannot be null");
         }
 
-        //DEfault CRUD by IRepo
+        // Default CRUD by IRepo
         public async Task<IEnumerable<Table?>> GetAllAsync()
         {
             return await _context.Tables.ToListAsync();
@@ -61,7 +61,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return table; // Return the deleted entity
         }
 
-        //Addition CRUD
+        // Additional CRUD
         public async Task<IEnumerable<Table?>> GetTablesByTypeAsync(int tableType)
         {
             return await _context.Tables.Where(t => t.TableType == tableType).ToListAsync();

@@ -19,6 +19,12 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         //Default
+        [HttpGet("{tableId}/items")] 
+        public async Task<ActionResult<IEnumerable<TableDetailDTO>>> GetTableItemsByTableId(int tableId) 
+        { 
+            var tableItems = await _tableService.GetTableItemsByTableIdAsync(tableId); 
+            return Ok(tableItems); 
+        }
 
         // GET: api/table
         [HttpGet]

@@ -19,11 +19,29 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<TableDetailDTO?>> GetAllTableDetailsAsync()
+        {
+            var tableDetails = await _tableDetailRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TableDetailDTO?>>(tableDetails);
+        }
+
+        public async Task<IEnumerable<TableDetailDTO>> GetTableItemsByTableIdAsync(int tableId)
+        {
+            var tableDetails = await _tableDetailRepository.GetByTableIdAsync(tableId);
+            return _mapper.Map<IEnumerable<TableDetailDTO>>(tableDetails);
+        }
+
+        public async Task<TableDetailDTO?> GetTableDetailByIdAsync(int tableDetailId)
+        {
+            var tableDetail = await _tableDetailRepository.GetByIdAsync(tableDetailId);
+            return _mapper.Map<TableDetailDTO?>(tableDetail);
+        }
+
         public async Task<TableDetailDTO?> CreateTableDetailAsync(TableDetailDTO tableDetailDto)
         {
-            var tableDetail = _mapper.Map<TableDetail>(tableDetailDto); // Map DTO to entity
-            var createdTableDetail = await _tableDetailRepository.CreateAsync(tableDetail); // Create entity in repository
-            return _mapper.Map<TableDetailDTO>(createdTableDetail); // Map created entity back to DTO
+            var tableDetail = _mapper.Map<TableDetail>(tableDetailDto);
+            var createdTableDetail = await _tableDetailRepository.CreateAsync(tableDetail);
+            return _mapper.Map<TableDetailDTO>(createdTableDetail);
         }
 
         public async Task<bool> DeleteTableDetailAsync(int tableDetailId)
@@ -32,23 +50,10 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             if (tableDetail != null)
             {
                 await _tableDetailRepository.DeleteAsync(tableDetail);
-                return true; // Return true if the table detail was found and deleted
+                return true;
             }
-            return false; // Return false if the table detail was not found
+            return false;
         }
-
-        public async Task<IEnumerable<TableDetailDTO?>> GetAllTableDetailsAsync()
-        {
-            var tableDetails = await _tableDetailRepository.GetAllAsync(); // Get all table details from repository
-            return _mapper.Map<IEnumerable<TableDetailDTO?>>(tableDetails); // Map entities to DTOs
-        }
-
-        public async Task<TableDetailDTO?> GetTableDetailByIdAsync(int tableDetailId)
-        {
-            var tableDetail = await _tableDetailRepository.GetByIdAsync(tableDetailId); // Get table detail by ID
-            return _mapper.Map<TableDetailDTO?>(tableDetail); // Map entity to DTO
-        }
-
         public async Task<TableDetailDTO?> UpdateTableDetailAsync(TableDetailDTO tableDetailDto)
         {
             var existingTableDetail = await _tableDetailRepository.GetByIdAsync(tableDetailDto.TableId);
@@ -59,8 +64,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
 
             // Map the updated values from DTO to the existing entity
             _mapper.Map(tableDetailDto, existingTableDetail);
-            var updatedTableDetail = await _tableDetailRepository.UpdateAsync(existingTableDetail); // Update entity in repository
-            return _mapper.Map<TableDetailDTO?>(updatedTableDetail); // Map updated entity back to DTO
+            var updatedTableDetail = await _tableDetailRepository.UpdateAsync(existingTableDetail);
+            return _mapper.Map<TableDetailDTO?>(updatedTableDetail);
         }
     }
 }

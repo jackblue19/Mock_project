@@ -409,20 +409,24 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         [Authorize(Roles = "Manager")]
-        [HttpPut]
-        [Route("status")]
-        public async Task<IResult> ManageStatus([FromBody] StatusDTO dto)
+        [HttpGet]
+        [Route("api/account/{username}")]
+        public async Task<IResult> ViewProfileDetail(string username)
         {
             try
             {
-                if (await _service.ChangeAccStatus(dto.Username)) return TypedResults.Ok("Changed the status");
-                else return TypedResults.Ok("Fail to change status");
+                var dto = await _service.GetAccountByUsnAsync(username);
+                if (dto == null)
+                return TypedResults.NotFound("Account not found");
+                return TypedResults.Ok(dto);
             }
-            catch (InvalidOperationException ex)
+            catch
             {
-                return TypedResults.BadRequest(new { Message = ex.Message });
+                return TypedResults.BadRequest("Account not found");
             }
         }
+
+
 
     }
 }

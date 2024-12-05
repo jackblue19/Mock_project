@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Models;
+using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.ViewModel;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
@@ -12,51 +13,90 @@ public class CartController : Controller
     private readonly ZestyBiteContext _context;
     private readonly IVnPayService _vnPayService;
     private readonly IBillRepository _billRepository;
-
-    public CartController(ZestyBiteContext context, IVnPayService vnPayService, IBillRepository billRepository)
-    {
+    private readonly IAccountRepository _accountRepository;
+    private readonly ITableRepository _tableRepository;
+    private readonly ITableDetailRepository _tableDetailRepository;
+    private readonly ITableDetailService _tableDetailService;
+    public CartController(ZestyBiteContext context,
+                            IVnPayService vnPayService,
+                            IBillRepository billRepository,
+                            IAccountRepository acc,
+                            ITableRepository tb,
+                            ITableDetailRepository tbd,
+                            ITableDetailService tableDetailService) {
         _context = context;
         _vnPayService = vnPayService;
         _billRepository = billRepository;
+        _accountRepository = acc;
+        _tableRepository = tb;
+        _tableDetailRepository = tbd;
+        _tableDetailService = tableDetailService;
     }
 
     // Display Cart
-    public IActionResult Cart()
-    {
-        try
-        {
-            var cart = GetCheckout(); // Retrieve cart from session
-            if (cart == null || !cart.Items.Any())
-            {
+    public async Task<IActionResult> Cart() {
+        var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
+        if (string.IsNullOrEmpty(usn)) {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var acc = await _accountRepository.GetAccountByUsnAsync(usn);
+        if (acc == null) {
+            return View("Error", new { message = "Account not found." });
+        }
+
+        try {
+            var cart = GetCheckout();
+            if (cart == null || !cart.Items.Any()) {
                 ViewBag.ErrorMessage = "Your cart is empty!";
-                return View(cart); // Display empty cart message
+                TempData["totalItems"] = 0;
+                return View(cart);
             }
 
-            ViewBag.TotalItems = cart.Items.Sum(i => i.Quantity);
-            ViewBag.TotalAmount = cart.Items.Sum(i => i.Quantity * i.Price);
-            return View(cart); // Automatically maps to Views/Cart/Cart.cshtml
-        }
-        catch (Exception)
-        {
-            // Log the error (logging not shown here)
-            return View("Error", new { message = "Failed to load the cart." });
+            ViewBag.TotalItems = cart.TotalItems;
+            ViewBag.TotalAmount = cart.TotalPrice;
+            TempData["totalItems"] = cart.TotalItems;
+            Console.WriteLine("beforeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            // Prepare the itemQuantityMap for payment service
+            var itemQuantityMap = cart.Items.ToDictionary(i => i.ItemId, i => i.Quantity);
+            Console.WriteLine("midddddddddddddddddddddddddd");
+            // Call ToPayment service method
+            var result = await _tableDetailService.ToPayment(itemQuantityMap, acc, CartSessionKey, HttpContext);
+            Console.WriteLine("afterrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+            if (result is OkResult) {
+                Console.WriteLine("beginnnnnnnnnnnnnnnnnnnnn");
+                // You can return a success view or redirect after the payment process
+                return RedirectToAction("PaymentSuccess");
+            } else {
+                Console.WriteLine("enddddddddddddddddddd");
+                // Handle error case
+                ViewBag.ErrorMessage = "An error occurred during payment processing.";
+                return View("Error");
+            }
+        } catch (Exception ex) {
+            return View("Error", new { message = "An error occurred while loading the cart.", details = ex.Message });
         }
     }
-    public IActionResult Checkout()
-    {
-        var cart = GetCheckout(); // Assume GetCheckout() retrieves cart from session
-        if (cart == null || !cart.Items.Any())
-        {
-            return RedirectToAction("Cart"); // Redirect to cart if it's empty
+
+    private CheckoutDTO GetCheckout() {
+        // Retrieve cart from session
+        var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>(CartSessionKey);
+
+        if (cart == null) {
+            // Check for a cookie-based cart as a fallback
+            if (Request.Cookies.TryGetValue(CartSessionKey, out var cookieCart)) {
+                cart = JsonSerializer.Deserialize<CheckoutDTO>(cookieCart) ?? new CheckoutDTO();
+            } else {
+                cart = new CheckoutDTO {
+                    Items = new List<CheckoutItemDTO>() // Initialize empty list
+                };
+            }
+
+            // Save cart back to session
+            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
         }
 
-        var checkoutDTO = new CheckoutDTO
-        {
-            Items = cart.Items,
-            TotalAmount = cart.Items.Sum(i => i.Quantity * i.Price)
-        };
-
-        return View("Checkout", checkoutDTO);
+        return cart;
     }
 
     [HttpPost]
@@ -105,25 +145,11 @@ public class CartController : Controller
         return Redirect(paymentUrl);
     }
 
-    private CheckoutDTO GetCheckout()
-    {
-        var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>(CartSessionKey);
-        if (cart == null)
-        {
-            cart = new CheckoutDTO
-            {
-                Items = new List<CheckoutItemDTO>() // Initialize empty list
-            };
-            HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
-        }
-        return cart;
-    }
 
-    public IActionResult AddToCart(int itemId)
-    {
 
+    public IActionResult AddToCart(int itemId) {
         var cart = GetCheckout();
-        // Fetch item from database
+
         var item = _context.Items
                            .Where(i => i.ItemId == itemId)
                            .Select(i => new CheckoutItemDTO
@@ -139,25 +165,25 @@ public class CartController : Controller
         if (item == null)
         {
             return NotFound(new { message = "Item not found." });
-
         }
+
         // Add or update item quantity in cart
         var existingItem = cart.Items.FirstOrDefault(i => i.ItemId == item.ItemId);
         if (existingItem != null)
         {
             existingItem.Quantity++;
-        }
-        else
-        {
-
+        } else {
             cart.Items.Add(item);
         }
 
-        // Save session
+        // Save cart to session
         HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
-        var totalItems = cart.Items.Sum(i => i.Quantity);
 
-        return RedirectToAction("Index", "Home", new { cartTotalItems = totalItems });
+        // Update the total items in TempData
+        TempData["totalItems"] = cart.Items.Sum(i => i.Quantity);
+
+        // Redirect to Home page
+        return RedirectToAction("Index", "Home");
     }
 
     public IActionResult RemoveFromCart(int itemId)
@@ -206,8 +232,8 @@ public class CartController : Controller
     public IActionResult PaymentCallBack()
     {
         var response = _vnPayService.PaymentExecute(Request.Query);
-        if (response == null || response.VnPayResponseCode != "00")
-        {
+
+        if (response == null || response.VnPayResponseCode != "00") {
             TempData["Message"] = $"Payment failed: {response?.VnPayResponseCode}";
             return RedirectToAction("PaymentFail");
         }

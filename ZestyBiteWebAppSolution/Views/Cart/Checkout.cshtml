@@ -1,4 +1,4 @@
-﻿@model ZestyBiteWebAppSolution.Models.CheckoutDTO
+﻿@model ZestyBiteWebAppSolution.Models.DTOs.CheckoutDTO
 
 @{
     ViewBag.Title = "Checkout";
@@ -32,12 +32,12 @@
                                         <h6 class="my-0">@item.Name</h6>
                                         <small class="text-muted">Quantity: @item.Quantity</small>
                                     </div>
-                                    <span class="text-muted">@item.Price.ToString("C")</span>
+                                    <span class="text-muted">@item.Price.ToString()</span>
                                 </li>
                             }
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>Total (USD)</span>
-                                <strong>@Model.TotalAmount.ToString("C")</strong>
+                                <strong>@Model.TotalAmount.ToString()</strong>
                             </li>
                         </ul>
                     </div>

@@ -22,5 +22,7 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
         Task<bool> IsVerified(string usn, string code);
         Task<bool> IsDeleteUnregistedAccount(string usn);
         Task<bool> VerifyOldPasswordAsync(string username, string oldPassword);
+        Task<Account?> GetUsnAsync(string username);
+
+        }
     }
-}

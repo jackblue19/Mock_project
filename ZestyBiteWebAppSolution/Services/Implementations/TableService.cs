@@ -76,5 +76,16 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var virtualTables = await _tableRepository.GetTablesByTypeAsync(1); // Get tables of type 1
             return _mapper.Map<IEnumerable<TableDTO?>>(virtualTables); // Map to DTOs
         }
+        public TableDTO MapToTableDTO(Table table) {
+            return new TableDTO {
+                TableId = table.TableId,
+                TableCapacity = table.TableCapacity,
+                TableMaintenance = table.TableMaintenance,
+                TableType = table.TableType,
+                TableStatus = table.TableStatus,
+                TableNote = table.TableNote,
+                AccountId = table.AccountId
+            };
+        }
     }
 }

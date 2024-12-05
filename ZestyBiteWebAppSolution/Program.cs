@@ -9,8 +9,13 @@ using ZestyBiteWebAppSolution.Repositories.Implementations;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers().AddNewtonsoftJson(options => {
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 
 // Configure Session
 builder.Services.AddDistributedMemoryCache(); // Store session in memory
@@ -18,7 +23,7 @@ builder.Services.AddSession(options => {
     options.Cookie.Name = ".ZestyBite.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
+    options.Cookie.IsEssential = false;
 });
 
 // Thêm dịch vụ Authorization và tạo các policies phân quyền
@@ -85,13 +90,10 @@ builder.Services.AddScoped<ITableService, TableService>();
 
 builder.Services.AddScoped<ITableDetailRepository, TableDetailRepository>();
 builder.Services.AddScoped<ITableDetailService, TableDetailService>();
-
-
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
-builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
-
+builder.Services.AddScoped<IBillService, BillService>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -158,4 +160,3 @@ app.MapRazorPages();
 
 // Run the app
 app.Run();
-

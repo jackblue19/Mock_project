@@ -2,19 +2,15 @@
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Mappings
-{
-    public class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
+namespace ZestyBiteWebAppSolution.Mappings {
+    public class MappingProfile : Profile {
+        public MappingProfile() {
             // Feedback to FeedbackDTO mapping
             CreateMap<Feedback, FeedbackDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
                 .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
-                .ForMember(dest => dest.Fullname, opt => opt.MapFrom(src => src.UsernameNavigation.Name))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
                 .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
                 .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag))
@@ -55,7 +51,6 @@ namespace ZestyBiteWebAppSolution.Mappings
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
                 .ForMember(dest => dest.TableCapacity, opt => opt.MapFrom(src => src.TableCapacity))
                 .ForMember(dest => dest.TableMaintenance, opt => opt.MapFrom(src => src.TableMaintenance))
-                .ForMember(dest => dest.ReservationId, opt => opt.MapFrom(src => src.ReservationId))
                 .ForMember(dest => dest.TableType, opt => opt.MapFrom(src => src.TableType))
                 .ForMember(dest => dest.TableStatus, opt => opt.MapFrom(src => src.TableStatus))
                 .ForMember(dest => dest.TableNote, opt => opt.MapFrom(src => src.TableNote))
@@ -66,7 +61,6 @@ namespace ZestyBiteWebAppSolution.Mappings
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
                 .ForMember(dest => dest.TableCapacity, opt => opt.MapFrom(src => src.TableCapacity))
                 .ForMember(dest => dest.TableMaintenance, opt => opt.MapFrom(src => src.TableMaintenance))
-                .ForMember(dest => dest.ReservationId, opt => opt.MapFrom(src => src.ReservationId))
                 .ForMember(dest => dest.TableType, opt => opt.MapFrom(src => src.TableType))
                 .ForMember(dest => dest.TableStatus, opt => opt.MapFrom(src => src.TableStatus))
                 .ForMember(dest => dest.TableNote, opt => opt.MapFrom(src => src.TableNote))

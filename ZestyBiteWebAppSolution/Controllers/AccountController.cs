@@ -49,6 +49,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO dto) {
+            // Kiểm tra tính hợp lệ của dữ liệu đầu vào
             if (!ModelState.IsValid) {
                 return View(dto);
             }
@@ -56,16 +57,17 @@ namespace ZestyBiteWebAppSolution.Controllers {
             if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
                 try {
                     HttpContext.Session.SetString("username", dto.Username);
+
                     Response.Cookies.Append("username", dto.Username, new CookieOptions {
-                        Expires = DateTimeOffset.Now.AddMinutes(30),
+                        Expires = DateTimeOffset.Now.AddMinutes(30), 
                         HttpOnly = true,
-                        Secure = false,
-                        SameSite = SameSiteMode.Strict
+                        Secure = Request.IsHttps,
+                        SameSite = SameSiteMode.Strict 
                     });
-                    // return Ok("Login done");
+
                     return RedirectToAction("Index", "Home");
-                } catch {
-                    throw new Exception("dunno error");
+                } catch (Exception ) {
+                    return StatusCode(500, new { message = "An unexpected error occurred during login." });
                 }
             }
 

@@ -1,7 +1,5 @@
-﻿namespace ZestyBiteWebAppSolution.Models.DTOs
-{
-    public class TableDTO
-    {
+﻿namespace ZestyBiteWebAppSolution.Models.DTOs {
+    public class TableDTO {
         public int TableId { get; set; }
         public int TableCapacity { get; set; }
         public int TableMaintenance { get; set; }

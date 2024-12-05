@@ -2,12 +2,9 @@
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 
-namespace ZestyBiteWebAppSolution.Mappings
-{
-    public class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
+namespace ZestyBiteWebAppSolution.Mappings {
+    public class MappingProfile : Profile {
+        public MappingProfile() {
             // Feedback to FeedbackDTO mapping
             CreateMap<Feedback, FeedbackDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FbId))
@@ -55,7 +52,6 @@ namespace ZestyBiteWebAppSolution.Mappings
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
                 .ForMember(dest => dest.TableCapacity, opt => opt.MapFrom(src => src.TableCapacity))
                 .ForMember(dest => dest.TableMaintenance, opt => opt.MapFrom(src => src.TableMaintenance))
-                .ForMember(dest => dest.ReservationId, opt => opt.MapFrom(src => src.ReservationId))
                 .ForMember(dest => dest.TableType, opt => opt.MapFrom(src => src.TableType))
                 .ForMember(dest => dest.TableStatus, opt => opt.MapFrom(src => src.TableStatus))
                 .ForMember(dest => dest.TableNote, opt => opt.MapFrom(src => src.TableNote))
@@ -66,7 +62,6 @@ namespace ZestyBiteWebAppSolution.Mappings
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
                 .ForMember(dest => dest.TableCapacity, opt => opt.MapFrom(src => src.TableCapacity))
                 .ForMember(dest => dest.TableMaintenance, opt => opt.MapFrom(src => src.TableMaintenance))
-                .ForMember(dest => dest.ReservationId, opt => opt.MapFrom(src => src.ReservationId))
                 .ForMember(dest => dest.TableType, opt => opt.MapFrom(src => src.TableType))
                 .ForMember(dest => dest.TableStatus, opt => opt.MapFrom(src => src.TableStatus))
                 .ForMember(dest => dest.TableNote, opt => opt.MapFrom(src => src.TableNote))

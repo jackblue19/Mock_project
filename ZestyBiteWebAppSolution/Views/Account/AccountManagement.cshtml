@@ -154,21 +154,84 @@
 
 <body>
     <div class="popup-overlay ftco-animate" id="popupOverlay" onclick="closePopup()"></div>
+
     <div class="popup" id="infoPopup">
-        <div class="popup-header ftco-animate">
+        <div class="popup-header">
             <h3 id="popupTitle">Account Details</h3>
             <span class="popup-close" onclick="closePopup()">×</span>
         </div>
-        <form id="accountForm ftco-animate">
-            <table class="Info ftco-animate">
-                <tbody id="infoTableBody"></tbody>
+        <form id="accountForm">
+            <!-- Ensure this is properly opened -->
+            <table class="Info">
+                <tbody id="infoTableBody">
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td>
+                            <select id="status">
+                                <option value="1">Unlock</option>
+                                <option value="0">Lock</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Username</strong></td>
+                        <td><input type="text" id="username" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Password</strong></td>
+                        <td><input type="password" id="password" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>User's Name</strong></td>
+                        <td><input type="text" id="name" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phone Number</strong></td>
+                        <td><input type="text" id="phone" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address</strong></td>
+                        <td><input type="text" id="address" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gender</strong></td>
+                        <td>
+                            <select id="gender">
+                                <option value="1">Male</option>
+                                <option value="0">Female</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email</strong></td>
+                        <td><input type="text" id="email" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Verification Code</strong></td>
+                        <td><input type="text" id="verificationCode" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Role ID</strong></td>
+                        <td>
+                            <select id="roleId">
+                                <option value="1">Manager</option>
+                                <option value="2">Order Taker</option>
+                                <option value="3">Procurement Manager</option>
+                                <option value="4">Server Staff</option>
+                                <option value="5">Customer Service Staff</option>
+                                <option value="6">Food Runner</option>
+                                <option value="7">Customer</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
             <div style="margin-top: 15px; display: flex; justify-content: space-between;">
                 <button type="button" onclick="submitForm()" id="updateButton">Update</button>
                 <button type="button" onclick="manageStatus()" id="blockButton">Block</button>
                 <button type="button" onclick="deleteAccount()" id="deleteButton">Delete</button>
             </div>
-        </form>
+        </form> <!-- Ensure this is properly closed -->
     </div>
 
     <div class="AccountBody ftco-animate">
@@ -210,80 +273,75 @@
 
     <script>
         let accounts = [];
-        // const sampleAccounts = [
-        //     {
-        //         id: 1,
-        //         status: 1, Active
-        //         username: 'john_doe',
-        //         password: 'password123',
-        //         name: 'John Doe',
-        //         phoneNumber: '123-456-7890',
-        //         address: '123 Main St, Anytown, USA',
-        //         gender: 1,
-        //         email: 'john.doe@example.com',
-        //         verificationCode: 'ABC123',
-        //         roleId: 1, Manager
-        //         createdAt: '2023-01-01T12:00:00Z'
-        //     },
-        //     {
-        //         id: 2,
-        //         status: 1, Active
-        //         username: 'jane_smith',
-        //         password: 'password456',
-        //         name: 'Jane Smith',
-        //         phoneNumber: '987-654-3210',
-        //         address: '456 Elm St, Othertown, USA',
-        //         gender: 0,
-        //         email: 'jane.smith@example.com',
-        //         verificationCode: 'XYZ789',
-        //         roleId: 2, Order Taker
-        //         createdAt: '2023-02-01T12:00:00Z'
-        //     },
-        //     {
-        //         id: 3,
-        //         status: 0, Blocked
-        //         username: 'bob_brown',
-        //         password: 'password789',
-        //         name: 'Bob Brown',
-        //         phoneNumber: '555-555-5555',
-        //         address: '789 Oak St, Sometown, USA',
-        //         gender: 1,
-        //         email: 'bob.brown@example.com',
-        //         verificationCode: 'LMN456',
-        //         roleId: 3, Procurement Manager
-        //         createdAt: '2023-03-01T12:00:00Z'
-        //     },
-        //     {
-        //         id: 4,
-        //         status: 1, Active
-        //         username: 'alice_jones',
-        //         password: 'password101',
-        //         name: 'Alice Jones',
-        //         phoneNumber: '444-444-4444',
-        //         address: '321 Pine St, Yourtown, USA',
-        //         gender: 0,
-        //         email: 'alice.jones@example.com',
-        //         verificationCode: 'QRS123',
-        //         roleId: 4, Server Staff
-        //         createdAt: '2023-04-01T12:00:00Z'
-        //     },
-        //     {
-        //         id: 5,
-        //         status: 1, Active
-        //         username: 'charlie_black',
-        //         password: 'password202',
-        //         name: 'Charlie Black',
-        //         phoneNumber: '222-222-2222',
-        //         address: '654 Maple St, Hometown, USA',
-        //         gender: 1,
-        //         email: 'charlie.black@example.com',
-        //         verificationCode: 'TUV456',
-        //         roleId: 5, Customer Service Staff
-        //         createdAt: '2023-05-01T12:00:00Z'
-        //     }
-        // ];
-        // accounts = sampleAccounts; 
-        // renderAccountTable(); 
+        const sampleAccounts = [
+            {
+                id: 1,
+                status: 1, // Active
+                username: 'john_doe',
+                password: 'password123',
+                name: 'John Doe',
+                phoneNumber: '123-456-7890',
+                address: '123 Main St, Anytown, USA',
+                gender: 1, // Male
+                email: 'john.doe@example.com',
+                verificationCode: 'ABC123',
+                roleId: 1, // Manager
+            },
+            {
+                id: 2,
+                status: 1, // Active
+                username: 'jane_smith',
+                password: 'password456',
+                name: 'Jane Smith',
+                phoneNumber: '987-654-3210',
+                address: '456 Elm St, Othertown, USA',
+                gender: 0, // Female
+                email: 'jane.smith@example.com',
+                verificationCode: 'XYZ789',
+                roleId: 2, // Order Taker
+            },
+            {
+                id: 3,
+                status: 0, // Blocked
+                username: 'bob_brown',
+                password: 'password789',
+                name: 'Bob Brown',
+                phoneNumber: '555-555-5555',
+                address: '789 Oak St, Sometown, USA',
+                gender: 1, // Male
+                email: 'bob.brown@example.com',
+                verificationCode: 'LMN456',
+                roleId: 3, // Procurement Manager
+            },
+            {
+                id: 4,
+                status: 1, // Active
+                username: 'alice_jones',
+                password: 'password101',
+                name: 'Alice Jones',
+                phoneNumber: '444-444-4444',
+                address: '321 Pine St, Yourtown, USA',
+                gender: 0, // Female
+                email: 'alice.jones@example.com',
+                verificationCode: 'QRS123',
+                roleId: 4, // Server Staff
+            },
+            {
+                id: 5,
+                status: 1, // Active
+                username: 'charlie_black',
+                password: 'password202',
+                name: 'Charlie Black',
+                phoneNumber: '222-222-2222',
+                address: '654 Maple St, Hometown, USA',
+                gender: 1, // Male
+                email: 'charlie.black@example.com',
+                verificationCode: 'TUV456',
+                roleId: 5, // Customer Service Staff
+            }
+        ];
+        accounts = sampleAccounts; 
+        renderAccountTable(accounts); 
 
         function renderAccountTable(accounts) {
             const tbody = document.getElementById('accountTableBody');
@@ -376,12 +434,12 @@
                 {
                     name: 'status', label: 'Status', type: 'select', options: [
                         { value: 1, text: 'Unlock' },
-                        { value: 2, text: 'Lock' }
+                        { value: 0, text: 'Lock' } // Changed to 0 for Lock
                     ]
                 },
                 { name: 'username', label: 'Username', type: 'text' },
                 { name: 'password', label: 'Password', type: 'password' },
-                { name: 'name', label: "User's Name", type: 'text' },
+                { name: 'name', label: "User 's Name", type: 'text' },
                 { name: 'phone', label: 'Phone Number', type: 'text' },
                 { name: 'address', label: 'Address', type: 'text' },
                 {
@@ -407,18 +465,26 @@
 
             const infoTableBody = document.getElementById('infoTableBody');
             infoTableBody.innerHTML = fields.map(field => `
-                        <tr>
-                            <td><strong>${field.label}</strong></td>
-                            <td>
-                                ${field.type === 'select'
-                    ? `<select id="${field.name}" ${field.readonly ? 'readonly' : ''}>
-                                        ${field.options.map(option => `<option value="${option.value}" ${account[field.name] === option.value ? 'selected' : ''}>${option.text}</option>`).join('')}
-                                       </select>`
+                <tr>
+                    <td><strong>${field.label}</strong></td>
+                    <td>
+                        ${field.type === 'select'
+                    ? `<select id="${field.name}">
+                                ${field.options.map(option => `
+                                    <option value="${option.value}" ${account[field.name] == option.value ? 'selected' : ''}>
+                                        ${option.text}
+                                    </option>`).join('')}
+                               </select>`
                     : `<input type="${field.type}" id="${field.name}" value="${account[field.name] || ''}" ${field.readonly ? 'readonly' : ''}>`
                 }
-                            </td>
-                        </tr>
-                    `).join('');
+                    </td>
+                </tr>
+            `).join('');
+
+            // Set the status to the correct value for existing accounts
+            if (account.status !== undefined) {
+                document.getElementById('status').value = account.status;
+            }
 
             document.getElementById('updateButton').textContent = isNewAccount ? 'Create' : 'Update';
             document.getElementById('deleteButton').style.display = isNewAccount ? 'none' : 'block';

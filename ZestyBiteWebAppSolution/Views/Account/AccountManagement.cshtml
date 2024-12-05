@@ -207,11 +207,7 @@
                         <td><input type="text" id="email" readonly></td>
                     </tr>
                     <tr>
-                        <td><strong>Verification Code</strong></td>
-                        <td><input type="text" id="verificationCode" readonly></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Role ID</strong></td>
+                        <td><strong>Role</strong></td>
                         <td>
                             <select id="roleId">
                                 <option value="1">Manager</option>
@@ -257,8 +253,7 @@
                             <th>Address</th>
                             <th>Gender</th>
                             <th>Email</th>
-                            <th>Verification Code</th>
-                            <th>Role ID</th>
+                            <th>Role</th>
                         </tr>
                     </thead>
                     <tbody id="accountTableBody">
@@ -273,74 +268,6 @@
 
     <script>
         let accounts = [];
-        const sampleAccounts = [
-            {
-                id: 1,
-                status: 1, // Active
-                username: 'john_doe',
-                password: 'password123',
-                name: 'John Doe',
-                phoneNumber: '123-456-7890',
-                address: '123 Main St, Anytown, USA',
-                gender: 1, // Male
-                email: 'john.doe@example.com',
-                verificationCode: 'ABC123',
-                roleId: 1, // Manager
-            },
-            {
-                id: 2,
-                status: 1, // Active
-                username: 'jane_smith',
-                password: 'password456',
-                name: 'Jane Smith',
-                phoneNumber: '987-654-3210',
-                address: '456 Elm St, Othertown, USA',
-                gender: 0, // Female
-                email: 'jane.smith@example.com',
-                verificationCode: 'XYZ789',
-                roleId: 2, // Order Taker
-            },
-            {
-                id: 3,
-                status: 0, // Blocked
-                username: 'bob_brown',
-                password: 'password789',
-                name: 'Bob Brown',
-                phoneNumber: '555-555-5555',
-                address: '789 Oak St, Sometown, USA',
-                gender: 1, // Male
-                email: 'bob.brown@example.com',
-                verificationCode: 'LMN456',
-                roleId: 3, // Procurement Manager
-            },
-            {
-                id: 4,
-                status: 1, // Active
-                username: 'alice_jones',
-                password: 'password101',
-                name: 'Alice Jones',
-                phoneNumber: '444-444-4444',
-                address: '321 Pine St, Yourtown, USA',
-                gender: 0, // Female
-                email: 'alice.jones@example.com',
-                verificationCode: 'QRS123',
-                roleId: 4, // Server Staff
-            },
-            {
-                id: 5,
-                status: 1, // Active
-                username: 'charlie_black',
-                password: 'password202',
-                name: 'Charlie Black',
-                phoneNumber: '222-222-2222',
-                address: '654 Maple St, Hometown, USA',
-                gender: 1, // Male
-                email: 'charlie.black@example.com',
-                verificationCode: 'TUV456',
-                roleId: 5, // Customer Service Staff
-            }
-        ];
-        accounts = sampleAccounts; 
         renderAccountTable(accounts); 
 
         function renderAccountTable(accounts) {
@@ -360,8 +287,7 @@
                     <td>${account.address}</td>
                     <td>${account.gender === 1 ? 'Male' : 'Female'}</td>
                     <td>${account.email}</td>
-                    <td>${account.verificationCode}</td>
-                    <td>${account.roleId}</td>
+                    <td>${account.roleDescription}</td>
                 `;
 
                 tbody.appendChild(row);

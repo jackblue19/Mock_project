@@ -8,9 +8,9 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Controllers
 {
-    [AllowAnonymous]
-    //[ApiController]
-    //[Route("api/[controller]")]
+    // [AllowAnonymous]
+    // [ApiController]
+    // [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -70,9 +70,9 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
 
-        // [AllowAnonymous]
+        [AllowAnonymous]
         [HttpPost]
-        [Route("login")]
+        // [Route("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
             if (!ModelState.IsValid)
@@ -340,7 +340,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         [Authorize(Roles = "Manager")]
         [HttpGet]
-        [Route("getallacc")]
+        [Route("api/account/getallacc")]
         public async Task<IResult> GetAllAccount()
         {
             try

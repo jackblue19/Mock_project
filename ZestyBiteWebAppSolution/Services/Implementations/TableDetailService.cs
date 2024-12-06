@@ -5,20 +5,20 @@ using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Services.Implementations
-{
+namespace ZestyBiteWebAppSolution.Services.Implementations {
     public class TableDetailService : ITableDetailService {
         private readonly ITableDetailRepository _tableDetailRepository;
         private readonly IMapper _mapper;
         private readonly ZestyBiteContext _context;
         private readonly ITableRepository _tableRepository;
+        private readonly IBillRepository _billRepository;
 
-
-        public TableDetailService(ITableDetailRepository tableDetailRepository, IMapper mapper, ZestyBiteContext context, ITableRepository tableRepository) {
+        public TableDetailService(ITableDetailRepository tableDetailRepository, IMapper mapper, ZestyBiteContext context, ITableRepository tableRepository, IBillRepository billRepository) {
             _tableDetailRepository = tableDetailRepository;
             _mapper = mapper;
             _context = context;
             _tableRepository = tableRepository;
+            _billRepository = billRepository;
         }
 
         public async Task<TableDetailDTO?> CreateTableDetailAsync(TableDetailDTO tableDetailDto) {
@@ -73,7 +73,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                     }).ToList(),
                     TotalAmount = itemQuantityMap.Sum(item => item.Value * (_context.Items.FirstOrDefault(i => i.ItemId == item.Key)?.SuggestedPrice ?? 0))
                 };
-
+                int accId = acc.AccountId;
                 // Save cart to session
                 httpContext.Session.SetObjectAsJson(CartSessionKey, cart);
 
@@ -84,16 +84,17 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                     TableType = 1,
                     TableStatus = "Deposit",
                     TableNote = "nothing to comment",
-                    AccountId = acc.AccountId
+                    AccountId = accId
                 };
 
                 var tableUser = await _tableRepository.CreateAsync(userTable);
+                int tbid = tableUser.TableId;
 
                 var tableDetail = itemQuantityMap.Select(item => new TableDetail {
                     TableId = tableUser.TableId,
                     ItemId = item.Key,
                     Quantity = item.Value,
-                    
+
                 }).ToList();
 
                 await _tableDetailRepository.CreateRangeAsync(tableDetail);
@@ -101,6 +102,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
 
                 httpContext.Session.SetObjectAsJson("UserTable", tableUser);
                 httpContext.Session.SetObjectAsJson("TableDetails", tableDetail);
+                await _billRepository.CreateAsync(tbid);
 
                 // return TypedResults.Ok("done done");
                 return true;

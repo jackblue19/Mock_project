@@ -36,9 +36,7 @@ public class CartController : Controller {
         _accountService = accountService;
     }
 
-    // Display Cart
     public async Task<IActionResult> Cart() {
-        // Retrieve username from session or cookies
         var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
         if (string.IsNullOrEmpty(usn)) {
             return RedirectToAction("Login", "Account");
@@ -61,23 +59,78 @@ public class CartController : Controller {
         // Populate ViewBag with cart details
         ViewBag.TotalItems = cart.TotalItems;
         ViewBag.TotalAmount = cart.TotalPrice;
-        TempData["totalItems"] = cart.TotalItems;
 
-        var itemQuantityMap = cart.Items.ToDictionary(i => i.ItemId, i => i.Quantity);
+        ViewBag.TotalItems = 0;
+        ViewBag.TotalAmount = 0;
+        return View("Cart", cart);
 
-        // Call ToPayment service
-        var result = await _tableDetailService.ToPayment(itemQuantityMap, acc, CartSessionKey, HttpContext); //cần gọi ra id của table 
+    }
 
-        if (result) {
+    // Display Cart
+    [HttpPost]
+    [Route("api/cart/saving")]
+    public async Task<IActionResult> CartAPI() {
+        // Retrieve username from session or cookies
+        var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
+        if (string.IsNullOrEmpty(usn)) {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Fetch the account associated with the username
+        var acc = await _accountRepository.GetAccountByUsnAsync(usn);
+        if (acc == null) {
+            ViewBag.ErrorMessage = "Account not found.";
+            return BadRequest("Account not found.");
+        }
+
+        // Get the cart
+        var cart = GetCheckout();
+        if (cart == null || !cart.Items.Any()) {
+            ViewBag.ErrorMessage = "Your cart is empty!";
+            return View(cart);
+        }
+
+        // Populate ViewBag with cart details
+        //ViewBag.Items = cart.Items; // Ensure this is set properly
+        ViewBag.TotalItems = cart.TotalItems;
+        ViewBag.TotalAmount = cart.TotalPrice;
+
+        var savedValue = HttpContext.Session.GetString("save");
+        bool flag = true;
+        var uflag = HttpContext.Session.GetString("uflag");
+        // Check if the paymentFlag is 1 or 0
+        if (savedValue == uflag) {
+            flag = true;  // Do not process payment logic
+        } else {
+            // Process payment if flag is 1
+            var itemQuantityMap = cart.Items.ToDictionary(i => i.ItemId, i => i.Quantity);
+
+            // Call ToPayment service
+            var result = await _tableDetailService.ToPayment(itemQuantityMap, acc, CartSessionKey, HttpContext);
+            if (result) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+        }
+
+        if (flag) {
             ViewBag.TotalItems = 0;
             ViewBag.TotalAmount = 0;
-            return View("Cart", cart);
+            return Ok();
         } else {
             ViewBag.ErrorMessage = "An error occurred during payment processing.";
-            // Return an error message view or BadRequest
             return BadRequest("Failed to load information");
         }
     }
+    [HttpPost("api/Cart/Change")]
+    public IActionResult SetUFlag() {
+        // Set the session key "uflag" to 1
+        HttpContext.Session.SetString("uflag", "1");
+
+        return Ok();
+    }
+
 
     // In CartController
     [HttpPost]
@@ -95,25 +148,29 @@ public class CartController : Controller {
                 return BadRequest("Account not found.");
             }
 
-            // Get the cart
-            var cart = GetCheckout();
-            if (cart == null || !cart.Items.Any()) {
-                ViewBag.ErrorMessage = "Your cart is empty!";
-                return View(cart);
-            }
+            //// Get the cart
+            //var cart = GetCheckout();
+            //if (cart == null || !cart.Items.Any()) {
+            //    ViewBag.ErrorMessage = "Your cart is empty!";
+            //    return View(cart);
+            //}
 
-            // Populate ViewBag with cart details
-            ViewBag.TotalItems = cart.TotalItems;
-            ViewBag.TotalAmount = cart.TotalPrice;
+            //if (cart.Items == null) {
+            //    cart.Items = new List<CheckoutItemDTO>();
+            //}
+
+            //// Populate ViewBag with cart details
+            //ViewBag.TotalItems = cart.TotalItems;
+            //ViewBag.TotalAmount = cart.TotalPrice;
 
             // Prepare the CheckoutDTO model for the view
-            var checkoutDTO = new CheckoutDTO {
-                Items = cart.Items,
-                TotalAmount = cart.TotalPrice,
-                TableId = cart.TableId,
-            };
+            //var checkoutDTO = new CheckoutDTO {
+            //    Items = cart.Items,
+            //    TotalAmount = cart.TotalPrice,
+            //    TableId = cart.TableId,
+            //};
 
-            await _billRepository.CreateAsync(20);
+            //await _billRepository.CreateAsync();
 
 
         }
@@ -132,6 +189,7 @@ public class CartController : Controller {
                 cart = new CheckoutDTO {
                     Items = new List<CheckoutItemDTO>(),
                     TotalAmount = 0,
+                    //TableId =
                 };
             }
 
@@ -170,6 +228,7 @@ public class CartController : Controller {
 
         // Save cart to session
         HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
+        HttpContext.Session.SetString("save", "0");
 
         // Update the total items in TempData
         TempData["totalItems"] = cart.Items.Sum(i => i.Quantity);

@@ -211,9 +211,10 @@ public partial class ZestyBiteContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("profit_ibfk_2");
 
+            // Cập nhật phần này để sử dụng Cascade Delete
             entity.HasOne(d => d.Supply).WithMany(p => p.Profits)
                 .HasForeignKey(d => d.SupplyId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade) // Thay đổi thành Cascade
                 .HasConstraintName("profit_ibfk_1");
         });
 
@@ -290,14 +291,16 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasOne(d => d.Item).WithMany(p => p.SupplyItems)
                 .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.ClientSetNull) // This line remains unchanged
                 .HasConstraintName("supply_item_ibfk_2");
 
+            // Updated this line to Cascade delete
             entity.HasOne(d => d.Supply).WithMany(p => p.SupplyItems)
                 .HasForeignKey(d => d.SupplyId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade) // Cascade delete behavior
                 .HasConstraintName("supply_item_ibfk_1");
         });
+
 
         modelBuilder.Entity<Table>(entity =>
         {

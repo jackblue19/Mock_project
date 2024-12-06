@@ -141,6 +141,78 @@ GET http://localhost:5024/api/table/reality
 ###
 GET http://localhost:5024/api/table/virtual
 ###
+### Get all supplies
+GET http://localhost:5024/api/Supply
+Content-Type: application/json
+
+### Get all supplies
+GET http://localhost:5024/api/Supply/1
+Content-Type: application/json
+
+###
+GET http://localhost:5024/api/Supply/28
+Content-Type: application/json
+
+### Get all supplies
+
+POST http://localhost:5024/api/Supply/create
+Content-Type: application/json
+
+{
+  "productName": "mã",
+  "supplyQuantity": 1,
+  "supplyPrice": 50000,
+  "supplyStatus": 0,
+  "dateImport": "2024-12-01T00:00:00",
+  "dateExpiration": "2025-12-01T00:00:00",
+  "tableId": 1,
+  "vendorName": "Vendor A",
+  "vendorPhone": "014244463434",
+  "vendorAddress": "Vendor Address A",
+  "supplyCategory": "drink"
+}
+
+### PUT
+PUT http://localhost:5024/api/Supply/update/1
+Content-Type: application/json
+
+{
+  "productName": "chuối",
+  "supplyQuantity": 100.00,
+  "supplyPrice": 50000,
+  "supplyStatus": 1,
+  "dateImport": "2024-11-01T00:00:00",
+  "dateExpiration": "2025-11-01T00:00:00",
+  "tableId": 1,
+  "vendorName": "Vendor A",
+  "vendorPhone": "0234546789",
+  "vendorAddress": "Vendor Address A",
+  "supplyCategory": "Food"
+}
+
+### Get all tables
+GET http://localhost:5024/api/table
+Content-Type: application/json
+
+### Get all supplies
+GET http://localhost:5024/api/Supply
+Content-Type: application/json
+
+###
+DELETE http://localhost:5024/api/Supply/delete/36
+Content-Type: application/json
 
 
+### Test with invalid ID (e.g., not existing SupplyId)
+DELETE http://localhost:5024/api/Supply/delete/1
+Content-Type: application/json
 
+
+### Get all supplyItem
+
+GET http://localhost:5024/api/supplyitem
+Content-Type: application/json
+
+###
+
+########################################################################

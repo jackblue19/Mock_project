@@ -19,7 +19,7 @@ table {
 	}
 
 #SupplyForm .modal-content {
-	background-image: url('../images/backgro.jpg');
+	background-image: url('/images/bg_1.png');
 	background-size: cover;
 	background-position: center;
 }

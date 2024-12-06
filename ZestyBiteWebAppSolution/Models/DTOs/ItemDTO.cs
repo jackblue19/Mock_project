@@ -32,4 +32,8 @@
 
         public int IsServed { get; set; }
     }
+    public class IdDTO
+    {
+        public int Id { get; set; }
+    }
 }

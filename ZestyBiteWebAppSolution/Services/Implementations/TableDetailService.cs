@@ -57,9 +57,9 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             var updatedTableDetail = await _tableDetailRepository.UpdateAsync(existingTableDetail); // Update entity in repository
             return _mapper.Map<TableDetailDTO?>(updatedTableDetail); // Map updated entity back to DTO
         }
-        public async Task<bool> ToPayment(Dictionary<int?, int?> itemQuantityMap, Account acc, string CartSessionKey, HttpContext httpContext) {
+        public async Task<int> ToPayment(Dictionary<int?, int?> itemQuantityMap, Account acc, string CartSessionKey, HttpContext httpContext) {
             if (!itemQuantityMap.Any() || acc == null) {
-                return false;
+                return 0;
             }
 
             try {
@@ -102,13 +102,12 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
 
                 httpContext.Session.SetObjectAsJson("UserTable", tableUser);
                 httpContext.Session.SetObjectAsJson("TableDetails", tableDetail);
-                await _billRepository.CreateAsync(tbid);
-
-                // return TypedResults.Ok("done done");
-                return true;
+                var billll = await _billRepository.CreateAsync(tbid);
+                int idid = billll.BillId;
+                return idid;
             } catch (InvalidOperationException) {
                 // return TypedResults.BadRequest("del on roi");
-                return false;
+                return 0;
             }
         }
     }

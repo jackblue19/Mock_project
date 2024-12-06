@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.DTOs;
+using ZestyBiteWebAppSolution.Models.ViewModel;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
@@ -62,6 +63,8 @@ public class CartController : Controller {
 
         ViewBag.TotalItems = 0;
         ViewBag.TotalAmount = 0;
+
+
         return View("Cart", cart);
 
     }
@@ -106,23 +109,30 @@ public class CartController : Controller {
             var itemQuantityMap = cart.Items.ToDictionary(i => i.ItemId, i => i.Quantity);
 
             // Call ToPayment service
-            var result = await _tableDetailService.ToPayment(itemQuantityMap, acc, CartSessionKey, HttpContext);
-            if (result) {
-                flag = true;
-            } else {
+            int billId;
+            try {
+                billId = _tableDetailService.ToPayment(itemQuantityMap, acc, CartSessionKey, HttpContext).Result;
+            } catch {
+                return BadRequest("del oonr rooannadnanodas");
+            }
+            if (billId == 0) {
                 flag = false;
+            } else {
+                flag = true;
             }
         }
 
         if (flag) {
             ViewBag.TotalItems = 0;
             ViewBag.TotalAmount = 0;
-            return Ok();
+            //HttpContext.Session.SetString("billId", billId);
+            return Ok(); // billId
         } else {
             ViewBag.ErrorMessage = "An error occurred during payment processing.";
             return BadRequest("Failed to load information");
         }
     }
+
     [HttpPost("api/Cart/Change")]
     public IActionResult SetUFlag() {
         // Set the session key "uflag" to 1
@@ -131,10 +141,28 @@ public class CartController : Controller {
         return Ok();
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Checkout(string payment = "VnPay") {
+        if (ModelState.IsValid) {
+            var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
+            if (string.IsNullOrEmpty(usn)) {
+                return RedirectToAction("Login", "Account");
+            }
 
+            // Fetch the account associated with the username
+            var acc = await _accountRepository.GetAccountByUsnAsync(usn);
+            if (acc == null) {
+                ViewBag.ErrorMessage = "Account not found.";
+                return BadRequest("Account not found.");
+            }
+        }
+        return View();
+
+    }
     // In CartController
     [HttpPost]
-    public async Task<IActionResult> Checkout(CheckoutDTO model, string payment = "COD") {
+    [Route("api/bill/checkout")]
+    public async Task<IActionResult> CheckoutAPI() {
         if (ModelState.IsValid) {
             var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
             if (string.IsNullOrEmpty(usn)) {
@@ -148,33 +176,22 @@ public class CartController : Controller {
                 return BadRequest("Account not found.");
             }
 
-            //// Get the cart
-            //var cart = GetCheckout();
-            //if (cart == null || !cart.Items.Any()) {
-            //    ViewBag.ErrorMessage = "Your cart is empty!";
-            //    return View(cart);
-            //}
+            int billId = await _billRepository.GetLatestBillIdByUsn(usn);
 
-            //if (cart.Items == null) {
-            //    cart.Items = new List<CheckoutItemDTO>();
-            //}
-
-            //// Populate ViewBag with cart details
-            //ViewBag.TotalItems = cart.TotalItems;
-            //ViewBag.TotalAmount = cart.TotalPrice;
-
-            // Prepare the CheckoutDTO model for the view
-            //var checkoutDTO = new CheckoutDTO {
-            //    Items = cart.Items,
-            //    TotalAmount = cart.TotalPrice,
-            //    TableId = cart.TableId,
-            //};
-
-            //await _billRepository.CreateAsync();
-
+            if (true) {
+                var vnPayModel = new VnPaymentRequestModel {
+                    BillId = billId,
+                    CreatedDate = DateTime.Now,
+                    Description = $"{acc.Name}",
+                    Amount = 1000,
+                    PaymentMethod = "VnPay",
+                };
+                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
+                //return RedirectToAction("Index", "Home");
+            }
 
         }
-        return View();
+        return BadRequest("");
 
     }
 

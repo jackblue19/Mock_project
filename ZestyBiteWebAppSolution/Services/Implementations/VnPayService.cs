@@ -21,12 +21,12 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));  // Get the client's IP address
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
-            vnpay.AddRequestData("vnp_TableInfo", $"Thanh toan don hang: {model.BillId}");  // Correct dynamic description
-            vnpay.AddRequestData("vnp_TableType", "other");  // Assuming "other" for order type
+            vnpay.AddRequestData("vnp_OderInfo", $"Thanh toan don hang:" + model.BillId);  // Correct dynamic description
+            vnpay.AddRequestData("vnp_OderType", "other");  // Assuming "other" for order type
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick);
 
-            var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:Url"], _config["VnPay:HashSecret"]);
+            var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
             return paymentUrl;
         }
 
@@ -57,8 +57,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                 OrderDescription = vnp_OrderInfo,  // Use dynamic order info
                 OrderId = vnp_orderId.ToString(),
                 TransactionId = vnp_TransactionId.ToString(),
-                Token = vnp_SecureHash.ToString(),
-                VnPayResponseCode = vnp_ResponseCode.ToString(),
+                Token = vnp_SecureHash,
+                VnPayResponseCode = vnp_ResponseCode
             };
         }
 

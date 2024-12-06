@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Checkout";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -17,52 +16,52 @@
                     <i class="fa fa-credit-card fa-3x text-primary"></i>
                     <h2 class="my-3" style="transform:translateY(50px); color: orange">Checkout form</h2>
                 </div>
-                    <!-- Billing Information -->
-                    <div class="col-md-8 order-md-1">
-                        <h4 class="mb-3">Billing address</h4>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="firstName">FullName</label>
-                                <input type="text" class="form-control" name="FullName" required>
-                                <div class="invalid-feedback">
-                                    Valid fullname is required.
-                                </div>
-                            </div>
-                            
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                            <input type="email" class="form-control" id="email" name="Email">
+                <!-- Billing Information -->
+                <div class="col-md-8 order-md-1">
+                    <h4 class="mb-3">Billing address</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName">FullName</label>
+                            <input type="text" class="form-control" name="FullName" required>
                             <div class="invalid-feedback">
-                                Please enter a valid email address for shipping updates.
+                                Valid fullname is required.
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="address">Address</label>
-                            <input type="text" class="form-control" id="address" name="Address" required>
-                            <div class="invalid-feedback">
-                                Please enter your shipping address.
-                            </div>
-                        </div>
+                    </div>
 
-                        <h4 class="mb-3">Payment</h4>
-                        <form action="@Url.Action("Checkout", "Cart")" method="post">
-                            <div class="custom-control custom-radio">
-                                <input id="credit" name="PaymentMethod" type="radio" class="custom-control-input" value="VnPay" checked required>
-                                <label class="custom-control-label" for="credit">VNPAY</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                                <input id="COD" name="PaymentMethod" type="radio" class="custom-control-input" value="COD" required>
-                                <label class="custom-control-label" for="COD">COD</label>
-                            </div>
-                            <hr class="mb-4">
-                            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to payment</button>
-                        </form>
+                    <div class="mb-3">
+                        <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                        <input type="email" class="form-control" id="email" name="Email">
+                        <div class="invalid-feedback">
+                            Please enter a valid email address for shipping updates.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" name="Address" required>
+                        <div class="invalid-feedback">
+                            Please enter your shipping address.
+                        </div>
+                    </div>
+
+                    <h4 class="mb-3">Payment</h4>
+                    <div>
+                        <div class="custom-control custom-radio">
+                            <input id="credit" name="PaymentMethod" type="radio" class="custom-control-input" value="VnPay" checked required>
+                            <label class="custom-control-label" for="credit">VNPAY</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input id="COD" name="PaymentMethod" type="radio" class="custom-control-input" value="COD" required>
+                            <label class="custom-control-label" for="COD">COD</label>
+                        </div>
+                        <hr class="mb-4">
+                        <input class="btn btn-primary btn-lg btn-block" type="submit" onclick="handleCheckout()"/>Continue to payment
                     </div>
 
                 </div>
+
             </div>
         </section>
     </main>
@@ -71,4 +70,31 @@
     <script src="~/js/main.min.js"></script>
     <script src="~/js/jquery.min.js"></script>
     <script src="~/js/popper.min.js"></script>
+    <script>
+         async function handleCheckout() {
+
+             try {
+                 // Gửi yêu cầu POST tới API "/api/bill/checkout"
+                 let response = await fetch('/api/bill/checkout', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json'
+                     },
+                     body: JSON.stringify({
+                         payment: "VnPay" // Hoặc thay bằng giá trị động nếu cần
+                     })
+                 });
+
+                 if (response.ok) {
+                     console.log("Thanh toán đã được xử lý thành công.");
+                     // Tiến hành chuyển hướng hoặc thực hiện hành động sau khi thanh toán thành công
+                     // window.location.href = '/payment-success'; // Ví dụ chuyển hướng đến trang thành công
+                 } else {
+                     console.error("Có lỗi khi xử lý thanh toán.");
+                 }
+             } catch (error) {
+                 console.error("Lỗi kết nối với API:", error);
+             }
+         }
+     </script> 
 }

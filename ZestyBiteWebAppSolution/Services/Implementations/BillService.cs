@@ -13,7 +13,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         public async Task<decimal?> CalculateTotalCostAsync() {
             await _context.Database.ExecuteSqlRawAsync("CALL CalculateTotalCost()");
 
-            // Optionally: Calculate totalAmount manually
             var totalAmount = await _context.TableDetails
                 .Include(td => td.Item)
                 .Where(td => td.Item != null)

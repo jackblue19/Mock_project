@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ZestyBiteWebAppSolution.Data;
-using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Models.DTOs;
-using ZestyBiteWebAppSolution.Models.ViewModel;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
@@ -133,7 +130,8 @@ public class CartController : Controller {
             if (Request.Cookies.TryGetValue(CartSessionKey, out var cookieCart)) {
             } else {
                 cart = new CheckoutDTO {
-                    Items = new List<CheckoutItemDTO>()
+                    Items = new List<CheckoutItemDTO>(),
+                    TotalAmount = 0,
                 };
             }
 
@@ -143,45 +141,6 @@ public class CartController : Controller {
 
         return cart;
     }
-
-    //[HttpPost]
-    //public async Task<IActionResult> VNPayment(VnPaymentRequestModel paymentRequest) {
-    //    if (ModelState.IsValid) {
-    //        var tableid = HttpContext.User.Claims.SingleOrDefault(p => p.Type == MySetting.CART_KEY).Value;
-
-    //        var tableDetails = await _tableDetailRepository.GetTableDetailsByAccountIdAsync();
-    //        if (tableDetails == null || !tableDetails.Any()) {
-    //            return NotFound(new { message = "No table details found for this account." });
-    //        }
-
-    //        var totalAmount = 10000;
-    //        //await _context.Database.ExecuteSqlRawAsync("CALL CalculateTotalCost()");
-    //        //// Compute total amount from table details (sum up the item prices and quantities)
-    //        //var totalAmount = await _billService.CalculateTotalCostAsync();
-
-    //        // Create a description using table details (e.g., item names and quantities)
-    //        var description = string.Join(", ", tableDetails.Select(td => $"{td.Item.ItemName} (x{td.Quantity})"));
-
-    //        // Check payment method (you can also add logic for COD if needed)
-    //        if (paymentRequest.PaymentMethod != "Credit") {
-    //            return BadRequest(new { message = "Invalid payment method." });
-    //        }
-
-    //        // Create the payment model to send to VNPAY
-    //        var vnPayModel = new VnPaymentRequestModel {
-    //            Amount = totalAmount,
-    //            CreatedDate = DateTime.Now,
-    //            Description = description, // Example: "Item1 (x2), Item2 (x1)"
-    //            PaymentMethod = paymentRequest.PaymentMethod
-    //        };
-
-    //        // Generate VNPAY payment URL using the vnPayModel
-    //        var paymentUrl = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel);
-    //        return Redirect(paymentUrl);
-    //        // Redirect the user to the VNPAY sandbox page
-    //    }
-        
-    //}
 
     public IActionResult AddToCart(int itemId) {
         var cart = GetCheckout();

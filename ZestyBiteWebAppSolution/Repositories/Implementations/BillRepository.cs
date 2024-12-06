@@ -25,23 +25,9 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             _context.SaveChanges();
             return ab;
         }
-
-        //public async Task<IEnumerable<TableDetail>> GetTableDetailsByAccountIdAsync(int accountId) {
-        //    var bill = await _context.Bills
-        //                             .Include(b => b.TableDetails)
-        //                             .ThenInclude(td => td.Item) // Include the related Item
-        //                             .FirstOrDefaultAsync(b => b.AccountId == accountId);
-
-        //    if (bill == null) return Enumerable.Empty<TableDetail>();
-
-        //    return bill.TableDetails;
-        //}
-
-
-        //public async Task<Account?> GetNameById(int id) {
-        //    var bill = await _context.Bills.FirstOrDefaultAsync(p => p.BillId == id);
-        //    var acc = bill?.Account;
-        //    return acc;
-        //}
+        public async Task<Bill> GetBillByTableId(int tableId) {
+            var ab =  _context.Bills.Include(p => p.Table).FirstOrDefault(p => p.TableId== tableId);
+            return ab;
+        }
     }
 }

@@ -21,8 +21,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));  // Get the client's IP address
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang: {model.OrderId}");  // Correct dynamic description
-            vnpay.AddRequestData("vnp_OrderType", "other");  // Assuming "other" for order type
+            vnpay.AddRequestData("vnp_TableInfo", $"Thanh toan don hang: {model.TableId}");  // Correct dynamic description
+            vnpay.AddRequestData("vnp_TableType", "other");  // Assuming "other" for order type
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick);
 

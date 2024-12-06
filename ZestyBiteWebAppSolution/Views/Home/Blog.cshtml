@@ -22,12 +22,11 @@
         }
 
         .comment {
-            border: 1px solid #dddddd50;
+            border: 1px solid #dddddd1d;
             color: azure;
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 10px;
-            background-color: #f9f9f905;
             position: relative;
         }
 
@@ -44,7 +43,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border: 2px solid #cccccc50;
+            border: 2px solid #000000;
         }
 
         .comment h3 {
@@ -61,16 +60,14 @@
 
         .nested-comment {
             margin-left: 0px;
-            border-left: 2px solid #dddddd80;
+            border-left: 2px solid #d7ba00ad;
             padding-left: 10px;
-            background-color: #f6852f05;
         }
 
         /* Style for reply form */
         .reply-form {
             margin-top: 10px;
             padding: 10px;
-            border: 1px solid #dddddd50;
             border-radius: 5px;
         }
 
@@ -78,29 +75,33 @@
                 width: calc(100% - 60px);
                 padding: 5px;
                 margin-right: 5px;
-                border: 1px solid #cccccc;
                 border-radius: 3px;
-                background-color: #ffffff;
+                border: 1px solid #ffffff;
+                color: #ffffff;
+                background-color: #00000000;
             }
 
             .reply-form button {
                 padding: 5px 10px;
-                background-color: #e8c940;
-                color: #000000;
-                border: none;
+                color: #ffffff;
+                background-color: #00000000;
+                border: 1px solid #ffffff;
                 border-radius: 15px;
                 cursor: pointer;
                 margin:  10px;
             }
 
                 .reply-form button:hover {
-                    background-color: #f6852f;
+                    background-color: #c7af128d;
                 }
 
          .reply-btn {
-             background-color: #e8c940;
+             border: 1px solid #ffffff;
+             border-radius: 15px;
              border-radius: 15px;
              margin-bottom: 10px;
+             color: #ffffff;
+             background-color: #00000000;
          }
 
         /* Style for deeply nested comments */
@@ -315,17 +316,25 @@
         }
 
         // Post a reply to the back-end
-        function postReply(parentId, content, level) {
+        function postReply(commentId, content, level) {
             // Locate the parent comment element by its ID
-            const parentCommentElement = document.querySelector(`[data-id="${parentId}"]`);
+            const parentCommentElement = document.querySelector(`[data-id="${commentId}"]`);
+            @* const parentId = parentElement.getAttribute("data-feedback-id"); *@
 
             if (!parentCommentElement) {
                 showNotification("Parent comment not found!");
                 return;
             }
-
             const itemId = parentCommentElement.getAttribute("data-item-id");
+            if (!parentCommentElement) {
+                showNotification("Item Id not found!");
+                return;
+            }
             const itemName = parentCommentElement.getAttribute("data-item-name") || "Unknown Item";
+            if (!parentCommentElement) {
+                showNotification("Item name not found!");
+                return;
+            }
             const ParentFb = parentId; // Use parentId as ParentFb
 
             // Prepare the payload for the reply

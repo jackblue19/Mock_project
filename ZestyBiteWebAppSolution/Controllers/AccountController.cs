@@ -65,6 +65,13 @@ namespace ZestyBiteWebAppSolution.Controllers
 
 
         [AllowAnonymous]
+        public IActionResult AccountManagement()
+        {
+            return View();
+        }
+
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
@@ -97,6 +104,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
             return Unauthorized(new { message = "Invalid username or password" });
         }
+        
 
         // [HttpPost]
         // public async Task<IActionResult> ForgotPassword(string email)
@@ -332,7 +340,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         [Authorize(Roles = "Manager")]
         [HttpGet]
-        [Route("getallacc")]
+        [Route("api/account/getallacc")]
         public async Task<IResult> GetAllAccount()
         {
             try
@@ -397,6 +405,23 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
         [Authorize(Roles = "Manager")]
+        [HttpGet]
+        [Route("api/account/{username}")]
+        public async Task<IResult> ViewProfileDetail(string username)
+        {
+            try
+            {
+                var dto = await _service.GetAccountByUsnAsync(username);
+                if (dto == null)
+                return TypedResults.NotFound("Account not found");
+                return TypedResults.Ok(dto);
+            }
+            catch
+            {
+                return TypedResults.BadRequest("Account not found");
+            }
+        }
+        [Authorize(Roles = "Manager")]
         [HttpPut]
         [Route("status")]
         public async Task<IResult> ManageStatus([FromBody] StatusDTO dto)
@@ -411,5 +436,8 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
+
+
+
     }
 }

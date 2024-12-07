@@ -126,9 +126,8 @@ namespace ZestyBiteWebAppSolution.Controllers
         public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto)
         {
             var usn = User.Identity?.Name;
-
-            if (verifyDto == null || string.IsNullOrEmpty(usn) || string.IsNullOrEmpty(verifyDto.Code))
-                return BadRequest(new { Message = "Invalid verification data" });
+            if (string.IsNullOrEmpty(usn))
+                return BadRequest(new { Message = "User not authenticated." });
 
             try
             {
@@ -137,6 +136,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                     await _service.IsDeleteUnregistedAccount(usn);
                     return BadRequest(new { Message = "Verification session expired or not found." });
                 }
+
                 var tcs = VerificationTasks[usn];
 
                 if (!VerificationAttempts.ContainsKey(usn))
@@ -155,6 +155,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                     VerificationAttempts.TryRemove(usn, out _);
                     HttpContext.Session.Remove("username");
                     Response.Cookies.Delete("username");
+
                     return RedirectToAction("Login", "Account");
                 }
 
@@ -166,6 +167,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                     if (await _service.IsDeleteUnregistedAccount(usn))
                         return RedirectToAction("Index", "Home");
                 }
+
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
@@ -233,8 +235,6 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-
-        [HttpGet]
         [Route("viewprofile")]
         public async Task<IActionResult> ViewProfile()
         {

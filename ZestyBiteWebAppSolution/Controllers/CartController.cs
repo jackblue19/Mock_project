@@ -116,7 +116,7 @@ public class CartController : Controller {
             try {
                 billId = _tableDetailService.ToPayment(itemQuantityMap, acc, CartSessionKey, HttpContext).Result;
             } catch {
-                return BadRequest("del oonr rooannadnanodas");
+                return BadRequest();
             }
             if (billId == 0) {
                 flag = false;
@@ -128,7 +128,6 @@ public class CartController : Controller {
         if (flag) {
             ViewBag.TotalItems = 0;
             ViewBag.TotalAmount = 0;
-            //HttpContext.Session.SetString("billId", billId);
             return Ok(); // billId
         } else {
             ViewBag.ErrorMessage = "An error occurred during payment processing.";
@@ -138,7 +137,6 @@ public class CartController : Controller {
 
     [HttpPost("api/Cart/Change")]
     public IActionResult SetUFlag() {
-        // Set the session key "uflag" to 1
         HttpContext.Session.SetString("uflag", "1");
 
         return Ok();
@@ -151,7 +149,6 @@ public class CartController : Controller {
                 return RedirectToAction("Login", "Account");
             }
 
-            // Fetch the account associated with the username
             var acc = await _accountRepository.GetAccountByUsnAsync(usn);
             if (acc == null) {
                 ViewBag.ErrorMessage = "Account not found.";

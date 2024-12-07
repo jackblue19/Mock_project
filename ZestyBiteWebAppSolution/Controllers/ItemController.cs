@@ -23,19 +23,20 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // [Authorize(Roles = "Manager")]
-        [HttpGet]
-        [Route("viewmenu")]
-        public async Task<ActionResult<IEnumerable<EItemDTO>>> ViewMenu()
+        [AllowAnonymous]
+        [HttpGet("viewmenu")]
+        public async Task<IResult> ViewMenu()
         {
             try
+            
             {
                 var dishes = _service.ViewAllItem();
-                if (dishes == null) return NotFound("No dishes here");
-                return Ok(dishes);
+                if (dishes == null) return TypedResults.NotFound("No dishes here");
+                return TypedResults.Ok(dishes);
             }
             catch
             {
-                return BadRequest("Can not get the dishes");
+                return TypedResults.BadRequest("Can not get the dishes");
             }
         }
 
@@ -89,7 +90,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return TypedResults.BadRequest("Dish in menu cant be modified");
             }
         }
-        
+
         [HttpDelete, Route("delete")]
         public async Task<IResult> DeleteDish([FromBody] IdDTO dto)
         {

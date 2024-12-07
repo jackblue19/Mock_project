@@ -114,7 +114,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 ItemStatus = eis.ItemStatus,
                 OriginalPrice = eis.OriginalPrice,
                 SuggestedPrice = eis.SuggestedPrice
-            });
+            }).ToList();
         }
 
         public async Task<EItemDTO> ViewOneDish(int itemId)

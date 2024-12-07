@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Zesty Bites</title>
@@ -67,7 +68,7 @@
                         <a href="@Url.Action("Cart", "Cart")" style="margin: 20px; display: flex; justify-content: space-between; flex-direction: row; align-items: baseline">
                             <i class="fa-solid fa-cart-shopping" style="margin-right:10px; font-size: 1.5em"></i>
                             <span class="badge badge-pill badge-primary" id="cart-badge">
-                                @(TempData["totalItems"] ?? 0)
+                                @TempData["totalItems"]
                             </span>
                         </a>
                     </li>

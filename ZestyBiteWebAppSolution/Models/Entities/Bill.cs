@@ -11,8 +11,6 @@ public partial class Bill
 
     public int PaymentId { get; set; }
 
-    public int AccountId { get; set; }
-
     public int TableId { get; set; }
 
     public decimal TotalCost { get; set; }
@@ -20,8 +18,6 @@ public partial class Bill
     public DateTime BillDatetime { get; set; }
 
     public int BillType { get; set; }
-
-    public virtual Account Account { get; set; } = null!;
 
     public virtual Payment Payment { get; set; } = null!;
 

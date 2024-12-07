@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Mappings;
@@ -11,6 +12,10 @@ using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers().AddNewtonsoftJson(options => {
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 
 // Configure Session
 builder.Services.AddDistributedMemoryCache(); // Store session in memory
@@ -47,7 +52,7 @@ builder.Services.AddSwaggerGen(c => {
         Description = "An API to demonstrate Swagger integration",
     });
 });
-builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization();
 
 //VNPay
 builder.Services.AddSingleton<IVnPayService, VnPayService>();
@@ -85,13 +90,10 @@ builder.Services.AddScoped<ITableService, TableService>();
 
 builder.Services.AddScoped<ITableDetailRepository, TableDetailRepository>();
 builder.Services.AddScoped<ITableDetailService, TableDetailService>();
-
-
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
-builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IVerifyService, VerifySerivce>();
-
+builder.Services.AddScoped<IBillService, BillService>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -104,9 +106,11 @@ builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", policy => {
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .WithExposedHeaders("Location");
     });
 });
+
 
 // Build the app
 var app = builder.Build();
@@ -158,4 +162,3 @@ app.MapRazorPages();
 
 // Run the app
 app.Run();
-

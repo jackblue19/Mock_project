@@ -11,7 +11,6 @@ namespace ZestyBiteWebAppSolution.Mappings {
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
                 .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
-                .ForMember(dest => dest.Fullname, opt => opt.MapFrom(src => src.UsernameNavigation.Name))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
                 .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
                 .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag))

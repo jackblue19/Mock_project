@@ -11,13 +11,14 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         private readonly IMapper _mapper;
         private readonly ZestyBiteContext _context;
         private readonly ITableRepository _tableRepository;
+        private readonly IBillRepository _billRepository;
 
-
-        public TableDetailService(ITableDetailRepository tableDetailRepository, IMapper mapper, ZestyBiteContext context, ITableRepository tableRepository) {
+        public TableDetailService(ITableDetailRepository tableDetailRepository, IMapper mapper, ZestyBiteContext context, ITableRepository tableRepository, IBillRepository billRepository) {
             _tableDetailRepository = tableDetailRepository;
             _mapper = mapper;
             _context = context;
             _tableRepository = tableRepository;
+            _billRepository = billRepository;
         }
 
         public async Task<TableDetailDTO?> CreateTableDetailAsync(TableDetailDTO tableDetailDto) {
@@ -56,9 +57,9 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             var updatedTableDetail = await _tableDetailRepository.UpdateAsync(existingTableDetail); // Update entity in repository
             return _mapper.Map<TableDetailDTO?>(updatedTableDetail); // Map updated entity back to DTO
         }
-        public async Task<IResult> ToPayment(Dictionary<int?, int?> itemQuantityMap, Account acc, string CartSessionKey, HttpContext httpContext) {
+        public async Task<int> ToPayment(Dictionary<int?, int?> itemQuantityMap, Account acc, string CartSessionKey, HttpContext httpContext) {
             if (!itemQuantityMap.Any() || acc == null) {
-                return TypedResults.BadRequest("Invalid data: itemQuantityMap or Account is null/empty.");
+                return 0;
             }
 
             try {
@@ -72,7 +73,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                     }).ToList(),
                     TotalAmount = itemQuantityMap.Sum(item => item.Value * (_context.Items.FirstOrDefault(i => i.ItemId == item.Key)?.SuggestedPrice ?? 0))
                 };
-
+                int accId = acc.AccountId;
                 // Save cart to session
                 httpContext.Session.SetObjectAsJson(CartSessionKey, cart);
 
@@ -83,15 +84,17 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                     TableType = 1,
                     TableStatus = "Deposit",
                     TableNote = "nothing to comment",
-                    AccountId = acc.AccountId
+                    AccountId = accId
                 };
 
                 var tableUser = await _tableRepository.CreateAsync(userTable);
+                int tbid = tableUser.TableId;
 
                 var tableDetail = itemQuantityMap.Select(item => new TableDetail {
                     TableId = tableUser.TableId,
                     ItemId = item.Key,
-                    Quantity = item.Value
+                    Quantity = item.Value,
+
                 }).ToList();
 
                 await _tableDetailRepository.CreateRangeAsync(tableDetail);
@@ -99,10 +102,12 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
 
                 httpContext.Session.SetObjectAsJson("UserTable", tableUser);
                 httpContext.Session.SetObjectAsJson("TableDetails", tableDetail);
-
-                return TypedResults.Ok("done done");
+                var billll = await _billRepository.CreateAsync(tbid);
+                int idid = billll.BillId;
+                return idid;
             } catch (InvalidOperationException) {
-                return TypedResults.BadRequest("del on roi");
+                // return TypedResults.BadRequest("del on roi");
+                return 0;
             }
         }
     }

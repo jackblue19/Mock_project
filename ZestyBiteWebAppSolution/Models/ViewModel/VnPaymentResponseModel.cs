@@ -1,20 +1,19 @@
 ﻿namespace ZestyBiteWebAppSolution.Models.ViewModel {
     public class VnPaymentResponseModel {
         public bool Success { get; set; }
-        public string PaymentMethod { get; set; }
-        public string OrderDescription { get; set; }
-        public string OrderId { get; set; }
-        public string PaymentId { get; set; }
-        public string TransactionId { get; set; }
-        public string Token { get; set; }
-        public string VnPayResponseCode { get; set; }
+        public string PaymentMethod { get; set; } = string.Empty;
+        public string OrderDescription { get; set; } = string.Empty;
+        public string OrderId { get; set; } = string.Empty;
+        public string PaymentId { get; set; } = string.Empty;
+        public string TransactionId { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
+        public string VnPayResponseCode { get; set; } = string.Empty;
     }
     public class VnPaymentRequestModel {
-        public int OrderId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Amount { get; set; }
+        public int BillId { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public decimal? Amount { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string PaymentMethod { get; set; }
+        public string PaymentMethod { get; set; } = string.Empty;
     }
 }

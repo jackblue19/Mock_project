@@ -86,7 +86,6 @@
     <Folder Include="Areas\Customer_Service_Staff\Data\" />
     <Folder Include="Areas\Customer_Service_Staff\Views\Shared\" />
     <Folder Include="Areas\Food_Runner\Data\" />
-    <Folder Include="Areas\Manager\Controllers\" />
     <Folder Include="Areas\Manager\Data\" />
     <Folder Include="Areas\Order_Taker\Controllers\" />
     <Folder Include="Areas\Order_Taker\Data\" />

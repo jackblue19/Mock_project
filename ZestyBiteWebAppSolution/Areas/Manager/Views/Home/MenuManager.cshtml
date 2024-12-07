@@ -1,0 +1,464 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Manager/Views/Shared/_Layout.cshtml";
+}
+﻿<style>
+         .text-center {
+             overflow: auto;
+             width: 100%;
+         }
+         .text-content{
+             color: black;
+         }
+             /* Container styling for the menu */
+     .MenuView {
+         padding: 1rem;
+     }
+
+     .MenuList {
+         overflow-x: auto; /* Allows horizontal scrolling for smaller screens */
+     }
+
+     /* Table styling */
+     .List-Menu {
+         width: 100%;
+         border-collapse: collapse;
+         margin-top: 1rem;
+     }
+
+     .List-Menu th, .List-Menu td {
+         padding: 0.75rem;
+         border: 1px solid #ddd;
+         text-align: center;
+     }
+
+     .List-Menu th {
+         background-color: rgba(113, 99, 186, 255);
+         color: #fff;
+         font-weight: bold;
+         font-size: 1rem;
+     }
+
+     .List-Menu tbody td {
+         background-color: #f9f9f9;
+         font-size: 0.95rem;
+     }
+
+     /* Alternating row colors for better readability */
+     .List-Menu tbody tr:nth-child(even) td {
+         background-color: #f1f1f1;
+     }
+     /* Image styling for table cells */
+     .item-image {
+         width: 50px;
+         height: 50px;
+         border-radius: 5px;
+     }
+
+     #data td {
+         color: black !important;
+     }
+
+</style>
+<div class="container-content" style="margin-top :60px">
+    <div class="sidebar">
+        <nav>
+            <ul class="menu">
+                <li>
+                    <a href="@Url.Action("Index", "Home", new { area = "Manager" })">
+                        <i class="bi bi-credit-card"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("AccountManagement1", "Home", new { area = "Manager" })">
+                        <i class="fas fa-user"></i>
+                        <span>Account</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("payHistory", "Home", new { area = "Manager" })">
+                        <i class="bi bi-currency-exchange"></i>
+                        <span>Pay History</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="@Url.Action("MenuManager", "Home", new { area = "Manager" })">
+                        <i class="bi bi-list"></i>
+                        <span>MenuManage</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-user"></i>
+                        <span>Procedures</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-user"></i>
+                        <span> Service(..)</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+    <div class="text-center">
+        <section class="p-3">
+            <div class="content-text"><h1 style="color: black;font-weight: bold;">MenuManagement</h1></div>
+            <div class="col-12">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#SupplyForm">New Item</button>
+
+                <!--search-->
+                <div class="group">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+                        <g>
+                            <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+                        </g>
+                    </svg>
+
+                    <input id="query"
+                           class="input"
+                           type="search"
+                           placeholder="Search..."
+                           name="searchbar" />
+                </div>
+
+            </div>
+        </section>
+
+        <div class="MenuView">
+            <div class="MenuList">
+                <table class="List-Menu">
+                    <thead>
+                        <tr>
+                            <th>Item ID</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Catetory</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="menuText" style="color: black !important" id="data">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="pagination" class="mt-3"></div>
+    </div>
+</div>
+<!-- add item-->
+<div class="modal fade" id="SupplyForm">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="SupplyFormLabel">Add Item</h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="myForm">
+                    <div class="inputField">
+                        <div>
+                            <label for="itemId">Item ID</label>
+                            <input type="text" id="itemId" name="itemId" readonly> <!-- ID is usually read-only -->
+                        </div>
+                        <div>
+                            <label for="image">Image</label>
+                            <input type="file" id="image" name="image" accept="image/*">
+                            <br>
+                            <img id="imagePreview" src="" alt="Image Preview" style="max-width: 100%; display: none;">
+                        </div>
+                        <div>
+                            <label for="productName">Name</label>
+                            <input type="text" id="productName" name="productName">
+                        </div>
+                        <div>
+                            <label for="category">Category</label>
+                            <select id="category" name="category">
+                                <option value="Main course">Main course</option>
+                                <option value="Dessert">Dessert</option>
+                                <option value="Drink">Drink</option>
+                                <option value="Salad">Salad</option>
+                                <option value="Fruit">Fruit</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="price">Price</label>
+                            <input type="text" id="price" name="price">
+                        </div>
+                        <div>
+                            <label for="description">Description</label>
+                            <input type="text" id="description" name="description">
+                        </div>
+                        <div>
+                            <label for="status">Status</label>
+                            <select id="status" name="status">
+                                <option value="Still">Still</option>
+                                <option value="Sold Out">Sold Out</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning" id="submitBtn">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Read Supply Form -->
+<div class="modal fade" id="readData">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Supply Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="myForm">
+                    <div class="inputField">
+                        <div>
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" disabled>
+                        </div>
+                        <div>
+                            <label for="category">Category</label>
+                            <input type="text" id="category" disabled>
+                        </div>
+                        <div>
+                            <label for="price">Price</label>
+                            <input type="text" id="price" disabled>
+                        </div>
+                        <div>
+                            <label for="description">Description</label>
+                            <input type="text" id="description" disabled>
+                        </div>
+                        <div>
+                            <label for="status">Status</label>
+                            <input type="text" id="status" disabled>
+                        </div>
+                        <div>
+                            <label for="imagePreview">Image</label>
+                            <img id="imagePreview" src="" alt="Image Preview" style="width: 200px;height: 50px; display: none;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Sample data array
+    const menuData = [
+        { id: 1, image: "/images/pizza-1.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 2, image: "/images/pizza-1.jpg", name: "drink", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 3, image: "/images/pizza-2.jpg", name: "burger", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Sold Out" },
+        { id: 4, image: "/images/pizza-3.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 5, image: "/images/pizza-4.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Sold Out" },
+        { id: 6, image: "/images/pizza-5.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 7, image: "/images/pizza-6.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 8, image: "/images/pizza-7.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 9, image: "/images/pizza-1.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 10, image: "/images/pizza-1.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Sold Out" },
+        { id: 10, image: "/images/pizza-1.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 10, image: "/images/pizza-1.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Sold Out" },
+        { id: 10, image: "/images/pizza-1.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Still" },
+        { id: 10, image: "/images/pizza-1.jpg", name: "Pizza", category: "Food", price: "10.000", description: "Ngon tuyệt đối", status: "Sold Out" },
+
+
+    ];
+    // Variables for pagination
+    let currentPage = 1;
+    const itemsPerPage = 5; // Adjust as needed
+    let filteredData = [...menuData]; // Start with all items
+
+    // Function to render table data with pagination
+    function renderTableData() {
+        const tbody = document.getElementById("data");
+        tbody.innerHTML = ""; // Clear existing data
+        // Calculate the start and end indices of items on the current page
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedData = filteredData.slice(start, end);
+
+        // Render the current page of items
+        paginatedData.forEach(item => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td><img src="${item.image}" alt="${item.name}" class="item-image"></td>
+                <td>${item.name}</td>
+                <td>${item.category}</td>
+                <td>${item.price}</td>
+                <td>${item.description}</td>
+                <td>
+                    <span class="badge ${item.status === 'Still' ? 'bg-success' : 'bg-danger'}">
+                        ${item.status === 'Still' ? 'Still' : 'Sold Out'}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#readData"><i class="bi bi-eye"></i></button>
+                    <button class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
+                    <button class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        renderPaginationControls();
+    }
+
+    // Function to render pagination controls with page numbers
+    function renderPaginationControls() {
+        const paginationControls = document.getElementById("pagination");
+        paginationControls.innerHTML = ""; // Clear existing controls
+
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+        // Previous button
+        if (currentPage > 1) {
+            const prevButton = document.createElement("button");
+            prevButton.textContent = "Previous";
+            prevButton.classList.add("btn", "btn-secondary", "me-2");
+            prevButton.style.backgroundColor = "rgba(113, 99, 186, 1)";
+            prevButton.addEventListener("click", () => {
+                currentPage--;
+                renderTableData();
+            });
+            paginationControls.appendChild(prevButton);
+        }
+
+        // Page number buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement("button");
+            pageButton.textContent = i;
+            pageButton.classList.add("btn", "me-1");
+            pageButton.classList.add(i === currentPage ? "btn-primary" : "btn-light");
+
+            pageButton.addEventListener("click", () => {
+                currentPage = i;
+                renderTableData();
+            });
+            paginationControls.appendChild(pageButton);
+        }
+
+        // Next button
+        if (currentPage < totalPages) {
+            const nextButton = document.createElement("button");
+            nextButton.textContent = "Next";
+            nextButton.classList.add("btn", "btn-secondary");
+            nextButton.style.backgroundColor = "rgba(113, 99, 186, 1)";
+            nextButton.addEventListener("click", () => {
+                currentPage++;
+                renderTableData();
+            });
+            paginationControls.appendChild(nextButton);
+        }
+    }
+
+    // Function to handle search and filter menu items
+    function handleSearch() {
+        const query = document.getElementById("query").value.toLowerCase();
+
+        // Filter menuData based on the search query
+        filteredData = menuData.filter(item => {
+            return (
+                item.name.toLowerCase().includes(query) ||
+                item.category.toLowerCase().includes(query) ||
+                item.description.toLowerCase().includes(query) ||
+                item.price.toLowerCase().includes(query) ||
+                item.id.toString().includes(query) ||
+                item.status.toLowerCase().includes(query) // Search by status
+            );
+        });
+
+        // Reset to first page after a search
+        currentPage = 1;
+
+        // Re-render table data and pagination after search
+        renderTableData();
+    }
+
+    // Event listener for search input
+    document.getElementById("query").addEventListener("input", handleSearch);
+
+    // Call the function to render the initial data
+    renderTableData();
+
+    // Function to handle form submission and add a new item
+    document.getElementById('myForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get values from the form
+        const itemId = document.getElementById('itemId').value; // Item ID (read-only)
+        const image = document.getElementById('image').files[0]; // Image file
+        const productName = document.getElementById('productName').value;
+        const category = document.getElementById('category').value;
+        const price = document.getElementById('price').value;
+        const description = document.getElementById('description').value;
+        const status = document.getElementById('status').value;
+
+        // Check if all required fields are filled
+        if (!productName || !category || !price || !description || !status) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        // Create a new item object
+        const newItem = {
+            id: menuData.length + 1, // Item ID should be unique, so using menuData length for new ID
+            image: URL.createObjectURL(image), // Use URL.createObjectURL to preview the image
+            name: productName,
+            category: category,
+            price: price,
+            description: description,
+            status: status
+        };
+
+        // Add the new item to the menuData array
+        menuData.push(newItem);
+        filteredData = [...menuData]; // Update filteredData to include the new item
+
+        // Re-render the table data with the updated menuData array
+        renderTableData();
+
+
+        // Close the modal after submitting
+        $('#SupplyForm').modal('hide');
+
+        // Reset the form
+        document.getElementById('myForm').reset();
+
+        // Clear the image preview
+        document.getElementById('imagePreview').style.display = 'none';
+    });
+
+    // Function to preview the image selected in the file input
+    document.getElementById('image').addEventListener('change', function (event) {
+        const imagePreview = document.getElementById('imagePreview');
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block'; // Show the image preview
+                imagePreview.style.width = '200px'; // Show the image preview
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.style.display = 'none'; // Hide the image preview if no file is selected
+        }
+    });
+
+
+</script>

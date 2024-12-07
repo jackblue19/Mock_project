@@ -21,8 +21,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));  // Get the client's IP address
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
-            vnpay.AddRequestData("vnp_OderInfo", $"Thanh toan don hang:" + model.BillId);  // Correct dynamic description
-            vnpay.AddRequestData("vnp_OderType", "other");  // Assuming "other" for order type
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang:" + model.BillId); // Correct key
+            vnpay.AddRequestData("vnp_OrderType", "other"); // Correct key
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick);
 
@@ -48,8 +48,11 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             if (!checkSignature) {
                 return new VnPaymentResponseModel {
                     Success = false,
+                    OrderDescription = vnp_OrderInfo, 
+                    VnPayResponseCode = "Invalid signature"
                 };
             }
+
 
             return new VnPaymentResponseModel {
                 Success = true,

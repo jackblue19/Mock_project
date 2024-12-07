@@ -141,7 +141,6 @@ public class CartController : Controller {
         return Ok();
     }
 
-    [HttpGet]
     public async Task<IActionResult> Checkout(string payment = "VnPay") {
         if (ModelState.IsValid) {
             var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
@@ -160,40 +159,44 @@ public class CartController : Controller {
 
     }
     // In CartController
-    [HttpPost]
+    [HttpGet]
     [Route("api/bill/checkout")]
-    public async Task<IActionResult> CheckoutAPI() {
-        if (ModelState.IsValid) {
-            var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
-            if (string.IsNullOrEmpty(usn)) {
-                return RedirectToAction("Login", "Account");
-            }
-
-            // Fetch the account associated with the username
-            var acc = await _accountRepository.GetAccountByUsnAsync(usn);
-            if (acc == null) {
-                ViewBag.ErrorMessage = "Account not found.";
-                return BadRequest("Account not found.");
-            }
-
-            int billId = await _billRepository.GetLatestBillIdByUsn(usn);
-
-            if (true) {
-                var vnPayModel = new VnPaymentRequestModel {
-                    BillId = billId,
-                    CreatedDate = DateTime.Now,
-                    Description = $"{acc.Name}",
-                    Amount = 1000,
-                    PaymentMethod = "VnPay",
-                };
-                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
-                //return RedirectToAction("Index", "Home");
-            }
-
+    public async Task<IActionResult> CheckoutAPI([FromQuery] string payment) {
+        if (!ModelState.IsValid) {
+            return BadRequest("Invalid request.");
         }
-        return BadRequest("");
 
+        var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
+        if (string.IsNullOrEmpty(usn)) {
+            return Unauthorized(new { message = "User is not logged in." });
+        }
+
+        var acc = await _accountRepository.GetAccountByUsnAsync(usn);
+        if (acc == null) {
+            return NotFound(new { message = "Account not found." });
+        }
+
+        int billId = await _billRepository.GetLatestBillIdByUsn(usn);
+        if (billId == 0) {
+            return BadRequest(new { message = "No bill found for user." });
+        }
+
+        var vnPayModel = new VnPaymentRequestModel {
+            BillId = billId,
+            CreatedDate = DateTime.Now,
+            Description = $"Payment for order #{billId} by {acc.Name}",
+            Amount = 100000, // Payment amount
+            PaymentMethod = payment
+        };
+
+        try {
+            var paymentUrl = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel);
+            return Ok(new { paymentUrl });
+        } catch (Exception ex) {
+            return StatusCode(500, new { message = "Internal server error.", details = ex.Message });
+        }
     }
+
 
     private CheckoutDTO GetCheckout() {
         // Retrieve cart from session
@@ -278,17 +281,17 @@ public class CartController : Controller {
         return RedirectToAction("Cart");
     }
 
-    [Authorize]
+    [AllowAnonymous]
     public IActionResult PaymentFail() {
         return View("PaymentFail");
     }
 
-    [Authorize]
+    [AllowAnonymous]
     public IActionResult PaymentSuccess() {
         return View("PaymentSuccess");
     }
 
-    [Authorize]
+    [AllowAnonymous]
     public IActionResult PaymentCallBack() {
         var response = _vnPayService.PaymentExecute(Request.Query);
 

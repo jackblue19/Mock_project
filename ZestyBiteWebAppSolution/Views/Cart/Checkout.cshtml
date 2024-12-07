@@ -57,7 +57,7 @@
                             <label class="custom-control-label" for="COD">COD</label>
                         </div>
                         <hr class="mb-4">
-                        <input class="btn btn-primary btn-lg btn-block" type="submit" onclick="handleCheckout()"/>Continue to payment
+                        <input class="btn btn-primary btn-lg btn-block" type="submit" onclick="handleCheckout()"/>
                     </div>
 
                 </div>
@@ -71,30 +71,28 @@
     <script src="~/js/jquery.min.js"></script>
     <script src="~/js/popper.min.js"></script>
     <script>
-         async function handleCheckout() {
+        async function handleCheckout() {
+            try {
+                // Thay vì fetch trực tiếp đến VNPay, chỉ gọi API server
+                let response = await fetch('/api/bill/checkout?payment=VnPay', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-             try {
-                 // Gửi yêu cầu POST tới API "/api/bill/checkout"
-                 let response = await fetch('/api/bill/checkout', {
-                     method: 'POST',
-                     headers: {
-                         'Content-Type': 'application/json'
-                     },
-                     body: JSON.stringify({
-                         payment: "VnPay" // Hoặc thay bằng giá trị động nếu cần
-                     })
-                 });
-
-                 if (response.ok) {
-                     console.log("Thanh toán đã được xử lý thành công.");
-                     // Tiến hành chuyển hướng hoặc thực hiện hành động sau khi thanh toán thành công
-                     // window.location.href = '/payment-success'; // Ví dụ chuyển hướng đến trang thành công
-                 } else {
-                     console.error("Có lỗi khi xử lý thanh toán.");
-                 }
-             } catch (error) {
-                 console.error("Lỗi kết nối với API:", error);
-             }
-         }
+                if (response.ok) {
+                    // Giả sử server trả về URL VNPay để chuyển hướng
+                    let result = await response.json();
+                    if (result.paymentUrl) {
+                        window.location.href = result.paymentUrl; // Thực hiện chuyển hướng
+                    }
+                } else {
+                    console.error("Có lỗi khi xử lý thanh toán.");
+                }
+            } catch (error) {
+                console.error("Lỗi kết nối với API:", error);
+            }
+        }
      </script> 
 }

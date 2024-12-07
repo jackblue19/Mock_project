@@ -72,7 +72,8 @@ namespace ZestyBiteWebAppSolution.Controllers
 
 
         [AllowAnonymous]
-        [HttpPost]
+        // [HttpPost]
+        [HttpPost("api/account/login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
             // Kiểm tra tính hợp lệ của dữ liệu đầu vào
@@ -86,7 +87,6 @@ namespace ZestyBiteWebAppSolution.Controllers
                 try
                 {
                     HttpContext.Session.SetString("username", dto.Username);
-
                     Response.Cookies.Append("username", dto.Username, new CookieOptions
                     {
                         Expires = DateTimeOffset.Now.AddMinutes(30),
@@ -94,8 +94,8 @@ namespace ZestyBiteWebAppSolution.Controllers
                         Secure = Request.IsHttps,
                         SameSite = SameSiteMode.Strict
                     });
-
-                    return RedirectToAction("Index", "Home");
+                    return Ok("login done");
+                    // return RedirectToAction("Index", "Home");
                 }
                 catch (Exception)
                 {

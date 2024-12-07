@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.DTOs;
@@ -292,13 +293,16 @@ public class CartController : Controller {
     }
 
     [AllowAnonymous]
-    public IActionResult PaymentCallBack() {
+    public async Task<IActionResult> PaymentCallBack() {
+        
         var response = _vnPayService.PaymentExecute(Request.Query);
-
+        //string abc = response.OrderId;
         if (response == null || response.VnPayResponseCode != "00") {
             TempData["Message"] = $"Payment failed: {response?.VnPayResponseCode}";
             return RedirectToAction("PaymentFail");
         }
+        //long xyz = Convert.ToInt64(abc);
+        //await _billRepository.UpdateBill(xyz);
 
         TempData["Message"] = "Payment successful.";
 

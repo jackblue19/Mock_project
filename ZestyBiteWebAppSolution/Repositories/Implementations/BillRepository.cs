@@ -47,8 +47,24 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations {
 
             return 0;  // Return 0 if no bill is found
         }
+        public async Task<Account> GetUsnById(int billid) {
+            var bbb = await _context.Bills.FirstOrDefaultAsync(p => p.BillId == billid);
+            var tb = await _tb.GetByIdAsync(bbb.TableId);
+            var acc = await _acc.GetByIdAsync(tb.AccountId);
+            return acc;
+        }
 
+        public async Task<Bill?> GetBillById (int billId) {
+            return  _context.Bills.FirstOrDefault(p => p.BillId == billId);
+        }
 
-        /// get latest total cost by usn => sqlraw -> procedure -> execute
+        public async Task<Bill?> UpdateBill(int billId) {
+            var b = _context.Bills.FirstOrDefault(p => p.BillId == billId);
+            b.BillStatus = 1;
+            _context.Bills.Update(b);
+            await _context.SaveChangesAsync();
+            return b;
+        }
+
     }
 }

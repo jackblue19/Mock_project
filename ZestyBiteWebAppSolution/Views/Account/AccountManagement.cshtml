@@ -411,6 +411,8 @@
                 roleId: document.getElementById('roleId').value
             };
 
+            console.log(accountData); // Log the data to verify
+
             const response = await fetch(`/api/account/updateacc`, {
                 method: 'POST',
                 headers: {
@@ -456,14 +458,13 @@
 
         async function manageStatus() {
             const username = document.getElementById('username').value;
-            const status = document.getElementById('status').value;
 
-            const response = await fetch(`/api/account/status/${username}`, {
+            const response = await fetch(`/api/account/status`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ status })
+                body: JSON.stringify({username})
             });
 
             if (response.ok) {
@@ -477,15 +478,26 @@
         async function deleteAccount() {
             const username = document.getElementById('username').value;
 
-            const response = await fetch(`/api/account/delete/${username}`, {
-                method: 'DELETE'
-            });
+            try {
+                const response = await fetch(`/api/account/deleteacc`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({username})
+                });
 
-            if (response.ok) {
-                await loadAccounts();
-                closePopup();
-            } else {
-                console.error('Error deleting account:', await response.text());
+                if (response.ok) {
+                    await loadAccounts();
+                    console.error('Delete account successfully!');
+                    closePopup();
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                alert('Error deleting account: ' + error.message);
             }
         }
 
@@ -518,15 +530,6 @@
             localStorage.setItem('accounts', JSON.stringify(accounts));
             renderAccountTable();
             closePopup();
-        }
-
-        function deleteAccount() {
-            const id = parseInt(document.getElementById('id').value);
-            accounts = accounts.filter(account => account.id !== id);
-
-            localStorage.setItem('accounts', JSON.stringify(accounts));
-            renderAccountTable();
-            closePopup(); // Make sure to check the account controller before fetching
         }
 
         function searchAccounts() {

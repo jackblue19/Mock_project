@@ -106,7 +106,7 @@
                 const itemName = selectedItem ? selectedItem.itemName : "Unknown Item"; // Fallback if not found
                 const parentFeedbackId = null; // Set ParentFb to null as per your requirement
 
-                fetch('http://localhost:5024/api/feedback/submitfeedback', {
+                fetch('/api/feedback/submitfeedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

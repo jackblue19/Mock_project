@@ -25,17 +25,17 @@ namespace ZestyBiteWebAppSolution.Controllers
         // [Authorize(Roles = "Manager")]
         [HttpGet]
         [Route("viewmenu")]
-        public async Task<IResult> ViewMenu()
+        public async Task<ActionResult<IEnumerable<EItemDTO>>> ViewMenu()
         {
             try
             {
                 var dishes = _service.ViewAllItem();
-                if (dishes == null) return TypedResults.NotFound("No dishes here");
-                return TypedResults.Ok(dishes);
+                if (dishes == null) return NotFound("No dishes here");
+                return Ok(dishes);
             }
             catch
             {
-                return TypedResults.BadRequest("Can not get the dishes");
+                return BadRequest("Can not get the dishes");
             }
         }
 

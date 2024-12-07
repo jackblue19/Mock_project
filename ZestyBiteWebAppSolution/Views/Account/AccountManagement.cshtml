@@ -24,7 +24,8 @@
             font-size: 24px;
         }
 
-        .AccountSearch, .AccountCreate {
+        .AccountSearch,
+        .AccountCreate {
             width: 50%;
             height: 80px;
             display: flex;
@@ -69,7 +70,8 @@
             border-collapse: collapse;
         }
 
-        table.List th, table.List td {
+        table.List th,
+        table.List td {
             text-align: center;
             padding: 8px;
             vertical-align: middle;
@@ -85,12 +87,14 @@
             border-top: 2px solid #ddd;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #000;
             word-wrap: break-word;
         }
 
-        th:nth-child(1), td:nth-child(1) {
+        th:nth-child(1),
+        td:nth-child(1) {
             width: 30px;
         }
 
@@ -233,7 +237,8 @@
     <div class="AccountBody ftco-animate">
         <div class="AccountFunction">
             <div class="AccountSearch ftco-animate ">
-                <input id="search" type="search" placeholder="Search..." autofocus required oninput="searchAccounts()" />
+                <input id="search" type="search" placeholder="Search..." autofocus required
+                    oninput="searchAccounts()" />
             </div>
             <div class="AccountCreate ftco-animate">
                 <button onclick="showCreatePopup()">Create</button>
@@ -268,50 +273,31 @@
 
     <script>
         let accounts = [];
-        renderAccountTable(accounts); 
+        renderAccountTable(accounts);
 
         function renderAccountTable(accounts) {
-    const tbody = document.getElementById('accountTableBody');
-    tbody.innerHTML = ''; // Xóa nội dung cũ
+            const tbody = document.getElementById('accountTableBody');
+            tbody.innerHTML = ''; // Xóa nội dung cũ
 
-    accounts.forEach(account => {
-        const row = document.createElement('tr');
-        row.classList.add('username');
-        row.setAttribute('data-username', account.username);
+            accounts.forEach(account => {
+                const row = document.createElement('tr');
+                row.onclick = () => showPopup(account.id);
 
-        row.innerHTML = `
-            <td>${account.status === 1 ? 'Active' : 'Blocked'}</td>
-            <td>${account.username}</td>
-            <td>${account.password}</td>
-            <td>${account.name}</td>
-            <td>${account.phone}</td>
-            <td>${account.address}</td>
-            <td>${account.gender === 1 ? 'Male' : 'Female'}</td>
-            <td>${account.email}</td>
-            <td>${account.roleDescription}</td>
-        `;
+                row.innerHTML = `
+                    <td>${account.status === 1 ? 'Unlock' : 'Lock'}</td>
+                    <td>${account.username}</td>
+                    <td>${account.password}</td>
+                    <td>${account.name}</td>
+                    <td>${account.phone}</td>
+                    <td>${account.address}</td>
+                    <td>${account.gender === 1 ? 'Male' : 'Female'}</td>
+                    <td>${account.email}</td>
+                    <td>${account.roleDescription}</td>
+                `;
 
-        row.addEventListener('click', () => {
-            fetchAccountDetails(account.username);
-        });
-
-        tbody.appendChild(row);
-    });
-}
-
-
-        async function fetchAccountDetails(username) {
-    try {
-        const responsez = await fetch(`/api/account/${username}`);
-        if (!responsez.ok) {
-            throw new Error('Network response was not ok');
+                tbody.appendChild(row);
+            });
         }
-        const accountz = await responsez.json();
-        showPopup(accountz);
-    } catch (error) {
-        console.error('Error fetching account details:', error);
-    }
-}
 
 
         async function loadAccounts() {
@@ -321,7 +307,7 @@
                     throw new Error('Network response was not ok');
                 }
                 const accounts = await response.json();
-                renderAccountTable(accounts); 
+                renderAccountTable(accounts);
             } catch (error) {
                 console.error('Error fetching accounts:', error);
             }
@@ -369,69 +355,7 @@
             }
         }
 
-        function showPopup(account) {
-    const isNewAccount = !account;
-
-    document.getElementById('popupTitle').textContent = isNewAccount ? 'Create New Account' : 'Edit Account';
-
-    const fields = [
-        {
-            name: 'status', label: 'Status', type: 'select', options: [
-                { value: 1, text: 'Unlock' },
-                { value: 0, text: 'Lock' } 
-            ]
-        },
-        { name: 'username', label: 'Username', type: 'text', readonly: true },
-        { name: 'password', label: 'Password', type: 'password', readonly: true },
-        { name: 'name', label: "User 's Name", type: 'text', readonly: true },
-        { name: 'phone', label: 'Phone Number', type: 'text', readonly: true },
-        { name: 'address', label: 'Address', type: 'text', readonly: true },
-        {
-            name: 'gender', label: 'Gender', type: 'select', options: [
-                { value: 1, text: 'Male' },
-                { value: 0, text: 'Female' }
-            ]
-        },
-        { name: 'email', label: 'Email', type: 'text', readonly: true },
-        { name: 'verificationCode', label: 'Verification Code', type: 'text', readonly: true },
-        {
-            name: 'roleId', label: 'Role ID', type: 'select', options: [
-                { value: 1, text: 'Manager' },
-                { value: 2, text: 'Order Taker' },
-                { value: 3, text: 'Procurement Manager' },
-                { value: 4, text: 'Server Staff' },
-                { value: 5, text: 'Customer Service Staff' },
-                { value: 6, text: 'Food Runner' },
-                { value: 7, text: 'Customer' }
-            ]
-        }
-    ];
-
-    const infoTableBody = document.getElementById('infoTableBody');
-    infoTableBody.innerHTML = fields.map(field => `
-        <tr>
-            <td><strong>${field.label}</strong></td>
-            <td>
-                ${field.type === 'select'
-                    ? `<select id="${field.name}">
-                        ${field.options.map(option => `
-                            <option value="${option.value}" ${account && account[field.name] == option.value ? 'selected' : ''}>
-                                ${option.text}
-                            </option>`).join('')}
-                       </select>`
-                    : `<input type="${field.type}" id="${field.name}" value="${account ? account[field.name] || '' : ''}" ${field.readonly ? 'readonly' : ''}>`
-                }
-            </td>
-        </tr>
-    `).join('');
-
-    document.getElementById('updateButton').textContent = isNewAccount ? 'Create' : 'Update';
-    document.getElementById('deleteButton').style.display = isNewAccount ? 'none' : 'block';
-
-    document.getElementById('popupOverlay').style.display = 'block';
-    document.getElementById('infoPopup').style.display = 'block';
-}
-
+        function showPopup(id) {
             const account = id ? accounts.find(a => a.id === id) : {};
             const isNewAccount = !id;
 
@@ -485,8 +409,7 @@
                     : `<input type="${field.type}" id="${field.name}" value="${account[field.name] || ''}" ${field.readonly ? 'readonly' : ''}>`
                 }
                     </td>
-                </tr>
-            `).join('');
+                </tr>`).join('');
 
             // Set the status to the correct value for existing accounts
             if (account.status !== undefined) {

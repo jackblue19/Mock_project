@@ -90,5 +90,16 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 throw new InvalidOperationException("Error occured while fetching table items by table id");
             }
         }
+        public TableDTO MapToTableDTO(Table table) {
+            return new TableDTO {
+                TableId = table.TableId,
+                TableCapacity = table.TableCapacity,
+                TableMaintenance = table.TableMaintenance,
+                TableType = table.TableType,
+                TableStatus = table.TableStatus,
+                TableNote = table.TableNote,
+                AccountId = table.AccountId
+            };
+        }
     }
 }

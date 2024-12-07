@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ZestyBiteWebAppSolution.Models.DTOs
 {
@@ -14,5 +13,9 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
 
         [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; } = null!;
+    }
+    public class PaymentFlagDTO
+    {
+        public string Flag { get; set; }
     }
 }

@@ -1,7 +1,5 @@
-﻿namespace ZestyBiteWebAppSolution.Models.DTOs
-{
-    public class ItemDTO
-    {
+﻿namespace ZestyBiteWebAppSolution.Models.DTOs {
+    public class ItemDTO {
         public int ItemId { get; set; }
         public string ItemName { get; set; } = string.Empty;
         public string ItemCategory { get; set; } = string.Empty;

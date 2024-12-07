@@ -74,7 +74,7 @@
                 </table>
             </div>
         </div>
-        <form method="post" action="@Url.Action("Checkout", "Cart")" id="payment-form">
+        <form method="get" action="@Url.Action("Checkout", "Cart")" id="payment-form">
             <div class="under-table">
                 <table class="calculate">
                     <thead>
@@ -90,7 +90,8 @@
                                 </div>
                             </th>
                             <th>
-                                <input type="submit" class="confirmPay mt-2 w-100" value="Payment" />
+                                <input type="hidden" id="paymentFlag" name="paymentFlag" value="0" />
+                                <input type="submit" class="confirmPay mt-2 w-100" value="Continue to checkout" onclick="updatePaymentFlag()" />
                             </th>
                         </tr>
                     </thead>
@@ -138,4 +139,45 @@
 
         updateSelectedItems();  // Update the overall total
     }
+    async function updatePaymentFlag() {
+        // Cập nhật giá trị paymentFlag thành 1
+        document.getElementById('paymentFlag').value = '1';
+
+        try {
+            // Gửi yêu cầu POST tới API "/api/Cart/Change" để cập nhật session uflag
+            let response1 = await fetch('/api/Cart/Change', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+
+            if (response1.ok) {
+                console.log("Session uflag đã được cập nhật thành công.");
+
+                // Sau khi cập nhật uflag thành công, gọi API thứ hai "/api/cart/saving"
+                let response2 = await fetch('/api/cart/saving', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (response2.ok) {
+                    console.log("Cart đã được lưu thành công.");
+                    // Tiến hành các hành động khác, ví dụ như chuyển hướng đến trang thanh toán
+                    // window.location.href = '/checkout'; // Ví dụ chuyển hướng đến trang thanh toán
+                } else {
+                    console.error("Có lỗi khi lưu cart.");
+                }
+            } else {
+                console.error("Có lỗi khi cập nhật session uflag.");
+            }
+        } catch (error) {
+            console.error("Lỗi kết nối với API:", error);
+        }
+    }
+
 </script>

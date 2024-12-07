@@ -9,8 +9,8 @@ using ZestyBiteWebAppSolution.Services.Interfaces;
 namespace ZestyBiteWebAppSolution.Controllers
 {
     // [AllowAnonymous]
-    [ApiController]
-    [Route("api/[controller]")]
+    // [ApiController]
+    // [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _service;
@@ -73,9 +73,9 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
+            // Kiểm tra tính hợp lệ của dữ liệu đầu vào
             if (!ModelState.IsValid)
             {
                 return View(dto);
@@ -86,25 +86,26 @@ namespace ZestyBiteWebAppSolution.Controllers
                 try
                 {
                     HttpContext.Session.SetString("username", dto.Username);
+
                     Response.Cookies.Append("username", dto.Username, new CookieOptions
                     {
                         Expires = DateTimeOffset.Now.AddMinutes(30),
                         HttpOnly = true,
-                        Secure = false,
+                        Secure = Request.IsHttps,
                         SameSite = SameSiteMode.Strict
                     });
-                    return Ok("Login done");
-                    // return RedirectToAction("Index", "Home");
+
+                    return RedirectToAction("Index", "Home");
                 }
-                catch
+                catch (Exception)
                 {
-                    throw new Exception("dunno error");
+                    return StatusCode(500, new { message = "An unexpected error occurred during login." });
                 }
             }
 
             return Unauthorized(new { message = "Invalid username or password" });
         }
-        
+
 
         // [HttpPost]
         // public async Task<IActionResult> ForgotPassword(string email)
@@ -356,22 +357,27 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
         [AllowAnonymous]
-        [HttpPost]
-        [Route("logout")]
+        // [Route("logout")]
         public IActionResult Logout()
         {
             try
             {
                 HttpContext.Session.Remove("username");
                 Response.Cookies.Delete("username");
-                // return RedirectToAction("Index", "Home");
-                return Ok("log out sucees");
+                return RedirectToAction("Index", "Home");
+                // return Ok("log out sucees");
             }
             catch
             {
                 return BadRequest("cant log out!!!");
             }
         }
+        /*
+        admin_user
+        adminpass
+        customer1
+        customerpass
+        */
         [Authorize(Roles = "Manager")]
         [HttpPost]
         [Route("addstaff")]
@@ -413,7 +419,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             {
                 var dto = await _service.GetAccountByUsnAsync(username);
                 if (dto == null)
-                return TypedResults.NotFound("Account not found");
+                    return TypedResults.NotFound("Account not found");
                 return TypedResults.Ok(dto);
             }
             catch
@@ -436,8 +442,5 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
-
-
-
     }
 }

@@ -76,14 +76,11 @@ public partial class ZestyBiteContext : DbContext
 
             entity.ToTable("bill");
 
-            entity.HasIndex(e => e.AccountId, "Account_ID");
-
             entity.HasIndex(e => e.PaymentId, "Payment_ID");
 
             entity.HasIndex(e => e.TableId, "Table_ID");
 
             entity.Property(e => e.BillId).HasColumnName("Bill_ID");
-            entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.BillDatetime)
                 .HasColumnType("datetime")
                 .HasColumnName("Bill_Datetime");
@@ -95,11 +92,6 @@ public partial class ZestyBiteContext : DbContext
                 .HasPrecision(14)
                 .HasColumnName("Total_Cost");
 
-            entity.HasOne(d => d.Account).WithMany(p => p.Bills)
-                .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("bill_ibfk_2");
-
             entity.HasOne(d => d.Payment).WithMany(p => p.Bills)
                 .HasForeignKey(d => d.PaymentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -108,7 +100,7 @@ public partial class ZestyBiteContext : DbContext
             entity.HasOne(d => d.Table).WithMany(p => p.Bills)
                 .HasForeignKey(d => d.TableId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("bill_ibfk_3");
+                .HasConstraintName("bill_ibfk_2");
         });
 
         modelBuilder.Entity<Feedback>(entity =>

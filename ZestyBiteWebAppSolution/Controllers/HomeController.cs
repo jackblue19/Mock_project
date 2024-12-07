@@ -4,24 +4,31 @@ using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.ViewModel;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteSolution.Controllers {
+namespace ZestyBiteSolution.Controllers
+{
     [AllowAnonymous]
-    public class HomeController : Controller {
+    public class HomeController : Controller
+    {
         private readonly IItemService _itemService;
 
-        public HomeController(IItemService itemService) {
+        public HomeController(IItemService itemService)
+        {
             _itemService = itemService;
         }
 
-        private CheckoutDTO GetShoppingCart() {
+        private CheckoutDTO GetShoppingCart()
+        {
             var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>("ShoppingCart");
-            if (cart == null) {
+            if (cart == null)
+            {
                 cart = new CheckoutDTO();
             }
             return cart;
         }
-
-        public async Task<IActionResult> Index(int? cartTotalItems) {
+        
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(int? cartTotalItems)
+        {
             var items = await _itemService.GetAllItemsAsync();
 
             var pizzaItems = items.Where(i => i.ItemCategory == "Pizza").ToList();
@@ -29,7 +36,8 @@ namespace ZestyBiteSolution.Controllers {
             var pastaItems = items.Where(i => i.ItemCategory == "Pasta").ToList();
             var burgersItems = items.Where(i => i.ItemCategory == "Burgers").ToList();
 
-            var viewModel = new IndexViewModel {
+            var viewModel = new IndexViewModel
+            {
                 PizzaItems = pizzaItems,
                 DrinkItems = drinkItems,
                 PastaItems = pastaItems,
@@ -41,29 +49,35 @@ namespace ZestyBiteSolution.Controllers {
             viewModel.TotalItems = cart.Items?.Sum(i => i.Quantity) ?? 0;
 
             // If cartTotalItems is passed as a query parameter, update the badge count
-            if (cartTotalItems.HasValue) {
+            if (cartTotalItems.HasValue)
+            {
                 viewModel.TotalItems = cartTotalItems.Value;
             }
 
             return View(viewModel);
         }
 
-        public IActionResult About() {
+        public IActionResult About()
+        {
             return View();
         }
 
-        public IActionResult Feedback() {
+        public IActionResult Feedback()
+        {
             return View();
         }
 
-        public IActionResult Contact() {
+        public IActionResult Contact()
+        {
             return View();
         }
-        public IActionResult Blog() {
+        public IActionResult Blog()
+        {
             return View();
         }
 
-        public async Task<IActionResult> Menu(int page = 1) {
+        public async Task<IActionResult> Menu(int page = 1)
+        {
             int pageSize = 6;
 
             var itemsDTO = await _itemService.GetAllItemsAsync();
@@ -82,7 +96,8 @@ namespace ZestyBiteSolution.Controllers {
             var pastaItems = itemsDTO.Where(i => i.ItemCategory == "Pasta").ToList();
             var burgersItems = itemsDTO.Where(i => i.ItemCategory == "Burgers").ToList();
 
-            var model = new IndexViewModel {
+            var model = new IndexViewModel
+            {
                 PizzaItems = pizzaItems,
                 DrinkItems = drinkItems,
                 PastaItems = pastaItems,
@@ -96,8 +111,10 @@ namespace ZestyBiteSolution.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Search(string query, int page = 1) {
-            if (string.IsNullOrWhiteSpace(query)) {
+        public async Task<IActionResult> Search(string query, int page = 1)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
                 var itemDTO = await _itemService.GetAllItemsAsync();
                 return View("SearchResults", itemDTO);
             }
@@ -115,7 +132,8 @@ namespace ZestyBiteSolution.Controllers {
                 .Take(pageSize)
                 .ToList();
 
-            var model = new IndexViewModel {
+            var model = new IndexViewModel
+            {
                 Items = paginatedItems,
                 CurrentPage = page,
                 TotalPages = totalPages

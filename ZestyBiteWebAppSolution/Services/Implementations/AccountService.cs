@@ -306,5 +306,11 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 return false;
             }
         }
+
+        public async Task<Account?> GetUsnAsync(string username)
+        {
+            var current = await _repository.GetAccountByUsnAsync(username);
+            return current;
+        }
     }
 }

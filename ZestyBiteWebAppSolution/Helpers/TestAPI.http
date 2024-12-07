@@ -1,7 +1,7 @@
 ###
 GET http://localhost:5024/api/item/viewmenu
 ###
-POST  http://localhost:5024/api/account/logout
+GET  http://localhost:5024/api/account/logout
 ###
 GET http://localhost:5024/api/account/getallacc
 ###

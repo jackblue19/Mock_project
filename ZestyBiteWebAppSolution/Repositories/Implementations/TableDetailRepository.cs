@@ -14,19 +14,9 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<TableDetail?>> GetAllAsync()
+        public async Task<IEnumerable<TableDetail>> GetAllAsync()
         {
-            return await _context.TableDetails
-                .Include(td => td.Item)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<TableDetail>> GetByTableIdAsync(int tableId)
-        {
-            return await _context.TableDetails
-                .Include(td => td.Item)
-                .Where(td => td.TableId == tableId)
-                .ToListAsync();
+            return await _context.TableDetails.ToListAsync();
         }
 
         public async Task<TableDetail?> GetByIdAsync(int id)
@@ -72,10 +62,32 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
 
         public async Task CreateRangeAsync(IEnumerable<TableDetail> tableDetails)
         {
-            if (!tableDetails.Any()) throw new ArgumentException("No table details provided.");
+            if (tableDetails == null || !tableDetails.Any())
+            {
+                throw new ArgumentException("No table details provided.");
+            }
+
             await _context.TableDetails.AddRangeAsync(tableDetails);
             await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Table>> GetTableDetailsByAccountIdAsync(int accountId)
+        {
+            return await _context.Tables
+                .Where(td => td.AccountId == accountId)
+                .ToListAsync();
+        }
+
+        Task<IEnumerable<TableDetail>> ITableDetailRepository.GetTableDetailsByAccountIdAsync(int accountId)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<IEnumerable<TableDetail>> GetByTableIdAsync(int tableId)
+        {
+            return await _context.TableDetails
+                .Include(td => td.Item)
+                .Where(td => td.TableId == tableId)
+                .ToListAsync();
+        }
     }
 }

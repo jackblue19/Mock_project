@@ -1,5 +1,5 @@
 namespace ZestyBiteWebAppSolution.Models.DTOs {
-    internal class CheckoutDTO {
+    public class CheckoutDTO {
         public List<CheckoutItemDTO> Items { get; set; } = new List<CheckoutItemDTO>();
 
         public void AddItem(CheckoutItemDTO item) {
@@ -17,6 +17,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs {
                 Items.Remove(itemToRemove);
             }
         }
+        public int? TableId { get; set; }
 
         public int? TotalItems => Items.Sum(i => i.Quantity);
 
@@ -32,5 +33,4 @@ namespace ZestyBiteWebAppSolution.Models.DTOs {
         public string ImageUrl { get; set; } = null!;
         public int? Quantity { get; set; }
     }
-
 }

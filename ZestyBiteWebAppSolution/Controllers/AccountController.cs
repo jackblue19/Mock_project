@@ -49,7 +49,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO dto) {
-            // Kiểm tra tính hợp lệ của dữ liệu đầu vào
             if (!ModelState.IsValid) {
                 return View(dto);
             }
@@ -90,16 +89,20 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto) {
-            var usn = User.Identity?.Name;
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
 
-            if (verifyDto == null || string.IsNullOrEmpty(usn) || string.IsNullOrEmpty(verifyDto.Code))
-                return BadRequest(new { Message = "Invalid verification data" });
+            var usn = User.Identity?.Name;
+            if (string.IsNullOrEmpty(usn))
+                return BadRequest(new { Message = "User not authenticated." });
 
             try {
                 if (!VerificationTasks.ContainsKey(usn)) {
                     await _service.IsDeleteUnregistedAccount(usn);
                     return BadRequest(new { Message = "Verification session expired or not found." });
                 }
+
                 var tcs = VerificationTasks[usn];
 
                 if (!VerificationAttempts.ContainsKey(usn))
@@ -116,16 +119,19 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     VerificationAttempts.TryRemove(usn, out _);
                     HttpContext.Session.Remove("username");
                     Response.Cookies.Delete("username");
+
                     return RedirectToAction("Login", "Account");
                 }
 
                 VerificationAttempts[usn]++;
+
                 if (VerificationAttempts[usn] >= 5) {
                     VerificationTasks.TryRemove(usn, out _);
                     VerificationAttempts.TryRemove(usn, out _);
                     if (await _service.IsDeleteUnregistedAccount(usn))
                         return RedirectToAction("Index", "Home");
                 }
+
                 return RedirectToAction("Index", "Home");
             } catch (Exception ex) {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
@@ -178,19 +184,17 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-
-        [HttpGet]
         [Route("viewprofile")]
         public async Task<IActionResult> ViewProfile() {
             try {
                 var username = User.Identity?.Name;
                 if (string.IsNullOrEmpty(username)) {
-                    return RedirectToAction("Login", "Account"); // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+                    return RedirectToAction("Login", "Account"); 
                 }
 
                 var dto = await _service.ViewProfileByUsnAsync(username);
                 if (dto == null) {
-                    return NotFound(); // Hiển thị trang "Not Found" nếu không tìm thấy người dùng
+                    return NotFound(); 
                 }
                 return View(dto);
             } catch (Exception ex) {

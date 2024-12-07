@@ -320,7 +320,6 @@
             // Locate the parent comment element by its ID
             const parentCommentElement = document.querySelector(`[data-id="${commentId}"]`);
             @* const parentId = parentElement.getAttribute("data-feedback-id"); *@
-
             if (!parentCommentElement) {
                 showNotification("Parent comment not found!");
                 return;

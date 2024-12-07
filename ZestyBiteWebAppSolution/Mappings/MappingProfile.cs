@@ -83,7 +83,49 @@ namespace ZestyBiteWebAppSolution.Mappings {
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item));
-                //.ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.Table)); // Include Table
+            //.ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.Table)); // Include Table
+            // Supply to SupplyDTO mapping
+            CreateMap<Supply, SupplyDTO>()
+                .ForMember(dest => dest.SupplyId, opt => opt.MapFrom(src => src.SupplyId))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
+                .ForMember(dest => dest.SupplyQuantity, opt => opt.MapFrom(src => src.SupplyQuantity))
+                .ForMember(dest => dest.SupplyPrice, opt => opt.MapFrom(src => src.SupplyPrice))
+                .ForMember(dest => dest.SupplyStatus, opt => opt.MapFrom(src => src.SupplyStatus))
+                .ForMember(dest => dest.DateImport, opt => opt.MapFrom(src => src.DateImport))
+                .ForMember(dest => dest.DateExpiration, opt => opt.MapFrom(src => src.DateExpiration))
+                .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
+                .ForMember(dest => dest.VendorName, opt => opt.MapFrom(src => src.VendorName))
+                .ForMember(dest => dest.VendorPhone, opt => opt.MapFrom(src => src.VendorPhone))
+                .ForMember(dest => dest.VendorAddress, opt => opt.MapFrom(src => src.VendorAddress))
+                .ForMember(dest => dest.SupplyCategory, opt => opt.MapFrom(src => src.SupplyCategory));
+
+            // SupplyDTO to Supply mapping
+            CreateMap<SupplyDTO, Supply>()
+                .ForMember(dest => dest.SupplyId, opt => opt.MapFrom(src => src.SupplyId))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
+                .ForMember(dest => dest.SupplyQuantity, opt => opt.MapFrom(src => src.SupplyQuantity))
+                .ForMember(dest => dest.SupplyPrice, opt => opt.MapFrom(src => src.SupplyPrice))
+                .ForMember(dest => dest.SupplyStatus, opt => opt.MapFrom(src => src.SupplyStatus))
+                .ForMember(dest => dest.DateImport, opt => opt.MapFrom(src => src.DateImport))
+                .ForMember(dest => dest.DateExpiration, opt => opt.MapFrom(src => src.DateExpiration))
+                .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
+                .ForMember(dest => dest.VendorName, opt => opt.MapFrom(src => src.VendorName))
+                .ForMember(dest => dest.VendorPhone, opt => opt.MapFrom(src => src.VendorPhone))
+                .ForMember(dest => dest.VendorAddress, opt => opt.MapFrom(src => src.VendorAddress))
+                .ForMember(dest => dest.SupplyCategory, opt => opt.MapFrom(src => src.SupplyCategory));
+
+            CreateMap<SupplyItem, SupplyItemDTO>()
+                           .ForMember(dest => dest.SupplyId, opt => opt.MapFrom(src => src.SupplyId))
+                           .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
+                           .ForMember(dest => dest.SupplyItemProfit, opt => opt.MapFrom(src => src.SupplyItemProfit))
+                           .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Supply.ProductName)) // Thông tin bổ sung từ bảng Supply
+                           .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName));       // Thông tin bổ sung từ bảng Item
+
+            // SupplyItemDTO -> SupplyItem
+            CreateMap<SupplyItemDTO, SupplyItem>()
+                .ForMember(dest => dest.SupplyId, opt => opt.MapFrom(src => src.SupplyId))
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
+                .ForMember(dest => dest.SupplyItemProfit, opt => opt.MapFrom(src => src.SupplyItemProfit));
         }
     }
 }

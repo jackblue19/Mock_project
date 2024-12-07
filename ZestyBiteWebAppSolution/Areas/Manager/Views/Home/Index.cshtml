@@ -1,11 +1,95 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿@{
+    ViewBag.Title = "Supply";
+    Layout = "~/Areas/Manager/Views/Shared/_Layout.cshtml";
 
-namespace ZestyBiteSolution.Areas.Manager.Views.Home
-{
-	public class Index
-	{
-	}
 }
+
+<div class="container-content" style="margin-top :60px">
+        <div class="sidebar">
+            <nav>
+                <ul class="menu">
+                    <li class="active">
+                        <a href="dashboard.html">
+                            <i class="bi bi-credit-card"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="AccountManagement.cshtml">
+                            <i class="fas fa-user"></i>
+                            <span>Account</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payhistory.html">
+                            <i class="bi bi-currency-exchange"></i>
+                            <span> PayHistory</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="bi bi-chat-square-text-fill"></i>
+                            <span> FeedBack</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="menuManagement.html">
+                            <i class="bi bi-list"></i>
+                            <span>MenuManage</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span> Manager</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span> Service(..)</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+        <div class="gird-container">
+            <div class="main-card">
+                <div class="card">
+                    <div class="card-inner">
+                        <p>Purchase</p>
+                        <i class="bi bi-cart"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <p>Revenue</p>
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <p>Pay History</p>
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <p>AccountList</p>
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+                </div>
+                <div class="card charts-card">
+                    <div class="charts-card">
+                        <p class="chart-title">Revenue vs Profit</p>
+                        <div id="bar-chart" style="height: 300px" ;></div>
+                    </div>
+                    <div class="charts-card">
+                        <p class="chart-title">Purchase and Sales Orders</p>
+                        <div id="area-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>

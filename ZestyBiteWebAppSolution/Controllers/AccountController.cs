@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
 using ZestyBiteWebAppSolution.Helpers;
@@ -81,12 +82,13 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return View(dto);
             }
 
+            // Kiểm tra tài khoản và mật khẩu
             if (await _service.IsTrueAccount(dto.Username, dto.Password))
             {
                 try
                 {
+                    // Lưu tên người dùng vào session và cookie
                     HttpContext.Session.SetString("username", dto.Username);
-
                     Response.Cookies.Append("username", dto.Username, new CookieOptions
                     {
                         Expires = DateTimeOffset.Now.AddMinutes(30),
@@ -95,7 +97,25 @@ namespace ZestyBiteWebAppSolution.Controllers
                         SameSite = SameSiteMode.Strict
                     });
 
-                    return RedirectToAction("Index", "Home");
+                    // Lấy roleId của người dùng từ Service
+                    var roleId = await _service.GetRoleIdByUsn(dto.Username);
+
+                    // Kiểm tra nếu roleId == 3 thì chuyển hướng tới trang "Procurement Manager"
+                    if (roleId == 3)
+                    {
+                        // Nếu là Procurement Manager, chuyển hướng tới trang quản lý của Procurement Manager
+                        return RedirectToAction("Index", "Home", new { area = "Procurement_Manager" });
+                    }
+                    else if (roleId == 1)
+                    {
+                        // Chuyển hướng đến trang AccountManagement trong Views/Account
+                        return RedirectToAction("AccountManagement", "Account");
+                    }
+                    else
+                    {
+                        // Nếu không phải Procurement Manager, chuyển hướng tới trang chính của hệ thống
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 catch (Exception)
                 {
@@ -103,8 +123,11 @@ namespace ZestyBiteWebAppSolution.Controllers
                 }
             }
 
+            // Trả về thông báo lỗi nếu tài khoản hoặc mật khẩu không chính xác
             return Unauthorized(new { message = "Invalid username or password" });
         }
+
+
 
 
         // [HttpPost]

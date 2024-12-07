@@ -1,370 +1,72 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Account Management</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Manager</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" rel="stylesheet" />
-
-    <link rel="stylesheet" href="../../Content/css/open-iconic-bootstrap.min.css" />
-    <link rel="stylesheet" href="../../Content/css/animate.css" />
-    <link rel="stylesheet" href="../../Content/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="../../Content/css/owl.theme.default.min.css" />
-    <link rel="stylesheet" href="../../Content/css/magnific-popup.css" />
-    <link rel="stylesheet" href="../../Content/css/aos.css" />
-    <link rel="stylesheet" href="../../Content/css/ionicons.min.css" />
-    <link rel="stylesheet" href="../../Content/css/bootstrap-datepicker.css" />
-    <link rel="stylesheet" href="../../Content/css/jquery.timepicker.css" />
-    <link rel="stylesheet" href="../../Content/css/flaticon.css" />
-    <link rel="stylesheet" href="../../Content/css/icomoon.css" />
-    <link rel="stylesheet" href="../../Content/css/style.css" />
-
-    <style>
-        #ftco-navbar {
-            height: 60px !important;
-        }
-
-
-        /* Set the text color to black for the entire document */
-        body {
-            color: black;
-            /* Set the text color to black */
-        }
-
-        /* Account div */
-        .AccountFunction {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            background-color: #D0CECA;
-            color: #000;
-        }
-
-            .AccountFunction * {
-                font-size: 24px;
-                /* This will apply to all child elements */
-            }
-
-        .AccountSearch {
-            width: 50%;
-            height: 80px;
-            display: flex;
-            margin-left: 15px;
-            justify-content: flex-start;
-            align-items: center;
-        }
-
-        .AccountCreate {
-            width: 50%;
-            height: 80px;
-            display: flex;
-            margin-right: 15px;
-            justify-content: flex-end;
-            align-items: center;
-        }
-
-
-        /* Account Gridview */
-        .AccountView {
-            background-color: #D0CECA;
-            width: 100%;
-            height: 555px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .AccountList {
-            overflow-y: scroll;
-            margin-left: 15px;
-            margin-right: 15px;
-            background-color: #FDFCE5;
-            width: 100%;
-            border: 2px solid #000;
-            /* Border for AccountList */
-            border-radius: 10px;
-            /* Rounded corners */
-            padding: 10px;
-            /* Optional padding */
-        }
-
-            .AccountList::-webkit-scrollbar {
-                width: 0px;
-                /* Thinner scrollbar width */
-            }
-
-        /* table style -----------------------------------------------------------*/
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-            table.List th,
-            table.List td {
-                text-align: center;
-                /* Center-align text within table cells */
-                padding: 8px;
-                /* Padding within table cells for better readability */
-                vertical-align: middle;
-                /* Ensures text is vertically centered */
-            }
-
-        thead th {
-            position: sticky;
-            top: 0;
-            /* Keeps the header at the top while scrolling */
-            background-color: #cba570;
-            /* Optional: background color for the header */
-            color: rgb(0, 0, 0);
-            /* Optional: text color for better contrast */
-            padding: 10px;
-            z-index: 1;
-            /* Ensure it stays above other table content */
-            border-bottom: 2px solid #ddd;
-            /* Adds a bottom border to the sticky header */
-            border-top: 2px solid #ddd;
-            /* Adds a top border if needed */
-            z-index: 1;
-            /* Keeps the header above table content */
-            /* Optional: border styling */
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            word-wrap: break-word;
-        }
-
-            th:nth-child(1),
-            td:nth-child(1) {
-                width: 30px;
-                word-wrap: break-word;
-                /* Ensure long text wraps instead of overflowing */
-            }
-
-        /* Popup styles ---------------------------------------------------------------*/
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50%;
-            background-color: #FDFCE5;
-            border: 1px solid #333;
-            padding: 20px;
-            z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-        }
-
-
-        .popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-            .popup-header h3 {
-                color: #000000;
-            }
-
-
-        .popup-close {
-            cursor: pointer;
-            font-size: 1.5em;
-            color: #333;
-        }
-
-        /* Add styles for input fields in the popup */
-        .popup input[type="text"],
-        .popup input[type="password"],
-        .popup select {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 5px;
-        }
-
-        /* footer --------------------------------------------------- */
-        .footer {
-            height: 15px;
-            background-color: #D0CECA;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro&family=Literata">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/Content/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/css/animate.css">
+    <link rel="stylesheet" href="~/Content/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/Content/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/Content/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/Content/css/aos.css">
+    <link rel="stylesheet" href="~/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="~/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="~/css/flaticon.css">
+    <link rel="stylesheet" href="~/css/icomoon.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/Supply.css">
+    <link rel="stylesheet" href="~/css/dashboard.css">
+    <link rel="stylesheet" href="~/css/accmng.css">
+    <link rel="stylesheet" href="~/css/FoodRunner.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.40.0/apexcharts.min.js"></script>
 </head>
-
-<body>
+<body class="body-config" style="background-color: aliceblue;">
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <span class="flaticon-pizza-1 mr-1"></span>Pizza<br /><small>Delicous</small>
+                <span class="flaticon-pizza-1 mr-1"></span>Zesty Bites<br><small>Delicious</small>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
                     aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
-            <div class="collapse navbar-collapse" id="ftco-nav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a href="#" class="nav-link">Menu - Promotion</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Profit</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Pay History</a></li>
-                    <li class="nav-item active"><a href="#" class="nav-link">Account Management</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Logout</a></li>
-                </ul>
-            </div>
         </div>
     </nav>
 
-    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
-    <div class="popup" id="infoPopup">
-        <div class="popup-header">
-            <h3 id="popupTitle">Account Details</h3>
-            <span class="popup-close" onclick="closePopup()">×</span>
-        </div>
-        <form id="accountForm">
-            <table class="Info">
-                <tbody id="infoTableBody"></tbody>
-            </table>
-            <div style="margin-top: 15px; display: flex; justify-content: space-between;">
-                <button type="button" onclick="submitForm()" id="submitButton">Update</button>
-                <button type="button" onclick="deleteAccount()" id="deleteButton">Delete</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="AccountBody">
-        <div class="AccountFunction">
-            <div class="AccountSearch">
-                <input id="search" type="search" placeholder="Search..." autofocus required
-                       oninput="searchAccounts()" />
-            </div>
-            <div class="AccountCreate">
-                <button onclick="showCreatePopup()">Create</button>
-            </div>
-        </div>
-
-        <div class="AccountView">
-            <div class="AccountList">
-                <table class="List">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>User's Name</th>
-                            <th>Phone_Number</th>
-                            <th>Address</th>
-                            <th>Gender</th>
-                            <th>Email</th>
-                            <th>Verification_Code</th>
-                            <th>Role_ID</th>
-                        </tr>
-                    </thead>
-                    <tbody id="accountTableBody">
-                        <!-- Account rows will be dynamically inserted here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    @RenderBody()
 
 
-    <div class="footer"></div>
+    <script src="~/Content/js/jquery.min.js"></script>
+    <script src="~/Content/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="~/Content/js/popper.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/jquery.easing.1.3.js"></script>
+    <script src="~/Content/js/jquery.waypoints.min.js"></script>
+    <script src="~/Content/js/jquery.stellar.min.js"></script>
+    <script src="~/Content/js/owl.carousel.min.js"></script>
+    <script src="~/Content/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/Content/js/aos.js"></script>
+    <script src="~/Content/js/jquery.animateNumber.min.js"></script>
+    <script src="~/Content/js/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/jquery.timepicker.min.js"></script>
+    <script src="~/Content/js/scrollax.min.js"></script>
+    <script src="~/Content/js/main.js"></script>
+    <script src="~/js/supply.js"></script>
+    <script src="~/js/revenue.js"></script>
 
-    <script>
-        // Show popup and fill data from the selected row
-        function showPopup(row) {
-            const data = Array.from(row.cells).map(cell => cell.innerText);
-            const fields = ["Account_ID", "Username", "Password", "Name", "Phone_Number", "Address", "Gender", "Email", "Verification_Code", "Role_ID"];
-            const infoTableBody = document.getElementById('infoTableBody');
-
-            infoTableBody.innerHTML = fields.map((field, i) => `
-                <tr>
-                    <td><strong>${field}</strong></td>
-                    <td>${data[i]}</td>
-                </tr>
-            `).join("");
-
-            document.getElementById('popupOverlay').style.display = 'block';
-            document.getElementById('infoPopup').style.display = 'block';
-        }
-
-        // Close popup function
-        function closePopup() {
-            document.getElementById('popupOverlay').style.display = 'none';
-            document.getElementById('infoPopup').style.display = 'none';
-        }
-
-        function updateAccount() {
-            console.log("Updating account with data:", currentData);
-            alert(`Updating account:\n${JSON.stringify(currentData)}`);
-        }
-
-        function deleteAccount() {
-            console.log("Deleting account with data:", currentData);
-            alert(`Deleting account:\n${JSON.stringify(currentData)}`);
-            closePopup();
-        }
-
-        function searchAccounts() {
-            const searchValue = document.getElementById('search').value.toLowerCase(); // Get the search input and convert to lower case
-            const rows = document.querySelectorAll('.AccountList tbody tr'); // Select all rows in the table body
-
-            rows.forEach(row => {
-                const cells = row.getElementsByTagName('td'); // Get all cells in the row
-                let rowText = ''; // Initialize variable to hold row text
-
-                // Concatenate all cell text into a single string
-                for (let i = 0; i < cells.length; i++) {
-                    rowText += cells[i].innerText.toLowerCase() + ' '; // Convert cell text to lower case
-                }
-
-                // Check if the row contains the search value
-                if (rowText.includes(searchValue)) {
-                    row.style.display = ''; // Show the row if it matches
-                } else {
-                    row.style.display = 'none'; // Hide the row if it doesn't match
-                }
-            });
-        }
-
-    </script>
-
-    <!-- Scripts -->
-    <script src="../../Content/js/jquery.min.js"></script>
-    <script src="../../Content/js/jquery-migrate-3.0.1.min.js"></script>
-    <script src="../../Content/js/popper.min.js"></script>
-    <script src="../../Content/js/bootstrap.min.js"></script>
-    <script src="../../Content/js/jquery.easing.1.3.js"></script>
-    <script src="../../Content/js/jquery.waypoints.min.js"></script>
-    <script src="../../Content/js/jquery.stellar.min.js"></script>
-    <script src="../../Content/js/owl.carousel.min.js"></script>
-    <script src="../../Content/js/jquery.magnific-popup.min.js"></script>
-    <script src="../../Content/js/aos.js"></script>
-    <script src="../../Content/js/jquery.animateNumber.min.js"></script>
-    <script src="../../Content/js/bootstrap-datepicker.js"></script>
-    <script src="../../Content/js/jquery.timepicker.min.js"></script>
-    <script src="../../Content/js/scrollax.min.js"></script>
-    <script src="../../Content/js/main.js"></script>
-    <script src="../../Content/js/accmng.js"></script>
-
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 </body>
-
 </html>

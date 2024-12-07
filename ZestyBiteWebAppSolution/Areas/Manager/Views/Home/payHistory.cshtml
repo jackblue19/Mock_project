@@ -1,0 +1,340 @@
+﻿<style>
+        .popup {
+        overflow-y: auto;
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%; /* Adjust width to ensure it fits well on different screen sizes */
+        max-width: 600px; /* Limit max width */
+        max-height: 90%; /* Limit the height so it stays within the viewport */
+        background-color: #FDFCE5;
+        border: 1px solid #333;
+        padding: 20px;
+        z-index: 1000;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        box-sizing: border-box; /* Ensure padding is included in the total width/height */
+    }
+     .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .invoice {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 10px 0; /* Adds some vertical spacing */
+    }
+
+    .company-info, .invoice-info {
+        width: 48%; /* Adjust as needed to fit your design */
+    }
+
+    .company-info p, .invoice-info p {
+        margin: 0;
+        font-size: 0.9em;
+    }
+
+    .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .invoice-table th, .invoice-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-size: 0.9em;
+        color: black;
+    }
+
+    .invoice-table thead {
+        background-color: #f4f4f4;
+    }
+
+    .invoice-table tfoot {
+        background-color: #f9f9f9;
+        font-weight: bold;
+    }
+
+    .summary-section .totals {
+        background: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .totals p {
+        font-size: 15px;
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 0;
+    }
+
+</style>
+    <div class="container-content">
+        <div class="sidebar">
+            <nav>
+                <ul class="menu">
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="bi bi-credit-card"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="AccountManagement.html">
+                            <i class="fas fa-user"></i>
+                            <span>Account</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="payhistory.html">
+                            <i class="bi bi-currency-exchange"></i>
+                            <span> PayHistory</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="bi bi-chat-square-text-fill"></i>
+                            <span> FeedBack</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="menuManagement.html">
+                            <i class="bi bi-list"></i>
+                            <span>MenuManage</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Procedures</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span> Manager</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span> Service(..)</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+        <div class="main-content">
+            <!--View Page Bill-->
+            <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+
+            <!-- Popup Content -->
+            <div class="popup" id="infoPopup">
+                <div class="popup-header">
+                    <h3 id="popupTitle">Bill Details</h3>
+                    <span class="popup-close" onclick="closePopup()">×</span>
+                </div>
+
+                <!-- Invoice Content -->
+                <div class="invoice">
+                    <div class="company-info">
+                        <p>
+                            <strong>AccountID:</strong>
+                            <strong>AccountName:</strong>
+                            <strong>Table NO:</strong>
+                        </p>
+                    </div>
+                    <div class="invoice-info">
+                        <p><strong>Bill ID:</strong>
+                        <p><strong>Payment ID:</strong>
+                        <p><strong>Bill DateTime:</strong>
+                    </div>
+                </div>
+
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table rows go here -->
+                        <tr>
+                            <td>1</td>
+                            <td>MỲ CAY</td>
+                            <td>20,000</td>
+                            <td>2</td>
+                            <td>38000</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>MỲ CAY</td>
+                            <td>20,000</td>
+                            <td>2</td>
+                            <td>38000</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>MỲ CAY</td>
+                            <td>20,000</td>
+                            <td>2</td>
+                            <td>38000</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>MỲ CAY</td>
+                            <td>20,000</td>
+                            <td>2</td>
+                            <td>38000</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>MỲ CAY</td>
+                            <td>20,000</td>
+                            <td>2</td>
+                            <td>38000</td>
+                        </tr>
+                        <!-- Add more rows as needed -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4"><strong>    Total</strong></td>
+                            <td>152000</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <!-- Summary Section -->
+                <div class="summary-section">
+                    <div class="totals">
+                        <p><strong>Total:</strong> 160500</p>
+                        <p><strong>Deposit:</strong> 150000</p>
+                        <p><strong>Must-Pay:</strong> 10000</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="AccountBody">
+                <div class="content-text">
+                    <h2>Pay History</h2>
+                    <div class="AccountFunction">
+                        <div class="AccountSearch">
+                            <input id="search" type="search" placeholder="Search..." autofocus required
+                                   oninput="searchAccounts()" />
+                        </div>
+                    </div>
+
+                    <div class="AccountView">
+                        <div class="AccountList">
+                            <table class="List">
+                                <thead>
+                                    <tr>
+                                        <th>BillID</th>
+                                        <th>Bill Status</th>
+                                        <th>Total Cost</th>
+                                        <th>Bill DateTime</th>
+                                        <th>Bill Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accountTableBody">
+                                    <!-- Account rows will be dynamically inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer"></div>
+        </div>
+    </div>
+    <script>
+
+        let payHistory = []; // Store payment history data
+
+        // Function to render the account table rows
+        function renderAccountTable() {
+            const tbody = document.getElementById('accountTableBody');
+            tbody.innerHTML = payHistory.map(payHistorys => `
+                <tr onclick="showPopup(${payHistorys.billID})">
+                    <td>${payHistorys.billID}</td>
+                    <td>${payHistorys.billStatus}</td>
+                    <td>${payHistorys.totalCost}</td>
+                    <td>${payHistorys.billDateTime}</td>
+                    <td>${payHistorys.billType}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Function to display popup with selected bill details
+        function showPopup(billID) {
+            const selectedBill = payHistory.find(p => p.billID === billID);
+
+            if (selectedBill) {
+                document.getElementById('popupTitle').innerText = "Bill Details";
+
+                // Update the fields with selected bill details
+                document.querySelector('.company-info').innerHTML = `
+                    <p>
+                        <strong>Account ID:</strong> ${selectedBill.accountId}<br>
+                        <strong>Account Name:</strong> ${selectedBill.accountId}<br>
+                        <strong>Table No:</strong> ${selectedBill.tableID}
+                    </p>
+                `;
+
+                document.querySelector('.invoice-info').innerHTML = `
+                    <p><strong>Bill ID:</strong> ${selectedBill.billID}</p>
+                    <p><strong>Payment ID:</strong> ${selectedBill.paymentID}</p>
+                    <p><strong>Bill DateTime:</strong> ${selectedBill.billDateTime}</p>
+                `;
+
+                document.getElementById('popupOverlay').style.display = 'block';
+                document.getElementById('infoPopup').style.display = 'block';
+            }
+        }
+
+        // Close popup function
+        function closePopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+            document.getElementById('infoPopup').style.display = 'none';
+        }
+
+        // Initialize page and load payment history
+        document.addEventListener('DOMContentLoaded', loadAccounts);
+
+        function loadAccounts() {
+            payHistory = [
+                { billID: 1, billStatus: "Paid", paymentID: "3", accountId: "3", tableID: "2", totalCost: "1000", billDateTime: "21/10/2024", billType: "Deposit" },
+                { billID: 2, billStatus: "Unpaid", paymentID: "4", accountId: "5", tableID: "3", totalCost: "1500", billDateTime: "22/10/2024", billType: "Deposit" },
+                { billID: 3, billStatus: "Paid", paymentID: "5", accountId: "2", tableID: "1", totalCost: "1200", billDateTime: "23/10/2024", billType: "Withdrawal" },
+                { billID: 4, billStatus: "Unpaid", paymentID: "6", accountId: "7", tableID: "4", totalCost: "2000", billDateTime: "24/10/2024", billType: "Deposit" },
+                { billID: 5, billStatus: "Paid", paymentID: "7", accountId: "6", tableID: "2", totalCost: "1700", billDateTime: "25/10/2024", billType: "Withdrawal" },
+                { billID: 6, billStatus: "Unpaid", paymentID: "8", accountId: "4", tableID: "5", totalCost: "900", billDateTime: "26/10/2024", billType: "Deposit" },
+                { billID: 7, billStatus: "Paid", paymentID: "9", accountId: "8", tableID: "3", totalCost: "1400", billDateTime: "27/10/2024", billType: "Deposit" },
+                { billID: 8, billStatus: "Unpaid", paymentID: "10", accountId: "9", tableID: "6", totalCost: "1600", billDateTime: "28/10/2024", billType: "Withdrawal" },
+                { billID: 9, billStatus: "Paid", paymentID: "11", accountId: "10", tableID: "4", totalCost: "1300", billDateTime: "29/10/2024", billType: "Deposit" },
+                { billID: 10, billStatus: "Unpaid", paymentID: "12", accountId: "11", tableID: "1", totalCost: "800", billDateTime: "30/10/2024", billType: "Withdrawal" },
+                { billID: 11, billStatus: "Paid", paymentID: "13", accountId: "12", tableID: "7", totalCost: "1100", billDateTime: "31/10/2024", billType: "Deposit" },
+                { billID: 12, billStatus: "Paid", paymentID: "13", accountId: "13", tableID: "7", totalCost: "1100", billDateTime: "31/10/2024", billType: "Deposit" },
+                { billID: 13, billStatus: "Paid", paymentID: "13", accountId: "13", tableID: "7", totalCost: "1100", billDateTime: "31/10/2024", billType: "Deposit" }
+            ];
+
+            const savedPayHistory = localStorage.getItem('payHistory');
+            if (savedPayHistory) {
+                payHistory = JSON.parse(savedPayHistory);
+            }
+            renderAccountTable();
+        }
+    </script>

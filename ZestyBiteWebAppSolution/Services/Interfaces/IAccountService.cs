@@ -16,11 +16,11 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces {
         Task<bool> IsTrueAccount(string usn, string password);
         Task<string?> GetRoleDescByUsn(string usn);
 
-        Task<ProfileDTO> ViewProfileByUsnAsync(string usn);
-        Task<bool> IsVerified(string usn, string code);
-        Task<bool> IsDeleteUnregistedAccount(string usn);
-        Task<bool> VerifyOldPasswordAsync(string username, string oldPassword);
-        Task<Account?> GetUsnAsync(string username);
+                Task<ProfileDTO> ViewProfileByUsnAsync(string usn);
+                Task<bool> IsVerified(string usn, string code);
+                Task<bool> IsDeleteUnregistedAccount(string usn);
+                Task<bool> VerifyOldPasswordAsync(string username, string oldPassword);
+                Task<Account?> GetUsnAsync(string username);
 
         Task<Account> MapFromDTO(StaffDTO dto);
         Task<StaffDTO> MapFromEntity(Account acc);

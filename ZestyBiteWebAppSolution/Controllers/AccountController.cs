@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
 using ZestyBiteWebAppSolution.Helpers;
@@ -6,9 +7,13 @@ using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Controllers {
-    [AllowAnonymous]
-    public class AccountController : Controller {
+namespace ZestyBiteWebAppSolution.Controllers
+{
+    // [AllowAnonymous]
+    // [ApiController]
+    // [Route("api/[controller]")]
+    public class AccountController : Controller
+    {
         private readonly IAccountService _service;
         private readonly ILogger<AccountController> _logger;
         private readonly IVerifyService _mailService;
@@ -20,33 +25,54 @@ namespace ZestyBiteWebAppSolution.Controllers {
         ConcurrentDictionary<string, int> VerificationAttempts
                 = new ConcurrentDictionary<string, int>();
 
-        public AccountController(IVerifyService verifyService, ILogger<AccountController> logger, IAccountService accountService) {
+        public AccountController(IVerifyService verifyService, ILogger<AccountController> logger, IAccountService accountService)
+        {
             _logger = logger;
             _service = accountService;
             _mailService = verifyService;
         }
 
-        public IActionResult Login() {
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
             return View();
         }
 
-        public IActionResult Register() {
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
             return View();
         }
-        public IActionResult VerifyEmail() {
+        [AllowAnonymous]
+        public IActionResult VerifyEmail()
+        {
             return View();
         }
-        public IActionResult ChangePassword() {
+        [AllowAnonymous]
+        public IActionResult ChangePassword()
+        {
             return View();
         }
-        public IActionResult ForgotPassword() {
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
             return View();
         }
-        public IActionResult NewPassword() {
+        [AllowAnonymous]
+        public IActionResult NewPassword()
+        {
             return View();
         }
 
 
+        [AllowAnonymous]
+        public IActionResult AccountManagement()
+        {
+            return View();
+        }
+
+
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO dto) {
             if (!ModelState.IsValid) {
@@ -112,6 +138,9 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         }
 
+
+
+
         // [HttpPost]
         // public async Task<IActionResult> ForgotPassword(string email)
         // {
@@ -126,6 +155,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
         // }
 
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto) {
             if (!ModelState.IsValid) {
@@ -136,8 +166,10 @@ namespace ZestyBiteWebAppSolution.Controllers {
             if (string.IsNullOrEmpty(usn))
                 return BadRequest(new { Message = "User not authenticated." });
 
-            try {
-                if (!VerificationTasks.ContainsKey(usn)) {
+            try
+            {
+                if (!VerificationTasks.ContainsKey(usn))
+                {
                     await _service.IsDeleteUnregistedAccount(usn);
                     return BadRequest(new { Message = "Verification session expired or not found." });
                 }
@@ -147,12 +179,14 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 if (!VerificationAttempts.ContainsKey(usn))
                     VerificationAttempts[usn] = 0;
 
-                if (VerificationAttempts[usn] >= 5) {
+                if (VerificationAttempts[usn] >= 5)
+                {
                     await _service.IsDeleteUnregistedAccount(usn);
                     return BadRequest(new { Message = "Too many failed attempts." });
                 }
 
-                if (await _service.IsVerified(usn, verifyDto.Code)) {
+                if (await _service.IsVerified(usn, verifyDto.Code))
+                {
                     tcs.TrySetResult("Verified");
                     VerificationTasks.TryRemove(usn, out _);
                     VerificationAttempts.TryRemove(usn, out _);
@@ -172,20 +206,27 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 }
 
                 return RedirectToAction("Index", "Home");
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterDTO accountDto) {
+        [Route("signup")]
+        public async Task<IActionResult> Register(RegisterDTO accountDto)
+        {
             if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
             string token = VerificationCodeGenerator.GetSixDigitCode();
             accountDto.VerificationCode = token;
-            try {
+            try
+            {
                 var created = await _service.SignUpAsync(accountDto);
                 HttpContext.Session.SetString("username", created.Username);
-                Response.Cookies.Append("username", created.Username, new CookieOptions {
+                Response.Cookies.Append("username", created.Username, new CookieOptions
+                {
                     Expires = DateTimeOffset.Now.AddMinutes(3),
                     HttpOnly = true,
                     Secure = false,
@@ -198,14 +239,16 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 VerificationTasks[created.Username] = tcs;
                 VerificationAttempts[created.Username] = 0;
 
-                _ = Task.Delay(TimeSpan.FromMinutes(3), cts.Token).ContinueWith(async t => {
-                    if (t.IsCanceled || t.IsFaulted) {
+                _ = Task.Delay(TimeSpan.FromMinutes(3), cts.Token).ContinueWith(async t =>
+                {
+                    if (t.IsCanceled || t.IsFaulted)
+                    {
                         await _service.IsDeleteUnregistedAccount(created.Username);
                         ViewBag.Error = "Verification failed! Out of time =DD";
                         return;
                     }
-
-                    if (!tcs.Task.IsCompleted) {
+                    if (!tcs.Task.IsCompleted)
+                    {
                         VerificationTasks.TryRemove(created.Username, out _);
                         VerificationAttempts.TryRemove(created.Username, out _);
                         if (await _service.IsDeleteUnregistedAccount(created.Username))
@@ -214,18 +257,26 @@ namespace ZestyBiteWebAppSolution.Controllers {
                             ViewBag.Error = "Created?";
                     }
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
-                await _mailService.SendVerificationCodeAsync(accountDto.Email, token);
-                return RedirectToAction("VerifyEmail", "Account");
-            } catch (InvalidOperationException ex) {
+                // await _mailService.SendVerificationCodeAsync(accountDto.Email, token);
+                _mailService.SendVerificationCodeAsync(accountDto.Email, token);
+                // return RedirectToAction("VerifyEmail", "Account");
+                return Ok(token);
+            }
+            catch (InvalidOperationException ex)
+            {
                 return BadRequest(new { Message = ex.Message });
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, new { Message = "Internal Server Error", Detail = ex.Message });
             }
         }
 
         [Route("viewprofile")]
-        public async Task<IActionResult> ViewProfile() {
-            try {
+        public async Task<IActionResult> ViewProfile()
+        {
+            try
+            {
                 var username = User.Identity?.Name;
                 if (string.IsNullOrEmpty(username)) {
                     return RedirectToAction("Login", "Account"); 
@@ -236,21 +287,28 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     return NotFound(); 
                 }
                 return View(dto);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(ProfileDTO dto) {
-            try {
-                if (!ModelState.IsValid) {
+        [Route("updateprofile")]
+        public async Task<IActionResult> UpdateProfile(ProfileDTO dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
                     TempData["ErrorMessage"] = "Invalid data. Please check your inputs.";
                     return RedirectToAction("ViewProfile");
                 }
 
                 var username = User.Identity?.Name;
-                if (string.IsNullOrEmpty(username)) {
+                if (string.IsNullOrEmpty(username))
+                {
                     TempData["ErrorMessage"] = "You must be logged in to update your profile.";
                     return RedirectToAction("LogIn", "Account");
                 }
@@ -259,10 +317,14 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
                 TempData["SuccessMessage"] = "Profile updated successfully!";
                 return RedirectToAction("ViewProfile");
-            } catch (InvalidOperationException ex) {
+            }
+            catch (InvalidOperationException ex)
+            {
                 TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction("ViewProfile");
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
                 TempData["ErrorMessage"] = "An unexpected error occurred.";
                 return RedirectToAction("ViewProfile");
             }
@@ -274,21 +336,25 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 return View(dto);
             }
 
-            try {
+            try
+            {
                 var username = User.Identity?.Name;
-                if (string.IsNullOrEmpty(username)) {
+                if (string.IsNullOrEmpty(username))
+                {
                     TempData["ErrorMessage"] = "You must be logged in to change your password.";
                     return RedirectToAction("Login", "Account");
                 }
 
                 // Kiểm tra mật khẩu xác nhận
-                if (dto.NewPassword != dto.ConfirmNewPassword) {
+                if (dto.NewPassword != dto.ConfirmNewPassword)
+                {
                     TempData["ErrorMessage"] = "New password and confirmation password do not match.";
                     return View(dto);
                 }
 
                 var isOldPasswordCorrect = await _service.VerifyOldPasswordAsync(username, dto.OldPassword);
-                if (!isOldPasswordCorrect) {
+                if (!isOldPasswordCorrect)
+                {
                     TempData["ErrorMessage"] = "Old password is incorrect.";
                     return View(dto);
                 }
@@ -297,7 +363,9 @@ namespace ZestyBiteWebAppSolution.Controllers {
                 TempData["SuccessMessage"] = "Password changed successfully!";
                 return View(dto);
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 TempData["ErrorMessage"] = ex.Message;
                 return View(dto);
             }
@@ -305,21 +373,106 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         [Authorize(Roles = "Manager")]
         [HttpGet]
-        [Route("getallacc")]
-        public async Task<IResult> GetAllAccount() {
-            try {
+        [Route("api/account/getallacc")]
+        public async Task<IResult> GetAllAccount()
+        {
+            try
+            {
                 var accounts = await _service.GetALlAccountAsync();
                 if (!accounts.Any()) return TypedResults.NotFound();
                 return TypedResults.Ok(accounts);
 
-            } catch (InvalidOperationException ex) {
+            }
+            catch (InvalidOperationException ex)
+            {
                 return TypedResults.BadRequest(new { Message = ex.Message });
             }
         }
-        public IActionResult Logout() {
-            HttpContext.Session.Remove("username");
-            Response.Cookies.Delete("username");
-            return RedirectToAction("Index", "Home");
+        [AllowAnonymous]
+        // [Route("logout")]
+        public IActionResult Logout()
+        {
+            try
+            {
+                HttpContext.Session.Remove("username");
+                Response.Cookies.Delete("username");
+                return RedirectToAction("Index", "Home");
+                // return Ok("log out sucees");
+            }
+            catch
+            {
+                return BadRequest("cant log out!!!");
+            }
+        }
+        /*
+        admin_user
+        adminpass
+        customer1
+        customerpass
+        */
+        [Authorize(Roles = "Manager")]
+        [HttpPost]
+        [Route("addstaff")]
+        public async Task<IResult> CreateNewStaffAccount([FromBody] StaffDTO dto)
+        {
+            try
+            {
+                var staffAccount = await _service.MapFromDTO(dto);
+                await _service.CreateStaffAsync(staffAccount);
+                return TypedResults.Ok(staffAccount);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return TypedResults.BadRequest(new { Message = ex.Message });
+            }
+        }
+        [Authorize(Roles = "Manager")]
+        [HttpDelete]
+        [Route("deleteacc")]
+        public async Task<IResult> DeleteAnAccount([FromBody] StatusDTO dto)
+        {
+            try
+            {
+                if (await _service.DeleteAcc(dto.Username))
+                    return TypedResults.Ok("delete done");
+                return TypedResults.Ok("fail to delete");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return TypedResults.BadRequest(new { Message = ex.Message });
+            }
+        }
+        [Authorize(Roles = "Manager")]
+        [HttpGet]
+        [Route("api/account/{username}")]
+        public async Task<IResult> ViewProfileDetail(string username)
+        {
+            try
+            {
+                var dto = await _service.GetAccountByUsnAsync(username);
+                if (dto == null)
+                    return TypedResults.NotFound("Account not found");
+                return TypedResults.Ok(dto);
+            }
+            catch
+            {
+                return TypedResults.BadRequest("Account not found");
+            }
+        }
+        [Authorize(Roles = "Manager")]
+        [HttpPut]
+        [Route("status")]
+        public async Task<IResult> ManageStatus([FromBody] StatusDTO dto)
+        {
+            try
+            {
+                if (await _service.ChangeAccStatus(dto.Username)) return TypedResults.Ok("Changed the status");
+                else return TypedResults.Ok("Fail to change status");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return TypedResults.BadRequest(new { Message = ex.Message });
+            }
         }
     }
 }

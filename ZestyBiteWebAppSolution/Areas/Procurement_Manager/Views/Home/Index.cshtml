@@ -1,10 +1,203 @@
-﻿@{
+@{
     ViewBag.Title = "Supply";
     Layout = "~/Areas/Procurement_Manager/Views/Shared/_Layout.cshtml";
 
 }
 <link href="~/css/Procurement_Manager.css" rel="stylesheet" />
 
+<style>
+    .AccountBody {
+        height: 100%;
+        width: 100%;
+    }
+
+    .AccountFunction {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        color: #000;
+    }
+
+        .AccountFunction * {
+            font-size: 24px;
+            /* This will apply to all child elements */
+        }
+
+    .AccountSearch {
+        width: 50%;
+        height: 80px;
+        display: flex;
+        margin-left: 15px;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .AccountCreate {
+        width: 50%;
+        height: 80px;
+        display: flex;
+        margin-right: 15px;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+
+    /* Account Gridview */
+    .AccountView {
+        width: 100%;
+        height: 500px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .AccountList {
+        overflow-y: scroll;
+        margin-left: 15px;
+        margin-right: 15px;
+        background-color: #FDFCE5;
+        width: 100%;
+        border: 2px solid #000;
+        /* Border for AccountList */
+        border-radius: 10px;
+        /* Rounded corners */
+        padding: 10px;
+        /* Optional padding */
+    }
+
+        .AccountList::-webkit-scrollbar {
+            width: 0px;
+            /* Thinner scrollbar width */
+        }
+
+    .content-text h2 {
+        display: grid;
+        justify-content: center;
+        font-size: 40px;
+        margin: 0;
+        font-weight: bold;
+        color: #000
+    }
+    /* table style -----------------------------------------------------------*/
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        table.List th,
+        table.List td {
+            color: black;
+            text-align: center;
+            /* Center-align text within table cells */
+            padding: 8px;
+            /* Padding within table cells for better readability */
+            vertical-align: middle;
+            /* Ensures text is vertically centered */
+        }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        /* Keeps the header at the top while scrolling */
+        background-color: rgba(113, 99,186,255);
+        /* Optional: background color for the header */
+        color: rgb(0, 0, 0);
+        /* Optional: text color for better contrast */
+        padding: 10px;
+        z-index: 1;
+        /* Ensure it stays above other table content */
+        border-bottom: 2px solid #ddd;
+        /* Adds a bottom border to the sticky header */
+        border-top: 2px solid #ddd;
+        /* Adds a top border if needed */
+        z-index: 1;
+        /* Keeps the header above table content */
+        /* Optional: border styling */
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        word-wrap: break-word;
+    }
+
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 30px;
+            word-wrap: break-word;
+            /* Ensure long text wraps instead of overflowing */
+        }
+
+    /* Popup styles ---------------------------------------------------------------*/
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        background-color: #FDFCE5;
+        border: 1px solid #333;
+        padding: 20px;
+        z-index: 1000;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+    }
+
+
+    .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+        .popup-header h3 {
+            color: #000000;
+        }
+
+
+    .popup-close {
+        cursor: pointer;
+        font-size: 1.5em;
+        color: #333;
+    }
+
+    /* Add styles for input fields in the popup */
+    .popup input[type="text"],
+    .popup input[type="password"],
+    .popup select {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    /* footer --------------------------------------------------- */
+    .footer {
+        height: 15px;
+        background-color: #D0CECA;
+    }
+
+    table.List tr:nth-child(odd) {
+        background-color: #ffffff; /* Màu đậm cho hàng lẻ */
+    }
+
+    table.List tr:nth-child(even) {
+        background-color: #dcdada; /* Màu đậm cho hàng chẵn */
+    }
+
+</style>
 <!-- AdminPage Heading -->
 <div class="text-center mt-5" style="background-color: #D0CECA;height : 100vh">
     <section class="p-3">
@@ -177,9 +370,9 @@
     </div>
 
     <!-- Update Supply Modal -->
-    <div class="modal fade" id="updateSupplyModal">
+    <div class="modal fade" id="updateSupplyModal" >
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color:black">
                 <div class="modal-header">
                     <h5 class="modal-title" id="updateSupplyLabel">Update Supply</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -210,6 +403,10 @@
                             <input type="date" id="updateDateExpiration" class="form-control" required>
                         </div>
                         <div class="form-group">
+                            <label for="updateTableId">TableId</label>
+                            <input type="text" id="updateTableId" class="form-control" required>
+                        </div>
+                        <div class="form-group">
                             <label for="updateVendorName">Vendor Name</label>
                             <input type="text" id="updateVendorName" class="form-control" required>
                         </div>
@@ -222,11 +419,18 @@
                             <input type="text" id="updateVendorAddress" class="form-control" required>
                         </div>
                         <div class="form-group">
+                            <label for="updateStatus">Status</label>
+                            <select id="updateStatus" class="form-control">
+                                <option value="1">Still</option>
+                                <option value="0">Expired</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="updateCategory">Supply Category</label>
-                            <select id="updateCategory" class="form-control" required>
-                                <option value="food">Food</option>
-                                <option value="drink">Drink</option>
-                                <option value="facility">Facility</option>
+                            <select id="updateCategory" class="form-control">
+                                <option value="Food">Food</option>
+                                <option value="Drink">Drink</option>
+                                <option value="Facility">Facility</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Update Supply</button>
@@ -235,4 +439,6 @@
             </div>
         </div>
     </div>
+
+
 </div>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.ViewModel;
@@ -39,7 +40,8 @@ public class CartController : Controller {
 
     public async Task<IActionResult> Cart() {
         var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
-        if (string.IsNullOrEmpty(usn)) {
+        if (string.IsNullOrEmpty(usn))
+        {
             return RedirectToAction("Login", "Account");
         }
 
@@ -196,7 +198,8 @@ public class CartController : Controller {
         // Retrieve cart from session
         var cart = HttpContext.Session.GetObjectFromJson<CheckoutDTO>(CartSessionKey);
 
-        if (cart == null) {
+        if (cart == null)
+        {
             // Check for a cookie-based cart as a fallback
             if (Request.Cookies.TryGetValue(CartSessionKey, out var cookieCart)) {
             } else {
@@ -292,7 +295,7 @@ public class CartController : Controller {
 
     [AllowAnonymous]
     public async Task<IActionResult> PaymentCallBack() {
-        
+        /*9704198526191432198 */
         var response = _vnPayService.PaymentExecute(Request.Query);
         if (response == null || response.VnPayResponseCode != "00") {
             TempData["Message"] = $"Payment failed: {response?.VnPayResponseCode}";

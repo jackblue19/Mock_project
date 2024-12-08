@@ -200,14 +200,22 @@
 
         // Post a reply to the back-end
         function postReply(commentId, content, level) {
+        function postReply(commentId, content, level) {
             // Locate the parent comment element by its ID
+            const parentCommentElement = document.querySelector(`[data-id="${commentId}"]`);
+            @* const parentId = parentElement.getAttribute("data-feedback-id"); *@
             const parentCommentElement = document.querySelector(`[data-id="${commentId}"]`);
             @* const parentId = parentElement.getAttribute("data-feedback-id"); *@
             if (!parentCommentElement) {
                 showNotification("Parent comment not found!");
+                showNotification("Parent comment not found!");
                 return;
             }
             const itemId = parentCommentElement.getAttribute("data-item-id");
+            if (!parentCommentElement) {
+                showNotification("Item Id not found!");
+                return;
+            }
             if (!parentCommentElement) {
                 showNotification("Item Id not found!");
                 return;
@@ -218,9 +226,20 @@
                 return;
             }
             const ParentFb = parentId; // Use parentId as ParentFb
+            if (!parentCommentElement) {
+                showNotification("Item name not found!");
+                return;
+            }
+            const ParentFb = parentId; // Use parentId as ParentFb
 
             // Prepare the payload for the reply
+            // Prepare the payload for the reply
             const replyPayload = {
+                Content: content,
+                ItemId: itemId,
+                ItemName: itemName,
+                ParentFb: ParentFb, // Set ParentFb to the parentId
+                Fullname: "" // Add Fullname if needed
                 Content: content,
                 ItemId: itemId,
                 ItemName: itemName,
@@ -229,10 +248,25 @@
             };
 
             console.log("Submitting reply payload:", replyPayload);
+            console.log("Submitting reply payload:", replyPayload);
 
             // Send the reply to the back-end using fetch
             fetch('http://localhost:5024/api/feedback/submitfeedback', {
+            // Send the reply to the back-end using fetch
+            fetch('http://localhost:5024/api/feedback/submitfeedback', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(replyPayload)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(newReply => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -254,7 +288,11 @@
                 })
                 .catch(error => {
                     console.error("Error submitting reply:", error);
+                })
+                .catch(error => {
+                    console.error("Error submitting reply:", error);
                     showNotification("Failed to submit reply. Please try again."); // Show error notification
+                });
                 });
         }
 

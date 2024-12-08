@@ -17,5 +17,6 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
         //Addition
         Task<IEnumerable<TableDTO?>> GetAllRealTablesAsync();
         Task<IEnumerable<TableDTO?>> GetAllVirtualTablesAsync();
+        Task<IEnumerable<TableDetailDTO>> GetTableItemsByTableIdAsync(int tableId);
     }
 }

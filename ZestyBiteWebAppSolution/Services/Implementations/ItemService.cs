@@ -3,18 +3,23 @@ using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Services.Implementations {
-    public class ItemService : IItemService {
+namespace ZestyBiteWebAppSolution.Services.Implementations
+{
+    public class ItemService : IItemService
+    {
         private readonly IItemRepository _itemRepository;
 
-        public ItemService(IItemRepository itemRepository) {
+        public ItemService(IItemRepository itemRepository)
+        {
             _itemRepository = itemRepository;
         }
 
-        private ItemDTO? MapToItemDTO(Item item) {
+        private ItemDTO? MapToItemDTO(Item item)
+        {
             if (item == null)
                 return null;
-            return new ItemDTO {
+            return new ItemDTO
+            {
                 ItemId = item.ItemId,
                 ItemName = item.ItemName,
                 ItemDescription = item.ItemDescription,
@@ -26,11 +31,13 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             };
         }
 
-        private async Task<IEnumerable<ItemDTO>> GetItemsByCategoryAsync(string category) {
+        private async Task<IEnumerable<ItemDTO>> GetItemsByCategoryAsync(string category)
+        {
             var items = await _itemRepository.GetAllAsync(); // Lấy tất cả các món ăn
             var categoryItems = items.Where(i => i?.ItemCategory == category); // Lọc theo danh mục
 
-            return categoryItems.Select(item => new ItemDTO {
+            return categoryItems.Select(item => new ItemDTO
+            {
                 ItemId = item.ItemId,
                 ItemName = item.ItemName,
                 ItemDescription = item.ItemDescription,
@@ -43,15 +50,18 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         }
 
 
-        public async Task<IEnumerable<ItemDTO>> GetDrinkItemsAsync() {
+        public async Task<IEnumerable<ItemDTO>> GetDrinkItemsAsync()
+        {
             return await GetItemsByCategoryAsync("Drink");
         }
 
-        public async Task<IEnumerable<ItemDTO>> GetBurgersItemsAsync() {
+        public async Task<IEnumerable<ItemDTO>> GetBurgersItemsAsync()
+        {
             return await GetItemsByCategoryAsync("Burgers");
         }
 
-        public async Task<IEnumerable<ItemDTO>> GetPastaItemsAsync() {
+        public async Task<IEnumerable<ItemDTO>> GetPastaItemsAsync()
+        {
             return await GetItemsByCategoryAsync("Pasta");
         }
 
@@ -62,21 +72,26 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         }
 
 
-        public async Task<Item?> GetItemByIdAsync(int id) {
+        public async Task<Item?> GetItemByIdAsync(int id)
+        {
             return await _itemRepository.GetByIdAsync(id);
         }
 
-        public async Task<Item> CreateItemAsync(Item item) {
+        public async Task<Item> CreateItemAsync(Item item)
+        {
             return await _itemRepository.CreateAsync(item);
         }
 
-        public async Task<Item> UpdateItemAsync(Item item) {
+        public async Task<Item> UpdateItemAsync(Item item)
+        {
             return await _itemRepository.UpdateAsync(item);
         }
 
-        public async Task<bool> DeleteItemAsync(int itemId) {
+        public async Task<bool> DeleteItemAsync(int itemId)
+        {
             var item = await _itemRepository.GetByIdAsync(itemId);
-            if (item != null) {
+            if (item != null)
+            {
                 await _itemRepository.DeleteAsync(item);
                 return true;
             }

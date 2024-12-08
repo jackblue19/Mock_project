@@ -47,7 +47,7 @@
 
             // Fetch items from the server
             function fetchItems() {
-                return fetch('/api/feedback/items') // Ensure this is the correct endpoint
+                return fetch('/api/feedback/items') 
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -78,7 +78,6 @@
             // Filter dropdown options based on search input
             searchBox.addEventListener('input', () => {
                 const searchTerm = searchBox.value.toLowerCase();
-                // Clear existing options and repopulate based on search term
                 dishSelect.innerHTML = '';
                 items.forEach(item => {
                     if (item.itemName.toLowerCase().includes(searchTerm)) {
@@ -93,6 +92,14 @@
                     populateDishSelect(items);
                 }
             });
+
+            searchBox.addEventListener('blur', () => { 
+                const searchTerm = searchBox.value.toLowerCase(); 
+                if (searchTerm === '') 
+                { 
+                    populateDishSelect(items); 
+                } 
+            }); 
 
             // Fetch items and populate select element
             fetchItems();

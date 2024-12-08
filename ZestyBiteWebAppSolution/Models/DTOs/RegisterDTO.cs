@@ -71,7 +71,7 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         public int Status { get; set; }
         public string ProfileImg { get; set; } = "default null";
 
-        public string RoleDescription { get; set; } = null!;
-        public string VerificationCode { get; set; } = null!;
+        public string? RoleDescription { get; set; }
+        public string VerificationCode { get; set; } = "hidden";
     }
 }

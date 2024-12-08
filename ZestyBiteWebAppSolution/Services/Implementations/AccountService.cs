@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
@@ -89,7 +90,24 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return dto;
         }
 
-
+        public async Task<IEnumerable<AccountDTO?>> GetALlAccAsync()
+        {
+            var accounts = await _repository.GetAllAsync();
+            return accounts.Select(acc => new AccountDTO
+            {
+                Username = acc.Username,
+                Password = acc.Password,
+                Email = acc.Email,
+                Name = acc.Name,
+                PhoneNumber = acc.PhoneNumber,
+                Address = acc.Address,
+                Gender = acc.Gender,
+                Status = acc.AccountStatus,
+                ProfileImg = acc.ProfileImage,
+                VerificationCode = "hidden",
+                RoleDescription = acc.Role.RoleDescription
+            });
+        }
         public async Task<IEnumerable<RegisterDTO?>> GetALlAccountAsync()
         {
             var accounts = await _repository.GetAllAsync();

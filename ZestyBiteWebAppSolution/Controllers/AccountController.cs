@@ -116,8 +116,8 @@ namespace ZestyBiteWebAppSolution.Controllers
                         SameSite = SameSiteMode.Strict
                     });
 
-                    return RedirectToAction("Index", "Home");
-                    // return Ok("login done");
+                    // return RedirectToAction("Index", "Home");
+                    return Ok("login done");
                 }
                 catch (Exception)
                 {
@@ -475,7 +475,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         {
             try
             {
-                var accounts = await _service.GetALlAccountAsync();
+                var accounts = await _service.GetALlAccAsync();
                 if (!accounts.Any()) return TypedResults.NotFound();
                 return TypedResults.Ok(accounts);
 

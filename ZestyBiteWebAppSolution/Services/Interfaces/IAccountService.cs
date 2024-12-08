@@ -7,6 +7,7 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
         public interface IAccountService
         {
                 Task<IEnumerable<RegisterDTO?>> GetALlAccountAsync();
+                Task<IEnumerable<AccountDTO?>> GetALlAccAsync();
                 Task<Account> CreateStaffAsync(Account account);
                 Task<RegisterDTO?> GetAccountByIdAsync(int id);
                 Task<RegisterDTO?> GetAccountByUsnAsync(string usn);

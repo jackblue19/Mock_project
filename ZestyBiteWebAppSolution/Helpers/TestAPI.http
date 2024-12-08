@@ -31,7 +31,7 @@ POST http://localhost:5024/api/account/fgpwd
 Content-Type: application/json
 
 {
-  "Code": "425362",
+  "Code": "471468",
   "NewPassword":"987654321",
   "ConfirmNewPassword": "987654321"
 }

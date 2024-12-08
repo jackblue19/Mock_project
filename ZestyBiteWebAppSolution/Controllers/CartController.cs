@@ -139,7 +139,6 @@ public class CartController : Controller {
 
         return Ok();
     }
-
     public async Task<IActionResult> Checkout(string payment = "VnPay") {
         if (ModelState.IsValid) {
             var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
@@ -219,8 +218,13 @@ public class CartController : Controller {
     }
 
     public IActionResult AddToCart(int itemId) {
-        var cart = GetCheckout();
 
+        var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
+        if (string.IsNullOrEmpty(usn)) {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var cart = GetCheckout();
         var item = _context.Items
                            .Where(i => i.ItemId == itemId)
                            .Select(i => new CheckoutItemDTO {
@@ -293,13 +297,10 @@ public class CartController : Controller {
     public async Task<IActionResult> PaymentCallBack() {
         
         var response = _vnPayService.PaymentExecute(Request.Query);
-        //string abc = response.OrderId;
         if (response == null || response.VnPayResponseCode != "00") {
             TempData["Message"] = $"Payment failed: {response?.VnPayResponseCode}";
             return RedirectToAction("PaymentFail");
         }
-        //long xyz = Convert.ToInt64(abc);
-        //await _billRepository.UpdateBill(xyz);
 
         TempData["Message"] = "Payment successful.";
 

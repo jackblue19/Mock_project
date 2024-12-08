@@ -2234,7 +2234,6 @@ h3 {
     width: 100%;
     padding: 0.375rem 0.75rem;
     line-height: 1.5;
-    color: white;
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #ced4da;
@@ -11452,7 +11451,7 @@ textarea.form-control {
 }
 
 .ftco-section {
-    padding: 7em 0;
+    padding: 2em 0;
     position: relative;
 }
 
@@ -11770,6 +11769,12 @@ textarea.form-control {
     .img-about {
         height: 400px;
         margin-bottom: 30px;
+    }
+}
+@media (max-width: 991px) {
+    .img {
+        height: 300px;
+        width: 100%;
     }
 }
 

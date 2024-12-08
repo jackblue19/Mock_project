@@ -1,4 +1,4 @@
-﻿@model List<ItemDTO>
+﻿@model ZestyBiteWebAppSolution.Models.ViewModel.IndexViewModel
 @using ZestyBiteWebAppSolution.Models.DTOs
 @{
     ViewBag.Title = "SearchResults";
@@ -17,11 +17,11 @@
 
     <div class="container-wrap">
         <div class="row no-gutters d-flex">
-            @if (Model.Count() == 0) {
+            @if (Model.Items.Count() == 0) {
                 <p>No items found for your search.</p>
             } else {
                 <div class="row">
-                    @foreach (var item in Model) {
+                    @foreach (var item in Model.Items) {
                         <div class="col-md-4">
                             <div class="services-wrap d-flex">
                                 <a href="#" class="img" style="background-image: url('@item.ItemImage');"></a>
@@ -36,6 +36,17 @@
                             </div>
                         </div>
                     }
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="pagination justify-content-center">
+                            @for (int i = 1; i <= Model.TotalPages; i++) {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Search", new { query = ViewContext.HttpContext.Request.Query["query"], page = i })">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
             }
         </div>

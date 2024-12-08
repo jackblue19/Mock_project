@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
+using System.Numerics;
 using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Models.DTOs;
+using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
@@ -52,25 +54,51 @@ namespace ZestyBiteWebAppSolution.Controllers {
             if (!ModelState.IsValid) {
                 return View(dto);
             }
+            string lockoutKey = $"lockout_{dto.Username}";
+            string attemptsKey = $"attempts_{dto.Username}";
 
+            if (HttpContext.Session.TryGetValue(lockoutKey, out var lockoutEndBytes)) {
+                var lockoutEnd = BitConverter.ToInt64(lockoutEndBytes, 0);
+                if (lockoutEnd > DateTimeOffset.Now.ToUnixTimeSeconds()) {
+                    var lockoutDateTime = DateTimeOffset.FromUnixTimeSeconds(lockoutEnd).ToLocalTime();
+                    ModelState.AddModelError("", $"Account is locked until {lockoutDateTime:dd/MM/yyyy HH:mm:ss}");
+                    return View(dto);
+                } else {
+                    HttpContext.Session.Remove(lockoutKey);
+                }
+            }
+            int attempts = HttpContext.Session.GetInt32(attemptsKey) ?? 0;
             if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
                 try {
                     HttpContext.Session.SetString("username", dto.Username);
+                    HttpContext.Session.Remove(attemptsKey); 
 
                     Response.Cookies.Append("username", dto.Username, new CookieOptions {
-                        Expires = DateTimeOffset.Now.AddMinutes(30), 
+                        Expires = DateTimeOffset.Now.AddMinutes(30),
                         HttpOnly = true,
                         Secure = Request.IsHttps,
-                        SameSite = SameSiteMode.Strict 
+                        SameSite = SameSiteMode.Strict
                     });
 
                     return RedirectToAction("Index", "Home");
-                } catch (Exception ) {
-                    return StatusCode(500, new { message = "An unexpected error occurred during login." });
+                } catch (Exception) {
+                    ModelState.AddModelError("", "An unexpected error occurred during login.");
+                    return View(dto);
+                }
+            } else {
+                attempts++;
+                HttpContext.Session.SetInt32(attemptsKey, attempts);
+                if (attempts > 3) {
+                    var lockoutEnd = DateTimeOffset.Now.AddMinutes(15).ToUnixTimeSeconds();
+                    HttpContext.Session.Set(lockoutKey, BitConverter.GetBytes(lockoutEnd));
+                    HttpContext.Session.Remove(attemptsKey);
+                    ModelState.AddModelError("", $"Account is locked until {DateTimeOffset.FromUnixTimeSeconds(lockoutEnd).ToLocalTime():dd/MM/yyyy HH:mm:ss}");
+                    return View(dto);
+                } else {
+                    ModelState.AddModelError("", "Invalid username or password.");
+                    return View(dto);
                 }
             }
-
-            return Unauthorized(new { message = "Invalid username or password" });
         }
 
         // [HttpPost]
@@ -232,7 +260,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePwdDTO dto) {
             if (!ModelState.IsValid) {
-                TempData["ErrorMessage"] = "Invalid data received.";
                 return View(dto);
             }
 

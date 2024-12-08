@@ -138,6 +138,7 @@
                             <th>Image</th>
                             <th>Name</th>
                             <th>Category</th>
+                            <th>Original Price</th>
                             <th>Price</th>
                             <th>Description</th>
                             <th>Status</th>
@@ -186,8 +187,14 @@
                             </select>
                         </div>
                         <div>
+                            <label for="originalPrice">Original Price</label>
+                            <input type="text" id="originalPrice" name="price">
+                            <span id="originalPriceError" style="color: red; display: none;">Original price cannot be greater than selling price.</span>
+                        </div>
+                        <div>
                             <label for="price">Price</label>
                             <input type="text" id="price" name="price">
+                            <span id="priceError" style="color: red; display: none;">Selling price cannot be less than or equal to zero.</span>
                         </div>
                         <div>
                             <label for="description">Description</label>
@@ -251,173 +258,73 @@
         </div>
     </div>
 </div>
-<script>
-    // Lấy danh sách menu từ API và hiển thị lên bảng
-    // Hàm lấy danh sách menu từ API và hiển thị lên bảng
-    async function getMenu() {
-        try {
-            const response = await fetch('/api/item/viewmenu');
-            const menuItems = await response.json();
+<!-- Modal để cập nhật món ăn -->
+<!-- Modal cho Cập Nhật Món (Update Item) -->
+<div class="modal fade" id="updateItemForm" tabindex="-1" aria-labelledby="updateItemFormLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateItemFormLabel">Update Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateMenuForm" onsubmit="updateMenu(event)">
+                    <input type="hidden" id="itemIdUpdate"> <!-- Trường ẩn chứa itemId -->
+                    <div class="inputField">
+                        <div>
+                            <label for="imageUpdate">Image</label>
+                            <input type="file" id="imageUpdate" name="imageUpdate" accept="image/*">
+                            <br>
+                            <img id="imagePreviewUpdate" src="" alt="Image Preview" style="max-width: 100%; display: none;">
+                        </div>
+                        <div>
+                            <label for="productNameUpdate">Name</label>
+                            <input type="text" id="productNameUpdate" name="productNameUpdate">
+                        </div>
+                        <div>
+                            <label for="categoryUpdate">Category</label>
+                            <select id="categoryUpdate" name="categoryUpdate">
+                                <option value="Pizza">Pizza</option>
+                                <option value="Pasta">Pasta</option>
+                                <option value="Drink">Drink</option>
+                                <option value="Salad">Salad</option>
+                                <option value="Burgers">Burgers</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="originalPriceUpdate">Original Price</label>
+                            <input type="text" id="originalPriceUpdate" name="originalPriceUpdate">
+                            <span id="originalPriceErrorUpdate" style="color: red; display: none;">Original price cannot be greater than selling price.</span>
+                        </div>
+                        <div>
+                            <label for="priceUpdate">Price</label>
+                            <input type="text" id="priceUpdate" name="priceUpdate">
+                            <span id="priceErrorUpdate" style="color: red; display: none;">Selling price cannot be less than or equal to zero.</span>
+                        </div>
+                        <div>
+                            <label for="descriptionUpdate">Description</label>
+                            <input type="text" id="descriptionUpdate" name="descriptionUpdate">
+                        </div>
+                        <div>
+                            <label for="isServedUpdate">Is Served</label>
+                            <select id="isServedUpdate" name="isServedUpdate">
+                                <option value="1">Complete</option>
+                                <option value="0">Not Done</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="statusUpdate">Status</label>
+                            <select id="statusUpdate" name="statusUpdate">
+                                <option value="Still">Still</option>
+                                <option value="Sold Out">Sold Out</option>
+                            </select>
+                        </div>
+                    </div>
 
-            console.log(menuItems);  // Kiểm tra lại cấu trúc dữ liệu từ API
+                    <button type="submit" class="btn btn-primary" id="updateBtn">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-            const dataTable = document.getElementById('data');
-            dataTable.innerHTML = ''; // Xóa dữ liệu cũ trước khi hiển thị danh sách mới
-
-            if (Array.isArray(menuItems) && menuItems.length > 0) {
-                menuItems.forEach((item, index) => {
-                    // Ánh xạ itemStatus từ số thành chuỗi
-                    const statusText = item.itemStatus === 1 ? 'Still' : 'Sold Out';
-                    const { text, badgeClass } = getStatusAndBadgeClass(statusText);
-
-                    // Kiểm tra nếu giá trị null và thay thế bằng 'N/A'
-                    const itemName = item.itemName || 'N/A';
-                    const itemCategory = item.itemCategory || 'N/A';
-                    const suggestedPrice = item.suggestedPrice ? item.suggestedPrice.toFixed(2) : 'N/A'; // Format giá nếu có
-                    const itemDescription = item.itemDescription || 'N/A';
-                    const itemImage = item.itemImage || 'path/to/default-image.jpg'; // Đảm bảo có ảnh mặc định nếu không có
-
-                    const row = document.createElement('tr');
-                    row.id = `menu-row-${item.itemId}`;
-
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td><img src="${itemImage}" alt="${itemName}" class="item-image" style="width: 50px; height: 50px;"></td>
-                        <td>${itemName}</td>
-                        <td>${itemCategory}</td>
-                        <td>${suggestedPrice}</td>
-                        <td>${itemDescription}</td>
-                        <td><span class="badge ${badgeClass}">${text}</span></td>
-                        <td>
-                            <button class="btn btn-success" onclick="viewMenu(${item.itemId})" data-toggle="modal" data-target="#readData"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-primary" onclick="editMenu(${item.itemId})" data-toggle="modal" data-target="#updateMenuModal"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-danger" onclick="deleteMenu(${item.itemId})"><i class="bi bi-trash3"></i></button>
-                        </td>
-                    `;
-                    dataTable.appendChild(row);
-                });
-            } else {
-                dataTable.innerHTML = '<tr><td colspan="7">No menu items available.</td></tr>';
-            }
-        } catch (error) {
-            console.error('Error fetching menu items:', error);
-            const dataTable = document.getElementById('data');
-            dataTable.innerHTML = '<tr><td colspan="7">Failed to load menu items.</td></tr>';
-        }
-    }
-
-    // Hàm để xác định trạng thái và badge của món ăn (Still/Sold Out)
-    function getStatusAndBadgeClass(status) {
-        let text = '';
-        let badgeClass = '';
-        if (status === 'Still') {
-            text = 'Available';
-            badgeClass = 'badge-success';
-        } else if (status === 'Sold Out') {
-            text = 'Sold Out';
-            badgeClass = 'badge-danger';
-        } else {
-            text = 'Unknown';
-            badgeClass = 'badge-secondary';
-        }
-        return { text, badgeClass };
-    }
-
-    // Khi trang tải xong, gọi hàm getMenu để lấy danh sách
-    window.onload = () => {
-        getMenu();  // Gọi ngay khi trang tải lần đầu
-    }
-
-    // Hàm tạo món ăn mới
-    async function createMenu(event) {
-        event.preventDefault();  // Ngừng sự kiện mặc định của form (không làm reload trang)
-
-        // Lấy giá trị từ form
-        const productName = document.getElementById('productName').value;
-        const category = document.getElementById('category').value;
-        const price = document.getElementById('price').value;
-        const description = document.getElementById('description').value;
-        const status = document.getElementById('status').value;
-
-        // Lấy hình ảnh từ input file (nếu có)
-        const imageInput = document.getElementById('image');
-        const imageFile = imageInput.files[0];
-        let imageUrl = '';
-
-        // Nếu có ảnh, bạn cần upload ảnh trước và lấy URL
-        if (imageFile) {
-            imageUrl = await convertImageToBase64(imageFile);
-        } else {
-            imageUrl = '/images/default-image.jpg';
-        }
-
-        // Tạo đối tượng dữ liệu theo định dạng JSON
-        const newDish = {
-            itemName: productName,
-            itemCategory: category,
-            originalPrice: null,  // Bạn có thể thay đổi nếu cần
-            itemStatus: status === 'Still' ? 1 : 0,
-            itemDescription: description,
-            suggestedPrice: parseFloat(price),  // Chuyển giá thành số thực
-            itemImage: imageUrl,
-            isServed: 1  // Bạn có thể thay đổi nếu cần
-        };
-
-        try {
-            // Gửi yêu cầu POST tới API
-            const response = await fetch('/api/item/newdish', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newDish)  // Chuyển đổi dữ liệu thành JSON
-            });
-
-            if (response.ok) {
-                // Nếu món ăn được tạo thành công, đóng modal và tải lại danh sách menu
-                alert('Item created successfully!');
-                $('#ItemForm').modal('hide');  // Đóng modal
-                getMenu();  // Tải lại danh sách menu
-            } else {
-                // Nếu có lỗi từ API
-                alert('Failed to create item!');
-            }
-        } catch (error) {
-            console.error('Error creating menu item:', error);
-            alert('An error occurred while creating the item.');
-        }
-    }
-
-    // JavaScript: Hiển thị ảnh người dùng đã chọn
-    document.getElementById('image').addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                // Hiển thị ảnh trong preview
-                const imagePreview = document.getElementById('imagePreview');
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);  // Chuyển ảnh thành Base64
-        }
-    });
-
-    // Hàm chuyển đổi ảnh thành Base64
-    async function convertImageToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                resolve(e.target.result);  // Trả về chuỗi Base64
-            };
-            reader.onerror = function (error) {
-                reject(error);
-            };
-            reader.readAsDataURL(file);  // Chuyển ảnh thành Base64
-        });
-    }
-
-    // Gắn hàm createMenu vào sự kiện submit của form
-    document.getElementById('myForm').addEventListener('submit', createMenu);
-
-</script>

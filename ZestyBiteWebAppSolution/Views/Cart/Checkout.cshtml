@@ -1,4 +1,9 @@
-﻿@{
+﻿    <!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include jQuery Validation Plugin -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+@{
     ViewBag.Title = "Checkout";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -19,6 +24,7 @@
                 <!-- Billing Information -->
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Billing address</h4>
+                    <form id="checkoutForm" method="POST">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="firstName">FullName</label>
@@ -59,7 +65,7 @@
                         <hr class="mb-4">
                         <input class="btn btn-primary btn-lg btn-block" type="submit" onclick="handleCheckout()"/>
                     </div>
-
+                    </form>
                 </div>
 
             </div>
@@ -95,4 +101,48 @@
             }
         }
      </script> 
+
+    <script>
+        $(document).ready(function () {
+            // Initialize the jQuery validation plugin
+            $("#checkoutForm").validate({
+                rules: {
+                    FullName: {
+                        required: true,
+                        minlength: 3
+                    },
+                    Email: {
+                        email: true
+                    },
+                    Address: {
+                        required: true
+                    }
+                },
+                messages: {
+                    FullName: {
+                        required: "Full Name is required.",
+                        minlength: "Full Name must be at least 3 characters long."
+                    },
+                    Email: {
+                        email: "Please enter a valid email address."
+                    },
+                    Address: {
+                        required: "Please enter your shipping address."
+                    }
+                },
+                errorClass: "invalid-feedback", // Set custom error class
+                highlight: function (element) {
+                    $(element).addClass("is-invalid");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("is-invalid");
+                },
+                submitHandler: function (form) {
+                    // Optional: You can add custom behavior for form submission here
+                    alert('Form submitted!');
+                    form.submit();
+                }
+            });
+        });
+    </script>
 }

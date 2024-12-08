@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
-using System.Numerics;
 using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Models.DTOs;
-using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Services.Implementations;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 

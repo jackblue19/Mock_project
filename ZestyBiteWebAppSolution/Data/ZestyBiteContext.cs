@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ZestyBiteWebAppSolution.Models.Entities;
 
 namespace ZestyBiteWebAppSolution.Data;
@@ -37,7 +35,6 @@ public partial class ZestyBiteContext : DbContext
     public virtual DbSet<Table> Tables { get; set; }
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -153,7 +150,7 @@ public partial class ZestyBiteContext : DbContext
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.IsServed).HasColumnName("Is_Served");
             entity.Property(e => e.ItemCategory)
-                .HasColumnType("enum('Pizza','Pasta','Drink','Salad','Burgers')")
+                .HasColumnType("enum('Pizza','Pasta','Dessert','Drink','Salad','Fruit','Burgers')")
                 .HasColumnName("Item_Category");
             entity.Property(e => e.ItemDescription)
                 .HasMaxLength(255)
@@ -207,7 +204,6 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasOne(d => d.Supply).WithMany(p => p.Profits)
                 .HasForeignKey(d => d.SupplyId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("profit_ibfk_1");
         });
 
@@ -230,8 +226,6 @@ public partial class ZestyBiteContext : DbContext
             entity.ToTable("supply");
 
             entity.HasIndex(e => e.TableId, "Table_ID");
-
-            entity.HasIndex(e => e.VendorPhone, "Vendor_Phone").IsUnique();
 
             entity.Property(e => e.SupplyId).HasColumnName("Supply_ID");
             entity.Property(e => e.DateExpiration)
@@ -260,7 +254,9 @@ public partial class ZestyBiteContext : DbContext
             entity.Property(e => e.VendorName)
                 .HasMaxLength(255)
                 .HasColumnName("Vendor_Name");
-            entity.Property(e => e.VendorPhone).HasColumnName("Vendor_Phone");
+            entity.Property(e => e.VendorPhone)
+                .HasMaxLength(255)
+                .HasColumnName("Vendor_Phone");
 
             entity.HasOne(d => d.Table).WithMany(p => p.Supplies)
                 .HasForeignKey(d => d.TableId)
@@ -309,7 +305,7 @@ public partial class ZestyBiteContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("Table_Note");
             entity.Property(e => e.TableStatus)
-                .HasColumnType("enum('Served','Empty','Waiting','Deposit')")
+                .HasColumnType("enum('Served','Empty','Waiting')")
                 .HasColumnName("Table_Status");
             entity.Property(e => e.TableType).HasColumnName("Table_Type");
 
@@ -321,14 +317,22 @@ public partial class ZestyBiteContext : DbContext
 
         modelBuilder.Entity<TableDetail>(entity =>
         {
-            entity.HasKey(e => new { e.TableId, e.ItemId }).HasName("PRIMARY");
+            entity.HasKey(e => new { e.TableId, e.ItemId, e.BillId }).HasName("PRIMARY");
 
             entity.ToTable("table_details");
+
+            entity.HasIndex(e => e.BillId, "Bill_ID");
 
             entity.HasIndex(e => e.ItemId, "Item_ID");
 
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
+            entity.Property(e => e.BillId).HasColumnName("Bill_ID");
+
+            entity.HasOne(d => d.Bill).WithMany(p => p.TableDetails)
+                .HasForeignKey(d => d.BillId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("table_details_ibfk_3");
 
             entity.HasOne(d => d.Item).WithMany(p => p.TableDetails)
                 .HasForeignKey(d => d.ItemId)

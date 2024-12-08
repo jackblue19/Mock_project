@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ZestyBiteWebAppSolution.Data;
 using ZestyBiteWebAppSolution.Models.DTOs;
@@ -94,8 +93,6 @@ public class CartController : Controller {
             return View(cart);
         }
 
-        // Populate ViewBag with cart details
-        //ViewBag.Items = cart.Items; // Ensure this is set properly
         ViewBag.TotalItems = cart.TotalItems;
         ViewBag.TotalAmount = cart.TotalPrice;
 

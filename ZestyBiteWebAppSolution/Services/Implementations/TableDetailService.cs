@@ -98,7 +98,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                     ItemId = item.Key,
                     Quantity = item.Value,
                     BillId = idid
-
+                    // OriPrice = item.OriginalPrice,
+                    // SugPrice = item.SuggestedPrice
                 }).ToList();
 
                 await _tableDetailRepository.CreateRangeAsync(tableDetail);

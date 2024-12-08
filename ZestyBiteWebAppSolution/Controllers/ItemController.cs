@@ -22,31 +22,35 @@ namespace ZestyBiteWebAppSolution.Controllers
             _logger = logger;
         }
 
-        // [Authorize(Roles = "Manager")]
-        [HttpGet]
-        [Route("viewmenu")]
-        public async Task<ActionResult<IEnumerable<EItemDTO>>> ViewMenu()
+        [Authorize(Roles = "Manager")]
+        // [AllowAnonymous]
+        [HttpGet("viewmenu")]
+        public async Task<IResult> ViewMenu()
         {
             try
+
             {
-                var dishes = _service.ViewAllItem();
-                if (dishes == null) return NotFound("No dishes here");
-                return Ok(dishes);
+                var dishes = await _service.ViewAllItem();
+                if (dishes == null) return TypedResults.NotFound("No dishes here");
+                return TypedResults.Ok(dishes);
             }
             catch
             {
-                return BadRequest("Can not get the dishes");
+                return TypedResults.BadRequest("Can not get the dishes");
             }
         }
 
-        [AllowAnonymous]
+        // [AllowAnonymous]
+        [Authorize(Roles = "Manager")]
         [HttpGet]
-        [Route("viewdish")]
-        public async Task<IResult> ViewDish([FromBody] IdDTO dto)
+        [Route("viewdish/{id}")]
+        public async Task<IResult> ViewDish(int id)
+        // public async Task<IResult> ViewDish([FromBody] IdDTO dto)
         {
             try
             {
-                var dish = _service.ViewOneDish(dto.Id);
+                var dish = await _service.ViewOneDish(id);
+                // var dish = _service.ViewOneDish(dto.Id);
                 if (dish == null) return TypedResults.NotFound("No dishes here");
                 return TypedResults.Ok(dish);
             }
@@ -56,14 +60,14 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        // [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [Route("newdish")]
         public async Task<IResult> AddToMenu([FromBody] EItemDTO dto)
         {
             try
             {
-                var dish = _service.CreateNewDish(dto);
+                var dish = await _service.CreateNewDish(dto);
                 if (dish == null) return TypedResults.NotFound("No dishes here");
                 return TypedResults.Ok(dish);
             }
@@ -80,7 +84,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         {
             try
             {
-                var dish = _service.ModifyDish(dto);
+                var dish = await _service.ModifyDish(dto);
                 if (dish == null) return TypedResults.NotFound("critical damage");
                 return TypedResults.Ok(dish);
             }
@@ -89,13 +93,13 @@ namespace ZestyBiteWebAppSolution.Controllers
                 return TypedResults.BadRequest("Dish in menu cant be modified");
             }
         }
-        
+
         [HttpDelete, Route("delete")]
         public async Task<IResult> DeleteDish([FromBody] IdDTO dto)
         {
             try
             {
-                bool res = _service.DeleteItemAsync(dto.Id).Result;
+                bool res = await _service.DeleteItemAsync(dto.Id);
                 if (res) return TypedResults.Ok("delete");
                 else return TypedResults.BadRequest("un-deleted");
             }
@@ -105,5 +109,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
 
         }
+
+
     }
 }

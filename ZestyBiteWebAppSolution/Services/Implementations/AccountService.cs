@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
@@ -76,7 +77,22 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             return dto;
         }
 
-
+        public async Task<IEnumerable<AccountDTO?>> GetALlAccAsync() {
+            var accounts = await _repository.GetAllAsync();
+            return accounts.Select(acc => new AccountDTO {
+                Username = acc.Username,
+                Password = acc.Password,
+                Email = acc.Email,
+                Name = acc.Name,
+                PhoneNumber = acc.PhoneNumber,
+                Address = acc.Address,
+                Gender = acc.Gender,
+                Status = acc.AccountStatus,
+                ProfileImg = acc.ProfileImage,
+                VerificationCode = "hidden",
+                RoleDescription = acc.Role.RoleDescription
+            });
+        }
         public async Task<IEnumerable<RegisterDTO?>> GetALlAccountAsync() {
             var accounts = await _repository.GetAllAsync();
             return accounts.Select(acc => new RegisterDTO {
@@ -122,13 +138,14 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             await _repository.UpdateAsync(current);
             return dto;
         }
-        public async Task<ForgotPwdDTO> NewPwd(ForgotPwdDTO dto, string email) {
-            var updated = await _repository.GetAccountByEmailAsync(email);
+        public async Task<bool> NewPwd(ForgotPwdDTO dto, string usn) {
+            var updated = await _repository.GetAccountByUsnAsync(usn);
             if (updated == null)
                 throw new InvalidOperationException("Email address was not true");
+            if (updated.VerificationCode != dto.Code) return false;
             updated.Password = dto.NewPassword;
             await _repository.UpdateAsync(updated);
-            return dto;
+            return true;
         }
 
         public async Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn) {
@@ -220,10 +237,11 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                 ProfileImage = dto.ProfileImg,
                 VerificationCode = "CreatedByManager",
                 AccountStatus = 1,
+                RoleId = role.RoleId,
             };
-            acc.RoleId = role.RoleId;
             return acc;
         }
+
         public async Task<StaffDTO> MapFromEntity(Account acc) {
             var dto = new StaffDTO() {
                 Username = acc.Username,
@@ -264,6 +282,22 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         public async Task<Account?> GetUsnAsync(string username) {
             var current = await _repository.GetAccountByUsnAsync(username);
             return current;
+        }
+        public async Task<Account?> GetAccByMailAsync(string mail) {
+            var current = await _repository.GetAccountByEmailAsync(mail);
+            if (current == null) {
+                return null;
+            }
+            return current;
+        }
+        public async Task<Account> UpdateVCode(Account dto) {
+            var current = await _repository.GetAccountByUsnAsync(dto.Username);
+            if (current == null) {
+                throw new InvalidOperationException("User not found.");
+            }
+            current.VerificationCode = dto.VerificationCode;
+            await _repository.UpdateAsync(current);
+            return dto;
         }
     }
 }

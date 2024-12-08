@@ -9,14 +9,6 @@
     font-size: 30px; /* Thay đổi giá trị này để làm biểu tượng lớn hơn */
     margin-left: 50px; /* Di chuyển icon sang bên phải (giá trị dương) */
 }
-/* Modal styling */
-table {
-    color: #ffffff; /* Đặt màu chữ trắng cho toàn bộ bảng */
-}
-
-    table th, table td {
-        color: #ffffff; /* Đặt màu chữ trắng cho các ô trong bảng */
-    }
 
 #SupplyForm .modal-content {
     background-image: url('../images/backgro.jpg');

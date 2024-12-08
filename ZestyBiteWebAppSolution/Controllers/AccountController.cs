@@ -48,7 +48,10 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO dto) {
+        [Route("api/account/login")]
+        //public async Task<IActionResult> Login(LoginDTO dto) {
+        public async Task<IActionResult> Login([FromBody]LoginDTO dto) {
+
             if (!ModelState.IsValid) {
                 return View(dto);
             }
@@ -83,7 +86,8 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     if (roleId == 3) {
                         return RedirectToAction("Index", "Home", new { area = "Procurement_Manager" });
                     } else if (roleId == 1) {
-                        return RedirectToAction("Index", "Home", new { area = "Manager" });
+                        //return RedirectToAction("Index", "Home", new { area = "Manager" });
+                        return Ok("Oke");
                     } else if (roleId == 4) {
                         return RedirectToAction("Index", "Home", new { area = "Server_Staff" });
                     } else if (roleId == 6) {
@@ -112,19 +116,101 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         }
 
-        // [HttpPost]
-        // public async Task<IActionResult> ForgotPassword(string email)
-        // {
-        //     string verificationCode = VerificationCodeGenerator.GetSixDigitCode();
-        //     HttpContext.Session.SetString("username", email);
-        // }
+        [AllowAnonymous]
+        [HttpPost]
+        //[Route("api/account/newpwd")]
+        public async Task<IActionResult> ForgotPassword( MailDTO dto)
+        {
+            string digit = VerificationCodeGenerator.GetSixDigitCode();
+            var finding = await _service.GetAccByMailAsync(dto.Email);
+            if (finding == null)
+            {
+                return BadRequest();
+            }
+            finding.VerificationCode = digit;
+            await _service.UpdateVCode(finding);
+            HttpContext.Session.SetString("username", finding.Username);
+            Response.Cookies.Append("username", finding.Username, new CookieOptions
+            {
+                Expires = DateTimeOffset.Now.AddMinutes(3),
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Strict
+            });
 
-        // [HttpPost]
-        // public async Task<IActionResult> NewPassword([FromBody] ForgotPwdDTO dto)
-        // {
+            var pwdToken = new TaskCompletionSource<string>();
+            var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(3));
 
-        // }
+            VerificationTasks[finding.Username] = pwdToken;
+            VerificationAttempts[finding.Username] = 0;
 
+            _ = Task.Delay(TimeSpan.FromMinutes(3), timeout.Token).ContinueWith(t =>
+            {
+                if (t.IsCanceled || t.IsFaulted)
+                {
+                    BadRequest("Program Crashing An EndPoint => out of time");
+                }
+                if (!pwdToken.Task.IsCompleted)
+                {
+                    VerificationTasks.TryRemove(finding.Username, out _);
+                    VerificationAttempts.TryRemove(finding.Username, out _);
+                    BadRequest("Program Crashing An EndPoint => out of time");
+                }
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            await _mailService.SendVerificationCodeAsync(dto.Email, digit);
+            return RedirectToAction("NewPassword", "Account");
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> NewPassword(ForgotPwdDTO dto)
+        {
+
+            var usn = User.Identity?.Name;
+            if (string.IsNullOrEmpty(usn))
+                return BadRequest("User not authenticated.");
+            try
+            {
+                if (!VerificationTasks.ContainsKey(usn))
+                {
+                    return BadRequest("NO ACCOUNT WAS FOUND");
+                }
+
+                var pwdToken = VerificationTasks[usn];
+
+                if (!VerificationAttempts.ContainsKey(usn))
+                    VerificationAttempts[usn] = 0;
+
+                if (VerificationAttempts[usn] >= 5)
+                {
+                    return BadRequest("Too many failed attempts.");
+                }
+
+                if (await _service.NewPwd(dto, usn))
+                {
+                    pwdToken.TrySetResult("Verified");
+                    VerificationTasks.TryRemove(usn, out _);
+                    VerificationAttempts.TryRemove(usn, out _);
+                    HttpContext.Session.Remove("username");
+                    Response.Cookies.Delete("username");
+                    //return TypedResults.Ok("Change pwd sucess");
+                    return RedirectToAction("Login", "Account");
+                }
+
+                VerificationAttempts[usn]++;
+                if (VerificationAttempts[usn] >= 5)
+                {
+                    VerificationTasks.TryRemove(usn, out _);
+                    VerificationAttempts.TryRemove(usn, out _);
+                    // return RedirectToAction("Index", "Home");
+                    return BadRequest();
+                }
+                return RedirectToAction("Index", "Home"); // trả về trang verify hiện tại
+                //return TypedResults.BadRequest("Saii roi cung");
+            } catch {
+                return BadRequest(500);
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto) {
@@ -158,7 +244,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     VerificationAttempts.TryRemove(usn, out _);
                     HttpContext.Session.Remove("username");
                     Response.Cookies.Delete("username");
-
+                    TempData["VerificationSuccess"] = "Email verification successful. Please log in.";
                     return RedirectToAction("Login", "Account");
                 }
 

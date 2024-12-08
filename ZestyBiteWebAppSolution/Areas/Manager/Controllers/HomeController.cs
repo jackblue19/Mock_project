@@ -27,7 +27,7 @@ namespace ZestyBiteWebAppSolution.Areas.Manager.Controllers {
         [Route("api/account/getallacc")]
         public async Task<IResult> GetAllAccount() {
             try {
-                var accounts = await _accountService.GetALlAccountAsync();
+                var accounts = await _accountService.GetALlAccAsync();
                 if (!accounts.Any()) return TypedResults.NotFound();
                 return TypedResults.Ok(accounts);
 
@@ -37,19 +37,17 @@ namespace ZestyBiteWebAppSolution.Areas.Manager.Controllers {
         }
         [Authorize(Roles = "Manager")]
         [HttpPost]
-        [Route("addstaff")]
+        [Route("api/account/addstaff")]
         public async Task<IResult> CreateNewStaffAccount([FromBody] StaffDTO dto) {
-            try {
                 var staffAccount = await _accountService.MapFromDTO(dto);
                 await _accountService.CreateStaffAsync(staffAccount);
                 return TypedResults.Ok(staffAccount);
-            } catch (InvalidOperationException ex) {
-                return TypedResults.BadRequest(new { Message = ex.Message });
-            }
+             
         }
+
         [Authorize(Roles = "Manager")]
         [HttpDelete]
-        [Route("deleteacc")]
+        [Route("api/account/deleteacc")]
         public async Task<IResult> DeleteAnAccount([FromBody] StatusDTO dto) {
             try {
                 if (await _accountService.DeleteAcc(dto.Username))
@@ -74,7 +72,7 @@ namespace ZestyBiteWebAppSolution.Areas.Manager.Controllers {
         }
         [Authorize(Roles = "Manager")]
         [HttpPut]
-        [Route("status")]
+        [Route("api/account/status")]
         public async Task<IResult> ManageStatus([FromBody] StatusDTO dto) {
             try {
                 if (await _accountService.ChangeAccStatus(dto.Username)) return TypedResults.Ok("Changed the status");

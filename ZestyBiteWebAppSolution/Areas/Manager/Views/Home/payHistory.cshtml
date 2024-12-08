@@ -2,86 +2,9 @@
     ViewBag.Title = "payHistory";
     Layout = "~/Areas/Manager/Views/Shared/_Layout.cshtml";
 }
-<style>
-        .popup {
-        overflow-y: auto;
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80%; /* Adjust width to ensure it fits well on different screen sizes */
-        max-width: 600px; /* Limit max width */
-        max-height: 90%; /* Limit the height so it stays within the viewport */
-        background-color: #FDFCE5;
-        border: 1px solid #333;
-        padding: 20px;
-        z-index: 1000;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
-        box-sizing: border-box; /* Ensure padding is included in the total width/height */
-    }
-     .popup-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+<link href="~/css/payHistory.css" rel="stylesheet" />
 
-    .invoice {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 10px 0; /* Adds some vertical spacing */
-    }
-
-    .company-info, .invoice-info {
-        width: 48%; /* Adjust as needed to fit your design */
-    }
-
-    .company-info p, .invoice-info p {
-        margin: 0;
-        font-size: 0.9em;
-    }
-
-    .invoice-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-    }
-
-    .invoice-table th, .invoice-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-        font-size: 0.9em;
-        color: black;
-    }
-
-    .invoice-table thead {
-        background-color: #f4f4f4;
-    }
-
-    .invoice-table tfoot {
-        background-color: #f9f9f9;
-        font-weight: bold;
-    }
-
-    .summary-section .totals {
-        background: #f4f4f4;
-        padding: 10px;
-        border-radius: 5px;
-        margin-top: 10px;
-    }
-
-    .totals p {
-        font-size: 15px;
-        display: flex;
-        justify-content: space-between;
-        margin: 5px 0;
-    }
-
-</style>
-<div class="container-content" style="margin-top: 60px">
+<div class="container-content" style="margin-top :60px">
     <div class="sidebar">
         <nav>
             <ul class="menu">
@@ -109,25 +32,6 @@
                         <span>Menu Manager</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-user"></i>
-                        <span>Procedures</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-user"></i>
-                        <span> Manager</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-user"></i>
-                        <span> Service(..)</span>
-                    </a>
-                </li>
-
             </ul>
         </nav>
     </div>
@@ -266,14 +170,14 @@
     function renderAccountTable() {
         const tbody = document.getElementById('accountTableBody');
         tbody.innerHTML = payHistory.map(payHistorys => `
-            <tr onclick="showPopup(${payHistorys.billID})">
-                <td>${payHistorys.billID}</td>
-                <td>${payHistorys.billStatus}</td>
-                <td>${payHistorys.totalCost}</td>
-                <td>${payHistorys.billDateTime}</td>
-                <td>${payHistorys.billType}</td>
-            </tr>
-        `).join('');
+                    <tr onclick="showPopup(${payHistorys.billID})">
+                        <td>${payHistorys.billID}</td>
+                        <td>${payHistorys.billStatus}</td>
+                        <td>${payHistorys.totalCost}</td>
+                        <td>${payHistorys.billDateTime}</td>
+                        <td>${payHistorys.billType}</td>
+                    </tr>
+                `).join('');
     }
 
     // Function to display popup with selected bill details
@@ -285,18 +189,18 @@
 
             // Update the fields with selected bill details
             document.querySelector('.company-info').innerHTML = `
-                <p>
-                    <strong>Account ID:</strong> ${selectedBill.accountId}<br>
-                    <strong>Account Name:</strong> ${selectedBill.accountId}<br>
-                    <strong>Table No:</strong> ${selectedBill.tableID}
-                </p>
-            `;
+                        <p>
+                            <strong>Account ID:</strong> ${selectedBill.accountId}<br>
+                            <strong>Account Name:</strong> ${selectedBill.accountId}<br>
+                            <strong>Table No:</strong> ${selectedBill.tableID}
+                        </p>
+                    `;
 
             document.querySelector('.invoice-info').innerHTML = `
-                <p><strong>Bill ID:</strong> ${selectedBill.billID}</p>
-                <p><strong>Payment ID:</strong> ${selectedBill.paymentID}</p>
-                <p><strong>Bill DateTime:</strong> ${selectedBill.billDateTime}</p>
-            `;
+                        <p><strong>Bill ID:</strong> ${selectedBill.billID}</p>
+                        <p><strong>Payment ID:</strong> ${selectedBill.paymentID}</p>
+                        <p><strong>Bill DateTime:</strong> ${selectedBill.billDateTime}</p>
+                    `;
 
             document.getElementById('popupOverlay').style.display = 'block';
             document.getElementById('infoPopup').style.display = 'block';

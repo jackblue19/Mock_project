@@ -1,19 +1,18 @@
 ﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Manager/Views/Shared/_Layout.cshtml";
-
 }
 
-<div class="container-content" style="margin-top :60px">
-    <div class="sidebar">
-        <nav>
-            <ul class="menu">
-                <li class="active">
+<div class="container-content" style="margin-top: 60px">
+        <div class="sidebar">
+            <nav>
+                <ul class="menu">
+                    <li class="active">
                     <a href="@Url.Action("Index", "Home", new { area = "Manager" })">
                         <i class="bi bi-credit-card"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
                 <li>
                     <a href="@Url.Action("AccountManagement", "Home", new { area = "Manager" })">
                         <i class="fas fa-user"></i>
@@ -34,45 +33,45 @@
                         <span>Menu Manager</span>
                     </a>
                 </li>
-            </ul>
-        </nav>
-    </div>
-    <div class="gird-container">
-        <div class="main-card">
-            <div class="card">
-                <div class="card-inner">
-                    <p>Purchase</p>
-                    <i class="bi bi-cart"></i>
+                </ul>
+            </nav>
+        </div>
+        <div class="gird-container">
+            <div class="main-card">
+                <div class="card">
+                    <div class="card-inner">
+                        <p>Purchase</p>
+                        <i class="bi bi-cart"></i>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-inner">
-                    <p>Revenue</p>
-                    <i class="bi bi-graph-up"></i>
+                <div class="card">
+                    <div class="card-inner">
+                        <p>Revenue</p>
+                        <i class="bi bi-graph-up"></i>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-inner">
-                    <p>Pay History</p>
-                    <i class="bi bi-currency-dollar"></i>
+                <div class="card">
+                    <div class="card-inner">
+                        <p>Pay History</p>
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-inner">
-                    <p>AccountList</p>
-                    <i class="bi bi-person-lines-fill"></i>
+                <div class="card">
+                    <div class="card-inner">
+                        <p>AccountList</p>
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
                 </div>
-            </div>
-            <div class="card charts-card">
-                <div class="charts-card">
-                    <p class="chart-title">Revenue vs Profit</p>
-                    <div id="bar-chart" style="height: 300px" ;></div>
-                </div>
-                <div class="charts-card">
-                    <p class="chart-title">Purchase and Sales Orders</p>
-                    <div id="area-chart"></div>
+                <div class="card charts-card">
+                    <div class="charts-card">
+                        <p class="chart-title">Revenue vs Profit</p>
+                        <div id="bar-chart" style="height: 300px" ;></div>
+                    </div>
+                    <div class="charts-card">
+                        <p class="chart-title">Purchase and Sales Orders</p>
+                        <div id="area-chart"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+  </div>

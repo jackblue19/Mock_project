@@ -1,0 +1,77 @@
+﻿.popup {
+    overflow-y: auto;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* Adjust width to ensure it fits well on different screen sizes */
+    max-width: 600px; /* Limit max width */
+    max-height: 90%; /* Limit the height so it stays within the viewport */
+    background-color: #FDFCE5;
+    border: 1px solid #333;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    box-sizing: border-box; /* Ensure padding is included in the total width/height */
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.invoice {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0; /* Adds some vertical spacing */
+}
+
+.company-info, .invoice-info {
+    width: 48%; /* Adjust as needed to fit your design */
+}
+
+    .company-info p, .invoice-info p {
+        margin: 0;
+        font-size: 0.9em;
+    }
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+    .invoice-table th, .invoice-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-size: 0.9em;
+        color: black;
+    }
+
+    .invoice-table thead {
+        background-color: #f4f4f4;
+    }
+
+    .invoice-table tfoot {
+        background-color: #f9f9f9;
+        font-weight: bold;
+    }
+
+.summary-section .totals {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.totals p {
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}

@@ -1,0 +1,56 @@
+﻿.text-center {
+    overflow: auto;
+    width: 100%;
+}
+
+.text-content {
+    color: black;
+}
+/* Container styling for the menu */
+.MenuView {
+    padding: 1rem;
+}
+
+.MenuList {
+    overflow-x: auto; /* Allows horizontal scrolling for smaller screens */
+}
+
+/* Table styling */
+.List-Menu {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+    .List-Menu th, .List-Menu td {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .List-Menu th {
+        background-color: rgba(113, 99, 186, 255);
+        color: #fff;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    .List-Menu tbody td {
+        background-color: #f9f9f9;
+        font-size: 0.95rem;
+    }
+
+    /* Alternating row colors for better readability */
+    .List-Menu tbody tr:nth-child(even) td {
+        background-color: #f1f1f1;
+    }
+/* Image styling for table cells */
+.item-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+#data td {
+    color: black !important;
+}

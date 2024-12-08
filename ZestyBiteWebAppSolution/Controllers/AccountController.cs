@@ -49,29 +49,54 @@ namespace ZestyBiteWebAppSolution.Controllers {
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO dto) {
-            // Kiểm tra tính hợp lệ của dữ liệu đầu vào
             if (!ModelState.IsValid) {
                 return View(dto);
             }
+            string lockoutKey = $"lockout_{dto.Username}";
+            string attemptsKey = $"attempts_{dto.Username}";
 
+            if (HttpContext.Session.TryGetValue(lockoutKey, out var lockoutEndBytes)) {
+                var lockoutEnd = BitConverter.ToInt64(lockoutEndBytes, 0);
+                if (lockoutEnd > DateTimeOffset.Now.ToUnixTimeSeconds()) {
+                    var lockoutDateTime = DateTimeOffset.FromUnixTimeSeconds(lockoutEnd).ToLocalTime();
+                    ModelState.AddModelError("", $"Account is locked until {lockoutDateTime:dd/MM/yyyy HH:mm:ss}");
+                    return View(dto);
+                } else {
+                    HttpContext.Session.Remove(lockoutKey);
+                }
+            }
+            int attempts = HttpContext.Session.GetInt32(attemptsKey) ?? 0;
             if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
                 try {
                     HttpContext.Session.SetString("username", dto.Username);
+                    HttpContext.Session.Remove(attemptsKey); 
 
                     Response.Cookies.Append("username", dto.Username, new CookieOptions {
-                        Expires = DateTimeOffset.Now.AddMinutes(30), 
+                        Expires = DateTimeOffset.Now.AddMinutes(30),
                         HttpOnly = true,
                         Secure = Request.IsHttps,
-                        SameSite = SameSiteMode.Strict 
+                        SameSite = SameSiteMode.Strict
                     });
 
                     return RedirectToAction("Index", "Home");
-                } catch (Exception ) {
-                    return StatusCode(500, new { message = "An unexpected error occurred during login." });
+                } catch (Exception) {
+                    ModelState.AddModelError("", "An unexpected error occurred during login.");
+                    return View(dto);
+                }
+            } else {
+                attempts++;
+                HttpContext.Session.SetInt32(attemptsKey, attempts);
+                if (attempts > 3) {
+                    var lockoutEnd = DateTimeOffset.Now.AddMinutes(15).ToUnixTimeSeconds();
+                    HttpContext.Session.Set(lockoutKey, BitConverter.GetBytes(lockoutEnd));
+                    HttpContext.Session.Remove(attemptsKey);
+                    ModelState.AddModelError("", $"Account is locked until {DateTimeOffset.FromUnixTimeSeconds(lockoutEnd).ToLocalTime():dd/MM/yyyy HH:mm:ss}");
+                    return View(dto);
+                } else {
+                    ModelState.AddModelError("", "Invalid username or password.");
+                    return View(dto);
                 }
             }
-
-            return Unauthorized(new { message = "Invalid username or password" });
         }
 
         // [HttpPost]
@@ -90,16 +115,20 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto) {
-            var usn = User.Identity?.Name;
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
 
-            if (verifyDto == null || string.IsNullOrEmpty(usn) || string.IsNullOrEmpty(verifyDto.Code))
-                return BadRequest(new { Message = "Invalid verification data" });
+            var usn = User.Identity?.Name;
+            if (string.IsNullOrEmpty(usn))
+                return BadRequest(new { Message = "User not authenticated." });
 
             try {
                 if (!VerificationTasks.ContainsKey(usn)) {
                     await _service.IsDeleteUnregistedAccount(usn);
                     return BadRequest(new { Message = "Verification session expired or not found." });
                 }
+
                 var tcs = VerificationTasks[usn];
 
                 if (!VerificationAttempts.ContainsKey(usn))
@@ -116,16 +145,19 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     VerificationAttempts.TryRemove(usn, out _);
                     HttpContext.Session.Remove("username");
                     Response.Cookies.Delete("username");
+
                     return RedirectToAction("Login", "Account");
                 }
 
                 VerificationAttempts[usn]++;
+
                 if (VerificationAttempts[usn] >= 5) {
                     VerificationTasks.TryRemove(usn, out _);
                     VerificationAttempts.TryRemove(usn, out _);
                     if (await _service.IsDeleteUnregistedAccount(usn))
                         return RedirectToAction("Index", "Home");
                 }
+
                 return RedirectToAction("Index", "Home");
             } catch (Exception ex) {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
@@ -178,19 +210,17 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-
-        [HttpGet]
         [Route("viewprofile")]
         public async Task<IActionResult> ViewProfile() {
             try {
                 var username = User.Identity?.Name;
                 if (string.IsNullOrEmpty(username)) {
-                    return RedirectToAction("Login", "Account"); // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+                    return RedirectToAction("Login", "Account"); 
                 }
 
                 var dto = await _service.ViewProfileByUsnAsync(username);
                 if (dto == null) {
-                    return NotFound(); // Hiển thị trang "Not Found" nếu không tìm thấy người dùng
+                    return NotFound(); 
                 }
                 return View(dto);
             } catch (Exception ex) {
@@ -228,7 +258,6 @@ namespace ZestyBiteWebAppSolution.Controllers {
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePwdDTO dto) {
             if (!ModelState.IsValid) {
-                TempData["ErrorMessage"] = "Invalid data received.";
                 return View(dto);
             }
 

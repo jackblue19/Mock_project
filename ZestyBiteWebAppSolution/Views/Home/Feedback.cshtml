@@ -29,7 +29,7 @@
                         </div>
                         <div class="message d-md-flex">
                             <textarea id="feedbackMessage" name="type-area" cols="30" rows="3" class="form-control"
-                                placeholder="Message"></textarea>
+                                      placeholder="Message"></textarea>
                         </div>
                         <div class="submit-button">
                             <button type="submit" id="submitFeedback" class="btn btn-primary py-3 px-4">Send</button>
@@ -106,15 +106,15 @@
                 const itemName = selectedItem ? selectedItem.itemName : "Unknown Item"; // Fallback if not found
                 const parentFeedbackId = null; // Set ParentFb to null as per your requirement
 
-                fetch('http://localhost:5024/api/feedback/submitfeedback', {
+                fetch('/api/feedback/submitfeedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        Content: feedbackMessage, 
-                        ItemId: selectedDishId, 
-                        ItemName: itemName, 
+                        Content: feedbackMessage,
+                        ItemId: selectedDishId,
+                        ItemName: itemName,
                         ParentFb: null,
                         Fullname: "",
                     })

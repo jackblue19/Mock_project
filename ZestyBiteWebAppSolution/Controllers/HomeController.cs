@@ -97,12 +97,17 @@ namespace ZestyBiteSolution.Controllers {
 
         [HttpGet]
         public async Task<IActionResult> Search(string query, int page = 1) {
+            var itemsDTO = await _itemService.GetAllItemsAsync();
+
             if (string.IsNullOrWhiteSpace(query)) {
-                var itemDTO = await _itemService.GetAllItemsAsync();
-                return View("SearchResults", itemDTO);
+                var model = new IndexViewModel {
+                    Items = itemsDTO,
+                    CurrentPage = 1,
+                    TotalPages = 1
+                };
+                return View("SearchResults", model);
             }
 
-            var itemsDTO = await _itemService.GetAllItemsAsync();
             var filteredItems = itemsDTO
                 .Where(i => i.ItemName.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .ToList();
@@ -115,13 +120,14 @@ namespace ZestyBiteSolution.Controllers {
                 .Take(pageSize)
                 .ToList();
 
-            var model = new IndexViewModel {
+            var searchModel = new IndexViewModel {
                 Items = paginatedItems,
                 CurrentPage = page,
                 TotalPages = totalPages
             };
 
-            return View("SearchResults", model);
+            return View("SearchResults", searchModel);
         }
+
     }
 }

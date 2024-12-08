@@ -1,4 +1,7 @@
-﻿namespace ZestyBiteWebAppSolution.Models.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace ZestyBiteWebAppSolution.Models.Entities;
 
 public partial class Table
 {

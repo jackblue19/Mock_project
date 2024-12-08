@@ -56,7 +56,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
         }
 
 
-        public async Task<IEnumerable<ItemDTO>> GetAllItemsAsync() {
+        public async Task<IEnumerable<ItemDTO?>> GetAllItemsAsync() {
             var items = await _itemRepository.GetAllAsync();
             return items.Select(MapToItemDTO).Where(item => item != null).ToList();
         }
@@ -78,9 +78,72 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             var item = await _itemRepository.GetByIdAsync(itemId);
             if (item != null) {
                 await _itemRepository.DeleteAsync(item);
-                return true; // Return true if the item was found and deleted
+                return true;
             }
-            return false; // Return false if the item was not found
+            return false;
         }
+
+        /*  CRUD Item By Manager    */
+        public async Task<IEnumerable<EItemDTO?>> ViewAllItem() {
+            var items = await _itemRepository.GetAllAsync();
+            return items.Select(eis => new EItemDTO {
+                ItemId = eis.ItemId,
+                IsServed = eis.IsServed,
+                ItemCategory = eis.ItemCategory,
+                ItemDescription = eis.ItemDescription,
+                ItemImage = eis.ItemImage,
+                ItemName = eis.ItemName,
+                ItemStatus = eis.ItemStatus,
+                OriginalPrice = eis.OriginalPrice,
+                SuggestedPrice = eis.SuggestedPrice
+            });
+        }
+
+        public async Task<EItemDTO> ViewOneDish(int itemId) {
+            var eis = await _itemRepository.GetByIdAsync(itemId);
+            var dto = new EItemDTO() {
+                ItemId = eis.ItemId,
+                IsServed = eis.IsServed,
+                ItemCategory = eis.ItemCategory,
+                ItemDescription = eis.ItemDescription,
+                ItemImage = eis.ItemImage,
+                ItemName = eis.ItemName,
+                ItemStatus = eis.ItemStatus,
+                OriginalPrice = eis.OriginalPrice,
+                SuggestedPrice = eis.SuggestedPrice
+            };
+            return dto;
+        }
+
+        public async Task<Item> CreateNewDish(EItemDTO dto) {
+            var eis = new Item() {
+                ItemId = dto.ItemId,
+                IsServed = dto.IsServed,
+                ItemCategory = dto.ItemCategory,
+                ItemDescription = dto.ItemDescription,
+                OriginalPrice = dto.OriginalPrice,
+                ItemImage = dto.ItemImage,
+                ItemName = dto.ItemName,
+                ItemStatus = dto.ItemStatus,
+                SuggestedPrice = dto.SuggestedPrice
+            };
+            await _itemRepository.CreateAsync(eis);
+            return eis;
+        }
+
+        public async Task<Item> ModifyDish(EItemDTO dto) {
+            var eis = await _itemRepository.GetByIdAsync(dto.ItemId);
+            eis.IsServed = dto.IsServed;
+            eis.ItemCategory = dto.ItemCategory;
+            eis.ItemDescription = dto.ItemDescription;
+            eis.OriginalPrice = dto.OriginalPrice;
+            eis.SuggestedPrice = dto.SuggestedPrice;
+            eis.ItemImage = dto.ItemImage;
+            eis.ItemName = dto.ItemName;
+            eis.ItemStatus = dto.ItemStatus;
+            await _itemRepository.UpdateAsync(eis);
+            return eis;
+        }
+        // DeleteItemAsync
     }
 }

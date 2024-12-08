@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using ZestyBiteWebAppSolution.Data;
@@ -95,8 +94,6 @@ public class CartController : Controller {
             return View(cart);
         }
 
-        // Populate ViewBag with cart details
-        //ViewBag.Items = cart.Items; // Ensure this is set properly
         ViewBag.TotalItems = cart.TotalItems;
         ViewBag.TotalAmount = cart.TotalPrice;
 
@@ -115,7 +112,7 @@ public class CartController : Controller {
             try {
                 billId = _tableDetailService.ToPayment(itemQuantityMap, acc, CartSessionKey, HttpContext).Result;
             } catch {
-                return BadRequest("del oonr rooannadnanodas");
+                return BadRequest();
             }
             if (billId == 0) {
                 flag = false;
@@ -127,7 +124,6 @@ public class CartController : Controller {
         if (flag) {
             ViewBag.TotalItems = 0;
             ViewBag.TotalAmount = 0;
-            //HttpContext.Session.SetString("billId", billId);
             return Ok(); // billId
         } else {
             ViewBag.ErrorMessage = "An error occurred during payment processing.";
@@ -137,12 +133,10 @@ public class CartController : Controller {
 
     [HttpPost("api/Cart/Change")]
     public IActionResult SetUFlag() {
-        // Set the session key "uflag" to 1
         HttpContext.Session.SetString("uflag", "1");
 
         return Ok();
     }
-
     public async Task<IActionResult> Checkout(string payment = "VnPay") {
         if (ModelState.IsValid) {
             var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
@@ -150,7 +144,6 @@ public class CartController : Controller {
                 return RedirectToAction("Login", "Account");
             }
 
-            // Fetch the account associated with the username
             var acc = await _accountRepository.GetAccountByUsnAsync(usn);
             if (acc == null) {
                 ViewBag.ErrorMessage = "Account not found.";
@@ -223,8 +216,13 @@ public class CartController : Controller {
     }
 
     public IActionResult AddToCart(int itemId) {
-        var cart = GetCheckout();
 
+        var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
+        if (string.IsNullOrEmpty(usn)) {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var cart = GetCheckout();
         var item = _context.Items
                            .Where(i => i.ItemId == itemId)
                            .Select(i => new CheckoutItemDTO {
@@ -297,13 +295,10 @@ public class CartController : Controller {
     public async Task<IActionResult> PaymentCallBack() {
         
         var response = _vnPayService.PaymentExecute(Request.Query);
-        //string abc = response.OrderId;
         if (response == null || response.VnPayResponseCode != "00") {
             TempData["Message"] = $"Payment failed: {response?.VnPayResponseCode}";
             return RedirectToAction("PaymentFail");
         }
-        //long xyz = Convert.ToInt64(abc);
-        //await _billRepository.UpdateBill(xyz);
 
         TempData["Message"] = "Payment successful.";
 

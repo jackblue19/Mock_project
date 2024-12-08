@@ -109,7 +109,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                     else if (roleId == 1)
                     {
                         // Chuyển hướng đến trang AccountManagement trong Views/Account
-                        return RedirectToAction("AccountManagement", "Account");
+                        return RedirectToAction("Index", "Home", new { area = "Manager" });
                     }
                     else
                     {

@@ -78,6 +78,8 @@ async function viewSupply(id) {
         alert("Đã xảy ra lỗi khi tải thông tin chi tiết của supply.");
     }
 }
+
+
 // CREATE
 document.getElementById("supplyForm").addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -172,4 +174,109 @@ async function deleteSupply(id) {
         alert("Đã xảy ra lỗi khi xóa supply.");
     }
 }
+//Update
+async function editSupply(id) {
+    try {
+        const response = await fetch(`/api/supply/${id}`);
+        const supply = await response.json();
+
+        if (response.ok) {
+            // Gán các giá trị vào form update
+            // Gán supplyId vào trường ẩn
+            document.getElementById('updateSupplyId').value = supply.supplyId || '';  // Gán giá trị supplyId vào field ẩn
+            document.getElementById('updateProductName').value = supply.productName || '';
+            document.getElementById('updateQuantity').value = supply.supplyQuantity || '';
+            document.getElementById('updatePrice').value = supply.supplyPrice || '';
+            document.getElementById('updateDateImport').value = supply.dateImport ? supply.dateImport.split('T')[0] : '';
+            document.getElementById('updateDateExpiration').value = supply.dateExpiration ? supply.dateExpiration.split('T')[0] : '';
+            document.getElementById('updateTableId').value = supply.tableId || '';
+            document.getElementById('updateVendorName').value = supply.vendorName || '';
+            document.getElementById('updateVendorPhone').value = supply.vendorPhone || '';
+            document.getElementById('updateVendorAddress').value = supply.vendorAddress || '';
+
+            // Cập nhật giá trị của supplyCategory trong select
+            const categorySelect = document.getElementById('updateCategory');
+            categorySelect.value = supply.supplyCategory || 'Food';  // Set mặc định là "Food" nếu không có giá trị
+
+            // Cập nhật giá trị của supplyStatus (trạng thái)
+            const statusSelect = document.getElementById('updateStatus');
+            statusSelect.value = supply.supplyStatus; // 1 cho Still, 0 cho Expired
+        }
+    } catch (error) {
+        console.error('Error fetching supply for edit:', error);
+    }
+}
+
+// Function to handle the update action when submitting the update form
+// Function to handle the update action when submitting the update form
+document.getElementById('updateSupplyForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent page reload
+
+    const supplyId = document.getElementById('updateSupplyId').value;
+
+    const updatedSupply = {
+        productName: document.getElementById('updateProductName').value,
+        supplyQuantity: document.getElementById('updateQuantity').value,
+        supplyPrice: document.getElementById('updatePrice').value,
+        dateImport: new Date(document.getElementById('updateDateImport').value).toISOString(),
+        dateExpiration: new Date(document.getElementById('updateDateExpiration').value).toISOString(),
+        vendorName: document.getElementById('updateVendorName').value,
+        vendorPhone: document.getElementById('updateVendorPhone').value,
+        vendorAddress: document.getElementById('updateVendorAddress').value,
+        tableId: document.getElementById('updateTableId').value,
+        supplyCategory: document.getElementById('updateCategory').value,
+        supplyStatus: parseInt(document.getElementById("updateStatus").value)
+    };
+
+    // Kiểm tra sự tồn tại của tableId bằng cách gọi API GET
+    const tableId = updatedSupply.tableId;
+    try {
+        const response = await fetch(`/api/Supply/table/${tableId}`);
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(`Không tìm thấy supply với TableId ${tableId}. Vui lòng kiểm tra lại.`);
+            return; // Dừng lại nếu không tìm thấy supply với tableId này
+        }
+
+        // Nếu tableId hợp lệ, tiếp tục gửi yêu cầu cập nhật
+        const responseUpdate = await fetch(`/api/Supply/update/${supplyId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedSupply),
+        });
+
+        if (responseUpdate.ok) {
+            alert('Cập nhật thành công!');
+            $('#updateSupplyModal').modal('hide'); // Đóng modal
+
+            // Cập nhật trực tiếp dòng trong bảng
+            const row = document.getElementById(`supply-row-${supplyId}`);
+            if (row) {
+                row.cells[1].textContent = updatedSupply.productName;
+                row.cells[2].textContent = updatedSupply.supplyQuantity;
+                row.cells[3].textContent = updatedSupply.supplyPrice;
+                row.cells[4].textContent = new Date(updatedSupply.dateImport).toLocaleDateString();
+                row.cells[5].textContent = new Date(updatedSupply.dateExpiration).toLocaleDateString();
+                row.cells[6].textContent = updatedSupply.vendorName;
+                row.cells[7].textContent = updatedSupply.vendorPhone;
+                row.cells[8].textContent = updatedSupply.vendorAddress;
+                row.cells[9].textContent = updatedSupply.supplyCategory;
+
+                const { text, badgeClass } = getStatusAndBadgeClass(updatedSupply.supplyStatus);
+                row.cells[10].innerHTML = `<span class="badge ${badgeClass}">${text}</span>`;
+            }
+        } else {
+            alert('Cập nhật không thành công');
+        }
+    } catch (error) {
+        console.error('Lỗi khi kiểm tra tableId:', error);
+        alert('Đã xảy ra lỗi khi kiểm tra tableId.');
+    }
+});
+
+
+
 

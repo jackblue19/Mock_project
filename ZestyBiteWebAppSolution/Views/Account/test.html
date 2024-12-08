@@ -1,0 +1,201 @@
+<head>
+    <style>
+        /* General Layout */
+        .foodrunner-view {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            justify-content: space-between;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            background-color: #D0CECA;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .view-left,
+        .view-right {
+            height: 80%;
+            width: 48%;
+            margin-top: 100px;
+        }
+
+        h1 {
+            font-size: 45px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 35px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Food Runner Section */
+        .foodrunner-account {
+            text-align: center;
+            margin-bottom: 20px;
+            height: 20%;
+        }
+
+        .foodrunner-account img.profile-img {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 50%;
+            border: 2px solid #000000;
+        }
+
+        /* Items Table */
+        .table-detail {
+            height: 80%;
+        }
+        .table-item {
+            height: 55%;
+            width: 100%;
+            background-color: #56655E90;
+            border: 3px solid #000;
+            border-radius: 20px;
+            overflow: auto;
+            scrollbar-width: 0px;
+        }
+
+        /* Notes Table */
+        .table-note {
+            height: 25%;
+            width: 100%;
+            background-color: #56655E90;
+            border: 3px solid #000;
+            border-radius: 20px;
+            overflow: auto;
+            scrollbar-width: 0px;
+        }
+
+        /* Status Indicators */
+        .view-table-order {
+            height: 40%;
+            width: 100%;
+            background-color: #deceb9df;
+            border: 3px solid #000;
+            border-radius: 20px;
+            overflow: auto;
+            scrollbar-width: 0px;
+        }
+        .view-online-order {
+            height: 40%;
+            width: 100%;
+            background-color: #deceb9df;
+            border: 3px solid #000;
+            border-radius: 20px;
+            overflow: auto;
+            scrollbar-width: 0px;
+        }
+
+        .view-table-order th  {
+
+        }
+
+        .view-online-order th {
+
+        }
+
+        .view-table-order td  {
+
+        }
+        .view-online-order td {
+        }
+
+        .status-indicator {
+        }
+
+        .status-red {
+            background-color: #9a9a9aa5;
+        }
+
+        .status-green {
+            background-color: green;
+        }
+
+        .status-gray {
+            background-color: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="foodrunner-view row">
+        <div class="col-md-6 view-left">
+            <div class="foodrunner-account ftco-animate">
+                <div class="vcard bio">
+                    <img src="${profileImage}" alt="Profile" class="profile-img">
+                </div>
+                <div class="foodrunner-header">
+                    <h1>Food Runner</h1>
+                    <div class="User" id="name"></div>
+                </div>
+            </div>
+
+            <div class="table-detail ftco-animate">
+                <h2>Items</h2>
+                <table class="table-item">
+                    <!-- <thead>
+                        <tr>
+                            <th>Item</th>
+                        </tr>
+                    </thead> -->
+                    <tbody class="table-detail-item" id="table-detail-item">
+                        <!-- Item rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+                <h2>Note</h2>
+                <table class="table-note">
+                    <!-- <thead>
+                        <tr>
+                            <th>Note</th>
+                        </tr>
+                    </thead> -->
+                    <tbody class="table-detail-note" id="table-detail-note">
+                        <!-- Note will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6 view-right">
+            <h2>Table Orders</h2>
+            <table class="view-table-order">
+                <thead>
+                    <tr>
+                        <th>Table</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="view-table" id="view-table">
+                    <!-- Table orders will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <h2>Online Orders</h2>
+            <table class="view-online-order">
+                <thead>
+                    <tr>
+                        <th>Table</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="view-online" id="view-online">
+                    <!-- Online orders will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+
+    </script>
+</body>

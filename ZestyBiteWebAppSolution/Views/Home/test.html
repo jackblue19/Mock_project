@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Zesty Bites</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.0.0/mdb.min.css" rel="stylesheet" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="@Url.Content("~/css/open-iconic-bootstrap.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/animate.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.carousel.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.theme.default.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/magnific-popup.css")">
+    <link rel="stylesheet" href="@Url.Content("https://unpkg.com/aos@next/dist/aos.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/css/ionicons.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/bootstrap-datepicker.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/jquery.timepicker.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/flaticon.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/icomoon.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/style.css")">
+    <link href="@Url.Content("~/css/layout.css")" rel="stylesheet" />
+
+    <style>
+        /* General Layout */
+        .foodrunner-view {
+            blackground-color: gray;
+        }
+
+        .view-left,
+        .view-right {
+            width: 48%;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Food Runner Section */
+        .foodrunner-account {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            margin-bottom: 10px;
+        }
+
+        /* Items Table */
+        .table-detail {
+            background-color: #2f4f4f;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Notes Table */
+        .note {
+            margin-top: 15px;
+        }
+
+        /* Status Indicators */
+        .view-table-order,
+        .view-online-order {
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .view-table-order th,
+        .view-online-order th {
+            background-color: #ccc;
+            color: #000;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .view-table-order td,
+        .view-online-order td {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-red {
+            background-color: red;
+        }
+
+        .status-green {
+            background-color: green;
+        }
+
+        .status-gray {
+            background-color: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="foodrunner-view row">
+        <div class="col-md-6 view-left">
+            <div class="foodrunner-account ftco-animate">
+                <div class="vcard bio">
+                    <img src="${profileImage}" alt="Profile" class="profile-img">
+                </div>
+                <h1>Food Runner</h1>
+                <div class="User" id="name"></div>
+            </div>
+            <h2>Items</h2>
+            <div class="table-detail ftco-animate">
+                <table class="item">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-detail-item" id="table-detail-item">
+                        <!-- Item rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+                <table class="note">
+                    <thead>
+                        <tr>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-detail-note" id="table-detail-note">
+                        <!-- Note will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6 view-right">
+            <h2>Table Orders</h2>
+            <table class="view-table-order">
+                <thead>
+                    <tr>
+                        <th>Table</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="view-table" id="view-table">
+                    <!-- Table orders will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <h2>Online Orders</h2>
+            <table class="view-online-order">
+                <thead>
+                    <tr>
+                        <th>Table</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="view-online" id="view-online">
+                    <!-- Online orders will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+
+    </script>
+</body>

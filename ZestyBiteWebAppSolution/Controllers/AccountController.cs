@@ -68,6 +68,10 @@ namespace ZestyBiteWebAppSolution.Controllers
         {
             return View();
         }
+        public IActionResult FoodRunner()
+        {
+            return View();
+        }
 
 
         [AllowAnonymous]

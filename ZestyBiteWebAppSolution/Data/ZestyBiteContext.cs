@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using ZestyBiteWebAppSolution.Models.Entities;
 
 namespace ZestyBiteWebAppSolution.Data;
@@ -35,6 +37,7 @@ public partial class ZestyBiteContext : DbContext
     public virtual DbSet<Table> Tables { get; set; }
 
     public virtual DbSet<TableDetail> TableDetails { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -66,7 +69,7 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany()
                 .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("account_ibfk_1");
         });
 
@@ -132,13 +135,12 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasOne(d => d.ParentFbFlagNavigation).WithMany(p => p.InverseParentFbFlagNavigation)
                 .HasForeignKey(d => d.ParentFbFlag)
-                .OnDelete(DeleteBehavior.Cascade) 
                 .HasConstraintName("feedback_ibfk_3");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Feedbacks)
                 .HasPrincipalKey(p => p.Username)
                 .HasForeignKey(d => d.Username)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("feedback_ibfk_1");
         });
 
@@ -312,7 +314,6 @@ public partial class ZestyBiteContext : DbContext
 
             entity.HasOne(d => d.Account).WithMany(p => p.Tables)
                 .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("table_ibfk_1");
         });
 
@@ -329,6 +330,12 @@ public partial class ZestyBiteContext : DbContext
             entity.Property(e => e.TableId).HasColumnName("Table_ID");
             entity.Property(e => e.ItemId).HasColumnName("Item_ID");
             entity.Property(e => e.BillId).HasColumnName("Bill_ID");
+            entity.Property(e => e.OriPrice)
+                .HasPrecision(14)
+                .HasColumnName("Ori_Price");
+            entity.Property(e => e.SugPrice)
+                .HasPrecision(14)
+                .HasColumnName("Sug_Price");
 
             entity.HasOne(d => d.Bill).WithMany(p => p.TableDetails)
                 .HasForeignKey(d => d.BillId)

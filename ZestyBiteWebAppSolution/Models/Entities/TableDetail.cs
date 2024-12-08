@@ -1,11 +1,19 @@
-﻿namespace ZestyBiteWebAppSolution.Models.Entities;
+﻿using System;
+using System.Collections.Generic;
 
-public partial class TableDetail {
-    public int? TableId { get; set; }
+namespace ZestyBiteWebAppSolution.Models.Entities;
+
+public partial class TableDetail
+{
+    public int TableId { get; set; }
 
     public int ItemId { get; set; }
 
     public int BillId { get; set; }
+
+    public decimal OriPrice { get; set; }
+
+    public decimal SugPrice { get; set; }
 
     public int Quantity { get; set; }
 

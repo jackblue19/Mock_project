@@ -52,7 +52,7 @@ builder.Services.AddSwaggerGen(c => {
         Description = "An API to demonstrate Swagger integration",
     });
 });
-//builder.Services.AddAuthorization();
+builder.Services.AddAuthorization();
 
 //VNPay
 builder.Services.AddSingleton<IVnPayService, VnPayService>();

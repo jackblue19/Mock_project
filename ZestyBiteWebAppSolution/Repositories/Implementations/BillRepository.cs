@@ -31,16 +31,16 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         }
 
         public async Task<int> GetLatestBillIdByUsn(string username) {
-            Account? accz = await _acc.GetAccountByUsnAsync(username);  // Use await instead of Result to avoid blocking
+            Account? accz = await _acc.GetAccountByUsnAsync(username);  
             int accId = accz.AccountId;
 
-            Table? tbz = await _tb.GetTableByAccIdAsync(accId);  // Use await instead of Result to avoid blocking
+            Table? tbz = await _tb.GetTableByAccIdAsync(accId);  
             int tbId = tbz.TableId;
 
             var bilz = await _context.Bills
                                       .Where(boo => boo.TableId == tbId)
-                                      .OrderByDescending(boo => boo.BillId)  // Ensure it's ordered deterministically
-                                      .FirstOrDefaultAsync();  // Use FirstOrDefaultAsync to handle async operations
+                                      .OrderByDescending(boo => boo.BillId)  
+                                      .FirstOrDefaultAsync();  
 
             if (bilz != null) {
                 return bilz.BillId;

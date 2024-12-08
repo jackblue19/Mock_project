@@ -39,6 +39,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return await _context.Accounts
                                  .FirstOrDefaultAsync(acc => acc.Email == email);
         }
+        // public async Task<Account?> GetAccountByEmailAsync(string email)
+        // {
+        //     email = email.Trim().ToLower();
+        //     string query = $"SELECT * FROM Account WHERE Email = '{email}'";
+        //     return await _context.Accounts.FromSqlRaw(query).FirstOrDefaultAsync();
+        // }
 
         /* Generic */
         public async Task<IEnumerable<Account?>> GetAllAsync()

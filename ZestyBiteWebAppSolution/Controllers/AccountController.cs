@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mysqlx.Crud;
 using System.Collections.Concurrent;
 using ZestyBiteWebAppSolution.Helpers;
 using ZestyBiteWebAppSolution.Models.DTOs;
@@ -72,10 +73,10 @@ namespace ZestyBiteWebAppSolution.Controllers
 
 
         [AllowAnonymous]
-        [HttpPost]
-        // [HttpPost("api/account/login")]
-        // public async Task<IActionResult> Login([FromBody] LoginDTO dto)
-        public async Task<IActionResult> Login(LoginDTO dto)
+        // [HttpPost]
+        [HttpPost("api/account/login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        // public async Task<IActionResult> Login(LoginDTO dto)
         {
             // Kiểm tra tính hợp lệ của dữ liệu đầu vào
             if (!ModelState.IsValid)
@@ -85,23 +86,30 @@ namespace ZestyBiteWebAppSolution.Controllers
             string lockoutKey = $"lockout_{dto.Username}";
             string attemptsKey = $"attempts_{dto.Username}";
 
-            if (HttpContext.Session.TryGetValue(lockoutKey, out var lockoutEndBytes)) {
+            if (HttpContext.Session.TryGetValue(lockoutKey, out var lockoutEndBytes))
+            {
                 var lockoutEnd = BitConverter.ToInt64(lockoutEndBytes, 0);
-                if (lockoutEnd > DateTimeOffset.Now.ToUnixTimeSeconds()) {
+                if (lockoutEnd > DateTimeOffset.Now.ToUnixTimeSeconds())
+                {
                     var lockoutDateTime = DateTimeOffset.FromUnixTimeSeconds(lockoutEnd).ToLocalTime();
                     ModelState.AddModelError("", $"Account is locked until {lockoutDateTime:dd/MM/yyyy HH:mm:ss}");
                     return View(dto);
-                } else {
+                }
+                else
+                {
                     HttpContext.Session.Remove(lockoutKey);
                 }
             }
             int attempts = HttpContext.Session.GetInt32(attemptsKey) ?? 0;
-            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
-                try {
+            if (await _service.IsTrueAccount(dto.Username, dto.Password))
+            {
+                try
+                {
                     HttpContext.Session.SetString("username", dto.Username);
-                    HttpContext.Session.Remove(attemptsKey); 
+                    HttpContext.Session.Remove(attemptsKey);
 
-                    Response.Cookies.Append("username", dto.Username, new CookieOptions {
+                    Response.Cookies.Append("username", dto.Username, new CookieOptions
+                    {
                         Expires = DateTimeOffset.Now.AddMinutes(30),
                         HttpOnly = true,
                         Secure = Request.IsHttps,
@@ -110,45 +118,140 @@ namespace ZestyBiteWebAppSolution.Controllers
 
                     return RedirectToAction("Index", "Home");
                     // return Ok("login done");
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     ModelState.AddModelError("", "An unexpected error occurred during login.");
                     return View(dto);
                 }
-            } else {
+            }
+            else
+            {
                 attempts++;
                 HttpContext.Session.SetInt32(attemptsKey, attempts);
-                if (attempts > 3) {
+                if (attempts > 3)
+                {
                     var lockoutEnd = DateTimeOffset.Now.AddMinutes(15).ToUnixTimeSeconds();
                     HttpContext.Session.Set(lockoutKey, BitConverter.GetBytes(lockoutEnd));
                     HttpContext.Session.Remove(attemptsKey);
                     ModelState.AddModelError("", $"Account is locked until {DateTimeOffset.FromUnixTimeSeconds(lockoutEnd).ToLocalTime():dd/MM/yyyy HH:mm:ss}");
                     return View(dto);
-                } else {
+                }
+                else
+                {
                     ModelState.AddModelError("", "Invalid username or password.");
                     return View(dto);
                 }
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/account/newpwd")]
+        public async Task<IResult> ForgotPassword([FromBody] MailDTO dto)
+        {
+            Console.WriteLine($"Email received in API: {dto.Email}");
+            string digit = VerificationCodeGenerator.GetSixDigitCode();
+            // => create new method for after verify account => change verification code by VerificationCodeGenerator.GetSixDigitCode()
+            var finding = await _service.GetAccByMailAsync(dto.Email);
+            if (finding == null)
+            {
+                return TypedResults.NotFound("DELL TIM RA");
+            }
+            finding.VerificationCode = digit;
+            await _service.UpdateVCode(finding);
+            HttpContext.Session.SetString("username", finding.Username);
+            Response.Cookies.Append("username", finding.Username, new CookieOptions
+            {
+                Expires = DateTimeOffset.Now.AddMinutes(3),
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Strict
+            });
 
-        // [HttpPost]
-        // public async Task<IActionResult> ForgotPassword(string email)
-        // {
-        //     string verificationCode = VerificationCodeGenerator.GetSixDigitCode();
-        //     HttpContext.Session.SetString("username", email);
-        // }
+            var pwdToken = new TaskCompletionSource<string>();
+            var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(3));
 
-        // [HttpPost]
-        // public async Task<IActionResult> NewPassword([FromBody] ForgotPwdDTO dto)
-        // {
+            VerificationTasks[finding.Username] = pwdToken;
+            VerificationAttempts[finding.Username] = 0;
 
-        // }
+            _ = Task.Delay(TimeSpan.FromMinutes(3), timeout.Token).ContinueWith(t =>
+            {
+                if (t.IsCanceled || t.IsFaulted)
+                {
+                    BadRequest("Program Crashing An EndPoint => out of time");
+                }
+                if (!pwdToken.Task.IsCompleted)
+                {
+                    VerificationTasks.TryRemove(finding.Username, out _);
+                    VerificationAttempts.TryRemove(finding.Username, out _);
+                    BadRequest("Program Crashing An EndPoint => out of time");
+                }
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            await _mailService.SendVerificationCodeAsync(dto.Email, digit);
+            return TypedResults.Ok(digit);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/account/fgpwd")]
+        public async Task<IResult> NewPassword([FromBody] ForgotPwdDTO dto)
+        {
+
+            var usn = User.Identity?.Name;
+            if (string.IsNullOrEmpty(usn))
+                return TypedResults.BadRequest("User not authenticated.");
+            try
+            {
+                if (!VerificationTasks.ContainsKey(usn))
+                {
+                    return TypedResults.BadRequest("NO ACCOUNT WAS FOUND");
+                }
+
+                var pwdToken = VerificationTasks[usn];
+
+                if (!VerificationAttempts.ContainsKey(usn))
+                    VerificationAttempts[usn] = 0;
+
+                if (VerificationAttempts[usn] >= 5)
+                {
+                    return TypedResults.BadRequest("Too many failed attempts.");
+                }
+
+                if (await _service.NewPwd(dto, usn))
+                {
+                    pwdToken.TrySetResult("Verified");
+                    VerificationTasks.TryRemove(usn, out _);
+                    VerificationAttempts.TryRemove(usn, out _);
+                    HttpContext.Session.Remove("username");
+                    Response.Cookies.Delete("username");
+                    return TypedResults.Ok("Change pwd sucess");
+                    // return RedirectToAction("Login", "Account");
+                }
+
+                VerificationAttempts[usn]++;
+                if (VerificationAttempts[usn] >= 5)
+                {
+                    VerificationTasks.TryRemove(usn, out _);
+                    VerificationAttempts.TryRemove(usn, out _);
+                    // return RedirectToAction("Index", "Home");
+                    return TypedResults.BadRequest("sai nhiu vai");
+                }
+                // return RedirectToAction("Index", "Home"); // trả về trang verify hiện tại
+                return TypedResults.BadRequest("Saii roi cung");
+            }
+            catch
+            {
+                return TypedResults.StatusCode(500);
+            }
+        }
 
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(VerifyDTO verifyDto)
         {
+
             var usn = User.Identity?.Name;
             if (string.IsNullOrEmpty(usn))
                 return BadRequest(new { Message = "User not authenticated." });
@@ -192,7 +295,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                         return RedirectToAction("Index", "Home");
                 }
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home"); // trả về trang verify hiện tại
             }
             catch (Exception ex)
             {
@@ -202,7 +305,7 @@ namespace ZestyBiteWebAppSolution.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("signup")]
+        // [Route("signup")]
         public async Task<IActionResult> Register(RegisterDTO accountDto)
         {
             if (accountDto == null) return BadRequest(new { Message = "Invalid payload" });
@@ -210,6 +313,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             accountDto.VerificationCode = token;
             try
             {
+
                 var created = await _service.SignUpAsync(accountDto);
                 HttpContext.Session.SetString("username", created.Username);
                 Response.Cookies.Append("username", created.Username, new CookieOptions

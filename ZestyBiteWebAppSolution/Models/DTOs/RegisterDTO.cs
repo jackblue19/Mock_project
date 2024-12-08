@@ -52,11 +52,6 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long and not exceed 100 characters.")]
         public string Password { get; set; } = null!;
 
-        [NotMapped]
-        [Required(ErrorMessage = "Confirm Password is required.")]
-        [Compare("Password", ErrorMessage = "Password and Confirm Password do not match.")]
-        public string ConfirmPassword { get; set; } = null!;
-
         [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; } = null!;
 

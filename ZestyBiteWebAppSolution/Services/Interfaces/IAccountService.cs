@@ -12,7 +12,7 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
                 Task<RegisterDTO?> GetAccountByUsnAsync(string usn);
                 Task<RegisterDTO> SignUpAsync(RegisterDTO dto);
                 Task<ChangePwdDTO> ChangePwd(ChangePwdDTO dto, string usn);
-                Task<ForgotPwdDTO> NewPwd(ForgotPwdDTO dto, string email);
+                Task<bool> NewPwd(ForgotPwdDTO dto, string usn);
                 Task<ProfileDTO> UpdateProfile(ProfileDTO dto, string usn);
                 Task<int> GetRoleIdByUsn(string username);
                 Task<bool> IsTrueAccount(string usn, string password);
@@ -28,5 +28,9 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
                 Task<StaffDTO> MapFromEntity(Account acc);
                 Task<bool> DeleteAcc(string usn);
                 Task<bool> ChangeAccStatus(string usn);
+                Task<Account?> GetAccByMailAsync(string mail);
+                Task<Account> UpdateVCode(Account dto);
+
+
         }
 }

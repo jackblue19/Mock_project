@@ -18,10 +18,12 @@
             border-radius: 10px;
         }
 
-        .view-left {
+        .view-left, .view-right {
             height: 90%;
             width: 48%;
             margin-top: 90px;
+            display: flex;
+            flex-direction: column;
         }
 
         h1 {
@@ -43,52 +45,34 @@
             height: 20%;
         }
 
-        .foodrunner-account img.profile-img {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 50%;
-            border: 2px solid #000000;
-        }
+            .foodrunner-account img.profile-img {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                max-width: 100px;
+                max-height: 100px;
+                border-radius: 50%;
+                border: 2px solid #000000;
+            }
 
         /* Items Table */
         .table-detail {
-            height: 80%;
-        }
-
-        .table-item {
-            height: 45%;
-            width: 100%;
-            background-color: #56655E90;
-            border: 3px solid #000;
-            border-radius: 20px;
-            overflow-y: auto;
-        }
-
-        /* Notes Table */
-        .table-note {
-            height: 25%;
-            width: 100%;
-            background-color: #56655E90;
-            border: 3px solid #000;
-            border-radius: 20px;
-            overflow-y: auto;
-        }
-
-
-        /* right view css */
-        .view-right {
-            height: 90%;
-            width: 48%;
-            margin-top: 90px;
+            height: 70%;
             display: flex;
             flex-direction: column;
+            justify-content: center;
         }
-
+        .item-container {
+            height: 35%;
+        } 
+        .note-container {
+            height: 25%;
+        }
         .table-container {
             height: 40%;
+        }
+        .table-container, .note-container, .item-container {
+            
             overflow-y: auto;
             scrollbar-width: none; /* For Firefox */
             border: 3px solid black;
@@ -115,7 +99,7 @@
         th {
             position: sticky;
             top: 0;
-            background: #71857c;
+            background: #D0CECA;
         }
 
         tbody tr {
@@ -138,36 +122,43 @@
 
 <body>
   <div class="foodrunner-view row">
-    <div class="view-left">
-        <div class="foodrunner-account ftco-animate">
-            <div class="vcard bio">
-                <img src="${profileImage}" alt="Profile" class="profile-img">
+
+        <div class="view-left">
+            <div class="foodrunner-account ftco-animate">
+                <div class="vcard bio">
+                    <img src="${profileImage}" alt="Profile" class="profile-img">
+                </div>
+                <div class="foodrunner-header">
+                    <h1>Food Runner</h1>
+                    <div class="User " id="name"></div>
+                </div>
             </div>
-            <div class="foodrunner-header">
-                <h1>Food Runner</h1>
-                <div class="User " id="name"></div>
+
+            <div class="table-detail ftco-animate">
+
+                <h2 class="ftco-animate">Items</h2>
+
+                <table class="item-container">
+                    <tbody class="table-detail-item ftco-animate" id="table-detail-item">
+                        <!-- Item rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+
+                <h2 class="ftco-animate">Note</h2>
+
+                <table class="note-container">
+                    <tbody class="table-detail-note ftco-animate" id="table-detail-note">
+                        <!-- Note will be dynamically inserted here  -->
+                    </tbody>
+                </table>
+
             </div>
         </div>
 
-        <div class="table-detail ftco-animate">
-            <h2 class="ftco-animate">Items</h2>
-            <table class="table-item">
-                <tbody class="table-detail-item ftco-animate" id="table-detail-item">
-                    <!-- Item rows will be dynamically inserted here -->
-                </tbody>
-            </table>
-            <h2 class="ftco-animate">Note</h2>
-            <table class="table-note">
-                <tbody class="table-detail-note ftco-animate" id="table-detail-note">
-                    <!-- Note will be dynamically inserted here  -->
-                </tbody>
-            </table>
-        </div>
-    </div>
         <div class="view-right">
             <h2>Table Orders</h2>
 
-            <div class="table-container view-table-container">
+            <div class="table-container view-table-container ftco-animate">
                 <table>
                     <thead>
                         <tr>
@@ -176,7 +167,7 @@
                             <th style="display: none;">Bill</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body">
+                    <tbody class="ftco-animate" id="table-body">
                         <!-- Table orders will be dynamically inserted here -->
                     </tbody>
                 </table>
@@ -184,7 +175,7 @@
 
             <h2>Online Orders</h2>
 
-            <div class="table-container view-online-container">
+            <div class="table-container view-online-container ftco-animate">
                 <table>
                     <thead>
                         <tr>
@@ -193,7 +184,7 @@
                             <th style="display: none;">Bill</th>
                         </tr>
                     </thead>
-                    <tbody id="online-body">
+                    <tbody class="ftco-animate" id="online-body">
                         <!-- Online orders will be dynamically inserted here -->
                     </tbody>
                 </table>
@@ -226,7 +217,7 @@
             // Define the order of statuses
             const statusOrder = ['Waiting', 'Served', 'Empty'];
 
-            // Sort the data based on the defined status order
+            // Sort the data based on status order
             data.sort((a, b) => statusOrder.indexOf(a.tableStatus) - statusOrder.indexOf(b.tableStatus));
 
             data.forEach(item => {
@@ -258,6 +249,7 @@
 
                 const cell3 = document.createElement('td');
                 cell3.textContent = item.tableBill;
+                cell3.style.display = 'none';
 
                 row.appendChild(cell1);
                 row.appendChild(cell2);
@@ -265,6 +257,44 @@
                 tableBody.appendChild(row);
             });
         }
+
+        // async function fetchTableItems(tableId) {
+        //     try {
+        //         const response = await fetch(`/api/table/items?tableId=${tableId}`);
+        //         const items = await response.json();
+        //         const tableDetailItem = document.getElementById('table-detail-item');
+        //         tableDetailItem.innerHTML = ''; Clear existing rows
+
+        //         items.forEach(item => {
+        //             const row = document.createElement('tr');
+        //             const cell = document.createElement('td');
+        //             cell.textContent = item.itemName;
+        //             row.appendChild(cell);
+        //             tableDetailItem.appendChild(row);
+        //         });
+        //     } catch (error) {
+        //         console.error('Error fetching table items:', error);
+        //     }
+        // }
+
+        // async function fetchTableNotes(tableId) {
+        //     try {
+        //         const response = await fetch(`/api/table/notes?tableId=${tableId}`);
+        //         const notes = await response.json();
+        //         const tableDetailNote = document.getElementById('table-detail-note');
+        //         tableDetailNote.innerHTML = ''; Clear existing rows
+
+        //         notes.forEach(note => {
+        //             const row = document.createElement('tr');
+        //             const cell = document.createElement('td');
+        //             cell.textContent = note.note;
+        //             row.appendChild(cell);
+        //             tableDetailNote.appendChild(row);
+        //         });
+        //     } catch (error) {
+        //         console.error('Error fetching table notes:', error);
+        //     }
+        // }
 
         // Call fetchData when the page loads
         window.onload = fetchData;

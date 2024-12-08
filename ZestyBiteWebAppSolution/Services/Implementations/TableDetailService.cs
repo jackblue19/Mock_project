@@ -5,8 +5,7 @@ using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 using ZestyBiteWebAppSolution.Services.Interfaces;
 
-namespace ZestyBiteWebAppSolution.Services.Implementations
-{
+namespace ZestyBiteWebAppSolution.Services.Implementations {
     public class TableDetailService : ITableDetailService {
         private readonly ITableDetailRepository _tableDetailRepository;
         private readonly IMapper _mapper;
@@ -22,29 +21,18 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             _billRepository = billRepository;
         }
 
-        public async Task<TableDetailDTO?> CreateTableDetailAsync(TableDetailDTO tableDetailDto) {
-            var tableDetail = _mapper.Map<TableDetail>(tableDetailDto); // Map DTO to entity
-            var createdTableDetail = await _tableDetailRepository.CreateAsync(tableDetail); // Create entity in repository
-            return _mapper.Map<TableDetailDTO>(createdTableDetail); // Map created entity back to DTO
+        public async Task<IEnumerable<TableDetailDTO?>> GetAllTableDetailsAsync() {
+            var tableDetails = await _tableDetailRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TableDetailDTO?>>(tableDetails);
         }
 
         public async Task<bool> DeleteTableDetailAsync(int tableDetailId) {
             var tableDetail = await _tableDetailRepository.GetByIdAsync(tableDetailId);
             if (tableDetail != null) {
                 await _tableDetailRepository.DeleteAsync(tableDetail);
-                return true; // Return true if the table detail was found and deleted
+                return true;
             }
             return false; // Return false if the table detail was not found
-        }
-
-        public async Task<IEnumerable<TableDetailDTO?>> GetAllTableDetailsAsync() {
-            var tableDetails = await _tableDetailRepository.GetAllAsync(); // Get all table details from repository
-            return _mapper.Map<IEnumerable<TableDetailDTO?>>(tableDetails); // Map entities to DTOs
-        }
-
-        public async Task<TableDetailDTO?> GetTableDetailByIdAsync(int tableDetailId) {
-            var tableDetail = await _tableDetailRepository.GetByIdAsync(tableDetailId); // Get table detail by ID
-            return _mapper.Map<TableDetailDTO?>(tableDetail); // Map entity to DTO
         }
 
         public async Task<TableDetailDTO?> UpdateTableDetailAsync(TableDetailDTO tableDetailDto) {
@@ -58,17 +46,15 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             var updatedTableDetail = await _tableDetailRepository.UpdateAsync(existingTableDetail); // Update entity in repository
             return _mapper.Map<TableDetailDTO?>(updatedTableDetail); // Map updated entity back to DTO
         }
-        public async Task<int> ToPayment(Dictionary<int?, int?> itemQuantityMap, Account acc, string CartSessionKey, HttpContext httpContext) {
+        public async Task<int> ToPayment(Dictionary<int, int> itemQuantityMap, Account acc, string CartSessionKey, HttpContext httpContext) {
             if (!itemQuantityMap.Any() || acc == null) {
                 return 0;
             }
 
             try {
-                var itemQuantityMapz = new Dictionary<int, int>(); foreach (var kvp in itemQuantityMap) { if (kvp.Key.HasValue && kvp.Value.HasValue) { itemQuantityMap[kvp.Key.Value] = kvp.Value.Value; } }
 
-                // Create the cart from the provided itemQuantityMap
                 var cart = new CheckoutDTO {
-                    Items = itemQuantityMapz.Select(item => new CheckoutItemDTO {
+                    Items = itemQuantityMap.Select(item => new CheckoutItemDTO {
                         ItemId = item.Key,
                         Quantity = item.Value,
                         Name = _context.Items.FirstOrDefault(i => i.ItemId == item.Key)?.ItemName,
@@ -93,7 +79,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 var billll = await _billRepository.CreateAsync(tbid);
                 int idid = billll.BillId;
 
-                var tableDetail = itemQuantityMapz.Select(item => new TableDetail {
+                var tableDetail = itemQuantityMap.Select(item => new TableDetail {
                     TableId = tableUser.TableId,
                     ItemId = item.Key,
                     Quantity = item.Value,
@@ -106,7 +92,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
 
                 httpContext.Session.SetObjectAsJson("UserTable", tableUser);
                 httpContext.Session.SetObjectAsJson("TableDetails", tableDetail);
-                
+
                 return idid;
             } catch (InvalidOperationException) {
                 return 0;

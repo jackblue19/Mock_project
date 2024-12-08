@@ -149,8 +149,7 @@ app.UseAuthorization();
 // Configure Routing for Areas => nên sử dụng username thay thế =Đ
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-);
+pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 // Configure Default Routing -> author theo role -> using folder Areas
 app.MapControllerRoute(

@@ -65,6 +65,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     HttpContext.Session.Remove(lockoutKey);
                 }
             }
+
             int attempts = HttpContext.Session.GetInt32(attemptsKey) ?? 0;
             if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
                 try {
@@ -77,8 +78,19 @@ namespace ZestyBiteWebAppSolution.Controllers {
                         Secure = Request.IsHttps,
                         SameSite = SameSiteMode.Strict
                     });
+                    var roleId = await _service.GetRoleIdByUsn(dto.Username);
 
-                    return RedirectToAction("Index", "Home");
+                    if (roleId == 3) {
+                        return RedirectToAction("Index", "Home", new { area = "Procurement_Manager" });
+                    } else if (roleId == 1) {
+                        return RedirectToAction("Index", "Home", new { area = "Manager" });
+                    } else if (roleId == 4) {
+                        return RedirectToAction("Index", "Home", new { area = "Server_Staff" });
+                    } else if (roleId == 6) {
+                        return RedirectToAction("Index", "Home", new { area = "Food_Runner" });
+                    } else {
+                        return RedirectToAction("Index", "Home");
+                    }
                 } catch (Exception) {
                     ModelState.AddModelError("", "An unexpected error occurred during login.");
                     return View(dto);
@@ -97,6 +109,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     return View(dto);
                 }
             }
+
         }
 
         // [HttpPost]

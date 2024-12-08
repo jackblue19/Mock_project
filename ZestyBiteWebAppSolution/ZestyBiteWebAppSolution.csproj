@@ -7,43 +7,35 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Customer_Service_Staff\Controllers\**" />
-    <Compile Remove="Areas\Customer_Service_Staff\Data\**" />
-    <Compile Remove="Areas\Customer_Service_Staff\Views\Shared\**" />
     <Compile Remove="Areas\Food_Runner\Data\**" />
     <Compile Remove="Areas\Manager\Data\**" />
     <Compile Remove="Areas\Order_Taker\Controllers\**" />
     <Compile Remove="Areas\Order_Taker\Data\**" />
+    <Compile Remove="Areas\Order_Taker\Views\Shared\**" />
     <Compile Remove="Areas\Procurement_Manager\Data\**" />
     <Compile Remove="wwwroot\Content\**" />
     <Compile Remove="wwwroot\lib\**" />
-    <Content Remove="Areas\Customer_Service_Staff\Controllers\**" />
-    <Content Remove="Areas\Customer_Service_Staff\Data\**" />
-    <Content Remove="Areas\Customer_Service_Staff\Views\Shared\**" />
     <Content Remove="Areas\Food_Runner\Data\**" />
     <Content Remove="Areas\Manager\Data\**" />
     <Content Remove="Areas\Order_Taker\Controllers\**" />
     <Content Remove="Areas\Order_Taker\Data\**" />
+    <Content Remove="Areas\Order_Taker\Views\Shared\**" />
     <Content Remove="Areas\Procurement_Manager\Data\**" />
     <Content Remove="wwwroot\Content\**" />
     <Content Remove="wwwroot\lib\**" />
-    <EmbeddedResource Remove="Areas\Customer_Service_Staff\Controllers\**" />
-    <EmbeddedResource Remove="Areas\Customer_Service_Staff\Data\**" />
-    <EmbeddedResource Remove="Areas\Customer_Service_Staff\Views\Shared\**" />
     <EmbeddedResource Remove="Areas\Food_Runner\Data\**" />
     <EmbeddedResource Remove="Areas\Manager\Data\**" />
     <EmbeddedResource Remove="Areas\Order_Taker\Controllers\**" />
     <EmbeddedResource Remove="Areas\Order_Taker\Data\**" />
+    <EmbeddedResource Remove="Areas\Order_Taker\Views\Shared\**" />
     <EmbeddedResource Remove="Areas\Procurement_Manager\Data\**" />
     <EmbeddedResource Remove="wwwroot\Content\**" />
     <EmbeddedResource Remove="wwwroot\lib\**" />
-    <None Remove="Areas\Customer_Service_Staff\Controllers\**" />
-    <None Remove="Areas\Customer_Service_Staff\Data\**" />
-    <None Remove="Areas\Customer_Service_Staff\Views\Shared\**" />
     <None Remove="Areas\Food_Runner\Data\**" />
     <None Remove="Areas\Manager\Data\**" />
     <None Remove="Areas\Order_Taker\Controllers\**" />
     <None Remove="Areas\Order_Taker\Data\**" />
+    <None Remove="Areas\Order_Taker\Views\Shared\**" />
     <None Remove="Areas\Procurement_Manager\Data\**" />
     <None Remove="wwwroot\Content\**" />
     <None Remove="wwwroot\lib\**" />
@@ -111,10 +103,6 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.9.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Order_Taker\Views\Shared\" />
   </ItemGroup>
 
 </Project>

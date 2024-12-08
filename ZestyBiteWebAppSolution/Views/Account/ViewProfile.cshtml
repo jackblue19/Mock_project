@@ -28,21 +28,22 @@
                 <div class="card-body">
                     @{
                         if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string)) {
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                @TempData["SuccessMessage"]
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    @TempData["SuccessMessage"]
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
                         }
 
                         if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string)) {
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @TempData["ErrorMessage"]
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    @TempData["ErrorMessage"]
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
                         }
                     }
 
                     <!-- Name -->
+                    <form id="myForm">
                     <div class="form-group">
                         <label class="form-label">Name</label>
                         <input type="text" asp-for="Name" class="form-control" readonly />
@@ -89,6 +90,7 @@
                         </button>
                         <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;" onclick="cancelChanges()">Cancel</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -96,4 +98,40 @@
 }
 @section Scripts {
     <script src="~/js/EditProfile.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+    <script>
+    $(document).ready(function () {
+        // Initialize form validation
+            $("myForm").validate({
+            rules: {
+                PhoneNumber: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 12,
+                    digits: true
+                },
+                Address: {
+                    required: true
+                }
+            },
+            messages: {
+                PhoneNumber: {
+                    required: "Phone number is required.",
+                    minlength: "Phone number must be at least 10 digits.",
+                    maxlength: "Phone number can be no more than 12 digits.",
+                    digits: "Phone number must only contain numbers."
+                },
+                Address: {
+                    required: "Address is required."
+                }
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+            }
+    </script>
 }

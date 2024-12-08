@@ -16,6 +16,7 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces
         Task<IEnumerable<ItemDTO>> GetDrinkItemsAsync();
         Task<IEnumerable<ItemDTO>> GetBurgersItemsAsync();
         Task<IEnumerable<ItemDTO>> GetPastaItemsAsync();
+
         /*CRUD for manager*/
         Task<IEnumerable<EItemDTO?>> ViewAllItem();
         Task<EItemDTO> ViewOneDish(int itemId);

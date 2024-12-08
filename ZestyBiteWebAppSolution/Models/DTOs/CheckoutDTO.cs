@@ -27,10 +27,10 @@ namespace ZestyBiteWebAppSolution.Models.DTOs {
     }
 
     public class CheckoutItemDTO {
-        public int? ItemId { get; set; }
+        public int ItemId { get; set; }
         public string? Name { get; set; }
         public decimal? Price { get; set; }
         public string ImageUrl { get; set; } = null!;
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
     }
 }

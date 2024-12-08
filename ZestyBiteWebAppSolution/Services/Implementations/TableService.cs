@@ -98,7 +98,7 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
                 TableType = table.TableType,
                 TableStatus = table.TableStatus,
                 TableNote = table.TableNote,
-                AccountId = table.AccountId
+                //AccountId = table.AccountId
             };
         }
     }

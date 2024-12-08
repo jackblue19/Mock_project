@@ -1,23 +1,22 @@
 ﻿#search-text {
-    border: none; /* Bỏ đường viền của ô nhập */
     outline: none; /* Bỏ viền khi ô nhập được chọn */
-    background: none;
     font-size: 18px;
     width: 200px; /* Đặt chiều rộng cố định */
     padding: 10px 0px 10px 15px; /* Đặt padding mặc định */
     transition: all 0.25s ease-in-out;
+    
 }
 
 
 #search-box {
-    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử */
     align-items: center; /* Căn giữa theo chiều dọc */
     background-color: white; /* Màu nền cho ô tìm kiếm */
     border-radius: 30px; /* Bo góc cho ô tìm kiếm */
 }
-
+#search-text:focus {
+    color: #000; /* ensure the text color is dark enough to be seen */
+}
     #search-box:hover #search-text {
-        width: 200px;
         padding: 10px 0px 10px 15px
     }
 

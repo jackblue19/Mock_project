@@ -1,43 +1,43 @@
-﻿#body-config {
-	width: 100%;
-	background-image: url(../images/bg_3.jpg);
-	background-size: cover; /* Ensure the background covers the whole area */
-	background-position: center;
-}
-.body-center {
+﻿.body-center {
 	margin-top: 64px;
 	display: flex;
 }
+
 .left-body {
 	padding: 0;
-	width: 620px
+	width: 620px;
 }
 
 .right-body {
-	width: 50%;
+	width: 100%;
+	background-image: url(../images/bg_3.jpg);
+	background-size: cover;
+	background-position: center;
 	color: white;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 64px;
 	opacity: 1;
-	transition: font-size 0.3s; /* Thêm hiệu ứng chuyển tiếp cho font-size */
+	transition: font-size 0.3s;
+	position: relative;
 }
-
-.form-config {
+	.form-config {
 	background-color: black;
 	width: 650px !important;
 	height: 680px !important;
 	opacity: 80%;
 }
-	.form-top
-{
+
+.form-top {
 	width: auto;
-	margin-top: 5px
+	margin-top: 5px;
 }
-	.fa-user {
-		margin: 0 !important
-	}
+
+.fa-user {
+	margin: 0 !important;
+}
+
 .form-bot {
 	width: auto;
 	display: flex;
@@ -45,12 +45,12 @@
 	justify-content: center;
 	margin-top: -10px;
 }
+
 .inner-form {
 	text-align: center;
 }
-	h3
 
-{
+h3 {
 	color: orange;
 }
 
@@ -72,7 +72,11 @@
 	width: 500px !important;
 }
 
-.left-body, .right-body {
-	flex-basis: 50%;
-	box-sizing: border-box;
+.swiper-container {
+	width: 100%;
+	height: 100%;
+}
+
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+	background: #4F46E5 !important;
 }

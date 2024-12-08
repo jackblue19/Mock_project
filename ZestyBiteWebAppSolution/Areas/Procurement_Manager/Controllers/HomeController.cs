@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ZestyBiteSolution.Areas.Procurement_Manager.Controllers {
-    [Area("Procurement_Manager")] // Đánh dấu đây là controller thuộc Area "Procurement_Manager"
+    [Area("Procurement_Manager")] 
     public class HomeController : Controller {
         // Action cho trang Supply
         public IActionResult Supply() {

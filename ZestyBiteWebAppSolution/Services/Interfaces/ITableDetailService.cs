@@ -6,6 +6,6 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces {
         Task<bool> DeleteTableDetailAsync(int tableDetailId);
         Task<IEnumerable<TableDetailDTO?>> GetAllTableDetailsAsync();
         Task<TableDetailDTO?> UpdateTableDetailAsync(TableDetailDTO tableDetaildto);
-        Task<int> ToPayment(Dictionary<int?, int?> itemQuantityMap, Account acc, string CartSessionKey, HttpContext httpContext);
+        Task<int> ToPayment(Dictionary<int, int> itemQuantityMap, Account acc, string CartSessionKey, HttpContext httpContext);
     }
 }

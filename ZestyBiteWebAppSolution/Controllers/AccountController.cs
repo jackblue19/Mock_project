@@ -72,42 +72,62 @@ namespace ZestyBiteWebAppSolution.Controllers
 
 
         [AllowAnonymous]
-        // [HttpPost]
-        [HttpPost("api/account/login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
-        // public async Task<IActionResult> Login(LoginDTO dto)
+        [HttpPost]
+        // [HttpPost("api/account/login")]
+        // public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        public async Task<IActionResult> Login(LoginDTO dto)
         {
             // Kiểm tra tính hợp lệ của dữ liệu đầu vào
             if (!ModelState.IsValid)
             {
                 return View(dto);
             }
+            string lockoutKey = $"lockout_{dto.Username}";
+            string attemptsKey = $"attempts_{dto.Username}";
 
-            if (await _service.IsTrueAccount(dto.Username, dto.Password))
-            {
-                try
-                {
+            if (HttpContext.Session.TryGetValue(lockoutKey, out var lockoutEndBytes)) {
+                var lockoutEnd = BitConverter.ToInt64(lockoutEndBytes, 0);
+                if (lockoutEnd > DateTimeOffset.Now.ToUnixTimeSeconds()) {
+                    var lockoutDateTime = DateTimeOffset.FromUnixTimeSeconds(lockoutEnd).ToLocalTime();
+                    ModelState.AddModelError("", $"Account is locked until {lockoutDateTime:dd/MM/yyyy HH:mm:ss}");
+                    return View(dto);
+                } else {
+                    HttpContext.Session.Remove(lockoutKey);
+                }
+            }
+            int attempts = HttpContext.Session.GetInt32(attemptsKey) ?? 0;
+            if (await _service.IsTrueAccount(dto.Username, dto.Password)) {
+                try {
                     HttpContext.Session.SetString("username", dto.Username);
-                    Response.Cookies.Append("username", dto.Username, new CookieOptions
-                    {
+                    HttpContext.Session.Remove(attemptsKey); 
+
+                    Response.Cookies.Append("username", dto.Username, new CookieOptions {
                         Expires = DateTimeOffset.Now.AddMinutes(30),
                         HttpOnly = true,
                         Secure = Request.IsHttps,
                         SameSite = SameSiteMode.Strict
                     });
-                    return Ok("login done");
-                    // return RedirectToAction("Index", "Home");
+
+                    return RedirectToAction("Index", "Home");
+                    // return Ok("login done");
+                } catch (Exception) {
+                    ModelState.AddModelError("", "An unexpected error occurred during login.");
+                    return View(dto);
                 }
-                catch (Exception)
-                {
-                    return StatusCode(500, new { message = "An unexpected error occurred during login." });
+            } else {
+                attempts++;
+                HttpContext.Session.SetInt32(attemptsKey, attempts);
+                if (attempts > 3) {
+                    var lockoutEnd = DateTimeOffset.Now.AddMinutes(15).ToUnixTimeSeconds();
+                    HttpContext.Session.Set(lockoutKey, BitConverter.GetBytes(lockoutEnd));
+                    HttpContext.Session.Remove(attemptsKey);
+                    ModelState.AddModelError("", $"Account is locked until {DateTimeOffset.FromUnixTimeSeconds(lockoutEnd).ToLocalTime():dd/MM/yyyy HH:mm:ss}");
+                    return View(dto);
+                } else {
+                    ModelState.AddModelError("", "Invalid username or password.");
+                    return View(dto);
                 }
             }
-            else
-            {
-                return BadRequest("Invalid usn, pwd, ur account is locked");
-            }
-            // return Unauthorized(new { message = "Invalid username or password" });
         }
 
 

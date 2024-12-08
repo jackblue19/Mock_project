@@ -319,7 +319,8 @@
         function postReply(commentId, content, level) {
             // Locate the parent comment element by its ID
             const parentCommentElement = document.querySelector(`[data-id="${commentId}"]`);
-            @* const parentId = parentElement.getAttribute("data-feedback-id"); *@
+
+            const parentId = parentElement.getAttribute("data-feedback-id");
             if (!parentCommentElement) {
                 showNotification("Parent comment not found!");
                 return;
@@ -342,13 +343,13 @@
                 ItemId: itemId,
                 ItemName: itemName,
                 ParentFb: ParentFb, // Set ParentFb to the parentId
-                Fullname: "" // Add Fullname if needed
+                Fullname: "" 
             };
 
             console.log("Submitting reply payload:", replyPayload);
 
             // Send the reply to the back-end using fetch
-            fetch('http://localhost:5024/api/feedback/submitfeedback', {
+            fetch('/api/feedback/submitfeedback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -357,7 +358,7 @@
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        throw new Error('Network response was not ok'); 
                     }
                     return response.json();
                 })

@@ -131,6 +131,8 @@ Content-Type: application/json
     "password": "password456"
 }
 ###
+GET http://localhost:5024/api/feedback/items
+###
 POST http://localhost:5024/api/account/logout
 ###
 GET http://localhost:5024/api/table

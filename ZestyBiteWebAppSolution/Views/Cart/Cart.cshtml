@@ -1,4 +1,6 @@
-﻿@{
+﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+@{
     ViewBag.Title = "Cart";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -50,7 +52,7 @@
                                     <td id="itemPrice">@item.Price.ToString("C")</td>
                                     <td>
                                         <div class="styleQuantity">
-                                            <form action="@Url.Action("UpdateCart", "Cart")" method="post" style="display: inline;">
+                                            <form action="@Url.Action("UpdateCart", "Cart")" method="post" style="display: inline;" class="validate-form">
                                                 <input type="hidden" name="itemId" value="@item.ItemId" />
                                                 <input type="number" name="quantity" value="@item.Quantity" class="input-quantity" onchange="updateItemAmount(this)" />
                                             </form>
@@ -100,6 +102,31 @@
         </form>
     </div>
 </body>
+<script>
+    $(document).ready(function () {
+        // Apply jQuery Validation
+        $(".validate-form").each(function () {
+            $(this).validate({
+                rules: {
+                    quantity: {
+                        required: true,
+                        min: 1  // Quantity must be greater than 0
+                    }
+                },
+                messages: {
+                    quantity: {
+                        required: "Please enter a quantity.",
+                        min: "Quantity must be greater than 0."
+                    }
+                },
+                submitHandler: function (form) {
+                    // You can add any custom logic before form submission if needed
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 
 <script>
     function toggleSelectAll(checkbox) {

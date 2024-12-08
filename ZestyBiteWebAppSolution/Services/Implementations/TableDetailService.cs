@@ -35,18 +35,6 @@ namespace ZestyBiteWebAppSolution.Services.Implementations
             return _mapper.Map<IEnumerable<TableDetailDTO>>(tableDetails);
         }
 
-        public async Task<TableDetailDTO?> GetTableDetailByIdAsync(int tableDetailId)
-        {
-            var tableDetail = await _tableDetailRepository.GetByIdAsync(tableDetailId);
-            return _mapper.Map<TableDetailDTO?>(tableDetail);
-        }
-
-        public async Task<TableDetailDTO?> CreateTableDetailAsync(TableDetailDTO tableDetailDto)
-        {
-            var tableDetail = _mapper.Map<TableDetail>(tableDetailDto);
-            var createdTableDetail = await _tableDetailRepository.CreateAsync(tableDetail);
-            return _mapper.Map<TableDetailDTO>(createdTableDetail);
-        }
 
         public async Task<bool> DeleteTableDetailAsync(int tableDetailId)
         {

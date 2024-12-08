@@ -74,7 +74,8 @@ namespace ZestyBiteWebAppSolution.Controllers
         [AllowAnonymous]
         // [HttpPost]
         [HttpPost("api/account/login")]
-        public async Task<IActionResult> Login(LoginDTO dto)
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        // public async Task<IActionResult> Login(LoginDTO dto)
         {
             // Kiểm tra tính hợp lệ của dữ liệu đầu vào
             if (!ModelState.IsValid)
@@ -102,8 +103,11 @@ namespace ZestyBiteWebAppSolution.Controllers
                     return StatusCode(500, new { message = "An unexpected error occurred during login." });
                 }
             }
-
-            return Unauthorized(new { message = "Invalid username or password" });
+            else
+            {
+                return BadRequest("Invalid usn, pwd, ur account is locked");
+            }
+            // return Unauthorized(new { message = "Invalid username or password" });
         }
 
 
@@ -339,7 +343,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        [Authorize(Roles = "Manager")]
+        // [Authorize(Roles = "Manager")]
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/account/getallacc")]
         public async Task<IResult> GetAllAccount()
@@ -358,14 +363,15 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
         [AllowAnonymous]
         // [Route("logout")]
+        [Route("api/account/logout")]
         public IActionResult Logout()
         {
             try
             {
                 HttpContext.Session.Remove("username");
                 Response.Cookies.Delete("username");
-                return RedirectToAction("Index", "Home");
-                // return Ok("log out sucees");
+                // return RedirectToAction("Index", "Home");
+                return Ok("log out sucees");
             }
             catch
             {

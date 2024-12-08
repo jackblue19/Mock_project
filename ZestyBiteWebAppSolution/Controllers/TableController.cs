@@ -12,7 +12,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
             _tableService = tableService;
         }
 
-        //Default
+        // fix
         [HttpGet("{tableId}/items")] 
         public async Task<ActionResult<IEnumerable<TableDetailDTO>>> GetTableItemsByTableId(int tableId) 
         { 
@@ -45,7 +45,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-        // POST: api/table
+        // fix
         [HttpPost]
         public async Task<ActionResult<TableDTO>> CreateTable([FromBody] TableDTO tableDto) {
             if (!ModelState.IsValid) {
@@ -59,7 +59,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-        // PUT: api/table
+        // fix => table id status must be "empty"
         [HttpPut]
         public async Task<ActionResult<TableDTO>> UpdateTable([FromBody] TableDTO tableDto) {
             if (!ModelState.IsValid) {
@@ -75,7 +75,7 @@ namespace ZestyBiteWebAppSolution.Controllers {
             }
         }
 
-        // DELETE: api/table/{id}
+        // fix
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTable(int id) {
             try {

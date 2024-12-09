@@ -7,7 +7,7 @@ async function getMenu() {
         console.log(menuItems); 
 
         const dataTable = document.getElementById('data');
-        dataTable.innerHTML = ''; // Xóa dữ liệu cũ trước khi hiển thị danh sách mới
+        dataTable.innerHTML = ''; 
 
         if (Array.isArray(menuItems) && menuItems.length > 0) {
             menuItems.forEach((item, index) => {
@@ -15,7 +15,7 @@ async function getMenu() {
                 const statusText = item.itemStatus === 1 ? 'Still' : 'Sold Out';
                 const { text, badgeClass } = getStatusAndBadgeClass(statusText);
 
-                // Kiểm tra nếu giá trị null và thay thế bằng 'N/A'
+                
                 const itemName = item.itemName || 'N/A';
                 const itemCategory = item.itemCategory || 'N/A';
                 const originalPrice = item.originalPrice ? item.originalPrice.toFixed(2) : 'N/A';
@@ -90,31 +90,37 @@ async function createMenu(event) {
     originalPriceError.style.display = 'none';
     priceError.style.display = 'none';
 
+    // Kiểm tra giá
     if (parseFloat(originalPrice) > parseFloat(price)) {
         originalPriceError.style.display = 'block';
         return;
     }
 
-    // Kiểm tra nếu giá bán <= 0
     if (parseFloat(price) <= 0) {
         priceError.style.display = 'block';
         return;
     }
 
+    // Mặc định ảnh nếu không có
     const imageInput = document.getElementById('image');
     const imageFile = imageInput.files[0];
-    let imageUrl = '';
+    let imageUrl = '/images/default-image.jpg';  
 
+    
     if (imageFile) {
-        imageUrl = await convertImageToBase64(imageFile);
-    } else {
-        imageUrl = '/images/default-image.jpg';
+        try {
+            imageUrl = await convertImageToBase64(imageFile);  
+        } catch (error) {
+            alert('Lỗi khi chuyển đổi ảnh!');
+            console.error(error);
+            return;  
+        }
     }
 
     const newDish = {
         itemName: productName,
         itemCategory: category,
-        originalPrice: parseFloat(price),
+        originalPrice: parseFloat(originalPrice),
         itemStatus: status === 'Still' ? 1 : 0,
         itemDescription: description,
         suggestedPrice: parseFloat(price),
@@ -122,8 +128,8 @@ async function createMenu(event) {
         isServed: 1
     };
 
+    
     try {
-        // Gửi yêu cầu POST tới API
         const response = await fetch('/api/item/newdish', {
             method: 'POST',
             headers: {
@@ -133,19 +139,19 @@ async function createMenu(event) {
         });
 
         if (response.ok) {
-            alert('Item created successfully!');
+            alert('Món ăn đã được tạo thành công!');
             $('#ItemForm').modal('hide');
-            getMenu();
+            getMenu();  
         } else {
-            alert('Failed to create item!');
+            alert('Tạo món ăn không thành công!');
         }
     } catch (error) {
-        console.error('Error creating menu item:', error);
-        alert('An error occurred while creating the item.');
+        console.error('Lỗi khi tạo món ăn:', error);
+        alert('Có lỗi xảy ra khi tạo món ăn.');
     }
 }
 
-// JavaScript: Hiển thị ảnh người dùng đã chọn
+// Hiển thị ảnh người dùng đã chọn
 document.getElementById('image').addEventListener('change', function (event) {
     const file = event.target.files[0];
     if (file) {
@@ -158,59 +164,31 @@ document.getElementById('image').addEventListener('change', function (event) {
         reader.readAsDataURL(file);
     }
 });
+
+// Hàm chuyển ảnh thành Base64
 async function convertImageToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = function (e) {
-            resolve(e.target.result);
+            resolve(e.target.result);  
         };
         reader.onerror = function (error) {
             reject(error);
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(file);  
     });
 }
 
-// Gắn hàm createMenu vào sự kiện submit của form
+
 document.getElementById('myForm').addEventListener('submit', createMenu);
 
 //UPDATE
-// Hàm để hiển thị thông tin món ăn trong modal cập nhật
-function openUpdateModal(itemId) {
-    // Lấy thông tin món ăn từ API hoặc từ dữ liệu đã có
-    fetch(`/api/item/${itemId}`)
-        .then(response => response.json())
-        .then(item => {
-            // Điền dữ liệu vào các trường trong modal
-            document.getElementById('itemIdUpdate').value = item.itemId;
-            document.getElementById('productNameUpdate').value = item.itemName;
-            document.getElementById('categoryUpdate').value = item.itemCategory;
-            document.getElementById('originalPriceUpdate').value = item.originalPrice;
-            document.getElementById('priceUpdate').value = item.suggestedPrice;
-            document.getElementById('descriptionUpdate').value = item.itemDescription;
-            document.getElementById('statusUpdate').value = item.itemStatus === 1 ? 'Still' : 'Sold Out';
-
-            // Hiển thị ảnh hiện tại (nếu có)
-            const imagePreview = document.getElementById('imagePreviewUpdate');
-            imagePreview.src = item.itemImage || '/images/default-image.jpg';
-            imagePreview.style.display = 'block';
-
-            // Mở modal
-            $('#updateItemForm').modal('show');
-        })
-        .catch(error => console.error('Error fetching item data:', error));
-}
-
-// Hàm xử lý cập nhật món ăn
-// Hàm mở modal cập nhật và điền thông tin món ăn vào form
 function openUpdateModal(id) {
-    // Gửi yêu cầu lấy thông tin món ăn từ server bằng API của bạn
-    fetch(`/api/item/viewdish/${id}`)  // Đảm bảo API đúng với cấu trúc của bạn
+    fetch(`/api/item/viewdish/${id}`)
         .then(response => response.json())
         .then(item => {
-            // Điền thông tin vào các trường trong modal
             document.getElementById('itemIdUpdate').value = item.itemId;
-            document.getElementById('productNameUpdate').value = item.itemName || '';  
+            document.getElementById('productNameUpdate').value = item.itemName || '';
             document.getElementById('categoryUpdate').value = item.itemCategory || '';
             document.getElementById('originalPriceUpdate').value = item.originalPrice ? item.originalPrice.toFixed(2) : '';
             document.getElementById('priceUpdate').value = item.suggestedPrice ? item.suggestedPrice.toFixed(2) : '';
@@ -218,12 +196,16 @@ function openUpdateModal(id) {
             document.getElementById('isServedUpdate').value = item.isServed;
             document.getElementById('statusUpdate').value = item.itemStatus === 1 ? 'Still' : 'Sold Out';
 
-            // Hiển thị ảnh món ăn hiện tại
             const imagePreview = document.getElementById('imagePreviewUpdate');
             imagePreview.src = item.itemImage || '/images/default-image.jpg';  
             imagePreview.style.display = 'block';
 
-            // Mở modal
+            
+            
+            const imageFileName = getFileNameFromPath(item.itemImage || '/images/default-image.jpg');
+            
+
+            
             $('#updateItemForm').modal('show');
         })
         .catch(error => {
@@ -231,10 +213,44 @@ function openUpdateModal(id) {
             alert('Failed to load item data!');
         });
 }
-async function updateMenu(event) {
-    event.preventDefault(); 
 
-    // Lấy thông tin từ form
+// Hàm lấy tên file từ đường dẫn ảnh
+function getFileNameFromPath(path) {
+    if (path) {
+        const pathParts = path.split('/');
+        const fileName = pathParts[pathParts.length - 1]; 
+        return fileName || 'No file chosen';  
+    }
+    return 'No file chosen'; 
+}
+
+// Xử lý sự kiện chọn ảnh mới
+document.getElementById('imageUpdate').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    const fileNameLabel = document.getElementById('fileNameLabel');
+
+    if (file) {
+        
+        fileNameLabel.textContent = `Selected file: ${file.name}`;
+
+        
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const imagePreview = document.getElementById('imagePreviewUpdate');
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+       
+        fileNameLabel.textContent = 'No file chosen';
+    }
+});
+
+
+async function updateMenu(event) {
+    event.preventDefault();
+
     const itemId = document.getElementById('itemIdUpdate').value;
     const itemName = document.getElementById('productNameUpdate').value;
     const category = document.getElementById('categoryUpdate').value;
@@ -244,7 +260,17 @@ async function updateMenu(event) {
     const status = document.getElementById('statusUpdate').value;
     const isServed = document.getElementById('isServedUpdate').value === '1' ? 1 : 0;
 
-    // Kiểm tra giá trị
+    const currentImage = document.getElementById('imagePreviewUpdate').src; // Lấy src của ảnh hiện tại
+
+    // Kiểm tra điều kiện ảnh mới
+    let imageFile = document.getElementById('imageUpdate').files[0];
+    let itemImage = currentImage; 
+
+    if (imageFile) {
+        itemImage = await convertImageToBase64(imageFile); 
+    }
+
+    // Kiểm tra giá cả hợp lệ
     if (parseFloat(originalPrice) > parseFloat(price)) {
         alert('Original price cannot be greater than selling price.');
         return;
@@ -254,6 +280,7 @@ async function updateMenu(event) {
         alert('Selling price cannot be less than or equal to zero.');
         return;
     }
+
     const updatedItem = {
         itemId: itemId,
         itemName: itemName,
@@ -261,8 +288,8 @@ async function updateMenu(event) {
         originalPrice: parseFloat(originalPrice),
         suggestedPrice: parseFloat(price),
         itemDescription: description,
-        itemStatus: status === 'Still' ? 1 : 0,  
-        itemImage: await convertImageToBase64(document.getElementById('imageUpdate').files[0]) || '/images/default-image.jpg',
+        itemStatus: status === 'Still' ? 1 : 0,
+        itemImage: itemImage,  
         isServed: isServed
     };
 
@@ -279,7 +306,7 @@ async function updateMenu(event) {
             const updatedDish = await response.json();
             alert('Item updated successfully!');
             $('#updateItemForm').modal('hide');
-            getMenu();
+            getMenu();  
         } else {
             const errorData = await response.json();
             alert(`Failed to update item: ${errorData.message || 'Unknown error'}`);
@@ -289,19 +316,30 @@ async function updateMenu(event) {
         alert('An error occurred while updating the item.');
     }
 }
-// Hiển thị ảnh trong form khi người dùng chọn ảnh mới
-document.getElementById('imageUpdate').addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const imagePreview = document.getElementById('imagePreviewUpdate');
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = 'block'; // Hiển thị ảnh đã chọn
-        };
-        reader.readAsDataURL(file);  // Chuyển ảnh thành Base64
-    }
+// Trong getMenu() - phần hiển thị danh sách món ăn
+menuItems.forEach((item, index) => {
+    const row = document.createElement('tr');
+    row.id = `menu-row-${item.itemId}`;
+
+    row.innerHTML = `
+        <td>${index + 1}</td>
+        <td><img src="${item.itemImage || '/images/default-image.jpg'}" alt="${item.itemName}" class="item-image" style="width: 50px; height: 50px;"></td>
+        <td>${item.itemName || 'N/A'}</td>
+        <td>${item.itemCategory || 'N/A'}</td>
+        <td>${item.originalPrice ? item.originalPrice.toFixed(2) : 'N/A'}</td>
+        <td>${item.suggestedPrice ? item.suggestedPrice.toFixed(2) : 'N/A'}</td>
+        <td>${item.itemDescription || 'N/A'}</td>
+        <td><span class="badge ${item.itemStatus === 1 ? 'badge-success' : 'badge-danger'}">${item.itemStatus === 1 ? 'Available' : 'Sold Out'}</span></td>
+        <td>
+            <button class="btn btn-success" onclick="viewMenu(${item.itemId})" data-toggle="modal" data-target="#readData"><i class="bi bi-eye"></i></button>
+            <button class="btn btn-primary" onclick="openUpdateModal(${item.itemId})" data-toggle="modal" data-target="#updateItemForm"><i class="bi bi-pencil-square"></i></button>
+            <button class="btn btn-danger" onclick="deleteMenu(${item.itemId})"><i class="bi bi-trash3"></i></button>
+        </td>
+    `;
+    dataTable.appendChild(row);
 });
+
+
 
 
 

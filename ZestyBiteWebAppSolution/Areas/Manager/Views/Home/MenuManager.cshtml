@@ -198,7 +198,7 @@
                         </div>
                         <div>
                             <label for="description">Description</label>
-                            <input type="text" id="description" name="description">
+                            <textarea id="description" name="description" rows="5" cols="57"></textarea>
                         </div>
                         <div>
                             <label for="status">Status</label>
@@ -226,31 +226,43 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="#" id="myForm">
+                <form action="#" id="viewForm">
                     <div class="inputField">
                         <div>
-                            <label for="productName">Product Name</label>
-                            <input type="text" id="productName" disabled>
+                            <label for="productNameView">Product Name</label>
+                            <input type="text" id="productNameView" disabled>
                         </div>
                         <div>
-                            <label for="category">Category</label>
-                            <input type="text" id="category" disabled>
+                            <label for="categoryView">Category</label>
+                            <input type="text" id="categoryView" disabled>
                         </div>
                         <div>
-                            <label for="price">Price</label>
-                            <input type="text" id="price" disabled>
+                            <label for="originalPriceView">Original Price</label>
+                            <input type="text" id="originalPriceView" disabled>
                         </div>
                         <div>
-                            <label for="description">Description</label>
-                            <input type="text" id="description" disabled>
+                            <label for="suggestedPriceView">Suggested Price</label>
+                            <input type="text" id="suggestedPriceView" disabled>
                         </div>
                         <div>
-                            <label for="status">Status</label>
-                            <input type="text" id="status" disabled>
+                            <label for="descriptionView">Description</label>
+                            <input type="text" id="descriptionView" disabled>
                         </div>
                         <div>
-                            <label for="imagePreview">Image</label>
-                            <img id="imagePreview" src="" alt="Image Preview" style="width: 200px;height: 50px; display: none;">
+                            <label for="statusView">Status</label>
+                            <input type="text" id="statusView" disabled>
+                        </div>
+                        <div>
+                            <label for="imagePreviewView">Image</label>
+                            <img id="imagePreviewView" src="" alt="Image Preview" style="width: 200px; height: auto; display: none;">
+                        </div>
+                        <div>
+                            <label for="itemIdView">Item ID</label>
+                            <input type="text" id="itemIdView" disabled>
+                        </div>
+                        <div>
+                            <label for="isServedView">Is Served</label>
+                            <input type="text" id="isServedView" disabled>
                         </div>
                     </div>
                 </form>
@@ -258,14 +270,15 @@
         </div>
     </div>
 </div>
+
+
 <!-- Modal để cập nhật món ăn -->
-<!-- Modal cho Cập Nhật Món (Update Item) -->
 <div class="modal fade" id="updateItemForm" tabindex="-1" aria-labelledby="updateItemFormLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="updateItemFormLabel">Update Item</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="updateMenuForm" onsubmit="updateMenu(event)">
@@ -303,7 +316,7 @@
                         </div>
                         <div>
                             <label for="descriptionUpdate">Description</label>
-                            <input type="text" id="descriptionUpdate" name="descriptionUpdate">
+                            <textarea id="descriptionUpdate" name="descriptionUpdate" rows="5" cols="57"></textarea>
                         </div>
                         <div>
                             <label for="isServedUpdate">Is Served</label>

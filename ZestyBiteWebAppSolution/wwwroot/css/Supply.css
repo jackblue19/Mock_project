@@ -28,8 +28,12 @@ table {
 	background-size: cover;
 	background-position: center;
 }
-
-#readData .modal-content {
+#updateItemForm .modal-content {
+	background-image: url('../images/backgro.jpg');
+	background-size: cover;
+	background-position: center;
+	}
+	#readData .modal-content {
 	background-image: url('../images/backgro.jpg');
 	background-size: cover;
 	background-position: center;

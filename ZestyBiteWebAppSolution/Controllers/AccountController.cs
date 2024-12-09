@@ -48,9 +48,9 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
 
         [HttpPost]
-        [Route("api/account/login")]
+        //[Route("api/account/login")]
         //public async Task<IActionResult> Login(LoginDTO dto) {
-        public async Task<IActionResult> Login([FromBody]LoginDTO dto) {
+        public async Task<IActionResult> Login(LoginDTO dto) {
 
             if (!ModelState.IsValid) {
                 return View(dto);

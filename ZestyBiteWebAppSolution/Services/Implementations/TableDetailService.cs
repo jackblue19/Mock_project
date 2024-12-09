@@ -83,7 +83,9 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                     TableId = tableUser.TableId,
                     ItemId = item.Key,
                     Quantity = item.Value,
-                    BillId = idid
+                    BillId = idid,
+                    SugPrice = 10000,
+                    OriPrice = 20000
 
                 }).ToList();
 

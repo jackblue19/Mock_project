@@ -62,7 +62,7 @@ public partial class ZestyBiteContext : DbContext {
                 .HasMaxLength(50)
                 .HasColumnName("Verification_Code");
 
-            entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
+            entity.HasOne(d => d.Role).WithMany()
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("account_ibfk_1");

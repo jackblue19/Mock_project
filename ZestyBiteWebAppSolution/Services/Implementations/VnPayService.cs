@@ -16,17 +16,17 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
             vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
             vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
-            vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());  // Amount in "dong" (cent -> VND)
+            vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());  
             vnpay.AddRequestData("vnp_CreateDate", model.CreatedDate.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
-            vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));  // Get the client's IP address
+            vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context)); 
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang: {model.OrderId}");  // Correct dynamic description
-            vnpay.AddRequestData("vnp_OrderType", "other");  // Assuming "other" for order type
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang:" + model.BillId); 
+            vnpay.AddRequestData("vnp_OrderType", "other");
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick);
 
-            var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:Url"], _config["VnPay:HashSecret"]);
+            var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
             return paymentUrl;
         }
 
@@ -48,6 +48,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             if (!checkSignature) {
                 return new VnPaymentResponseModel {
                     Success = false,
+                    OrderDescription = vnp_OrderInfo, 
+                    VnPayResponseCode = "Invalid signature"
                 };
             }
 
@@ -57,8 +59,8 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
                 OrderDescription = vnp_OrderInfo,  // Use dynamic order info
                 OrderId = vnp_orderId.ToString(),
                 TransactionId = vnp_TransactionId.ToString(),
-                Token = vnp_SecureHash.ToString(),
-                VnPayResponseCode = vnp_ResponseCode.ToString(),
+                Token = vnp_SecureHash,
+                VnPayResponseCode = vnp_ResponseCode
             };
         }
 

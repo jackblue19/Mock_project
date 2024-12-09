@@ -19,7 +19,7 @@ namespace ZestyBiteWebAppSolution.Controllers
             _tableDetailService = tableDetailService;
         }
 
- // GET: api/tabledetail
+        // fix
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TableDetailDTO>>> GetAllTableDetails()
@@ -35,47 +35,8 @@ namespace ZestyBiteWebAppSolution.Controllers
             }
         }
 
-        // GET: api/tabledetail/{id}
-        [AllowAnonymous]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TableDetailDTO>> GetTableDetailById(int id)
-        {
-            try
-            {
-                var tableDetail = await _tableDetailService.GetTableDetailByIdAsync(id);
-                if (tableDetail == null)
-                {
-                    return NotFound(new { Message = "Table detail not found" });
-                }
-                return Ok(tableDetail);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        // POST: api/tabledetail
-        [Authorize]
-        [HttpPost]
-        public async Task<ActionResult<TableDetailDTO>> CreateTableDetail([FromBody] TableDetailDTO tableDetailDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                var createdTableDetail = await _tableDetailService.CreateTableDetailAsync(tableDetailDto);
-                return CreatedAtAction(nameof(GetTableDetailById), new { id = createdTableDetail.TableId }, createdTableDetail);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
         // PUT: api/tabledetail
+        // fix => itemId change in tableId
         [HttpPut]
         public async Task<ActionResult<TableDetailDTO>> UpdateTableDetail([FromBody] TableDetailDTO tableDetailDto)
         {
@@ -99,6 +60,7 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
         // DELETE: api/tabledetail/{id}
+        // fix => itemId change in tableId
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTableDetail(int id)
         {

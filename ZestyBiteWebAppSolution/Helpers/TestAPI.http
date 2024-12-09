@@ -1,5 +1,42 @@
 ###
-POST  http://localhost:5024/api/account/logout
+GET http://localhost:5024/api/item/viewmenu
+###
+GET http://localhost:5024/api/table/3/items
+###
+GET http://localhost:5024/api/table/get-items/3
+###
+GET http://localhost:5024/api/tabledetail
+###
+GET http://localhost:5024/api/tabledetail/1
+###
+GET http://localhost:5024/api/table
+###
+GET http://localhost:5024/api/tabledetail
+###
+GET http://localhost:5024/api/table/reality
+###
+GET http://localhost:5024/api/table/virtual
+###
+###
+GET http://localhost:5024/api/feedback/items
+###
+GET  http://localhost:5024/api/account/logout
+###
+POST http://localhost:5024/api/account/newpwd
+Content-Type: application/json
+
+{
+  "email": "git.jack1624@gmail.com"
+}
+###
+POST http://localhost:5024/api/account/fgpwd
+Content-Type: application/json
+
+{
+  "Code": "471468",
+  "NewPassword":"987654321",
+  "ConfirmNewPassword": "987654321"
+}
 ###
 GET http://localhost:5024/api/account/getallacc
 ###

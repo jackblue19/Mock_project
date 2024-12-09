@@ -11,8 +11,6 @@ public partial class Bill
 
     public int PaymentId { get; set; }
 
-    public int AccountId { get; set; }
-
     public int TableId { get; set; }
 
     public decimal TotalCost { get; set; }
@@ -21,11 +19,11 @@ public partial class Bill
 
     public int BillType { get; set; }
 
-    public virtual Account Account { get; set; } = null!;
-
     public virtual Payment Payment { get; set; } = null!;
 
     public virtual ICollection<Profit> Profits { get; set; } = new List<Profit>();
 
     public virtual Table Table { get; set; } = null!;
+
+    public virtual ICollection<TableDetail> TableDetails { get; set; } = new List<TableDetail>();
 }

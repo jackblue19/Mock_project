@@ -5,30 +5,24 @@ using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
-    public class TableRepository : ITableRepository
-    {
+    public class TableRepository : ITableRepository {
         private readonly ZestyBiteContext _context;
 
-        public TableRepository(ZestyBiteContext context)
-        {
+        public TableRepository(ZestyBiteContext context) {
             _context = context ?? throw new ArgumentNullException(nameof(context), "ZestyBiteContext cannot be null");
         }
 
-        // Default CRUD by IRepo
-        public async Task<IEnumerable<Table?>> GetAllAsync()
-        {
+        //DEfault CRUD by IRepo
+        public async Task<IEnumerable<Table?>> GetAllAsync() {
             return await _context.Tables.ToListAsync();
         }
 
-        public async Task<Table?> GetByIdAsync(int id)
-        {
+        public async Task<Table?> GetByIdAsync(int id) {
             return await _context.Tables.FindAsync(id);
         }
 
-        public async Task<Table> CreateAsync(Table table)
-        {
-            if (table == null)
-            {
+        public async Task<Table> CreateAsync(Table table) {
+            if (table == null) {
                 throw new ArgumentNullException(nameof(table), "Table cannot be null");
             }
 
@@ -37,10 +31,8 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return table;
         }
 
-        public async Task<Table> UpdateAsync(Table table)
-        {
-            if (table == null)
-            {
+        public async Task<Table> UpdateAsync(Table table) {
+            if (table == null) {
                 throw new ArgumentNullException(nameof(table), "Table cannot be null");
             }
 
@@ -49,10 +41,8 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return table;
         }
 
-        public async Task<Table> DeleteAsync(Table table)
-        {
-            if (table == null)
-            {
+        public async Task<Table> DeleteAsync(Table table) {
+            if (table == null) {
                 throw new ArgumentNullException(nameof(table), "Table cannot be null");
             }
 
@@ -61,10 +51,18 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return table; // Return the deleted entity
         }
 
-        // Additional CRUD
-        public async Task<IEnumerable<Table?>> GetTablesByTypeAsync(int tableType)
-        {
+        //Addition CRUD
+        public async Task<IEnumerable<Table?>> GetTablesByTypeAsync(int tableType) {
             return await _context.Tables.Where(t => t.TableType == tableType).ToListAsync();
         }
+
+        public async Task<Table?> GetTableByAccIdAsync(int idid) {
+            var tb = await _context.Tables
+                                    .Where(t => t.AccountId == idid)
+                                    .OrderByDescending(t => t.TableId)  // Add ordering by TableId or another unique property
+                                    .FirstOrDefaultAsync();  // Use FirstOrDefaultAsync instead of LastOrDefault
+            return tb;
+        }
+
     }
 }

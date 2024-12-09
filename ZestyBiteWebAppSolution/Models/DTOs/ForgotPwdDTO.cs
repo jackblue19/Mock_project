@@ -20,4 +20,9 @@ namespace ZestyBiteWebAppSolution.Models.DTOs
         [Compare("NewPassword", ErrorMessage = "New Password and Confirmed New Password do not match.")]
         public string ConfirmNewPassword { get; set; } = null!;
     }
+    public class MailDTO
+    {
+        [Required(ErrorMessage = "Email is required")]
+        public string Email { get; set; }
+    }
 }

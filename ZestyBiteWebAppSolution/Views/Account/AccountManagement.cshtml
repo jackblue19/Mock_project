@@ -314,6 +314,7 @@
                 <table class="List">
                     <thead>
                         <tr>
+                            <th>Index</th>
                             <th>Status</th>
                             <th>Username</th>
                             <th>Password</th>
@@ -323,6 +324,7 @@
                             <th>Gender</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th style="display: none;">Role</th>
                         </tr>
                     </thead>
                     <tbody id="accountTableBody">
@@ -342,13 +344,15 @@
         function renderAccountTable(accounts) {
             const tbody = document.getElementById('accountTableBody');
             tbody.innerHTML = ''; // Clear old content
-
+            var index = 0;
             accounts.forEach(account => {
                 console.log(account.status);
+                index = index + 1;
                 const row = document.createElement('tr');
                 row.onclick = () => showPopup(account); // Updated to pass the entire account object
 
                 row.innerHTML = `
+            <td>${index}</td>
             <td>${account.status == 1 ? 'Active' : 'Unactive'}</td>
             <td>${account.username}</td>
             <td>${account.password}</td>
@@ -358,6 +362,7 @@
             <td>${account.gender == 1 ? 'Male' : 'Female'}</td>
             <td>${account.email}</td>
             <td>${account.roleDescription}</td>
+            <td style="display: none;">${account.roleDescription}</td>
         `;
 
                 tbody.appendChild(row);

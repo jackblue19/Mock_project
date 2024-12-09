@@ -2,8 +2,9 @@
 
 namespace ZestyBiteWebAppSolution.Repositories.Interfaces {
     public interface IBillRepository {
-        Task<Bill?> GetBillAsync(int id);
-        Task<Account?> GetNameById(int id);
-        Task<Account?> GetAccountByUsername(string username);
+        Task<Bill?> CreateAsync(int id);
+        Task<int> GetLatestBillIdByUsn(string username);
+        Task<Account> GetUsnById(int billid);
+        Task<Bill?> UpdateBill(int billId);
     }
 }

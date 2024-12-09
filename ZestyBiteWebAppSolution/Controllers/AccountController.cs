@@ -76,13 +76,12 @@ namespace ZestyBiteWebAppSolution.Controllers
         }
 
 
-        [AllowAnonymous]
-        // [HttpPost]
-        [HttpPost("api/account/login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
-        // public async Task<IActionResult> Login(LoginDTO dto)
+        [HttpPost]
+        //[Route("api/account/login")]
+        //public async Task<IActionResult> Login(LoginDTO dto) {
+        public async Task<IActionResult> Login(LoginDTO dto)
         {
-            // Kiểm tra tính hợp lệ của dữ liệu đầu vào
+
             if (!ModelState.IsValid)
             {
                 return View(dto);
@@ -104,6 +103,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                     HttpContext.Session.Remove(lockoutKey);
                 }
             }
+
             int attempts = HttpContext.Session.GetInt32(attemptsKey) ?? 0;
             if (await _service.IsTrueAccount(dto.Username, dto.Password))
             {
@@ -119,9 +119,29 @@ namespace ZestyBiteWebAppSolution.Controllers
                         Secure = Request.IsHttps,
                         SameSite = SameSiteMode.Strict
                     });
+                    var roleId = await _service.GetRoleIdByUsn(dto.Username);
 
-                    // return RedirectToAction("Index", "Home");
-                    return Ok("login done");
+                    if (roleId == 3)
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Procurement_Manager" });
+                    }
+                    else if (roleId == 1)
+                    {
+                        //return RedirectToAction("Index", "Home", new { area = "Manager" });
+                        return Ok("Oke");
+                    }
+                    else if (roleId == 4)
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Server_Staff" });
+                    }
+                    else if (roleId == 6)
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Food_Runner" });
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 catch (Exception)
                 {
@@ -147,6 +167,7 @@ namespace ZestyBiteWebAppSolution.Controllers
                     return View(dto);
                 }
             }
+
         }
 
         [AllowAnonymous]

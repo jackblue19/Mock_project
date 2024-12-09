@@ -4,225 +4,78 @@
 }
 <link href="~/css/FoodRunner.css" rel="stylesheet" />
 
+<body>
+    <div class="foodrunner-view row">
 
-
-<body class="body-config-foodrunner">
-    
-    <div class="container-content">
-        <div class="main-content">
-            <div class="runner-info">
-                <div class="runner-header">
-                    <div class="avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="text-content">
-                        <h2>Food Runner</h2>
-                        <h3 id="runner-name"></h3>
-                    </div>
+        <div class="view-left">
+            <div class="foodrunner-account ftco-animate">
+                <div class="vcard bio">
+                    <img src="${profileImage}" alt="Profile" class="profile-img">
                 </div>
-                <div class="table-items">
-                    <h3 class="table-heading">Items</h3>
-                    <table class="table-order">
-
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Quanity</th>
-                            </tr>
-                        </thead>
-                    </table>
-                    <div class="table-body-scroll">
-                        <table class="table-order">
-                            <tbody class="table-order-body">
-                                <tr>
-                                    <td>Gà rán</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>Khoai tây chiên</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>Cánh gà chiên mắm</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>Mỳ Cay Hải Sản</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>Mỳ Cay Bò</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>Cơm Chiên Chân Châu</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>Mỳ Cay Cấp Độ 7</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>Đưa hết tiền đây</td>
-                                    <td>1</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="table-online-order">
-                        <h3 class="table-heading">Note</h3>
-                        <div class="table-body-scroll-note">
-                            <table class="table-order-note">
-                                <tbody>
-                                    <tr>
-                                        <td>Trứng chiên không mặn</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Thịt kho tàu không khét</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tôi là ai</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tôi là ai</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tôi là ai</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tôi là ai</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tôi là ai</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="table-order-container">
-                <h3 class="table-heading">Table Order</h3>
-                <div class="table-order-wrapper">
-                    <table class="table-order">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                    </table>
-                    <div class="table-body-scroll">
-                        <table class="table-order">
-                            <tbody class="table-order-body">
-                                <tr>
-                                    <td class="no-cell">
-                                        <div class="circle-number">1</div>
-                                    </td>
-                                    <td><span class="status unserved">Unserved</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-cell">
-                                        <div class="circle-number">2</div>
-                                    </td>
-                                    <td><span class="status unserved">Unserved</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-cell">
-                                        <div class="circle-number">20</div>
-                                    </td>
-                                    <td><span class="status unserved">Unserved</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-cell">
-                                        <div class="circle-number">4</div>
-                                    </td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-cell">
-                                        <div class="circle-number">5</div>
-                                    </td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-cell">
-                                        <div class="circle-number">6</div>
-                                    </td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-cell">
-                                        <div class="circle-number">7</div>
-                                    </td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-cell">
-                                        <div class="circle-number">8</div>
-                                    </td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="table-online-order">
-                    <h3 class="table-heading">Order Online</h3>
-                    <table class="table-order">
-
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                    </table>
-                    <div class="table-body-scroll">
-                        <table class="table-order">
-                            <tbody class="table-order-body">
-                                <tr>
-                                    <td>D849</td>
-                                    <td><span class="status unise">Unise</span></td>
-                                </tr>
-                                <tr>
-                                    <td>D0</td>
-                                    <td><span class="status unserved">Unserved</span></td>
-                                </tr>
-                                <tr>
-                                    <td>DE10</td>
-                                    <td><span class="status unserved">Unserved</span></td>
-                                </tr>
-                                <tr>
-                                    <td>K394</td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                                <tr>
-                                    <td>D30</td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                                <tr>
-                                    <td>DE630</td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                                <tr>
-                                    <td>DE60630</td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                                <tr>
-                                    <td>DE160</td>
-                                    <td><span class="status serving">Serving</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
+                <div class="foodrunner-header">
+                    <h1>Food Runner</h1>
+                    <div class="User " id="name"></div>
                 </div>
             </div>
+
+            <div class="table-detail ftco-animate">
+
+                <h2 class="ftco-animate">Items</h2>
+
+                <table class="item-container">
+                    <tbody class="table-detail-item ftco-animate" id="table-detail-item">
+                        <!-- Item rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+
+                <h2 class="ftco-animate">Note</h2>
+
+                <table class="note-container">
+                    <tbody class="table-detail-note ftco-animate" id="table-detail-note">
+                        <!-- Note will be dynamically inserted here  -->
+                    </tbody>
+                </table>
+
+            </div>
         </div>
+
+        <div class="view-right">
+            <h2>Table Orders</h2>
+
+            <div class="table-container view-table-container ftco-animate">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Table</th>
+                            <th>Status</th>
+                            <th style="display: none;">Bill</th>
+                        </tr>
+                    </thead>
+                    <tbody class="ftco-animate" id="table-body">
+                        <!-- Table orders will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>Online Orders</h2>
+
+            <div class="table-container view-online-container ftco-animate">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Table</th>
+                            <th>Status</th>
+                            <th style="display: none;">Bill</th>
+                        </tr>
+                    </thead>
+                    <tbody class="ftco-animate" id="online-body">
+                        <!-- Online orders will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+    </div>
+
+    <div class="footer"></div>
 </body>

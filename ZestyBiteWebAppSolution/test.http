@@ -109,21 +109,21 @@ Content-Type: application/json
 }
 
 ### PUT
-PUT http://localhost:5024/api/Supply/update/1
+PUT http://localhost:5024/api/supply/update/10
 Content-Type: application/json
 
 {
-  "productName": "khanh",
-  "supplyQuantity": 100.00,
-  "supplyPrice": 50000,
-  "supplyStatus": 1,
-  "dateImport": "2024-11-01T00:00:00",
-  "dateExpiration": "2025-11-01T00:00:00",
-  "tableId": 1,
-  "vendorName": "Vendor A",
-  "vendorPhone": "0123456789",
-  "vendorAddress": "Vendor Address A",
-  "supplyCategory": "Food"
+    "productName": "pizza",
+    "supplyQuantity": 333.00,
+    "supplyPrice": 333.00,
+    "supplyStatus": 1,
+    "dateImport": "2024-12-07T00:00:00",
+    "dateExpiration": "2024-12-08T00:00:00",
+    "tableId": 3333333,
+    "vendorName": "khánh",
+    "vendorPhone": "09832727332",
+    "vendorAddress": "hà tĩnh",
+    "supplyCategory": "Drink"
 }
 
 ###

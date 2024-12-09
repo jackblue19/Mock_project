@@ -59,8 +59,8 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         public async Task<Table?> GetTableByAccIdAsync(int idid) {
             var tb = await _context.Tables
                                     .Where(t => t.AccountId == idid)
-                                    .OrderByDescending(t => t.TableId)  // Add ordering by TableId or another unique property
-                                    .FirstOrDefaultAsync();  // Use FirstOrDefaultAsync instead of LastOrDefault
+                                    .OrderByDescending(t => t.TableId) 
+                                    .LastOrDefaultAsync();  // Use FirstOrDefaultAsync instead of LastOrDefault
             return tb;
         }
 

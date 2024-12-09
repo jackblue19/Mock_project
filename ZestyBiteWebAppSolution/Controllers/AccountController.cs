@@ -48,9 +48,9 @@ namespace ZestyBiteWebAppSolution.Controllers {
 
 
         [HttpPost]
-        //[Route("api/account/login")]
+        [Route("api/account/login")]
         //public async Task<IActionResult> Login(LoginDTO dto) {
-        public async Task<IActionResult> Login(LoginDTO dto) {
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto) {
 
             if (!ModelState.IsValid) {
                 return View(dto);
@@ -86,14 +86,14 @@ namespace ZestyBiteWebAppSolution.Controllers {
                     if (roleId == 3) {
                         return RedirectToAction("Index", "Home", new { area = "Procurement_Manager" });
                     } else if (roleId == 1) {
-                        //return RedirectToAction("Index", "Home", new { area = "Manager" });
-                        return Ok("Oke");
+                        return RedirectToAction("Index", "Home", new { area = "Manager" });
                     } else if (roleId == 4) {
                         return RedirectToAction("Index", "Home", new { area = "Server_Staff" });
                     } else if (roleId == 6) {
                         return RedirectToAction("Index", "Home", new { area = "Food_Runner" });
                     } else {
-                        return RedirectToAction("Index", "Home");
+                        //return RedirectToAction("Index", "Home");
+                        return Ok("OKKKKKKKKKKKKKK");
                     }
                 } catch (Exception) {
                     ModelState.AddModelError("", "An unexpected error occurred during login.");

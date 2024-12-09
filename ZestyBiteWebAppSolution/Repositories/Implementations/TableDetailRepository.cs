@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZestyBiteWebAppSolution.Data;
+using ZestyBiteWebAppSolution.Models.DTOs;
 using ZestyBiteWebAppSolution.Models.Entities;
 using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
@@ -68,5 +69,27 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
         Task<IEnumerable<TableDetail>> ITableDetailRepository.GetTableDetailsByAccountIdAsync(int accountId) {
             throw new NotImplementedException();
         }
+        public async Task<List<TableDetailDTO>> GetByBillIdAsync(int billId) {
+            return await _context.TableDetails
+                .Where(td => td.BillId == billId)
+                .GroupBy(td => new {
+                    td.BillId,
+                    td.TableId,
+                    td.ItemId,
+                    td.Item.ItemName,
+                    td.Item.SuggestedPrice,
+                    td.Quantity
+                })
+                .Select(group => new TableDetailDTO {
+                    BillId = group.Key.BillId,
+                    TableId = group.Key.TableId,
+                    ItemId = group.Key.ItemId,
+                    ItemName = group.Key.ItemName,
+                    SuggestedPrice = group.Key.SuggestedPrice,
+                    Quantity = group.Key.Quantity
+                })
+                .ToListAsync();
+        }
+
     }
 }

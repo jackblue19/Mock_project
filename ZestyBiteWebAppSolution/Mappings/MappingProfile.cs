@@ -70,15 +70,15 @@ namespace ZestyBiteWebAppSolution.Mappings {
             CreateMap<TableDetail, TableDetailDTO>()
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
-                .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item)); // Include item details if needed
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
+            //.ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item)); // Include item details if needed
 
             // TableDetailDTO to TableDetail mapping
             CreateMap<TableDetailDTO, TableDetail>()
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
-                .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item)); // Include item details if needed
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
+                //.ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item)); // Include item details if needed
         }
     }
 }

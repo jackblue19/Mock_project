@@ -6,5 +6,7 @@ namespace ZestyBiteWebAppSolution.Repositories.Interfaces {
         Task<int> GetLatestBillIdByUsn(string username);
         Task<Account> GetUsnById(int billid);
         Task<Bill?> UpdateBill(int billId);
+        Task<IEnumerable<Bill?>> GetAllAsync();
+        Task<Bill?> GetBillByTableId(int billId);
     }
 }

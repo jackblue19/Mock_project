@@ -66,6 +66,12 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             await _context.SaveChangesAsync();
             return b;
         }
-
+        public async Task<IEnumerable<Bill?>> GetAllAsync() {
+            return await _context.Bills
+                                 .ToListAsync();
+        }
+        public async Task<Bill?> GetBillByTableId(int billId) {
+            return _context.Bills.LastOrDefault(p => p.TableId == billId);
+        }
     }
 }

@@ -299,5 +299,12 @@ namespace ZestyBiteWebAppSolution.Services.Implementations {
             await _repository.UpdateAsync(current);
             return dto;
         }
+        public async Task<Account> GetByUsn(string username) {
+            var cur = await _repository.GetAccountByUsnAsync(username);
+            if (cur == null) {
+                throw new InvalidOperationException("User not found.");
+            }
+            return cur;
+        }
     }
 }

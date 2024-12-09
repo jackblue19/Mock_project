@@ -108,23 +108,14 @@
                         </tr>
                         <tr>
                             <td><strong>Role</strong></td>
-                            <td>
-                                <select id="roleId">
-                                    <option value="1">Manager</option>
-                                    <option value="2">Order Taker</option>
-                                    <option value="3">Procurement Manager</option>
-                                    <option value="4">Server Staff</option>
-                                    <option value="5">Customer Service Staff</option>
-                                    <option value="6">Food Runner</option>
-                                    <option value="7">Customer</option>
-                                </select>
-                            </td>
+                            <td><input type="text" id="roledesc" readonly>
+                                </td>
                         </tr>
                     </tbody>
                 </table>
                 <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: space-between;">
                     <button type="button" onclick="updateAccount()" id="updateButton">Update</button>
-                    <button type="button" onclick="manageStatus()" id="blockButton">Status</button>
+                    <button type="button" onclick="manageStatus()" id="blockButton">Block</button>
                     <button type="button" onclick="deleteAccount()" id="deleteButton">Delete</button>
                 </div>
             </form>
@@ -246,7 +237,7 @@
                 row.innerHTML = `
                             <td>${index}</td>
                             <td>${account.status == 1 ? 'Active' : 'Unactive'}</td>
-                            <td>${account.username}</td>
+                                    <td value = "${account.username}">${account.username}</td>
                             <td>${account.name}</td>
                             <td>${account.phoneNumber}</td>
                             <td>${account.address}</td>
@@ -283,7 +274,7 @@
             document.getElementById('address').value = account.address;
             document.getElementById('gender').value = account.gender;
             document.getElementById('email').value = account.email;
-            document.getElementById('roleId').value = account.roleDescription;
+            document.getElementById('roledesc').value = account.roleDescription;
 
             document.getElementById('popupOverlay').style.display = 'block';
             document.getElementById('infoPopup').style.display = 'block';
@@ -359,7 +350,7 @@
             const username = document.getElementById('username').value;
 
             const response = await fetch(`/api/account/status`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },

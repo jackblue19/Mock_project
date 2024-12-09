@@ -52,7 +52,7 @@
                                         <div class="styleQuantity">
                                             <form action="@Url.Action("UpdateCart", "Cart")" method="post" style="display: inline;">
                                                 <input type="hidden" name="itemId" value="@item.ItemId" />
-                                                <input type="number" name="quantity" value="@item.Quantity" class="input-quantity" onchange="updateItemAmount(this)" />
+                                                <input type="number" name="quantity" value="@item.Quantity" class="input-quantity" onchange="updateItemAmount(this)" min="0" />
                                             </form>
                                         </div>
                                     </td>
@@ -123,10 +123,18 @@
         document.getElementById('selectedTotalAmount').textContent = `$${totalAmount.toFixed(2)}`;
     }
 
+
     function updateItemAmount(input) {
         var row = input.closest('tr');
         var price = parseFloat(row.querySelector('.sumAmount').dataset.price);
         var quantity = parseInt(input.value, 10);
+
+        // Ensure quantity is not negative
+        if (quantity < 0) {
+            input.value = 0;
+            quantity = 0;
+        }
+
         var amount = price * quantity;
 
         // Update the amount for this item
@@ -139,12 +147,13 @@
 
         updateSelectedItems();  // Update the overall total
     }
+
     async function updatePaymentFlag() {
-        // Cập nhật giá trị paymentFlag thành 1
+        // Set paymentFlag to 1
         document.getElementById('paymentFlag').value = '1';
 
         try {
-            // Gửi yêu cầu POST tới API "/api/Cart/Change" để cập nhật session uflag
+            // Send POST request to update session uflag
             let response1 = await fetch('/api/Cart/Change', {
                 method: 'POST',
                 headers: {
@@ -154,9 +163,9 @@
             });
 
             if (response1.ok) {
-                console.log("Session uflag đã được cập nhật thành công.");
+                console.log("Session uflag updated successfully.");
 
-                // Sau khi cập nhật uflag thành công, gọi API thứ hai "/api/cart/saving"
+                // After updating uflag, call the second API to save the cart
                 let response2 = await fetch('/api/cart/saving', {
                     method: 'POST',
                     headers: {
@@ -166,17 +175,17 @@
                 });
 
                 if (response2.ok) {
-                    console.log("Cart đã được lưu thành công.");
-                    // Tiến hành các hành động khác, ví dụ như chuyển hướng đến trang thanh toán
-                    // window.location.href = '/checkout'; // Ví dụ chuyển hướng đến trang thanh toán
+                    console.log("Cart saved successfully.");
+                    // Redirect to checkout page, if needed
+                    // window.location.href = '/checkout'; // Example redirection to the checkout page
                 } else {
-                    console.error("Có lỗi khi lưu cart.");
+                    console.error("Error saving cart.");
                 }
             } else {
-                console.error("Có lỗi khi cập nhật session uflag.");
+                console.error("Error updating session uflag.");
             }
         } catch (error) {
-            console.error("Lỗi kết nối với API:", error);
+            console.error("Connection error with the API:", error);
         }
     }
 

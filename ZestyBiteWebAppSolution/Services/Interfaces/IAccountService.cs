@@ -22,7 +22,7 @@ namespace ZestyBiteWebAppSolution.Services.Interfaces {
         Task<bool> IsDeleteUnregistedAccount(string usn);
         Task<bool> VerifyOldPasswordAsync(string username, string oldPassword);
         Task<Account?> GetUsnAsync(string username);
-
+        Task<Account> GetByUsn(string username);
         Task<Account> MapFromDTO(StaffDTO dto);
         Task<StaffDTO> MapFromEntity(Account acc);
         Task<bool> DeleteAcc(string usn);

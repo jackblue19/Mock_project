@@ -215,7 +215,6 @@ public class CartController : Controller {
     }
 
     public IActionResult AddToCart(int itemId) {
-
         var usn = HttpContext.Session.GetString("username") ?? Request.Cookies["username"];
         if (string.IsNullOrEmpty(usn)) {
             return RedirectToAction("Login", "Account");
@@ -245,6 +244,13 @@ public class CartController : Controller {
             cart.Items.Add(item);
         }
 
+        // Ensure quantity is not negative
+        foreach (var cartItem in cart.Items) {
+            if (cartItem.Quantity < 0) {
+                cartItem.Quantity = 0;
+            }
+        }
+
         // Save cart to session
         HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
         HttpContext.Session.SetString("save", "0");
@@ -255,6 +261,7 @@ public class CartController : Controller {
         // Redirect to Home page
         return RedirectToAction("Index", "Home");
     }
+
 
     public IActionResult RemoveFromCart(int itemId) {
         var cart = GetCheckout();

@@ -29,7 +29,7 @@
                         </div>
                         <div class="message d-md-flex">
                             <textarea id="feedbackMessage" name="type-area" cols="30" rows="3" class="form-control"
-                                placeholder="Message"></textarea>
+                                      placeholder="Message"></textarea>
                         </div>
                         <div class="submit-button">
                             <button type="submit" id="submitFeedback" class="btn btn-primary py-3 px-4">Send</button>
@@ -47,7 +47,7 @@
 
             // Fetch items from the server
             function fetchItems() {
-                return fetch('/api/feedback/items') // Ensure this is the correct endpoint
+                return fetch('/api/feedback/items') 
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -78,7 +78,6 @@
             // Filter dropdown options based on search input
             searchBox.addEventListener('input', () => {
                 const searchTerm = searchBox.value.toLowerCase();
-                // Clear existing options and repopulate based on search term
                 dishSelect.innerHTML = '';
                 items.forEach(item => {
                     if (item.itemName.toLowerCase().includes(searchTerm)) {
@@ -94,6 +93,14 @@
                 }
             });
 
+            searchBox.addEventListener('blur', () => { 
+                const searchTerm = searchBox.value.toLowerCase(); 
+                if (searchTerm === '') 
+                { 
+                    populateDishSelect(items); 
+                } 
+            }); 
+
             // Fetch items and populate select element
             fetchItems();
 
@@ -106,15 +113,15 @@
                 const itemName = selectedItem ? selectedItem.itemName : "Unknown Item"; // Fallback if not found
                 const parentFeedbackId = null; // Set ParentFb to null as per your requirement
 
-                fetch('http://localhost:5024/api/feedback/submitfeedback', {
+                fetch('/api/feedback/submitfeedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        Content: feedbackMessage, 
-                        ItemId: selectedDishId, 
-                        ItemName: itemName, 
+                        Content: feedbackMessage,
+                        ItemId: selectedDishId,
+                        ItemName: itemName,
                         ParentFb: null,
                         Fullname: "",
                     })

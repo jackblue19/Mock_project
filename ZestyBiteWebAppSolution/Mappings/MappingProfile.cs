@@ -11,7 +11,6 @@ namespace ZestyBiteWebAppSolution.Mappings {
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.FbContent))
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.FbDatetime))
                 .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.UsernameNavigation.ProfileImage))
-                .ForMember(dest => dest.Fullname, opt => opt.MapFrom(src => src.UsernameNavigation.Name))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
                 .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.ItemName))
                 .ForMember(dest => dest.ParentFb, opt => opt.MapFrom(src => src.ParentFbFlag))
@@ -45,7 +44,8 @@ namespace ZestyBiteWebAppSolution.Mappings {
                 .ForMember(dest => dest.ItemDescription, opt => opt.MapFrom(src => src.ItemDescription))
                 .ForMember(dest => dest.SuggestedPrice, opt => opt.MapFrom(src => src.SuggestedPrice))
                 .ForMember(dest => dest.ItemImage, opt => opt.MapFrom(src => src.ItemImage))
-                .ForMember(dest => dest.IsServed, opt => opt.MapFrom(src => src.IsServed));
+                .ForMember(dest => dest.IsServed, opt => opt.MapFrom(src => src.IsServed))
+                .ForMember(dest => dest.TableDetails, opt => opt.MapFrom(src => src.TableDetails));
 
             // Table to TableDTO mapping
             CreateMap<Table, TableDTO>()
@@ -56,6 +56,7 @@ namespace ZestyBiteWebAppSolution.Mappings {
                 .ForMember(dest => dest.TableStatus, opt => opt.MapFrom(src => src.TableStatus))
                 .ForMember(dest => dest.TableNote, opt => opt.MapFrom(src => src.TableNote))
                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId));
+                //.ForMember(dest => dest.TableDetails, opt => opt.MapFrom(src => src.TableDetails)); // Include TableDetails
 
             // TableDTO to Table mapping
             CreateMap<TableDTO, Table>()
@@ -66,20 +67,23 @@ namespace ZestyBiteWebAppSolution.Mappings {
                 .ForMember(dest => dest.TableStatus, opt => opt.MapFrom(src => src.TableStatus))
                 .ForMember(dest => dest.TableNote, opt => opt.MapFrom(src => src.TableNote))
                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId));
+                //.ForMember(dest => dest.TableDetails, opt => opt.MapFrom(src => src.TableDetails)); // Include TableDetails
 
             // TableDetail to TableDetailDTO mapping
             CreateMap<TableDetail, TableDetailDTO>()
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
-                .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item)); // Include item details if needed
+                .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item));
+            //.ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.Table)); // Include Table
 
             // TableDetailDTO to TableDetail mapping
             CreateMap<TableDetailDTO, TableDetail>()
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.TableId))
                 .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ItemId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
-                .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item)); // Include item details if needed
+                .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Item));
+                //.ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.Table)); // Include Table
         }
     }
 }

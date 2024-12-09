@@ -29,8 +29,6 @@ public partial class Account
 
     public int AccountStatus { get; set; }
 
-    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
-
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
     public virtual Role Role { get; set; } = null!;

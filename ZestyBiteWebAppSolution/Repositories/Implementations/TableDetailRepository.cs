@@ -5,23 +5,29 @@ using ZestyBiteWebAppSolution.Repositories.Interfaces;
 
 namespace ZestyBiteWebAppSolution.Repositories.Implementations
 {
-    public class TableDetailRepository : ITableDetailRepository {
+    public class TableDetailRepository : ITableDetailRepository
+    {
         private readonly ZestyBiteContext _context;
 
-        public TableDetailRepository(ZestyBiteContext context) {
+        public TableDetailRepository(ZestyBiteContext context)
+        {
             _context = context;
         }
 
-        public async Task<IEnumerable<TableDetail?>> GetAllAsync() {
+        public async Task<IEnumerable<TableDetail>> GetAllAsync()
+        {
             return await _context.TableDetails.ToListAsync();
         }
 
-        public async Task<TableDetail?> GetByIdAsync(int id) {
+        public async Task<TableDetail?> GetByIdAsync(int id)
+        {
             return await _context.TableDetails.FindAsync(id);
         }
 
-        public async Task<TableDetail> CreateAsync(TableDetail tableDetail) {
-            if (tableDetail == null) {
+        public async Task<TableDetail> CreateAsync(TableDetail tableDetail)
+        {
+            if (tableDetail == null)
+            {
                 throw new ArgumentNullException(nameof(tableDetail), "TableDetail cannot be null");
             }
 
@@ -30,8 +36,10 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return tableDetail;
         }
 
-        public async Task<TableDetail> UpdateAsync(TableDetail tableDetail) {
-            if (tableDetail == null) {
+        public async Task<TableDetail> UpdateAsync(TableDetail tableDetail)
+        {
+            if (tableDetail == null)
+            {
                 throw new ArgumentNullException(nameof(tableDetail), "TableDetail cannot be null");
             }
 
@@ -40,8 +48,10 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return tableDetail;
         }
 
-        public async Task<TableDetail> DeleteAsync(TableDetail tableDetail) {
-            if (tableDetail == null) {
+        public async Task<TableDetail> DeleteAsync(TableDetail tableDetail)
+        {
+            if (tableDetail == null)
+            {
                 throw new ArgumentNullException(nameof(tableDetail), "TableDetail cannot be null");
             }
 
@@ -50,11 +60,34 @@ namespace ZestyBiteWebAppSolution.Repositories.Implementations
             return tableDetail; // Return the deleted entity
         }
 
-        public async Task CreateRangeAsync(IEnumerable<TableDetail> tableDetails) {
-            if (!tableDetails.Any()) throw new ArgumentException("No table details provided.");
+        public async Task CreateRangeAsync(IEnumerable<TableDetail> tableDetails)
+        {
+            if (tableDetails == null || !tableDetails.Any())
+            {
+                throw new ArgumentException("No table details provided.");
+            }
+
             await _context.TableDetails.AddRangeAsync(tableDetails);
             await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Table>> GetTableDetailsByAccountIdAsync(int accountId)
+        {
+            return await _context.Tables
+                .Where(td => td.AccountId == accountId)
+                .ToListAsync();
+        }
+
+        Task<IEnumerable<TableDetail>> ITableDetailRepository.GetTableDetailsByAccountIdAsync(int accountId)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<IEnumerable<TableDetail>> GetByTableIdAsync(int tableId)
+        {
+            return await _context.TableDetails
+                .Include(td => td.Item)
+                .Where(td => td.TableId == tableId)
+                .ToListAsync();
+        }
     }
 }

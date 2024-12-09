@@ -4,5 +4,6 @@ namespace ZestyBiteWebAppSolution.Repositories.Interfaces
 {
     public interface IItemRepository : IRepository<Item>
     {
+        Task<IEnumerable<Item?>> GetItemsInTable(int tableId);
     }
 }

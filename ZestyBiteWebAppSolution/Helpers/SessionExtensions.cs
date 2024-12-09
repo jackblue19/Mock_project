@@ -2,7 +2,13 @@
 
 public static class SessionExtensions {
     public static void SetObjectAsJson(this ISession session, string key, object value) {
-        session.SetString(key, JsonConvert.SerializeObject(value));
+        var settings = new JsonSerializerSettings {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore, 
+            Formatting = Formatting.Indented
+        };
+
+        var json = JsonConvert.SerializeObject(value, settings);
+        session.SetString(key, json);
     }
 
     public static T GetObjectFromJson<T>(this ISession session, string key) {

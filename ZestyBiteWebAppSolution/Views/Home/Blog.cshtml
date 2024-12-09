@@ -1,0 +1,439 @@
+﻿@{
+    ViewBag.Title = "Blog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <style>
+        /* General comment container styling */
+        .comment-list-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            scrollbar-width: none;
+        }
+
+            .comment-list-container::-webkit-scrollbar {
+                display: none;
+            }
+
+        .comment-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .comment {
+            border: 1px solid #dddddd1d;
+            color: azure;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .comment-body {
+            margin-left: 25px;
+            margin-top: 25px;
+            margin-right: 10px
+        }
+
+        .comment img.profile-img {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #000000;
+        }
+
+        .comment h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .comment .meta {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .nested-comment {
+            margin-left: 0px;
+            border-left: 2px solid #d7ba00ad;
+            padding-left: 10px;
+        }
+
+        /* Style for reply form */
+        .reply-form {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+            .reply-form input.reply-input {
+                width: calc(100% - 60px);
+                padding: 5px;
+                margin-right: 5px;
+                border-radius: 3px;
+                border: 1px solid #ffffff;
+                color: #ffffff;
+                background-color: #00000000;
+            }
+
+            .reply-form button {
+                padding: 5px 10px;
+                color: #ffffff;
+                background-color: #00000000;
+                border: 1px solid #ffffff;
+                border-radius: 15px;
+                cursor: pointer;
+                margin: 10px;
+            }
+
+                .reply-form button:hover {
+                    background-color: #c7af128d;
+                }
+
+        .reply-btn {
+            border: 1px solid #ffffff;
+            border-radius: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            color: #ffffff;
+            background-color: #00000000;
+        }
+
+        /* Style for deeply nested comments */
+        .nested-comments:last-child {
+            border-bottom: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f4433680;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+
+</head>
+
+<body>
+    <section>
+        <div class="container">
+            <div class="row">
+                <!-- Main Comment Section -->
+                <div class="col-md-8 ftco-animate comment-main">
+                    <div class="pt-5 mt-5">
+                        <h3>Comments</h3>
+                        <div class="comment-list-container">
+                            <ul class="comment-list" id="commentList">
+                                <!-- Comments will be dynamically loaded here -->
+                            </ul>
+                        </div>
+                        <!-- Pagination Controls -->
+                        <div class="pagination-controls mt-3">
+                            <button id="prevPage" class="btn btn-secondary" disabled>Previous</button>
+                            <input type="number" id="pageInput" class="form-control d-inline-block" style="width: 60px;"
+                                   min="1" placeholder="Page">
+                            <button id="goToPage" class="btn btn-primary">Go</button>
+                            <button id="nextPage" class="btn btn-secondary">Next</button>
+                            <span id="pageStatus" class="ml-2"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Section -->
+                <div class="col-md-4 sidebar ftco-animate">
+                    <div class="sidebar-box">
+                        <form class="search-form">
+                            <div class="form-group">
+                                <div class="icon">
+                                    <span class="icon-search"></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search..." id="searchInput">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-box ftco-animate">
+                        <div class="categories">
+                            <h3>Categories</h3>
+                            <ul>
+                                <li><a href="#">Main Course<span>(12)</span></a></li>
+                                <li><a href="#">Drink<span>(22)</span></a></li>
+                                <li><a href="#">Dessert<span>(37)</span></a></li>
+                                <li><a href="#">Fruit<span>(42)</span></a></li>
+                                <li><a href="#">Salad<span>(14)</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        const MAX_DEPTH = 2; // Maximum reply depth
+        let currentPage = 1; // Current page of comments
+
+        // Fetch comments for the current page
+        function loadComments(page = 1) {
+            $.ajax({
+                url: `/api/feedback/feedbackpagination?pageNumber=${page}&pageSize=10`,
+                method: 'GET',
+                success: function (data) {
+                    const commentList = document.getElementById("commentList");
+                    commentList.innerHTML = ""; // Clear existing comments
+                    displayComments(data, commentList); // Render comments
+                    updatePaginationControls(page);
+                },
+                error: function () {
+                    console.error("Error loading comments.");
+                }
+            });
+        }
+
+        // Update the state of pagination buttons
+        function updatePaginationControls(page) {
+            currentPage = page;
+
+            // Enable/disable previous and next buttons
+            document.getElementById("prevPage").disabled = currentPage === 1;
+
+            // Update the page status
+            document.getElementById("pageStatus").textContent = `Page ${currentPage}`;
+        }
+
+        // Event listeners for pagination controls
+        document.getElementById("prevPage").addEventListener("click", () => {
+            if (currentPage > 1) {
+                loadComments(currentPage - 1);
+            }
+        });
+
+        document.getElementById("nextPage").addEventListener("click", () => {
+            loadComments(currentPage + 1);
+        });
+
+        document.getElementById("goToPage").addEventListener("click", () => {
+            const pageInput = parseInt(document.getElementById("pageInput").value, 10);
+            if (!isNaN(pageInput) && pageInput > 0) {
+                loadComments(pageInput);
+            } else {
+                alert("Invalid page number.");
+            }
+        });
+
+        // Recursive function to display comments and replies
+        function displayComments(commentsToDisplay, container, level = 0) {
+            commentsToDisplay.forEach(comment => {
+                try {
+                    console.log("Processing comment:", comment);
+
+                    const profileImage = comment.profileImage || "default-profile.png"; // Fallback for profile image
+                    const fullname = comment.fullname || "Anonymous"; // Fallback for fullname
+                    const itemName = comment.itemName || "Unknown Item"; // Fallback for item name
+                    const dateTime = comment.dateTime ? new Date(comment.dateTime).toLocaleString() : "Unknown Date";
+                    const content = comment.content || "";
+
+                    // Safely handle comment.id or generate a fallback ID
+                    const commentId = comment.id || `temp-${Math.random().toString(36).substr(2, 9)}`;
+                    const repliesContainerId = `nested-${commentId}`;
+
+                    // Create the comment element
+                    const commentItem = document.createElement("li");
+                    commentItem.classList.add("comment", "nested-comment");
+                    commentItem.style.marginLeft = `${level * 5}px`;
+
+                    commentItem.innerHTML = `
+                                <div class="vcard bio">
+                                    <img src="${profileImage}" alt="Profile" class="profile-img">
+                                </div>
+                                <div class="comment-body">
+                                    <div class="comment-head">
+                                        <h3>${fullname}</h3> <!-- Ensure 'fullname' is used here -->
+                                        <div class="meta">${dateTime}</div>
+                                    </div>
+                                    ${level < 1 ? `<p><strong>Item:</strong> ${itemName}</p>` : ""}
+                                    <p>${content}</p>
+                                    ${level < MAX_DEPTH ? `<button class="reply-btn" data-id="${comment.id}" data-level="${level}">Reply</button>` : ""}
+                                    <div class="reply-form" id="replyBox-${commentId}" style="display: none;">
+                                        <input type="text" placeholder="Write a reply..." class="reply-input">
+                                        <button class="submit-reply" data-parent-id="${comment.parentFb}" data-level="${level}">Submit</button>
+                                    </div>
+                                    <ul class="nested-comments" id="${repliesContainerId}"></ul>
+                                </div>
+                            `;
+
+                    container.appendChild(commentItem);
+
+                    // Handle nested replies
+                    if (comment.parentFeedback) {
+                        const repliesContainer = document.getElementById(repliesContainerId);
+                        displayComments([comment.parentFeedback], repliesContainer, level + 1);
+                    }
+                } catch (error) {
+                    console.error("Error processing comment:", comment, error);
+                }
+            });
+            setupReplyHandlers();
+        }
+
+
+        // Set up event listeners for reply buttons and forms
+        function setupReplyHandlers() {
+            document.querySelectorAll('.reply-btn').forEach(button => {
+                button.addEventListener('click', event => {
+                    const commentId = button.getAttribute('data-id');
+                    const replyBox = document.getElementById(`replyBox-${commentId}`);
+                    replyBox.style.display = replyBox.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+
+            document.querySelectorAll('.submit-reply').forEach(button => {
+                button.addEventListener('click', event => {
+                    const parentId = button.getAttribute('data-parent-id');
+                    const itemId = button.getAttribute('data-item-id');
+                    const level = button.getAttribute('data-level');
+                    const replyInput = button.previousElementSibling.value.trim();
+
+                    if (!replyInput) {
+                        alert("Reply content cannot be empty.");
+                        return;
+                    }
+
+                    postReply(parentId, itemId, replyInput, parseInt(level, 10));
+                });
+            });
+        }
+
+        // Post a reply to the back-end
+        function postReply(commentId, content, level) {
+            // Locate the parent comment element by its ID
+            const parentCommentElement = document.querySelector(`[data-id="${commentId}"]`);
+
+            const parentId = parentElement.getAttribute("data-feedback-id");
+            if (!parentCommentElement) {
+                showNotification("Parent comment not found!");
+                return;
+            }
+            const itemId = parentCommentElement.getAttribute("data-item-id");
+            if (!parentCommentElement) {
+                showNotification("Item Id not found!");
+                return;
+            }
+            const itemName = parentCommentElement.getAttribute("data-item-name") || "Unknown Item";
+            if (!parentCommentElement) {
+                showNotification("Item name not found!");
+                return;
+            }
+            const ParentFb = parentId; // Use parentId as ParentFb
+
+            // Prepare the payload for the reply
+            const replyPayload = {
+                Content: content,
+                ItemId: itemId,
+                ItemName: itemName,
+                ParentFb: ParentFb, // Set ParentFb to the parentId
+                Fullname: ""
+            };
+
+            console.log("Submitting reply payload:", replyPayload);
+
+            // Send the reply to the back-end using fetch
+            fetch('/api/feedback/submitfeedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(replyPayload)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(newReply => {
+                    console.log("Reply submitted successfully:", newReply);
+                    const repliesContainer = document.getElementById(`nested-${parentId}`);
+                    displayComments([newReply], repliesContainer, level + 1); // Append the new reply
+
+                    // Show success notification
+                    showNotification("Reply submitted successfully!");
+                })
+                .catch(error => {
+                    console.error("Error submitting reply:", error);
+                    showNotification("Failed to submit reply. Please try again."); // Show error notification
+                });
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement("div");
+            notification.className = "notification";
+            notification.innerText = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+
+
+
+        // Append new feedback to the comment list
+        function appendFeedback(feedback, container, level) {
+            const newComment = document.createElement("li");
+            newComment.classList.add("comment", "nested-comment");
+            newComment.style.marginLeft = `${level * 5}px`;
+
+            newComment.innerHTML = `
+                    <div class="vcard bio">
+                        <img src="${comment.profileImage}" alt="Profile" class="profile-img">
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-head">
+                            <h3>${feedback.username}</h3>
+                            <div class="meta">${new Date(feedback.createdAt).toLocaleString()}</div>
+                        </div>
+                        <p>${feedback.content}</p>
+                    </div>
+            `;
+
+            container.appendChild(newComment);
+        }
+
+        // Initialize comments on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComments(currentPage);
+
+            // Pagination controls
+            document.getElementById('nextPage').addEventListener('click', () => {
+                currentPage++;
+                loadComments(currentPage);
+            });
+
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadComments(currentPage);
+                }
+            });
+        });
+
+        // Initial load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadComments(currentPage);
+        });
+    </script>
+</body>

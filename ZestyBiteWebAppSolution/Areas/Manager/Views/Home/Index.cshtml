@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "AccountManagement";
+    Layout = "~/Areas/Manager/Views/Shared/_Layout.cshtml";
+}
+
+<body class="body-config">
+    <div class="container-content">
+        <div class="sidebar">
+            <nav>
+                <ul class="menu">
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="bi bi-credit-card"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="AccountManagement.html">
+                            <i class="fas fa-user"></i>
+                            <span>Account</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payhistory.html">
+                            <i class="bi bi-currency-exchange"></i>
+                            <span> PayHistory</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="bi bi-chat-square-text-fill"></i>
+                            <span> FeedBack</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="menuManagement.html">
+                            <i class="bi bi-list"></i>
+                            <span>MenuManage</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Procedures</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span> Manager</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span> Service(..)</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="main-content">
+            <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+            <div class="popup" id="infoPopup">
+                <div class="popup-header">
+                    <h3 id="popupTitle">Account Details</h3>
+                    <span class="popup-close" onclick="closePopup()">×</span>
+                </div>
+                <form id="accountForm">
+                    <table class="Info">
+                        <tbody id="infoTableBody"></tbody>
+                    </table>
+                    <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                        <button type="button" onclick="submitForm()" id="submitButton">Update</button>
+                        <button type="button" onclick="deleteAccount()" id="deleteButton">Delete</button>
+                    </div>
+                </form>
+            </div>
+            <div class="AccountBody">
+                <div class="content-text">
+                    <h2>Account Management</h2>
+                    <div class="AccountFunction">
+                        <div class="AccountSearch">
+                            <input id="search" type="search" placeholder="Search..." autofocus required
+                                   oninput="searchAccounts()" />
+                        </div>
+                        <div class="AccountCreate">
+                            <button onclick="showCreatePopup()">Create</button>
+                        </div>
+                    </div>
+
+                    <div class="AccountView">
+                        <div class="AccountList">
+                            <table class="List">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Password</th>
+                                        <th>User's Name</th>
+                                        <th>Phone_Number</th>
+                                        <th>Address</th>
+                                        <th>Gender</th>
+                                        <th>Email</th>
+                                        <th>Verification_Code</th>
+                                        <th>Role_ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accountTableBody">
+                                    <!-- Account rows will be dynamically inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

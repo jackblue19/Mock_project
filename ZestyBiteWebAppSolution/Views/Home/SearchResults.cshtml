@@ -1,0 +1,54 @@
+﻿@model ZestyBiteWebAppSolution.Models.ViewModel.IndexViewModel
+@using ZestyBiteWebAppSolution.Models.DTOs
+@{
+    ViewBag.Title = "SearchResults";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3" style="padding: 20px">
+            <div class="col-md-7 heading-section ftco-animate text-center">
+                <h2 class="mb-4">Search Results</h2>
+                <p class="flip"><span class="deg1"></span><span class="deg2"></span><span class="deg3"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-wrap">
+        <div class="row no-gutters d-flex">
+            @if (Model.Items.Count() == 0) {
+                <p>No items found for your search.</p>
+            } else {
+                <div class="row">
+                    @foreach (var item in Model.Items) {
+                        <div class="col-md-4">
+                            <div class="services-wrap d-flex">
+                                <a href="#" class="img" style="background-image: url('@item.ItemImage');"></a>
+                                <div class="text p-4">
+                                    <h3>@item.ItemName</h3>
+                                    <p>@item.ItemDescription</p>
+                                    <p class="price">
+                                        <span>@item.SuggestedPrice.ToString("C")</span>
+                                        <a href="@Url.Action("ProductDetail", "Home", new { itemId = item.ItemId })" class="ml-2 btn btn-white btn-outline-white">Order</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="pagination justify-content-center">
+                            @for (int i = 1; i <= Model.TotalPages; i++) {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Search", new { query = ViewContext.HttpContext.Request.Query["query"], page = i })">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

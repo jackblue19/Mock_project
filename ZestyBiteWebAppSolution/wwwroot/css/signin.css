@@ -1,0 +1,82 @@
+﻿.body-center {
+	margin-top: 64px;
+	display: flex;
+}
+
+.left-body {
+	padding: 0;
+	width: 620px;
+}
+
+.right-body {
+	width: 100%;
+	background-image: url(../images/bg_3.jpg);
+	background-size: cover;
+	background-position: center;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 64px;
+	opacity: 1;
+	transition: font-size 0.3s;
+	position: relative;
+}
+	.form-config {
+	background-color: black;
+	width: 650px !important;
+	height: 680px !important;
+	opacity: 80%;
+}
+
+.form-top {
+	width: auto;
+	margin-top: 5px;
+}
+
+.fa-user {
+	margin: 0 !important;
+}
+
+.form-bot {
+	width: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: -10px;
+}
+
+.inner-form {
+	text-align: center;
+}
+
+h3 {
+	color: orange;
+}
+
+#signin input {
+	justify-content: left;
+	text-align: left;
+}
+
+.n-btn {
+	text-align: center;
+}
+
+#signin div {
+	display: block;
+	unicode-bidi: isolate;
+}
+
+#nav-config {
+	width: 500px !important;
+}
+
+.swiper-container {
+	width: 100%;
+	height: 100%;
+}
+
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+	background: #4F46E5 !important;
+}

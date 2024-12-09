@@ -1,0 +1,120 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\Customer_Service_Staff\Controllers\**" />
+    <Compile Remove="Areas\Customer_Service_Staff\Data\**" />
+    <Compile Remove="Areas\Customer_Service_Staff\Views\Shared\**" />
+    <Compile Remove="Areas\Food_Runner\Data\**" />
+    <Compile Remove="Areas\Manager\Data\**" />
+    <Compile Remove="Areas\Order_Taker\Controllers\**" />
+    <Compile Remove="Areas\Order_Taker\Data\**" />
+    <Compile Remove="Areas\Procurement_Manager\Data\**" />
+    <Compile Remove="wwwroot\Content\**" />
+    <Compile Remove="wwwroot\lib\**" />
+    <Content Remove="Areas\Customer_Service_Staff\Controllers\**" />
+    <Content Remove="Areas\Customer_Service_Staff\Data\**" />
+    <Content Remove="Areas\Customer_Service_Staff\Views\Shared\**" />
+    <Content Remove="Areas\Food_Runner\Data\**" />
+    <Content Remove="Areas\Manager\Data\**" />
+    <Content Remove="Areas\Order_Taker\Controllers\**" />
+    <Content Remove="Areas\Order_Taker\Data\**" />
+    <Content Remove="Areas\Procurement_Manager\Data\**" />
+    <Content Remove="wwwroot\Content\**" />
+    <Content Remove="wwwroot\lib\**" />
+    <EmbeddedResource Remove="Areas\Customer_Service_Staff\Controllers\**" />
+    <EmbeddedResource Remove="Areas\Customer_Service_Staff\Data\**" />
+    <EmbeddedResource Remove="Areas\Customer_Service_Staff\Views\Shared\**" />
+    <EmbeddedResource Remove="Areas\Food_Runner\Data\**" />
+    <EmbeddedResource Remove="Areas\Manager\Data\**" />
+    <EmbeddedResource Remove="Areas\Order_Taker\Controllers\**" />
+    <EmbeddedResource Remove="Areas\Order_Taker\Data\**" />
+    <EmbeddedResource Remove="Areas\Procurement_Manager\Data\**" />
+    <EmbeddedResource Remove="wwwroot\Content\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
+    <None Remove="Areas\Customer_Service_Staff\Controllers\**" />
+    <None Remove="Areas\Customer_Service_Staff\Data\**" />
+    <None Remove="Areas\Customer_Service_Staff\Views\Shared\**" />
+    <None Remove="Areas\Food_Runner\Data\**" />
+    <None Remove="Areas\Manager\Data\**" />
+    <None Remove="Areas\Order_Taker\Controllers\**" />
+    <None Remove="Areas\Order_Taker\Data\**" />
+    <None Remove="Areas\Procurement_Manager\Data\**" />
+    <None Remove="wwwroot\Content\**" />
+    <None Remove="wwwroot\lib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap.min.css" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\css\bootstrap.min.css.map" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js.map" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js.map" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.esm.js" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.esm.js.map" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js.map" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.js" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
+    <Content Remove="C:\Users\LENOVO\.nuget\packages\bootstrap\5.3.3\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\bootstrap\.DS_Store" />
+    <None Include="wwwroot\css\css\.DS_Store" />
+    <None Include="wwwroot\fonts\.DS_Store" />
+    <None Include="wwwroot\fonts\flaticon\.DS_Store" />
+    <None Include="wwwroot\fonts\icomoon\.DS_Store" />
+    <None Include="wwwroot\fonts\ionicons\fonts\.DS_Store" />
+    <None Include="wwwroot\js\.DS_Store" />
+    <None Include="wwwroot\scss\.DS_Store" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="bootstrap" Version="5.3.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Order_Taker\Views\Shared\" />
+  </ItemGroup>
+
+</Project>

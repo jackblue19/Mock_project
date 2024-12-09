@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Verify Email";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model ZestyBiteWebAppSolution.Models.DTOs.VerifyDTO
+
+<link href="~/css/signin.css" rel="stylesheet" />
+
+<div class="body-center">
+    <div class="left-body">
+        <div class="form-config">
+            <div class="media d-block services form-top">
+                <div class="icon d-flex justify-content-center align-items-center mb-5">
+                    <span class="flaticon-pizza-1"></span>
+                </div>
+            </div>
+            <div class="form-bot">
+                <div style="padding-top: 30px; width: 400px">
+                    <!-- Displaying the messages from ViewBag -->
+                    @if (ViewBag.Error != null) {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (ViewBag.Message != null) {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @ViewBag.Message
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    <h3 class="mb-8" style="text-align: center; margin-bottom: 2rem !important">Verify Your Email</h3>
+
+                    <form asp-action="VerifyEmail" method="post">
+                        @Html.AntiForgeryToken() 
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div> <!-- Validation errors -->
+
+                        <div class="d-md-flex">
+                            <div class="form-group">
+                                <i class="fa-solid fa-key"></i>
+                                <input asp-for="Code" class="form-control" placeholder="Enter verification code" type="text" required />
+                                <span asp-validation-for="Code" class="text-danger"></span> <!-- Validation for Code -->
+                            </div>
+                        </div>
+
+                        <div class="form-group n-btn">
+                            <input type="submit" value="Verify" class="btn btn-primary py-3 px-4">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

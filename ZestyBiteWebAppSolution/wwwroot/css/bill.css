@@ -1,0 +1,744 @@
+﻿.popup {
+    overflow-y: auto;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* Adjust width to ensure it fits well on different screen sizes */
+    max-width: 600px; /* Limit max width */
+    max-height: 90%; /* Limit the height so it stays within the viewport */
+    background-color: #FDFCE5;
+    border: 1px solid #333;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    box-sizing: border-box; /* Ensure padding is included in the total width/height */
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.invoice {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0; /* Adds some vertical spacing */
+}
+
+.company-info, .invoice-info {
+    width: 48%; /* Adjust as needed to fit your design */
+}
+
+    .company-info p, .invoice-info p {
+        margin: 0;
+        font-size: 0.9em;
+    }
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+    .invoice-table th, .invoice-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-size: 0.9em;
+        color: black;
+    }
+
+    .invoice-table thead {
+        background-color: #f4f4f4;
+    }
+
+    .invoice-table tfoot {
+        background-color: #f9f9f9;
+        font-weight: bold;
+    }
+
+.summary-section .totals {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.totals p {
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.AccountBody {
+    height: 100%;
+    width: 100%;
+}
+
+.AccountFunction {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    color: #000;
+}
+
+    .AccountFunction * {
+        font-size: 24px;
+        /* This will apply to all child elements */
+    }
+
+.AccountSearch {
+    width: 50%;
+    height: 80px;
+    display: flex;
+    margin-left: 15px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.AccountCreate {
+    width: 50%;
+    height: 80px;
+    display: flex;
+    margin-right: 15px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+
+/* Account Gridview */
+.AccountView {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+}
+
+.AccountList {
+    overflow-y: scroll;
+    margin-left: 15px;
+    margin-right: 15px;
+    background-color: #FDFCE5;
+    width: 100%;
+    border: 2px solid #000;
+    /* Border for AccountList */
+    border-radius: 10px;
+    /* Rounded corners */
+    padding: 10px;
+    /* Optional padding */
+}
+
+    .AccountList::-webkit-scrollbar {
+        width: 0px;
+        /* Thinner scrollbar width */
+    }
+
+.content-text h2 {
+    display: grid;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0;
+    font-weight: bold;
+    color: #000
+}
+/* table style -----------------------------------------------------------*/
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    table.List th,
+    table.List td {
+        color: black;
+        text-align: center;
+        /* Center-align text within table cells */
+        padding: 8px;
+        /* Padding within table cells for better readability */
+        vertical-align: middle;
+        /* Ensures text is vertically centered */
+    }
+
+thead th {
+    position: sticky;
+    top: 0;
+    /* Keeps the header at the top while scrolling */
+    background-color: rgba(113, 99,186,255);
+    /* Optional: background color for the header */
+    color: rgb(0, 0, 0);
+    /* Optional: text color for better contrast */
+    padding: 10px;
+    z-index: 1;
+    /* Ensure it stays above other table content */
+    border-bottom: 2px solid #ddd;
+    /* Adds a bottom border to the sticky header */
+    border-top: 2px solid #ddd;
+    /* Adds a top border if needed */
+    z-index: 1;
+    /* Keeps the header above table content */
+    /* Optional: border styling */
+}
+
+th,
+td {
+    border: 1px solid #000;
+    word-wrap: break-word;
+}
+
+    th:nth-child(1),
+    td:nth-child(1) {
+        width: 30px;
+        word-wrap: break-word;
+        /* Ensure long text wraps instead of overflowing */
+    }
+
+/* Popup styles ---------------------------------------------------------------*/
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    background-color: #FDFCE5;
+    border: 1px solid #333;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+    .popup-header h3 {
+        color: #000000;
+    }
+
+
+.popup-close {
+    cursor: pointer;
+    font-size: 1.5em;
+    color: #333;
+}
+
+/* Add styles for input fields in the popup */
+.popup input[type="text"],
+.popup input[type="password"],
+.popup select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+/* footer --------------------------------------------------- */
+.footer {
+    height: 15px;
+    background-color: #D0CECA;
+}
+
+table.List tr:nth-child(odd) {
+    background-color: #ffffff; /* Màu đậm cho hàng lẻ */
+}
+
+table.List tr:nth-child(even) {
+    background-color: #dcdada; /* Màu đậm cho hàng chẵn */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+/* Container chứa sidebar và main-content */
+.container-content {
+    display: flex;
+    height: 100vh;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh;
+}
+/* Sidebar cố định chiều rộng */
+.sidebar {
+    width: 115px;
+    background-color: rgba(113, 99,186,255);
+    color: white;
+    padding: 0 1.7rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: all 0.5s linear;
+    top: 0;
+    position: stickfixed;
+    height: 100vh;
+}
+
+    .sidebar:hover {
+        width: 240px;
+        transition: 0.5s;
+    }
+
+.menu {
+    height: 88%;
+    position: relative;
+    list-style: none;
+    padding: 0;
+}
+
+    .menu li {
+        padding: 1rem;
+        margin: 8px 0;
+        border-radius: 8px;
+        transition: all 0.5s ease-in-out;
+    }
+
+        .menu li:hover,
+        .active {
+            background: #e0e0e058;
+        }
+
+    .menu a {
+        color: #fff;
+        font-size: 14px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+        .menu a span {
+            overflow: hidden;
+        }
+
+        .menu a i {
+            font-size: 1.2rem;
+        }
+/* Main Content chiếm phần còn lại */
+.main-content {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: flex-start;
+    background-image: url("../images/image.jfif");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+@media only screen and (min-width: 1200px) {
+    .main-content {
+        background-size: 100%; /* Hiển thị toàn bộ hình nền */
+    }
+}
+
+/* Điều chỉnh thẻ runner-info */
+.runner-info {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    margin-top: 20px;
+    height: 90%;
+    flex-direction: column;
+}
+/*CUSTOM-SCROLL-BAR*/
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(11, 26, 34);
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(225, 240, 56, 0.247);
+    border-radius: 5px;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #f1cfcf;
+    }
+
+/* done */
+/* Điều chỉnh thẻ table-order */
+.table-order-container {
+    flex: 1;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    height: 90%;
+}
+
+.runner-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* Đặt chiều cao cho icon bằng tổng chiều cao của h2 và h3 */
+.avatar i.fas.fa-user {
+    font-size: 120px;
+    margin-right: 80px;
+    line-height: 1;
+    color: #000000;
+}
+
+.table-items {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    height: 70%;
+}
+/* Tăng chiều cao h2 và h3 theo cách phù hợp */
+.text-content h2 {
+    font-size: 50px;
+    margin: 0;
+    font-weight: bold;
+    color: #000;
+}
+
+.text-content h3 {
+    font-size: 30px;
+    margin: 0;
+    color: #000000;
+    padding-left: 90px;
+}
+/* Đặt line-height cho cả hai thẻ để tổng chiều cao bằng icon */
+.text-content h2, .text-content h3 {
+    line-height: 1.2;
+}
+/* Kiểu dáng cho bảng table-order */
+.table-order-wrapper {
+    max-height: 300px;
+}
+
+.table-order {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    /* Kiểu dáng cho tiêu đề bảng */
+    .table-order thead {
+        background-color: rgba(113, 99,186,255);
+        color: #000000;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+.table-body-scroll {
+    height: 200px;
+    overflow-y: auto;
+}
+
+.table-order td {
+    color: #ffffff;
+    padding: 6px 90px;
+    text-align: left;
+}
+
+/* Kiểu dáng cho các ô tiêu đề */
+.table-order th {
+    padding: 10px 100px;
+    text-align: left;
+}
+    /* Căn giữa hoặc phải cho cột Quantity */
+    .table-order td:nth-child(2), .table-order th:nth-child(2) {
+        text-align: center; /* Căn giữa cho cột Quantity */
+    }
+
+    /* Đặt chiều rộng cho cột */
+    .table-order th:nth-child(1), .table-order td:nth-child(1) {
+        width: 70%; /* Cột 'Item' */
+    }
+
+    .table-order th:nth-child(2), .table-order td:nth-child(2) {
+        width: 60%; /* Cột 'Quantity' */
+    }
+
+
+/* Kiểu dáng cho các hàng trong bảng */
+.table-order tbody tr {
+    background-color: #6b6969;
+    border-bottom: 1px solid #8b8989;
+    display: table;
+    width: 100%;
+}
+
+.table-order td.no-cell {
+    width: 70px;
+    text-align: center;
+}
+
+.table-order .circle-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #d3d3d3;
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+    margin: 0 auto;
+}
+
+
+
+/* Đổi màu hàng khi hover */
+.table-order tbody tr:hover {
+    background-color: #929094;
+}
+
+/* Kiểu dáng cho trạng thái trong bảng */
+.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+    /* Màu cho trạng thái Unserved */
+    .status.unserved {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .status.unise {
+        background-color: #204f9a;
+        color: white;
+    }
+
+    /* Màu cho trạng thái Serving */
+    .status.serving {
+        background-color: #28a745;
+        color: white;
+    }
+
+.table-heading {
+    color: #000;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.table-body-scroll-note {
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.table-order-note {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .table-order-note td {
+        padding: 12px;
+        border-bottom: 1px solid #000000;
+        font-size: 14px;
+        background-color: #6b6969;
+        color: #ffffff;
+    }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.gird-container {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.main-card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin: 20px 0;
+    height: auto;
+    width: 97%;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 15px;
+    background-color: #a2aba9;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 6px 7px -4px rgba(203, 201, 201, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+    .card:hover {
+        background-color: rgba(113, 99,186,255);
+    }
+
+    .card:first-child {
+        border-left: 10px solid rgb(160, 39, 154);
+    }
+
+    .card:nth-child(2) {
+        border-left: 10px solid rgb(40, 180, 127);
+    }
+
+    .card:nth-child(3) {
+        border-left: 10px solid rgba(103, 180, 40, 0.89);
+    }
+
+    .card:nth-child(4) {
+        border-left: 10px solid rgba(113, 99,186,255);
+    }
+
+    .card:nth-child(5):hover {
+        background-color: #a2aba9; /* Giữ màu nền như ban đầu */
+        border-left-color: rgba(113, 99, 186, 255); /* Giữ màu border cho card 4 */
+    }
+
+.card-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 5px;
+    color: #000;
+}
+
+.bi-cart::before {
+    background-color: rgb(160, 39, 154);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 25px;
+    color: #000;
+}
+
+.bi-graph-up::before {
+    background-color: rgb(40, 180, 127);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 25px;
+    color: #000;
+}
+
+.bi-currency-dollar::before {
+    background-color: rgba(103, 180, 40, 0.89);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 25px;
+    color: #000;
+}
+
+.bi-person-lines-fill::before {
+    background-color: rgba(113, 99,186,255);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 25px;
+    color: #000;
+}
+
+.charts-card {
+    grid-column: 1 / -1;
+}
+
+.chart-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 600;
+    color: #030303;
+}
+
+@media screen and (max-width: 768px) {
+    .main-card {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 0;
+    }
+
+    .charts {
+        grid-template-columns: 1fr;
+        margin-top: 400px;
+    }
+}
+
+.view-all {
+    color: #000000;
+    text-decoration: underline;
+    font-size: 14px;
+}

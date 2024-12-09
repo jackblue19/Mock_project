@@ -1,0 +1,115 @@
+﻿/* Global Styles */
+body {
+    background-image: url("../images/bg_3.jpg");
+}
+
+div {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+input.invalid {
+    background-color: #ffdddd;
+}
+/* Navigation Styles */
+#nav-config {
+    width: 500px !important;
+}
+
+#nextBtn, #prevBtn {
+    border-radius: 10px;
+    background-color: whitesmoke;
+    opacity: 80%;
+    color: black;
+}
+
+#prevBtn {
+    border-radius: 12px; /* Different radius for prevBtn */
+}
+/* Responsive Styles */
+
+/* Screen sizes up to 767px */
+@media only screen and (max-width: 767px) {
+    .other-choice {
+        opacity: 200;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+/* Screen sizes up to 520px */
+@media only screen and (max-width: 520px) {
+    .other-choice {
+        opacity: 200;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .info-top {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* Screen sizes 768px and up */
+@media only screen and (min-width: 768px) {
+    .form-config {
+        margin: auto;
+        background-color: black;
+        width: 720px !important;
+        height: 1000px !important;
+        opacity: 80%;
+        margin-bottom: 0;
+    }
+
+    .other-choice {
+        padding-top: 20px;
+        opacity: 200;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        flex-direction: row;
+    }
+}
+/* Stepper Styles */
+.tab {
+    display: none;
+}
+
+.step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+}
+
+    .step.active {
+        opacity: 1;
+    }
+
+    .step.finish {
+        background-color: #04AA6D;
+    }
+/* Info Section Styles */
+.info-top {
+    display: flex;
+    flex-direction: row;
+}
+
+.info-left, .info-right {
+    width: 50%;
+}
+
+.in-info {
+    padding-left: 60px;
+}
+
+    .in-info input {
+        padding-left: 20px;
+    }
